@@ -2,3 +2,6 @@ __pycache__/
 .venv/
 *.egg-info/
 uv.lock
+
+# synced bom package cache (bom.lock is the source of truth)
+.bom/

@@ -12,14 +12,14 @@ from __future__ import annotations
 
 import sys
 
-from bom import get_node, run_rules
+from quern import get_node, run_rules
 
 from .tree import build
 
 
 def main() -> int:
-    bom = build()
-    results = run_rules(bom)
+    quern = build()
+    results = run_rules(quern)
     red = [r for r in results if not r.ok]
 
     # ASCII only: this prints to a Windows console under cp1252, which mangles anything prettier
@@ -37,7 +37,7 @@ def main() -> int:
     print(f"{len(red)} of {len(results)} rule(s) RED.")
     print()
     for r in red:
-        node = get_node(bom, r.node) if r.node else None
+        node = get_node(quern, r.node) if r.node else None
         why = (node.payload.get("note") if node else None) or r.detail or ""
         print(f"  {r.node or r.rule}: {why}")
     print()

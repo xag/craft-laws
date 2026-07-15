@@ -17,7 +17,7 @@ These laws began as bullets in a markdown file. That file contained this sentenc
 > delete them; do not let them harden into laws by sitting here.*
 
 The sentence was true. It would have gone on being true, silently, for as long as anybody left it
-there — which is precisely the failure that [`ledger@0.1.0`](https://github.com/xag/bom) exists to
+there — which is precisely the failure that [`ledger@0.1.0`](https://github.com/xag/quern) exists to
 prevent, reproduced inside the artifact that teaches it.
 
 So the laws are data. `a-law-cites-a-source` is a rule now, and it is **red**, and it names the
@@ -36,16 +36,16 @@ need to be told what a law is. It only asks whether the thing resting on it was 
 `invest` re-authored the ledger's kinds and Home Hub rolled its own. The point of a package is
 that the third project does not make the same mistake a third time.
 
-## Why it does not live inside bom
+## Why it does not live inside quern
 
-`ledger@0.1.0` lives in `src/bom/ledger.py`, and its own docstring calls that siting wrong: a
-package inside the substrate means refining a vocabulary requires **a bom release** — the exact
-pathology bom exists to dissolve ([xag/bom#19](https://github.com/xag/bom/issues/19)).
+`ledger@0.1.0` lives in `src/quern/ledger.py`, and its own docstring calls that siting wrong: a
+package inside the substrate means refining a vocabulary requires **a quern release** — the exact
+pathology quern exists to dissolve ([xag/quern#19](https://github.com/xag/quern/issues/19)).
 
 Putting a set of UX laws in there would reproduce that error knowingly, and would mean that a
 better citation for a button label waits on a substrate release. So `craft` roots itself in its
 own `Library`, in its own repo, on its own clock — the third route, which #19 will make ordinary,
-and which is possible today only because bom already lets a project's own vocabulary stand
+and which is possible today only because quern already lets a project's own vocabulary stand
 alongside a package's.
 
 **`craft` is therefore the second independent consumer wanting that channel.** One is a special

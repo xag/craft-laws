@@ -12,8 +12,8 @@ None of them reads.
 
 from __future__ import annotations
 
-from bom import Node
-from bom.provenance import Quantity
+from quern import Node
+from quern.provenance import Quantity
 
 
 def _cited(source: str) -> Quantity:

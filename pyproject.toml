@@ -4,13 +4,13 @@ version = "0.1.0"
 description = "craft@0.1.0 — the laws of interface and copy, as checkable data."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["bom"]
+dependencies = ["quern"]
 
 [tool.uv.sources]
-# Pinned by rev, always. bom is pre-1.0 and its own doctrine is fork-or-republish over resolver
-# algebra. This package builds ON bom's ledger and grounding packages; it does not live inside
-# them, and that is the point (see craft/package.py, and xag/bom#19).
-bom = { git = "https://github.com/xag/bom", rev = "bc91a58" }
+# Pinned by rev, always. quern is pre-1.0 and its own doctrine is fork-or-republish over resolver
+# algebra. This package builds ON quern's ledger and grounding packages; it does not live inside
+# them, and that is the point (see craft/package.py, and xag/quern#19).
+quern = { git = "https://github.com/xag/quern", rev = "edd0d31" }
 
 [build-system]
 requires = ["hatchling"]

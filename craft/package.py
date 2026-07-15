@@ -27,13 +27,13 @@ gate` — the load-bearing rule the ledger already ships — asks the publicatio
 uncited law is about to travel through it. It does not need to be told what a law is. It only
 asks whether the thing resting on it was ever checked.
 
-SITING. This package does not live in bom's source, and that is deliberate. `ledger@0.1.0` does,
+SITING. This package does not live in quern's source, and that is deliberate. `ledger@0.1.0` does,
 and its own docstring calls that wrong: a package inside the substrate means refining a
-vocabulary requires a *bom release*, which is the pathology bom exists to dissolve (xag/bom#19).
+vocabulary requires a *quern release*, which is the pathology quern exists to dissolve (xag/quern#19).
 Putting a set of UX laws in there would reproduce that error knowingly, and would mean a better
 citation for a button label waits on a substrate release. So `craft` roots itself in its own
 Library, in its own repo, on its own clock — which is what #19 will make ordinary, and which is
-possible today only because bom already lets local vocabulary win over a package's.
+possible today only because quern already lets local vocabulary win over a package's.
 
 `craft` is therefore the SECOND independent consumer wanting that channel. One is a special
 case. Two is evidence.
@@ -41,12 +41,10 @@ case. Two is evidence.
 
 from __future__ import annotations
 
-from bom import KindDef, Node, Rule
-from bom.grounding import GROUNDING_PACKAGE
-from bom.ledger import LEDGER_PACKAGE
-from bom.library import CounterExample, Package
-from bom.provenance import Quantity
-from bom.tree import PackageRef
+from quern import KindDef, Node, Rule
+from quern.library import CounterExample, Package
+from quern.provenance import Quantity
+from quern.tree import PackageRef
 
 VOCABULARY = [
     KindDef(
@@ -117,7 +115,7 @@ RULES = [
 
 # --- examples, and the counter-examples that prove the guards guard -----------------
 #
-# bom will not publish a package whose rules have no examples, and it stages each counter-example
+# quern will not publish a package whose rules have no examples, and it stages each counter-example
 # ALONE so the named rule has to fail on that node and not on some other defect. Which is the
 # same demand this whole file was written under: not "does the method explain the defects you
 # already found", but "does it reject something it should".
@@ -211,8 +209,11 @@ CRAFT_PACKAGE = Package(
                 "guide cannot fire.",
     publisher="poietic.studio",
     requires=[
-        PackageRef(name="ledger", version=LEDGER_PACKAGE.version),
-        PackageRef(name="grounding", version=GROUNDING_PACKAGE.version),
+        # Versions pinned exactly, by doctrine. Since xag/quern#19, ledger@ and
+        # grounding@ are their own authoring repos; craft names the versions it
+        # builds on rather than importing their Python to read a constant.
+        PackageRef(name="ledger", version="0.1.0"),
+        PackageRef(name="grounding", version="1.0.0"),
     ],
     vocabulary=VOCABULARY,
     rules=RULES,

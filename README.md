@@ -1,11 +1,35 @@
 # craft-laws
 
-**`craft@0.1.0`** — the laws of interface and copy, as data a rule can go red on.
+**This repo does not pass its own check today — on purpose.**
+
+```bash
+$ uv run python -m craft.check
+...
+4 of 37 rule(s) RED.
+  no-calque: ... I have not found it stated as a rule ...
+  untranslatable-tone: ... Source it or drop it.
+  empty-state-never-contradicts: ... It stays, uncited and red ...
+  publish: Red, and correctly so: three of the twelve laws cite nobody.
+```
+
+Twelve laws of interface and copy, as **checkable data**: each carries the observation
+that would convict it (a falsifier), the property of an app that switches it on (a
+trigger), the authority that stated it (a citation, with the quote), and a real defect it
+caught (a sighting). Three of the twelve cite nobody — so the rule `a-law-cites-a-source`
+is red, the publish gate refuses to let them travel as settled, and the check exits 1.
+That is not a bug in the repo. It is the repo's entire argument: **a style guide is prose,
+and prose cannot fire.** These three sat in a markdown file for weeks inside a sentence
+that said they were unsourced — a sentence that was true, and that nothing could act on.
+As data, the same fact is a red check that will not go away until somebody finds the
+source or deletes the law.
 
 ```bash
 uv run python -m craft.check          # the laws' own rules. Exit 1 while any is red.
 uv run python -m craft.render         # the markdown view, generated from the data
 ```
+
+[`LAWS.md`](LAWS.md) is the rendered view, stamped with the rev it came from; CI
+regenerates it and fails if the view and the data disagree.
 
 ## Why this is not a style guide
 
@@ -81,3 +105,9 @@ in the file.
 
 - [`blind-usability`](https://github.com/xag/claude-plugins) — step 3b turns these laws into
   expectations, triggered by an app's intent, confronted by reading the rendered screens.
+
+## License
+
+Apache-2.0 — see [LICENSE](LICENSE).
+
+© 2026 Xavier Grehant

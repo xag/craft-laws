@@ -89,7 +89,7 @@ LAWS = [
             ("chores 2026-07-13, the member sheet",
              "A section headed « Absence » whose submit button was also labelled « Absence ». "
              "In the English original: 'Away' over 'Away' — so the defect predated the "
-             "translation by a year and nobody had ever read the screen."),
+             "translation, and nobody had ever read the screen."),
         ],
     ),
 

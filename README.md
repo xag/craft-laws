@@ -18,7 +18,7 @@ trigger), the authority that stated it (a citation, with the quote), and a real 
 caught (a sighting). Three of the twelve cite nobody — so the rule `a-law-cites-a-source`
 is red, the publish gate refuses to let them travel as settled, and the check exits 1.
 That is not a bug in the repo. It is the repo's entire argument: **a style guide is prose,
-and prose cannot fire.** These three sat in a markdown file for weeks inside a sentence
+and prose cannot fire.** These three sat in a markdown file inside a sentence
 that said they were unsourced — a sentence that was true, and that nothing could act on.
 As data, the same fact is a red check that will not go away until somebody finds the
 source or deletes the law.

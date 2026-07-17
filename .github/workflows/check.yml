@@ -1,0 +1,59 @@
+# Two assertions, both about drift — the failure mode this repo exists to prevent.
+#
+# The check is red today, on purpose: three laws cite nobody and the publish gate refuses
+# them. So CI does not ask "is it green" — it asserts the red is EXACTLY the declared red.
+# A law that quietly loses a citation, or a gate that quietly goes green, both change the
+# set, and both should cost a failing build until the record moves with them.
+#
+# The second assertion: LAWS.md is a rendered view, and a view that can drift from its
+# data is a second source of truth. CI re-renders and diffs, ignoring only the rev stamp.
+#
+# Both need `quern` (private) and the registry, so this job holds ESTATE_READ_TOKEN —
+# same arrangement, and same reasoning, as the chores conformance job.
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  laws:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: xag/quern-registry
+          token: ${{ secrets.ESTATE_READ_TOKEN }}
+          path: quern-registry
+      - uses: astral-sh/setup-uv@v5
+      - name: Let uv reach the private substrate
+        env:
+          TOKEN: ${{ secrets.ESTATE_READ_TOKEN }}
+        run: |
+          git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
+      - name: The red is exactly the declared red
+        env:
+          QUERN_REGISTRY: ${{ github.workspace }}/quern-registry
+        run: |
+          uv run python - <<'EOF'
+          from quern import run_rules
+          from craft.tree import build
+          red = {r.node for r in run_rules(build()) if not r.ok}
+          declared = {"no-calque", "untranslatable-tone",
+                      "empty-state-never-contradicts", "publish"}
+          assert red == declared, (
+              f"the red set changed: {sorted(red)} != {sorted(declared)} - a law lost or "
+              "gained a citation without the record moving. Update laws.py AND this list "
+              "in the same commit, deliberately.")
+          print(f"red is exactly the declared red: {sorted(red)}")
+          EOF
+      - name: LAWS.md is the data, rendered
+        env:
+          QUERN_REGISTRY: ${{ github.workspace }}/quern-registry
+        run: |
+          uv run python -m craft.render > /tmp/laws.md
+          diff <(grep -v 'GENERATED from craft@' LAWS.md) \
+               <(grep -v 'GENERATED from craft@' /tmp/laws.md) \
+            || { echo "LAWS.md disagrees with the data - re-render: python -m craft.render > LAWS.md"; exit 1; }

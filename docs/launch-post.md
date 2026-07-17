@@ -16,7 +16,7 @@ French parent has ever said. A countdown rendered « Encore encore 3 min pour co
 because two strings, each perfectly correct in isolation, had been composed into one
 sentence no person would write. The submit button under the heading « Absence » was
 labelled « Absence » — and when I checked the English original, it said *Away* under
-*Away*, so that defect had been on screen for a year and every test it ever met was
+*Away*, so the defect predated the translation entirely and every test it ever met was
 green.
 
 Not one of my 486 checks could see any of this. They were all checking the catalogue —

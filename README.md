@@ -41,8 +41,10 @@ These laws began as bullets in a markdown file. That file contained this sentenc
 > delete them; do not let them harden into laws by sitting here.*
 
 The sentence was true. It would have gone on being true, silently, for as long as anybody left it
-there — which is precisely the failure that [`ledger@0.1.0`](https://github.com/xag/quern) exists to
-prevent, reproduced inside the artifact that teaches it.
+there — which is precisely the failure that [`ledger@0.1.0`](https://github.com/xag/quern) — a small
+vocabulary for keeping decisions, caveats and debts as data a check can act on, from the
+[quern](https://github.com/xag/quern) library — exists to prevent, reproduced inside the artifact
+that teaches it.
 
 So the laws are data. `a-law-cites-a-source` is a rule now, and it is **red**, and it names the
 three laws that cite nobody. `LAWS.md` is a rendered *view* of that data, stamped with the rev it
@@ -57,8 +59,8 @@ wearing a lab coat. Then `nothing-unsound-passes-a-gate` — which `ledger` alre
 publication gate whether an uncited law is about to travel as though it were settled. It does not
 need to be told what a law is. It only asks whether the thing resting on it was ever checked.
 
-`invest` re-authored the ledger's kinds and Home Hub rolled its own. The point of a package is
-that the third project does not make the same mistake a third time.
+Two earlier projects each rebuilt this vocabulary from scratch and diverged. The point of a
+package is that the third project does not make the same mistake a third time.
 
 ## Why it does not live inside quern
 

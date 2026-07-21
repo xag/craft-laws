@@ -199,7 +199,7 @@ COUNTER_EXAMPLES = [
 
 CRAFT_PACKAGE = Package(
     name="craft",
-    version="0.1.0",
+    version="0.1.1",
     description="The laws of interface and copy, as checkable data: each carrying the "
                 "observation that would convict it, the property of an app's intent that "
                 "switches it on, the source that authorises it, and the real defects it has "
@@ -212,8 +212,13 @@ CRAFT_PACKAGE = Package(
         # Versions pinned exactly, by doctrine. Since xag/quern#19, ledger@ and
         # grounding@ are their own authoring repos; craft names the versions it
         # builds on rather than importing their Python to read a constant.
-        PackageRef(name="ledger", version="0.1.0"),
-        PackageRef(name="grounding", version="1.0.0"),
+        # 0.1.1 moves both to the current pair — ledger@0.5.0 carrying grounding@1.1.0,
+        # whose provenance contracts each describe themselves instead of sharing one
+        # line. No kind, rule or example changed; a closure that mixes ledger versions
+        # is a diamond, so a consumer wanting the legible contracts needs craft to name
+        # the same ones.
+        PackageRef(name="ledger", version="0.5.0"),
+        PackageRef(name="grounding", version="1.1.0"),
     ],
     vocabulary=VOCABULARY,
     rules=RULES,

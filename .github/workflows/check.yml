@@ -8,8 +8,12 @@
 # The second assertion: LAWS.md is a rendered view, and a view that can drift from its
 # data is a second source of truth. CI re-renders and diffs, ignoring only the rev stamp.
 #
-# Both need `quern` (private) and the registry, so this job holds ESTATE_READ_TOKEN —
-# same arrangement, and same reasoning, as the chores conformance job.
+# NEITHER NEEDS A CREDENTIAL ANY MORE. This job used to check out xag/quern-registry with
+# ESTATE_READ_TOKEN and rewrite git's URLs to carry it. Both halves were removable: quern is
+# public now, and the registry checkout was fetching a package this repo already pins — from a
+# registry frozen at ledger@0.4.1, which is why the check died on "craft@0.1.1 (pinned) is not
+# in the library". `.quern/library` is committed, so the pinned bytes travel with the lock that
+# names them. Verified with QUERN_REGISTRY pointed at a path that does not exist.
 name: check
 
 on:
@@ -22,20 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          repository: xag/quern-registry
-          token: ${{ secrets.ESTATE_READ_TOKEN }}
-          path: quern-registry
       - uses: astral-sh/setup-uv@v5
-      - name: Let uv reach the private substrate
-        env:
-          TOKEN: ${{ secrets.ESTATE_READ_TOKEN }}
-        run: |
-          git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
       - name: The red is exactly the declared red
-        env:
-          QUERN_REGISTRY: ${{ github.workspace }}/quern-registry
         run: |
           uv run python - <<'EOF'
           from quern import run_rules
@@ -50,8 +42,6 @@ jobs:
           print(f"red is exactly the declared red: {sorted(red)}")
           EOF
       - name: LAWS.md is the data, rendered
-        env:
-          QUERN_REGISTRY: ${{ github.workspace }}/quern-registry
         run: |
           uv run python -m craft.render > /tmp/laws.md
           diff <(grep -v 'GENERATED from craft@' LAWS.md) \

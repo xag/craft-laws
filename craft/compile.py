@@ -59,26 +59,31 @@ def _law(law_id: str) -> str:
 
 def _empty_state_never_contradicts(surfaces: list[Node]) -> list[Node]:
     law = _law("empty-state-never-contradicts")
+    # Controls are collected ACROSS surfaces, deliberately: a screen a person sees is
+    # several model surfaces at once (a tab and the header above it), and whether a
+    # denial and an offer are co-visible is not a modeling convention — it is exactly
+    # what the prover decides from the `when` exprs. The invariant states the pair;
+    # the state walk finds the overlap or proves there is none.
+    controls = [(s, e) for s in surfaces for e in elements(s)
+                if e.payload.get("action")]
     out: list[Node] = []
     for s in surfaces:
-        controls = {e.payload.get("action"): e for e in elements(s)
-                    if e.payload.get("action")}
         for e in elements(s):
             for d in denials(e):
                 action = d.payload.get("action", "")
-                c = controls.get(action)
-                if c is None:
-                    continue
-                keys = ", ".join(b.payload.get("key", "?") for b in bindings(e))
-                out.append(Node(
-                    id=f"{law}--{e.id}", kind="invariant",
-                    payload={
-                        "expr": f"not (({when(s, e)}) and ({when(s, c)}))",
-                        "note": f"'{keys}' asserts action '{action}' is moot; "
-                                f"'{c.id}' offers it on the same screen. No state "
-                                "may show both.",
-                        "law": law,
-                    }))
+                for cs, c in controls:
+                    if c.payload.get("action") != action:
+                        continue
+                    keys = ", ".join(b.payload.get("key", "?") for b in bindings(e))
+                    out.append(Node(
+                        id=f"{law}--{e.id}", kind="invariant",
+                        payload={
+                            "expr": f"not (({when(s, e)}) and ({when(cs, c)}))",
+                            "note": f"'{keys}' asserts action '{action}' is moot; "
+                                    f"'{c.id}' offers it in the same state. No "
+                                    "state may show both.",
+                            "law": law,
+                        }))
     return out
 
 

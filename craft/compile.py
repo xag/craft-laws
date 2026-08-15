@@ -75,8 +75,11 @@ def _empty_state_never_contradicts(surfaces: list[Node]) -> list[Node]:
                     if c.payload.get("action") != action:
                         continue
                     keys = ", ".join(b.payload.get("key", "?") for b in bindings(e))
+                    # The id names the PAIR: one denial can contradict several
+                    # controls, each conviction deserves its own counterexample, and
+                    # the prover keeps one path per invariant id.
                     out.append(Node(
-                        id=f"{law}--{e.id}", kind="invariant",
+                        id=f"{law}--{e.id}--{c.id}", kind="invariant",
                         payload={
                             "expr": f"not (({when(s, e)}) and ({when(cs, c)}))",
                             "note": f"'{keys}' asserts action '{action}' is moot; "

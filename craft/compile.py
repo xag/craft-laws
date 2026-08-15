@@ -20,6 +20,8 @@ idiom, so any consumer that can prove a model can prove a drawing.
 
 from __future__ import annotations
 
+import re
+
 from quern import Node
 
 from craft.laws import LAWS
@@ -57,7 +59,7 @@ def _law(law_id: str) -> str:
     return law_id
 
 
-def _empty_state_never_contradicts(surfaces: list[Node]) -> list[Node]:
+def _empty_state_never_contradicts(surfaces: list[Node], **_: object) -> list[Node]:
     law = _law("empty-state-never-contradicts")
     # Controls are collected ACROSS surfaces, deliberately: a screen a person sees is
     # several model surfaces at once (a tab and the header above it), and whether a
@@ -90,7 +92,7 @@ def _empty_state_never_contradicts(surfaces: list[Node]) -> list[Node]:
     return out
 
 
-def _composed_prose(surfaces: list[Node]) -> list[Node]:
+def _composed_prose(surfaces: list[Node], **_: object) -> list[Node]:
     law = _law("composed-prose")
     out: list[Node] = []
     for s in surfaces:
@@ -109,7 +111,7 @@ def _composed_prose(surfaces: list[Node]) -> list[Node]:
     return out
 
 
-def _plurals_and_agreement(surfaces: list[Node]) -> list[Node]:
+def _plurals_and_agreement(surfaces: list[Node], **_: object) -> list[Node]:
     law = _law("plurals-and-agreement")
     out: list[Node] = []
     for s in surfaces:
@@ -127,18 +129,77 @@ def _plurals_and_agreement(surfaces: list[Node]) -> list[Node]:
     return out
 
 
+def _one_surface_one_job(surfaces: list[Node], **_: object) -> list[Node]:
+    law = _law("one-surface-one-job")
+    out: list[Node] = []
+    for s in surfaces:
+        marked = [e for e in elements(s) if e.payload.get("intent")]
+        for i, e1 in enumerate(marked):
+            for e2 in marked[i + 1:]:
+                a, b = e1.payload["intent"], e2.payload["intent"]
+                if a == b:
+                    continue
+                out.append(Node(
+                    id=f"{law}--{s.id}--{e1.id}--{e2.id}", kind="invariant",
+                    payload={
+                        "expr": f"not (({when(s, e1)}) and ({when(s, e2)}))",
+                        "note": f"'{e1.id}' serves '{a}' and '{e2.id}' serves "
+                                f"'{b}' — a person arriving to do one meets the "
+                                "other. No state may show both.",
+                        "law": law,
+                    }))
+    return out
+
+
+def _rare_action_folds_away(surfaces: list[Node], *,
+                            disclosures: frozenset[str] = frozenset(),
+                            **_: object) -> list[Node]:
+    """A rare element must sit behind a disclosure: its visibility must pass through
+    one of the state variables named in `disclosures` (the fold/expand booleans of
+    the operational half). One that does not is visible the moment its surface is —
+    the conviction, with the path to the surface as the repro. The reference check is
+    lexical (a word-boundary match of the variable name in the element's own `when`),
+    which is honest at this size: a `when` that names a fold it does not actually
+    gate on is a drawing lying about itself, and the walks convict that separately."""
+    law = _law("rare-action-folds-away")
+    out: list[Node] = []
+    for s in surfaces:
+        for e in elements(s):
+            if e.payload.get("frequency") != "rare":
+                continue
+            own = e.payload.get("when", "")
+            behind = any(re.search(rf"\b{re.escape(d)}\b", own) for d in disclosures)
+            if behind:
+                continue
+            out.append(Node(
+                id=f"{law}--{s.id}--{e.id}", kind="invariant",
+                payload={
+                    "expr": f"not ({when(s, e)})",
+                    "note": f"'{e.id}' is a rare act with no disclosure between it "
+                            "and the surface — it is met by everyone who arrives, "
+                            "in every state that shows the surface.",
+                    "law": law,
+                }))
+    return out
+
+
 COMPILABLE = {
     "empty-state-never-contradicts": _empty_state_never_contradicts,
     "composed-prose": _composed_prose,
     "plurals-and-agreement": _plurals_and_agreement,
+    "one-surface-one-job": _one_surface_one_job,
+    "rare-action-folds-away": _rare_action_folds_away,
 }
 
 
-def compile_invariants(surfaces: list[Node],
-                       laws: list[str] | None = None) -> list[Node]:
+def compile_invariants(surfaces: list[Node], laws: list[str] | None = None,
+                       disclosures: frozenset[str] | set[str] = frozenset()
+                       ) -> list[Node]:
     """Every invariant the compilable laws produce over these surfaces. Naming a law
     that does not compile is refused out loud — its falsifier needs a reading, and
-    pretending otherwise would report the judge's work as done."""
+    pretending otherwise would report the judge's work as done. `disclosures` names
+    the operational model's fold/expand state variables — what rare-action-folds-away
+    means by 'a second layer'."""
     chosen = list(COMPILABLE) if laws is None else laws
     out: list[Node] = []
     for law_id in chosen:
@@ -146,7 +207,8 @@ def compile_invariants(surfaces: list[Node],
         if law_id not in COMPILABLE:
             raise ValueError(f"'{law_id}' does not compile — its falsifier needs a "
                              "reading, and that seat belongs to the judge")
-        out.extend(COMPILABLE[law_id](surfaces))
+        out.extend(COMPILABLE[law_id](surfaces,
+                                      disclosures=frozenset(disclosures)))
     return out
 
 

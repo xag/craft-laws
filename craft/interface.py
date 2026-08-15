@@ -1,4 +1,4 @@
-"""interface@0.1.0 — an interface's denotation as data: what each screen shows, held
+"""interface@0.1.1 — an interface's denotation as data: what each screen shows, held
 in a tree that rules can traverse, laws can compile against, and a render layer can be
 generated from.
 
@@ -62,9 +62,16 @@ VOCABULARY = [
         "prose that reads as one sentence rather than a list of labels; `action` names "
         "the act this control commits; `count_var` names a numeric state variable "
         "rendered inline, and `fixed_plural` that it stands beside a noun whose number "
-        "never changes. These are the facts the compilable laws read — stated on the "
-        "element because they are properties of the drawing, not observations of a "
-        "screen.",
+        "never changes; `intent` names the one job this element serves a person "
+        "arriving to do (rename, create, configure — two intents co-visible is what "
+        "one-surface-one-job convicts); `frequency: 'rare'` marks an act performed "
+        "orders of magnitude less often than its surface is visited (create a "
+        "household vs switch one — rare-action-folds-away expects such an element's "
+        "`when` to pass through a disclosure state variable, so seeing it costs a "
+        "deliberate act). These are the facts the compilable laws read — stated on "
+        "the element because they are properties of the drawing, not observations of "
+        "a screen, and each is a judgment a person makes ONCE at authoring time that "
+        "the prover then enforces over every reachable state.",
     ),
     KindDef(
         kind="binding",
@@ -240,7 +247,7 @@ COUNTER_EXAMPLES = [
 
 INTERFACE_PACKAGE = Package(
     name="interface",
-    version="0.1.0",
+    version="0.1.1",
     description="An interface's denotation as data: surfaces, elements, bindings, "
                 "content, denials, witnesses and (one day) constraints — the "
                 "formalism the craft laws' triggers bind to, the tree their "

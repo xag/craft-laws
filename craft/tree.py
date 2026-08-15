@@ -49,6 +49,53 @@ DECISIONS = [
                           "estate's own telling of the story."}),
         ],
     ),
+    Node(
+        id="the-laws-side-has-a-formalism-side",
+        kind="decision",
+        name="interface@ is minted beside craft@: the denotation of an interface as "
+             "data — surfaces, elements, bindings, content, denials, witnesses, "
+             "constraints — with the decidable laws compiling against it "
+             "(craft/compile.py) instead of being read against screens",
+        payload={
+            "rationale":
+                "A law's trigger names properties of an app, and those properties had "
+                "no formalism: 'any count is shown to a person' was prose matched by "
+                "judgment. With the drawing as a tree, the property IS a node shape — "
+                "an element declaring count_var — and both halves of the mechanical "
+                "filter (which laws apply; whether they hold) become functions. The "
+                "compilable laws (empty-state-never-contradicts, composed-prose, "
+                "plurals-and-agreement) emit épure invariants, one per conviction, so "
+                "an exhaustive prover checks them over every reachable UI state with "
+                "a minimal click-path per violation. The laws and the formalism "
+                "version together here because they drift apart anywhere else.",
+            "consequence":
+                "Only the decidable half compiles, and the split is enforced out "
+                "loud: asking compile.py for a reading law raises, never silently "
+                "skips. The constraint kind is minted as a seat (layout as solved "
+                "interval queries, not three sampled viewports) and carried "
+                "honestly with no consumer yet. First consumer of the whole package "
+                "is chores' interface drawing, whose render-layer bindings are "
+                "generated from the tree — drift impossible by construction for "
+                "what is generated.",
+        },
+        children=[
+            Node(id="alt-interface-in-its-own-repo", kind="alternative",
+                 name="Mint interface@ in a repo of its own",
+                 payload={"why":
+                          "The vocabulary is only load-bearing where laws bind to it: "
+                          "a trigger that names an element shape must version with "
+                          "the shape it names, or a law silently fires on a stale "
+                          "formalism. Two repos would make that drift a resolver "
+                          "accident; one repo makes it a diff in one review."}),
+            Node(id="alt-compilers-in-the-package", kind="alternative",
+                 name="Ship the compilers inside the published package",
+                 payload={"why":
+                          "Compilers are host code, like vigil's natives: Python "
+                          "that runs, not data that means. The package carries what "
+                          "a rule can go red on; the compilers travel with the repo "
+                          "and are pinned by rev like any other code."}),
+        ],
+    ),
 ]
 
 

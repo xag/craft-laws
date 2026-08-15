@@ -7,3 +7,6 @@ uv.lock
 # digest, and ignoring the bytes those digests name meant CI had to fetch them from a registry
 # — xag/quern-registry, which is frozen at ledger@0.4.1, so the check died on
 # "craft@0.1.1 (pinned) is not in the library". The package is data; it travels with the lock.
+
+# The publish runs record their nondeterminism boundary here; tapes are evidence, not source.
+.quern/flight/

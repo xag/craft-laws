@@ -84,6 +84,41 @@ def _text_width(metrics: dict, lang: str, element: Node) -> float:
     return max(widths)
 
 
+def solve_targets(surfaces: list[Node], metrics: dict,
+                  min_px: float = 24.0) -> list[LayoutVerdict]:
+    """targets-are-thumb-sized (WCAG 2.2 SC 2.5.8): every control a finger must hit
+    measures at least `min_px` in both dimensions. Law-driven, not constraint-driven:
+    no per-app constraint node exists, because the law quantifies over every element
+    that commits an action — the drawing's `action` fact IS the trigger. A control
+    the metrics never measured is a refusal naming it, never a silent pass: the law
+    covers exactly the controls someone put a ruler on, and the ruler's reach must
+    be visible. The measurement is a rendered rect at the tightest viewport; WCAG's
+    spacing and equivalent-control exceptions are not modeled and a conviction here
+    may still be excused by one — the verdict says which claim it makes."""
+    targets = metrics.get("targets", {})
+    out: list[LayoutVerdict] = []
+    for s in surfaces:
+        for e in elements(s):
+            if not e.payload.get("action"):
+                continue
+            if e.id not in targets:
+                raise ValueError(
+                    f"control '{e.id}' commits '{e.payload['action']}' and was "
+                    "never measured — add it to the measuring tool's targets; a "
+                    "law that skips the unmeasured is a law that teaches people "
+                    "not to measure")
+            w, h = targets[e.id]
+            margin = min(w, h) - min_px
+            out.append(LayoutVerdict(
+                constraint=f"target--{e.id}", lang="px",
+                verdict="proved" if margin >= 0 else "refuted",
+                margin_px=round(margin, 1), at_width=int(min(w, h)),
+                note=f"'{e.id}' renders {round(w, 1)}x{round(h, 1)}px against the "
+                     f"{min_px}px WCAG floor (spacing/equivalent exceptions not "
+                     "modeled; a red here may still be excused by one)"))
+    return out
+
+
 def solve_constraints(surfaces: list[Node], metrics: dict) -> list[LayoutVerdict]:
     """Every layout verdict the drawing's constraints produce under these metrics.
     Endpoint evaluation IS the interval proof: both sides are linear in the viewport

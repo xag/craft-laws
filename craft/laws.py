@@ -314,6 +314,59 @@ LAWS = [
              "caught the worst defect of the run — which is the only argument for a law that "
              "matters.",
     ),
+
+    # --- laws the formalism was NOT designed around ------------------------------
+    # The three above the fold entered when their defects did, and the interface
+    # vocabulary grew up beside them — so a skeptic should ask whether the machinery
+    # only fits the laws it was shaped by. These three arrived later, from standing
+    # authorities, chosen for what they demand of the model rather than for any
+    # defect already caught: one reads the ACTION graph against the drawing, one
+    # reads the drawing against itself across surfaces, one reads measured geometry.
+    # No sightings yet, and that is the honest state of a law on arrival.
+
+    _law(
+        "status-is-visible",
+        "Every act a person commits shows them something changed",
+        _cited(NNG + ", #1 Visibility of System Status"),
+        falsifier="An action that commits — a tap that succeeds — after which nothing a person "
+                  "can see is different. 'It worked and nothing happened': no error, no "
+                  "refusal, and the person left tapping again.",
+        triggers=["any interface with a control that commits something"],
+        citations=[(NNG + " — #1 Visibility of System Status", NNG_URL,
+                    "The design should always keep users informed about what is going on, "
+                    "through appropriate feedback within a reasonable amount of time.")],
+    ),
+
+    _law(
+        "one-act-one-name",
+        "The same action wears the same words everywhere it is offered",
+        _cited(NNG + ", #4 Consistency and Standards"),
+        falsifier="Two controls committing the same action under different labels — or the "
+                  "same label committing different actions on different screens.",
+        triggers=["any interface with a control that commits something"],
+        citations=[(NNG + " — #4 Consistency and Standards", NNG_URL,
+                    "Users should not have to wonder whether different words, situations, or "
+                    "actions mean the same thing. Follow platform and industry conventions.")],
+    ),
+
+    _law(
+        "targets-are-thumb-sized",
+        "A control a finger must hit is at least 24 by 24 CSS pixels",
+        _cited("W3C, WCAG 2.2, Success Criterion 2.5.8 Target Size (Minimum), Level AA"),
+        falsifier="A pointer target measuring under 24 CSS pixels in either dimension, with no "
+                  "equivalent larger control on the same view and no 24px undersized-target "
+                  "spacing exception applying.",
+        triggers=["the app is used on a phone",
+                  "any interface with a control that commits something"],
+        citations=[("W3C — WCAG 2.2, SC 2.5.8 Target Size (Minimum)",
+                    "https://www.w3.org/TR/WCAG22/#target-size-minimum",
+                    "The size of the target for pointer inputs is at least 24 by 24 CSS "
+                    "pixels, except where: Spacing: Undersized targets ... Equivalent: The "
+                    "function can be achieved through a different control on the same page "
+                    "that meets this criterion.")],
+        note="WCAG's floor, not the platforms' comfort: Apple's HIG asks 44pt and Material "
+             "48dp. The law takes the citable minimum; an app may hold itself to more.",
+    ),
 ]
 
 # What the laws are allowed to travel through. Ungrounded authority — an uncited law — will not
@@ -323,7 +376,7 @@ GATE = Node(
     kind="gate",
     name="What may be relied on as a law",
     payload={
-        "note": "Red, and correctly so: three of the twelve laws cite nobody. They are carried "
+        "note": "Red, and correctly so: three of the fifteen laws cite nobody. They are carried "
                 "on purpose and they are visible — which is the whole difference between this "
                 "and the markdown file it replaced, where the same three sat in a sentence that "
                 "was true and could not fire. Discharge by finding the source, or by deleting "

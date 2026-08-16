@@ -1,4 +1,4 @@
-"""interface@0.1.1 — an interface's denotation as data: what each screen shows, held
+"""interface@0.2.0 — an interface's denotation as data: what each screen shows, held
 in a tree that rules can traverse, laws can compile against, and a render layer can be
 generated from.
 
@@ -108,6 +108,22 @@ VOCABULARY = [
         "and a surface no tape can name is a surface no walk can testify for.",
     ),
     KindDef(
+        kind="term",
+        description="One settled word of the app's own language: a domain concept "
+        "with its canonical word per shipped language, the words the app must NOT "
+        "use for it (`strays`: ad-hoc synonyms against the settled glossary — "
+        "glossary-first's mechanical half), and the literal translations that read "
+        "as translationese (`calques` — no-calque's mechanical half). Payload: "
+        "`concept`, `words` ({lang: word}), `strays` ({lang: [words]}), `calques` "
+        "({lang: [words]}). This is the language substrate's first kind — the "
+        "drawing's move repeated for words: the glossary the law demands as an "
+        "artifact becomes data a check can run over, and the judgment of WHICH "
+        "words are settled is made once, at authoring time, by someone who speaks "
+        "the language. The reading residue — a stray nobody pre-listed — stays "
+        "with the judge and must shrink as terms accrete, or the convergence "
+        "hypothesis's falsifier fires.",
+    ),
+    KindDef(
         kind="constraint",
         description="A geometry or layout claim over elements — fits, does not "
         "overlap, stays visible at every width in a range — stated as an expression "
@@ -181,6 +197,16 @@ EXAMPLES = [
                           "over": ["ex-empty-text", "ex-add-control"]}),
         ],
     ),
+    # The glossary's canonical example, in the same demo domain: the settled word,
+    # the ad-hoc synonym the app must not drift to, the literal translation that
+    # reads as translationese.
+    Node(
+        id="the-basket-term", kind="term", name="the basket",
+        payload={"concept": "basket",
+                 "words": {"en": "basket", "fr": "panier"},
+                 "strays": {"en": ["cart"], "fr": ["chariot"]},
+                 "calques": {"fr": ["corbeille d'achat"]}},
+    ),
     # The same screen as it actually shipped, before the fix: a LEGAL drawing of a
     # defective app. The vocabulary describes what is; the compiled empty-state law is
     # what convicts this description, in every reachable state that shows both
@@ -247,7 +273,7 @@ COUNTER_EXAMPLES = [
 
 INTERFACE_PACKAGE = Package(
     name="interface",
-    version="0.1.1",
+    version="0.2.0",
     description="An interface's denotation as data: surfaces, elements, bindings, "
                 "content, denials, witnesses and (one day) constraints — the "
                 "formalism the craft laws' triggers bind to, the tree their "

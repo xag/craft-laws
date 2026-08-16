@@ -1,6 +1,8 @@
 # craft-laws
 
-**This repo does not pass its own check today — on purpose.**
+Laws of interface and copy as **checkable data**. A law here is not advice: it carries the observation that would convict it (a falsifier), the property of an app that switches it on (a trigger), the authority that stated it (a citation, quoted verbatim), and the real defects it has caught (sightings). An app declares what it is; the laws whose triggers fire arrive; and a verdict is `fail` with the offending words — never *I don't like it*.
+
+**The check is red today, on purpose.** A handful of laws cite nobody — carried because they caught real defects, and visibly ungrounded until somebody sources or deletes them. `a-law-cites-a-source` names them, the publish gate refuses to let them travel as settled, and the check exits 1:
 
 ```bash
 $ uv run python -m craft.check
@@ -10,7 +12,9 @@ $ uv run python -m craft.check
   empty-state-never-contradicts: ... It stays, uncited and red ...
 ```
 
-Laws of interface and copy as **checkable data**: each carries the observation that would convict it (a falsifier), the property of an app that switches it on (a trigger), the authority that stated it (a citation, with the verbatim quote), and the real defects it has caught (sightings). A handful cite nobody — so `a-law-cites-a-source` is red, the publish gate refuses to let them travel as settled, and the check exits 1. That is not a bug. It is the repo's entire argument: **a style guide is prose, and prose cannot fire.** How many laws, and how many are red, are exactly the kind of numbers this file refuses to state — the law `counts-are-computed` earned its place when this very README said "twelve" long after the answer had changed. Run the check; it counts.
+That standing red is the repo's entire argument: **a style guide is prose, and prose cannot fire.** A rule that cannot go red is an opinion with formatting.
+
+How many laws, and how many are red, this file refuses to say — `counts-are-computed` earned its place when this very README said "twelve" long after the answer had changed. Run the check; it counts.
 
 ```bash
 uv run python -m craft.check          # the laws' own rules; counts itself. Exit 1 while any is red.

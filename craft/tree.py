@@ -258,3 +258,47 @@ def build() -> Quern:
     quern = lib.effective(quern)
     quern.root.children = [*LAWS, *DECISIONS, GATE]
     return quern
+
+
+DECISIONS.append(Node(
+    id="coverage-is-the-metric-laws-are-the-probe",
+    kind="decision",
+    name="An app's verification is scored by its twin's COVERAGE of the app — "
+         "surfaces drawn over surfaces walked, strings bound over strings shipped, "
+         "toward 100% — never by which tools it has or how many laws it passes. "
+         "The law set serves the other master: each law probes whether the "
+         "vocabulary suffices",
+    links={"rests_on": ["the-vocabulary-converges"]},
+    payload={
+        "rationale":
+            "The first adoption survey scored a ladder of artifacts, and that "
+            "scale is contingent on today's rules: it read chores as complete "
+            "(11/11 rungs) while chores' twin covered 45% of its walked surfaces "
+            "and ~7% of its shipped strings — every undrawn surface a place no "
+            "law can reach, invisible in the score. Coverage is the invariant: at "
+            "100%, every law, current and future, applies wholesale and for free, "
+            "which is what makes the vocabulary-plus-process the product and the "
+            "law count a byproduct. The 57 laws were mined to FALSIFY the "
+            "vocabulary (the convergence hypothesis), not to grade apps; a law "
+            "that demands new vocabulary is doing its job either way.",
+        "consequence":
+            "surface_tape.adopt now headlines the coverage and names the undrawn "
+            "surfaces; the rungs remain, demoted to process. The development "
+            "process this implies: walk first (the walker defines the coverage "
+            "denominator), draw toward it, bind toward the catalogue, and let "
+            "laws-passed be something nobody optimizes directly.",
+    },
+    children=[
+        Node(id="alt-score-by-tooling", kind="alternative",
+             name="Keep the artifact ladder as the adoption score",
+             payload={"why": "Contingent on the current rule set and saturates at "
+                             "eleven while the twin describes a fraction of the "
+                             "app - the wariness that triggered this decision."}),
+        Node(id="alt-score-by-laws-passed", kind="alternative",
+             name="Score apps by how many laws they pass",
+             payload={"why": "The denominator grows with every mined law, so the "
+                             "score punishes exactly the mining the vocabulary "
+                             "needs - and a pass over an undrawn surface is a "
+                             "silence, not a pass."}),
+    ],
+))

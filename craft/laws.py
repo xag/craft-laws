@@ -315,6 +315,29 @@ LAWS = [
              "matters.",
     ),
 
+    _law(
+        "the-title-names-the-place",
+        "The window or tab title says where the person is, not only what the app is "
+        "called",
+        _cited("W3C, WCAG 2.2, SC 2.4.2 Page Titled, Level A"),
+        falsifier="Two different places in the app whose window titles read the same — "
+                  "or a title that is blank, or only ever the product's name — while "
+                  "the screens beneath them differ. Observable per walked surface by "
+                  "reading document.title beside the tape's surface name.",
+        triggers=["the app runs in a browser tab or names its screens in a window "
+                  "title"],
+        citations=[("W3C — WCAG 2.2, SC 2.4.2 Page Titled",
+                    "https://www.w3.org/TR/WCAG22/#page-titled",
+                    "Web pages have titles that describe topic or purpose."),
+                   ("RGAA 4 — Critère 8.5 / 8.6",
+                    "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/",
+                    "Chaque page web a-t-elle un titre de page ? … Pour chaque page "
+                    "web ayant un titre de page, ce titre est-il pertinent ?")],
+        note="The RGAA citation is deliberate beyond redundancy: the package's "
+             "non-anglophone root, phrased as a numbered test procedure rather "
+             "than a rule — the falsifiability this catalogue selects for.",
+    ),
+
     # --- laws the formalism was NOT designed around ------------------------------
     # The three above the fold entered when their defects did, and the interface
     # vocabulary grew up beside them — so a skeptic should ask whether the machinery
@@ -348,6 +371,33 @@ LAWS = [
              "no authority found stating it for documentation. It is the "
              "documentation instance of a wider truth this estate keeps re-learning "
              "— a claim that cannot fire goes stale the moment it is written.",
+    ),
+
+    _law(
+        "docs-do-not-date-themselves",
+        "Documentation describes what the product is, never how it just changed — no "
+        "'now', no 'new', no 'currently'",
+        _cited("Google developer documentation style guide, Timeless documentation"),
+        falsifier="A time-anchoring word — currently, now, new, soon, latest, 'at the "
+                  "time of writing' — in documentation describing a capability. Each "
+                  "is a sentence pre-written to go stale; observable by a wordlist "
+                  "over the docs, no interpretation needed.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        citations=[("Google developer documentation style guide — Timeless "
+                    "documentation",
+                    "https://developers.google.com/style/timeless-documentation",
+                    "Timeless documentation is documentation that avoids words and "
+                    "phrases that anchor the documentation to a point in time or "
+                    "assume knowledge of prior or future products and features… "
+                    "Words like now, new, and currently can render such "
+                    "documentation inaccurate, outdated, or unmeaningful.")],
+        note="counts-are-computed's cited sibling: the same staleness mechanism, "
+             "caught at the word level where a wordlist can decide it, instead of "
+             "the number level where only a computation can. Release notes and "
+             "blog posts are exempt by the source's own carve-out — they are "
+             "time-stamped content, and 'new' is true there in a way it cannot "
+             "stay true in a reference.",
     ),
 
     _law(
@@ -921,6 +971,31 @@ LAWS = [
     ),
 
     _law(
+        "text-survives-doubling",
+        "Everything the screen says is still there, still readable, and still "
+        "operable with the text at twice its size",
+        _cited("W3C, WCAG 2.2, SC 1.4.4 Resize Text, Level AA"),
+        falsifier="At 200% text size, a string clipped, a control pushed off-screen "
+                  "or under another, a function no longer reachable. Measurable: the "
+                  "same layout premises the fits constraints solve over, with the "
+                  "font widths doubled.",
+        triggers=["any interface at all"],
+        citations=[("W3C — WCAG 2.2, SC 1.4.4 Resize Text",
+                    "https://www.w3.org/TR/WCAG22/#resize-text",
+                    "Except for captions and images of text, text can be resized "
+                    "without assistive technology up to 200 percent without loss of "
+                    "content or functionality."),
+                   ("RGAA 4 — Critère 10.4",
+                    "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/",
+                    "Dans chaque page web, le texte reste-t-il lisible lorsque la "
+                    "taille des caractères est augmentée jusqu’à 200 %, au moins "
+                    "(hors cas particuliers) ?")],
+        note="text-expansion's monolingual twin: that law doubles the words "
+             "(another language), this one doubles the glyphs (the reader's eyes). "
+             "Both land on the same solver over the same measured premises.",
+    ),
+
+    _law(
         "ellipsis-promises-more-input",
         "A control label ends in an ellipsis exactly when the action needs further "
         "input before it can run",
@@ -1009,6 +1084,61 @@ LAWS = [
                     "https://digital.gov/guides/plain-language/writing",
                     "Active voice makes it clear who should do what. It eliminates "
                     "ambiguity about responsibilities.")],
+    ),
+
+    _law(
+        "links-say-where-they-lead",
+        "A link's own words say what it opens — 'here' and 'this page' say nothing "
+        "without the sentence around them",
+        _cited("W3C, WCAG 2.2, SC 2.4.4 Link Purpose (In Context), Level A"),
+        falsifier="A link or navigation control whose text is 'here', 'click here', "
+                  "'this document', 'this page', 'more', 'read more', or a bare URL — "
+                  "a wordlist over link labels, no interpretation needed.",
+        triggers=["the app or its documentation links a reader somewhere else"],
+        citations=[("W3C — WCAG 2.2, SC 2.4.4 Link Purpose (In Context)",
+                    "https://www.w3.org/TR/WCAG22/#link-purpose-in-context",
+                    "The purpose of each link can be determined from the link text "
+                    "alone or from the link text together with its programmatically "
+                    "determined link context, except where the purpose of the link "
+                    "would be ambiguous to users in general."),
+                   ("Google developer documentation style guide — Link text",
+                    "https://developers.google.com/style/link-text",
+                    "Write link text that makes sense without the surrounding text. "
+                    "Don't use phrases such as this document, this article, or "
+                    "click here."),
+                   ("RGAA 4 — Critère 6.1, test 6.1.1",
+                    "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/",
+                    "Chaque lien est-il explicite (hors cas particuliers) ? … "
+                    "L’intitulé de lien seul permet d’en comprendre la fonction")],
+        note="The standard is the root; Google's page is the operational wordlist "
+             "half (decider material), and RGAA the test-procedure phrasing. "
+             "Kin to says-what-happens — that law holds a control's label to its "
+             "act, this one holds a link's label to its destination.",
+    ),
+
+    _law(
+        "instructions-point-by-name-not-by-place",
+        "Copy that directs a person to a control names it — never 'the button on the "
+        "right', 'the green icon', 'below'",
+        _cited("W3C, WCAG 2.2, SC 1.3.3 Sensory Characteristics, Level A"),
+        falsifier="An instruction identifying its target only by shape, colour, size, "
+                  "or position — a wordlist over the catalogue ('on the right', "
+                  "'above', 'below', 'the green/red …'), each hit checkable against "
+                  "whether the sentence also names the control.",
+        triggers=["the app's copy or documentation directs a person to a control"],
+        citations=[("W3C — WCAG 2.2, SC 1.3.3 Sensory Characteristics",
+                    "https://www.w3.org/TR/WCAG22/#sensory-characteristics",
+                    "Instructions provided for understanding and operating content "
+                    "do not rely solely on sensory characteristics of components "
+                    "such as shape, color, size, visual location, orientation, or "
+                    "sound."),
+                   ("RGAA 4 — Critère 10.9",
+                    "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/",
+                    "Dans chaque page web, l’information ne doit pas être donnée "
+                    "uniquement par la forme, taille ou position.")],
+        note="Also the layout truth beneath it: a position-worded instruction is a "
+             "sentence that goes false when the layout reflows — the same staleness "
+             "mechanism docs-do-not-date-themselves names for time.",
     ),
 
     # --- localization ------------------------------------------------------------

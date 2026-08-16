@@ -135,6 +135,58 @@ DECISIONS = [
                                  "before it was written down as a law."}),
         ],
     ),
+    Node(
+        id="the-laws-grew-by-mining-not-by-bleeding",
+        kind="decision",
+        name="The package grew from 15 laws to 57 by mining the source catalogue "
+             "(docs/sources.md) — sources chosen by authority and falsifiability, "
+             "never fame — so coverage stops being an artifact of which defects "
+             "happened to hurt us first",
+        payload={
+            "rationale":
+                "Every law before this entered through a wound: a defect shipped, "
+                "taught its law, and the law joined. Honest, but biased — a package "
+                "grown only from one estate's scars covers that estate's habits. "
+                "Four mining passes (accessibility, government/forms/copy, "
+                "localization, empirical/content) worked a catalogue built to be "
+                "category-exhaustive, with the gaps recorded as gaps and an overlap "
+                "map so each law cites its strongest root: WCAG for the rule, "
+                "GOV.UK for the operational wording, Baymard for the tested "
+                "statistic, CLDR under everything plural. Every citation quote was "
+                "fetched and verified verbatim — one pass caught the fetch tool "
+                "FABRICATING a spec sentence and re-verified against raw source, "
+                "which is the whole argument for quotes over paraphrases. Where "
+                "clusters collided (error messaging arrived from three roots), the "
+                "collision is merged and recorded in the law's note.",
+            "consequence":
+                "42 new laws, all cited, all with observable falsifiers; the "
+                "standing red stays exactly the three uncited originals. The known "
+                "costs, carried openly: none of the 42 has a sighting yet, and the "
+                "critic's own doctrine says a law that never catches anything is a "
+                "law nobody should trust — the `laws` command reports the "
+                "caught-nothing list, which is now long and is the pruning "
+                "pressure. Weakest entries are flagged in their notes "
+                "(destructive-is-set-apart wants a stronger root). Apps inherit "
+                "the growth on repin, and their critics will correctly re-open "
+                "queues because the law set changed.",
+        },
+        children=[
+            Node(id="alt-wait-for-wounds", kind="alternative",
+                 name="Keep growing one defect at a time",
+                 payload={"why": "Focused but blind: the estate would never have "
+                                 "written the keyboard laws or the RTL laws from "
+                                 "its own scars, because its apps have not bled "
+                                 "there yet — which is precisely when a law is "
+                                 "cheapest to adopt."}),
+            Node(id="alt-import-a-standard-wholesale", kind="alternative",
+                 name="Adopt WCAG (or any one source) wholesale as the law set",
+                 payload={"why": "One source is one bias with a certificate. The "
+                                 "catalogue's overlap map exists because the "
+                                 "strongest root differs per law — and half the "
+                                 "craft (copy voice, forms research, l10n "
+                                 "practice) lives outside any single standard."}),
+        ],
+    ),
 ]
 
 

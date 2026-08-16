@@ -2,7 +2,7 @@
 
 Exit 1 while any rule is red, so this is a CI gate.
 
-It is red today, on purpose and by design: three of the fifteen laws cite nobody. That is the
+It is red today, on purpose and by design: three of the laws cite nobody. That is the
 honest state of the file, and the only reason it is *visible* is that it is data. As prose — and
 it was prose, in a markdown file, four hours ago — the same fact sat in a sentence that was
 perfectly true and could not fire.

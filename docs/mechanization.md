@@ -2,7 +2,7 @@
 
 Doctrine (ledger: `the-vocabulary-converges`): there is no judge-forever category — only laws whose model-side vocabulary has not been built yet. The semantic twin an app declares must eventually let ANY law or spec compile, and the vocabulary needed must converge: the new facts a newly mechanized law demands tend to zero. The twin's own fidelity is earned empirically — drawings licensed by walks (drift) as épure's models are licensed by tapes (refine) — so judgment moves to authoring time and is verified, never trusted.
 
-**The series so far** (new facts or kinds each mechanization demanded; the falsifier watches this column): base drawing ~6 ideas · composed-prose **+0** · plurals **+2** (count_var, fixed_plural) · one-surface-one-job **+1** (intent) · rare-action-folds-away **+1** (frequency; the disclosure set) · status-is-visible **+0** · one-act-one-name **+0** (later +1: generic_keys) · targets-are-thumb-sized **+0** (one measuring instrument). Every mechanization from here appends its delta to this line.
+**The series so far** (new facts or kinds each mechanization demanded; the falsifier watches this column): base drawing ~6 ideas · composed-prose **+0** · plurals **+2** (count_var, fixed_plural) · one-surface-one-job **+1** (intent) · rare-action-folds-away **+1** (frequency; the disclosure set) · status-is-visible **+0** · one-act-one-name **+0** (later +1: generic_keys) · targets-are-thumb-sized **+0** (one measuring instrument) · error-neither-begs-nor-blames **+0** (decider) · sentences-under-25 **+0** (decider) · escape-closes-the-overlay + no-keyboard-trap, model half **+0** (per-overlay reach, existing machinery). Every mechanization from here appends its delta to this line.
 
 ## Mechanized today (8)
 

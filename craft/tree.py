@@ -96,6 +96,45 @@ DECISIONS = [
                           "and are pinned by rev like any other code."}),
         ],
     ),
+    Node(
+        id="a-human-found-defect-enters-as-a-law",
+        kind="decision",
+        name="Every defect a person finds — feedback, an issue, a ruling on a "
+             "proposed conviction — passes through one question before it is fixed: "
+             "what valid generic rule did it break? The answer lands here, as a law "
+             "or a refinement, so the fix ships with a regression test for every "
+             "app that adopts the package, not just the one that bled",
+        payload={
+            "rationale":
+                "A fix without a law repairs one screen once; a law repairs a class "
+                "forever, everywhere the package is pinned. The first exercise of "
+                "the protocol is one-act-one-name's first sighting: 'Add it' "
+                "committing three different acts was proved co-offered by the "
+                "compiler, ruled a defect by a person, and the RULING itself was "
+                "generic — the act was already named by the menu that led there, so "
+                "a commit may wear a conventional confirm. That became the law's "
+                "generic-confirm exemption (falsifier text and compiler both), and "
+                "chores' fix and the law's sharpening shipped as one motion. The "
+                "sighting records it, because a law that has caught something is a "
+                "law somebody may trust.",
+            "consequence":
+                "The question is also allowed to answer 'no generic rule — this is "
+                "app taste', and then no law is minted: a package that absorbs "
+                "every preference becomes a checklist, and checklists are ignored. "
+                "The bar is the same as for any law: a falsifier somebody could "
+                "observe, a trigger that switches it on, an authority or the "
+                "honest uncited red.",
+        },
+        children=[
+            Node(id="alt-fix-and-move-on", kind="alternative",
+                 name="Fix the app and record nothing",
+                 payload={"why": "The defect class survives the fix and re-enters "
+                                 "through the next sheet somebody adds — the exact "
+                                 "history of every law already in this file, each "
+                                 "of which shipped as a one-off fix somewhere "
+                                 "before it was written down as a law."}),
+        ],
+    ),
 ]
 
 

@@ -275,14 +275,21 @@ def compile_status(surfaces: list[Node], actions: list[Node],
     return out
 
 
-def compile_one_name(surfaces: list[Node]) -> list[Node]:
+def compile_one_name(surfaces: list[Node],
+                     generic_keys: frozenset[str] | set[str] = frozenset()
+                     ) -> list[Node]:
     """one-act-one-name (NN/g #4): the same action wears the same words everywhere,
-    and the same words never commit two different actions. Static over the drawing —
+    and a SPECIFIC name never commits two different actions. Static over the drawing —
     the binding keys ARE the words' identity, one level below the strings, which is
     stricter and cheaper than comparing rendered text: two controls sharing a key
     cannot diverge in any language, and two keys can (translations drift one string
-    at a time). The conviction's invariant fails wherever either control shows, so
-    the counterexample path reaches one of the two inconsistent offerings."""
+    at a time). `generic_keys` names the platform-conventional confirms (OK, Done,
+    Cancel) the app declares: they claim no act beyond 'commit this context' and are
+    exempt from the same-words direction — an authoring-time judgment, made once,
+    like every fact the compilers read. The same-ACT direction stays strict for them:
+    one act wearing OK here and a verb there is still two names for one act. The
+    conviction's invariant fails wherever either control shows, so the counterexample
+    path reaches one of the two inconsistent offerings."""
     law = _law("one-act-one-name")
     controls: dict[str, list[tuple[Node, Node]]] = {}
     for s in surfaces:
@@ -314,6 +321,8 @@ def compile_one_name(surfaces: list[Node]) -> list[Node]:
             for b in bindings(e):
                 by_key.setdefault(b.payload.get("key", ""), []).append((s, e))
     for key, pairs in by_key.items():
+        if key in generic_keys:
+            continue
         for i, (s1, e1) in enumerate(pairs):
             for s2, e2 in pairs[i + 1:]:
                 a1, a2 = e1.payload.get("action"), e2.payload.get("action")

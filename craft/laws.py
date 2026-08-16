@@ -341,12 +341,28 @@ LAWS = [
         "one-act-one-name",
         "The same action wears the same words everywhere it is offered",
         _cited(NNG + ", #4 Consistency and Standards"),
-        falsifier="Two controls committing the same action under different labels — or the "
-                  "same label committing different actions on different screens.",
+        falsifier="Two controls committing the same action under different labels — or a "
+                  "SPECIFIC label (one that names an act: 'Add it', 'Send') committing "
+                  "different actions on different screens. Platform-conventional generic "
+                  "confirms (OK, Done, Cancel) are exempt from the second half: they claim "
+                  "no act beyond 'commit this context', which is the convention the law's "
+                  "own citation tells interfaces to follow.",
         triggers=["any interface with a control that commits something"],
         citations=[(NNG + " — #4 Consistency and Standards", NNG_URL,
                     "Users should not have to wonder whether different words, situations, or "
                     "actions mean the same thing. Follow platform and industry conventions.")],
+        sightings=[
+            ("chores 2026-08-16, the three add sheets",
+             "'Add it' committed add-a-chore, add-a-category and add-a-tag on three "
+             "different sheets — proved co-offered by the compiled law the day the sheets "
+             "were drawn, each conviction carrying its two-tap path. Ruled a defect: the "
+             "act was already named by the menu that led there, so the commits became a "
+             "generic confirm — and the ruling refined this law with the generic-confirm "
+             "exemption, so every adopter inherits the sharper check."),
+        ],
+        note="Which labels count as generic is an authoring-time declaration (the compiler's "
+             "generic_keys), not a hardcoded wordlist: 'OK' is generic everywhere, but an "
+             "app's voice may make 'Done' specific, and only its authors know.",
     ),
 
     _law(

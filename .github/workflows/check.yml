@@ -1,7 +1,8 @@
 # Two assertions, both about drift — the failure mode this repo exists to prevent.
 #
-# The check is red today, on purpose: three laws cite nobody and the publish gate refuses
-# them. So CI does not ask "is it green" — it asserts the red is EXACTLY the declared red.
+# The check is red today, on purpose: the uncited laws named below cite nobody and the
+# publish gate refuses them. So CI does not ask "is it green" — it asserts the red is
+# EXACTLY the declared red (a set of names, never a count — see counts-are-computed).
 # A law that quietly loses a citation, or a gate that quietly goes green, both change the
 # set, and both should cost a failing build until the record moves with them.
 #
@@ -34,7 +35,8 @@ jobs:
           from craft.tree import build
           red = {r.node for r in run_rules(build()) if not r.ok}
           declared = {"no-calque", "untranslatable-tone",
-                      "empty-state-never-contradicts", "publish"}
+                      "empty-state-never-contradicts", "counts-are-computed",
+                      "publish"}
           assert red == declared, (
               f"the red set changed: {sorted(red)} != {sorted(declared)} - a law lost or "
               "gained a citation without the record moving. Update laws.py AND this list "

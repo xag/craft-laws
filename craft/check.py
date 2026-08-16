@@ -2,10 +2,11 @@
 
 Exit 1 while any rule is red, so this is a CI gate.
 
-It is red today, on purpose and by design: three of the laws cite nobody. That is the
-honest state of the file, and the only reason it is *visible* is that it is data. As prose — and
-it was prose, in a markdown file, four hours ago — the same fact sat in a sentence that was
-perfectly true and could not fire.
+It is red today, on purpose and by design: the uncited laws cite nobody, and the check
+names and counts them itself — this docstring states no number, per counts-are-computed.
+That honest state is *visible* only because the laws are data. As prose — and they began
+as prose, in a markdown file — the same fact sat in a sentence that was perfectly true
+and could not fire.
 """
 
 from __future__ import annotations

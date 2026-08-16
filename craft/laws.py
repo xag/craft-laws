@@ -325,6 +325,32 @@ LAWS = [
     # No sightings yet, and that is the honest state of a law on arrival.
 
     _law(
+        "counts-are-computed",
+        "Documentation never carries a number a tool can compute — prose states the "
+        "command, the tool states the count",
+        _uncited(),
+        falsifier="A number in documentation or docstrings describing an enumerable "
+                  "the repo can compute (how many laws, surfaces, rules, entries) — "
+                  "observable by comparing the prose against the computing command's "
+                  "output.",
+        triggers=["any interface at all"],
+        sightings=[
+            ("craft-laws itself, 2026-08-16 — three times in one day",
+             "The README said 'twelve laws' while the file held 57; the census "
+             "document's hand tally said 24 while the computed status said 25; "
+             "chores' probe docstring described a two-surface drawing at eleven "
+             "surfaces. Each was written true and went silently false — the exact "
+             "failure mode this package's founding argument names, reproduced in "
+             "its own prose. The fixes all had one shape: the prose keeps the "
+             "command, the tool keeps the number."),
+        ],
+        note="Uncited and red, in this repo's own tradition: observed in practice, "
+             "no authority found stating it for documentation. It is the "
+             "documentation instance of a wider truth this estate keeps re-learning "
+             "— a claim that cannot fire goes stale the moment it is written.",
+    ),
+
+    _law(
         "status-is-visible",
         "Every act a person commits shows them something changed",
         _cited(NNG + ", #1 Visibility of System Status"),
@@ -1165,11 +1191,13 @@ GATE = Node(
     kind="gate",
     name="What may be relied on as a law",
     payload={
-        "note": "Red, and correctly so: three laws cite nobody. They are carried "
-                "on purpose and they are visible — which is the whole difference between this "
-                "and the markdown file it replaced, where the same three sat in a sentence that "
-                "was true and could not fire. Discharge by finding the source, or by deleting "
-                "the law. Never by editing this file.",
+        "note": "Red, and correctly so: the check names every law that cites nobody, and "
+                "counts them itself (this note once said 'three' and went stale the day a "
+                "fourth arrived — counts-are-computed was minted on exactly that defect). "
+                "They are carried on purpose and they are visible — which is the whole "
+                "difference between this and the markdown file it replaced, where the same "
+                "laws sat in a sentence that was true and could not fire. Discharge by "
+                "finding the source, or by deleting the law. Never by editing this file.",
     },
     links={"admits": [law.id for law in LAWS]},
 )

@@ -1,6 +1,6 @@
 # A style guide cannot fire
 
-*Draft launch post for craft-laws. Publish alongside the repo flip; trim to taste.*
+*Draft launch post for craft-laws. Publish alongside the repo flip; trim to taste. The counts below ("twelve laws", "4 of 37 rules") are the launch-day snapshot and are left as history — the file has grown since; `uv run python -m craft.check` counts today.*
 
 On the 13th of July I shipped a French localisation with 486 tests passing. Every string
 key was covered in both directions — 303 of 303. The syntax checker was clean. The

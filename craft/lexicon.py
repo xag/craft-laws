@@ -64,6 +64,56 @@ def _hits(word: str, catalogue: dict[str, str]) -> list[tuple[str, str]]:
     return out
 
 
+def check_verbs(surfaces: list[Node], terms: list[Node],
+                catalogues: dict[str, dict[str, str]],
+                generic_keys: frozenset[str] | set[str] = frozenset()
+                ) -> list[LexFinding]:
+    """says-what-happens, compiled against the glossary: a control whose element
+    declares `verb` (the term concept its act is named by) must wear that term's
+    word, in every language — the label's key resolves per catalogue and the settled
+    word must appear in it. Generic confirms (the app's declared generic_keys) claim
+    no act and are exempt, per one-act-one-name's own ruling. A control with an
+    action but NO verb declared is not convicted — it is unclaimed coverage, the
+    caller's to count and this function's to leave visible, never to guess."""
+    law = _law("says-what-happens")
+    words_by_concept = {t.payload.get("concept", t.id): t.payload.get("words", {})
+                        for t in terms if t.kind == "term"}
+    findings: list[LexFinding] = []
+    for s in surfaces:
+        for e in (c for c in s.children if c.kind == "element"):
+            verb = e.payload.get("verb")
+            if not e.payload.get("action") or not verb:
+                continue
+            if verb not in words_by_concept:
+                findings.append(LexFinding(
+                    law=law, concept=verb, lang="", key="",
+                    quote=f"(element '{e.id}' names verb '{verb}' and the "
+                          "glossary has no such term)",
+                    why="A verb claimed against no settled term is a check that "
+                        "cannot run — settle the term or drop the claim."))
+                continue
+            words = words_by_concept[verb]
+            for b in (c for c in e.children if c.kind == "binding"):
+                key = b.payload.get("key", "")
+                if not key or key in generic_keys \
+                        or b.payload.get("role") != "text":
+                    continue
+                for lang, cat in catalogues.items():
+                    text = cat.get(key)
+                    word = words.get(lang)
+                    if text is None or word is None:
+                        continue    # coverage gaps are check_glossary's findings
+                    if not re.search(rf"\b{re.escape(word)}\b", text,
+                                     re.IGNORECASE):
+                        findings.append(LexFinding(
+                            law=law, concept=verb, lang=lang, key=key,
+                            quote=text,
+                            why=f"'{e.id}' commits '{verb}' and its label does "
+                                f"not say so: the settled {lang} word is "
+                                f"'{word}'."))
+    return findings
+
+
 def check_glossary(terms: list[Node],
                    catalogues: dict[str, dict[str, str]]) -> list[LexFinding]:
     """Every conviction the glossary supports against these catalogues. `catalogues`

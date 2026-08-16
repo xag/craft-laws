@@ -183,6 +183,67 @@ def _rare_action_folds_away(surfaces: list[Node], *,
     return out
 
 
+def compile_check_before_commit(surfaces: list[Node], actions: list[Node],
+                                ) -> list[Node]:
+    """check-before-commit (GOV.UK): an IRREVERSIBLE act is offered only where the
+    person is reviewing what they entered. Two authoring-time facts carry it: an
+    action's payload `irreversible: true` (a judgment about the domain — money
+    moves, mail sends, another person is bound), and a surface's payload
+    `review: true` (this is where the entered answers are shown back). The emitted
+    invariant is a pure state predicate — 'wherever this act is enabled, a review
+    surface is showing' — so the prover finds the state that offers an irreversible
+    commit outside review, with the click-path that reaches it."""
+    law = _law("check-before-commit")
+    review_whens = [s.payload.get("when", "true") for s in surfaces
+                    if s.payload.get("review")]
+    out: list[Node] = []
+    for a in actions:
+        if not a.payload.get("irreversible"):
+            continue
+        guard = a.payload.get("guard", "") or "true"
+        reviewing = (" or ".join(f"({w})" for w in review_whens)
+                     if review_whens else "false")
+        out.append(Node(
+            id=f"{law}--{a.id}", kind="invariant",
+            payload={
+                "expr": f"not ({guard}) or ({reviewing})",
+                "note": f"'{a.id}' is irreversible and this state offers it "
+                        "without showing the person what they are about to "
+                        "commit — no review surface is up.",
+                "law": law,
+            }))
+    return out
+
+
+def compile_destructive_set_apart(surfaces: list[Node], actions: list[Node],
+                                  confirms: frozenset[str] | set[str] = frozenset()
+                                  ) -> list[Node]:
+    """destructive-is-set-apart, the model half: a destructive act's guard passes
+    through a confirmation state variable (the confirm dialogs' booleans, declared
+    the way disclosures are), so committing destruction always costs a deliberate
+    second act. The visual half — separation, critical tone — stays with the
+    rendered world. Lexical reference check, same honest shortcut as disclosures."""
+    law = _law("destructive-is-set-apart")
+    out: list[Node] = []
+    for a in actions:
+        if not a.payload.get("destructive"):
+            continue
+        guard = a.payload.get("guard", "") or "true"
+        behind = any(re.search(rf"\b{re.escape(c)}\b", guard) for c in confirms)
+        if behind:
+            continue
+        out.append(Node(
+            id=f"{law}--{a.id}", kind="invariant",
+            payload={
+                "expr": f"not ({guard})",
+                "note": f"'{a.id}' destroys and its guard passes through no "
+                        "confirmation variable — it fires wherever offered, one "
+                        "tap from loss.",
+                "law": law,
+            }))
+    return out
+
+
 COMPILABLE = {
     "empty-state-never-contradicts": _empty_state_never_contradicts,
     "composed-prose": _composed_prose,

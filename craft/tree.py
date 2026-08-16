@@ -187,6 +187,61 @@ DECISIONS = [
                                  "practice) lives outside any single standard."}),
         ],
     ),
+    Node(
+        id="the-vocabulary-converges",
+        kind="hypothesis",
+        name="Any law compiles against a sufficient semantic twin, and the vocabulary "
+             "the twin needs CONVERGES: the new facts a newly mechanized law demands "
+             "tend to zero. There is no judge-forever category — only laws whose "
+             "model-side vocabulary has not been built yet",
+        payload={
+            "held_because":
+                "The mechanization series so far is asymptote-shaped. The first law "
+                "bought the base drawing (surfaces, elements, bindings, witnesses, "
+                "denials — call it six ideas); every law since paid less: "
+                "composed-prose +0, plurals +2 facts (count_var, fixed_plural), "
+                "one-surface-one-job +1 (intent), rare-action +1 (frequency, plus "
+                "the disclosure set), status-is-visible +0, one-act-one-name +0 "
+                "(later +1 declaration, generic_keys), targets +0 facts (one "
+                "measuring instrument). Marginal cost: 6, 0, 2, 1, 1, 0, 0, 0. And "
+                "the model's own fidelity is not taken on faith — the drawing is "
+                "licensed by walks (drift) exactly as épure's models are licensed "
+                "by tapes (refine), so the judgment that moves INTO the model at "
+                "authoring time is verified against reality, not trusted. The cost "
+                "of an app declaring its twin is accepted on precisely that "
+                "condition.",
+            "consequence_if_wrong":
+                "If a law class resists — successive laws of one kind each "
+                "demanding substantial new vocabulary, with no reuse — then the "
+                "twin is the wrong representation for that class, and the finding "
+                "is about the MODEL, not about the law. The reading seat would "
+                "return for that class as a diagnosed limitation with a named "
+                "boundary, never as a default category. docs/mechanization.md "
+                "carries the per-law routes and the running series, so the "
+                "falsification below is checkable from the record rather than "
+                "from memory.",
+        },
+        children=[
+            Node(
+                id="the-marginal-vocabulary-stops-shrinking",
+                kind="falsification",
+                payload={
+                    "claim":
+                        "Three consecutive newly mechanized laws each demand two or "
+                        "more new facts or kinds with no reuse between them — or "
+                        "one law receives two vocabulary extensions purpose-built "
+                        "for it and still cannot compile.",
+                    "cadence": "at every law mechanization, recorded beside it in "
+                               "docs/mechanization.md",
+                    "discharge_route":
+                        "Name the resisting class and its boundary in this entry "
+                        "(supersede, never delete), return that class to the "
+                        "reading queue as a diagnosed limitation, and keep the "
+                        "asymptote claim for the classes where the series holds.",
+                },
+            ),
+        ],
+    ),
 ]
 
 

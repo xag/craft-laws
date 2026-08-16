@@ -1,4 +1,4 @@
-"""interface@0.2.0 — an interface's denotation as data: what each screen shows, held
+"""interface@0.2.1 — an interface's denotation as data: what each screen shows, held
 in a tree that rules can traverse, laws can compile against, and a render layer can be
 generated from.
 
@@ -273,7 +273,7 @@ COUNTER_EXAMPLES = [
 
 INTERFACE_PACKAGE = Package(
     name="interface",
-    version="0.2.0",
+    version="0.2.1",
     description="An interface's denotation as data: surfaces, elements, bindings, "
                 "content, denials, witnesses and (one day) constraints — the "
                 "formalism the craft laws' triggers bind to, the tree their "

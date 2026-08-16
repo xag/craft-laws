@@ -114,6 +114,103 @@ def check_verbs(surfaces: list[Node], terms: list[Node],
     return findings
 
 
+
+
+def check_ellipsis(surfaces: list[Node],
+                   catalogues: dict[str, dict[str, str]],
+                   generic_keys: frozenset[str] | set[str] = frozenset()
+                   ) -> list[LexFinding]:
+    """ellipsis-promises-more-input (GNOME, a biconditional): a control whose
+    `opens` fact names further input needs the ellipsis on its label, and a label
+    ending in one without `opens` is a decorative promise. Per language — the
+    ellipsis lives in the string."""
+    law = _law("ellipsis-promises-more-input")
+    findings: list[LexFinding] = []
+    for s in surfaces:
+        for e in (c for c in s.children if c.kind == "element"):
+            if not e.payload.get("action"):
+                continue
+            opens = bool(e.payload.get("opens"))
+            for b in (c for c in e.children if c.kind == "binding"):
+                key = b.payload.get("key", "")
+                if not key or key in generic_keys \
+                        or b.payload.get("role") != "text":
+                    continue
+                for lang, cat in catalogues.items():
+                    text = cat.get(key)
+                    if text is None:
+                        continue
+                    dots = text.rstrip().endswith(("…", "..."))
+                    if opens and not dots:
+                        findings.append(LexFinding(
+                            law=law, concept=str(e.payload.get("opens")),
+                            lang=lang, key=key, quote=text,
+                            why=f"'{e.id}' opens further input and its label "
+                                "does not say so — the GNOME rule is a "
+                                "biconditional, and this is its first half."))
+                    elif dots and not opens:
+                        findings.append(LexFinding(
+                            law=law, concept="", lang=lang, key=key, quote=text,
+                            why=f"'{e.id}' promises further input with an "
+                                "ellipsis and commits directly — the signal is "
+                                "load-bearing, a decorative one is a lie."))
+    return findings
+
+
+_TITLE_CASE = re.compile(r"^(?:[A-Z][a-z]+\s+)+[A-Z][a-z]+$")
+
+
+def check_label_case(surfaces: list[Node],
+                     catalogues: dict[str, dict[str, str]]) -> list[LexFinding]:
+    """sentence-labels-take-sentence-case (GNOME + GitLab): an input's label never
+    wears Title Case. Convicts only the unmistakable shape — two-plus capitalized
+    dictionary-shaped words — so proper nouns and single words never
+    false-positive."""
+    law = _law("sentence-labels-take-sentence-case")
+    findings: list[LexFinding] = []
+    for s in surfaces:
+        for e in (c for c in s.children if c.kind == "element"):
+            if not e.payload.get("collects"):
+                continue
+            for b in (c for c in e.children if c.kind == "binding"):
+                key = b.payload.get("key", "")
+                if not key or b.payload.get("role") != "text":
+                    continue
+                for lang, cat in catalogues.items():
+                    text = cat.get(key, "")
+                    if _TITLE_CASE.match(text.strip()):
+                        findings.append(LexFinding(
+                            law=law, concept=str(e.payload.get("collects")),
+                            lang=lang, key=key, quote=text,
+                            why="A field label in Title Case — sentence case "
+                                "for labels that run into text, per GNOME and "
+                                "GitLab both."))
+    return findings
+
+
+def check_voice(voices: list[Node],
+                catalogues: dict[str, dict[str, str]]) -> list[LexFinding]:
+    """untranslatable-tone's and speaks-to-you's wordlist halves: a word the app's
+    declared voice never uses, found in a catalogue string. The voice node is the
+    app's own register, declared once by whoever owns it — this enforces a
+    declaration, it does not invent taste."""
+    tone = _law("untranslatable-tone")
+    findings: list[LexFinding] = []
+    for v in voices:
+        if v.kind != "voice":
+            continue
+        for lang, words in (v.payload.get("never") or {}).items():
+            cat = catalogues.get(lang, {})
+            for word in words:
+                for key, hit in _hits(word, cat):
+                    findings.append(LexFinding(
+                        law=tone, concept=v.id, lang=lang, key=key, quote=hit,
+                        why=f"'{hit}' is outside the voice this app declared "
+                            f"({v.id}) — off-register here, off-register or "
+                            "untranslatable everywhere else."))
+    return findings
+
+
 def check_glossary(terms: list[Node],
                    catalogues: dict[str, dict[str, str]]) -> list[LexFinding]:
     """Every conviction the glossary supports against these catalogues. `catalogues`

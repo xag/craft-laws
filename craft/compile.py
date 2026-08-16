@@ -244,12 +244,131 @@ def compile_destructive_set_apart(surfaces: list[Node], actions: list[Node],
     return out
 
 
+
+
+def compile_navigation_order(surfaces: list[Node], **_: object) -> list[Node]:
+    """navigation-keeps-its-order (WCAG 3.2.3): elements sharing a `nav` group keep
+    their relative order on every surface repeating the group. Identity across
+    surfaces is the `nav_item` fact (element ids must stay unique per tree); order
+    is the tree's child order — already authored, no position numbers."""
+    law = _law("navigation-keeps-its-order")
+    groups: dict[str, list[tuple[Node, list[str]]]] = {}
+    for s in surfaces:
+        by_group: dict[str, list[str]] = {}
+        for e in elements(s):
+            g = e.payload.get("nav")
+            if g and e.payload.get("nav_item"):
+                by_group.setdefault(g, []).append(e.payload["nav_item"])
+        for g, order in by_group.items():
+            groups.setdefault(g, []).append((s, order))
+    out: list[Node] = []
+    for g, appearances in groups.items():
+        ref_surface, reference = appearances[0]
+        for s, order in appearances[1:]:
+            shared = [x for x in order if x in reference]
+            expected = [x for x in reference if x in order]
+            if shared != expected:
+                out.append(Node(
+                    id=f"{law}--{g}--{s.id}", kind="invariant",
+                    payload={
+                        "expr": f"not ({s.payload.get('when', 'true')})",
+                        "note": f"nav group '{g}' runs {shared} on '{s.id}' but "
+                                f"{expected} on '{ref_surface.id}' — one "
+                                "mechanism, two orders.",
+                        "law": law,
+                    }))
+    return out
+
+
+def compile_one_question(surfaces: list[Node], **_: object) -> list[Node]:
+    """one-question-per-page (GOV.UK): two elements ASKING for different data,
+    co-visible on one surface, are two questions on one page — convicted pairwise,
+    as one-surface-one-job convicts intents. `asks` names the datum an input
+    gathers (collects names the TYPE; asks the INSTANCE)."""
+    law = _law("one-question-per-page")
+    out: list[Node] = []
+    for s in surfaces:
+        askers = [e for e in elements(s) if e.payload.get("asks")]
+        for i, e1 in enumerate(askers):
+            for e2 in askers[i + 1:]:
+                if e1.payload["asks"] == e2.payload["asks"]:
+                    continue
+                out.append(Node(
+                    id=f"{law}--{s.id}--{e1.id}--{e2.id}", kind="invariant",
+                    payload={
+                        "expr": f"not (({when(s, e1)}) and ({when(s, e2)}))",
+                        "note": f"'{e1.id}' asks for {e1.payload['asks']} and "
+                                f"'{e2.id}' for {e2.payload['asks']} on one page "
+                                "— group only where research says to.",
+                        "law": law,
+                    }))
+    return out
+
+
+def compile_never_ask_twice(surfaces: list[Node], **_: object) -> list[Node]:
+    """never-ask-twice (WCAG 3.3.7): the same `asks` datum gathered on a second
+    surface convicts unless the second declares `prefilled: true` — the spec's
+    auto-populate-or-selectable clause as a drawing fact."""
+    law = _law("never-ask-twice")
+    seen: dict[str, tuple[Node, Node]] = {}
+    out: list[Node] = []
+    for s in surfaces:
+        for e in elements(s):
+            datum = e.payload.get("asks")
+            if not datum:
+                continue
+            if datum in seen and seen[datum][0].id != s.id:
+                if not e.payload.get("prefilled"):
+                    first_s, first_e = seen[datum]
+                    out.append(Node(
+                        id=f"{law}--{datum}--{e.id}", kind="invariant",
+                        payload={
+                            "expr": f"not ({when(s, e)})",
+                            "note": f"'{e.id}' asks again for {datum}, already "
+                                    f"gathered by '{first_e.id}' on "
+                                    f"'{first_s.id}', with no prefill declared.",
+                            "law": law,
+                        }))
+            else:
+                seen.setdefault(datum, (s, e))
+    return out
+
+
+def compile_marked_fields(surfaces: list[Node], **_: object) -> list[Node]:
+    """mark-optional-and-required-alike (Baymard): on a surface mixing required
+    and optional inputs, every input carries a visible mark. `required` states the
+    truth, `marked` what the screen shows."""
+    law = _law("mark-optional-and-required-alike")
+    out: list[Node] = []
+    for s in surfaces:
+        inputs = [e for e in elements(s) if "required" in e.payload]
+        if len({bool(e.payload["required"]) for e in inputs}) < 2:
+            continue                    # not mixed: the law's premise is absent
+        for e in inputs:
+            if not e.payload.get("marked"):
+                kind_word = "required" if e.payload["required"] else "optional"
+                out.append(Node(
+                    id=f"{law}--{s.id}--{e.id}", kind="invariant",
+                    payload={
+                        "expr": f"not ({when(s, e)})",
+                        "note": f"'{e.id}' is {kind_word} on a surface mixing "
+                                "both, and carries no mark — 32% of Baymard's "
+                                "testers hit a validation error exactly here.",
+                        "law": law,
+                    }))
+    return out
+
+
 COMPILABLE = {
     "empty-state-never-contradicts": _empty_state_never_contradicts,
     "composed-prose": _composed_prose,
     "plurals-and-agreement": _plurals_and_agreement,
     "one-surface-one-job": _one_surface_one_job,
     "rare-action-folds-away": _rare_action_folds_away,
+    "navigation-keeps-its-order": compile_navigation_order,
+    "one-question-per-page": compile_one_question,
+    "never-ask-twice": compile_never_ask_twice,
+    "mark-optional-and-required-alike": compile_marked_fields,
 }
 
 

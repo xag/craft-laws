@@ -1,4 +1,4 @@
-"""interface@0.2.1 — an interface's denotation as data: what each screen shows, held
+"""interface@0.3.0 — an interface's denotation as data: what each screen shows, held
 in a tree that rules can traverse, laws can compile against, and a render layer can be
 generated from.
 
@@ -124,6 +124,20 @@ VOCABULARY = [
         "hypothesis's falsifier fires.",
     ),
     KindDef(
+        kind="voice",
+        description="The app's tone as data — the last of the language substrate's "
+        "three kinds (term settled the nouns, the element's verb fact the acts; "
+        "this settles the REGISTER). Payload: `never` ({lang: [words or short "
+        "phrases]}) — vocabulary outside the app's declared voice, per language: "
+        "exclamation-mark habits, slang, the third-person 'the user', mascot-speak. "
+        "What it mechanizes is untranslatable-tone's and speaks-to-you's wordlist "
+        "halves: a declared-off word found in a catalogue convicts. What it "
+        "cannot hold — whether a metaphor LANDS — stays the reading residue, and "
+        "the convergence hypothesis is falsified or defended by whether that "
+        "residue keeps shrinking as voices accrete. Declared per app by whoever "
+        "owns its voice, once.",
+    ),
+    KindDef(
         kind="constraint",
         description="A geometry or layout claim over elements — fits, does not "
         "overlap, stays visible at every width in a range — stated as an expression "
@@ -196,6 +210,12 @@ EXAMPLES = [
                                    "boxes of these two elements are disjoint",
                           "over": ["ex-empty-text", "ex-add-control"]}),
         ],
+    ),
+    # The voice, in the same demo domain: the checkout app's register, declared.
+    Node(
+        id="the-checkout-voice", kind="voice", name="the checkout app's register",
+        payload={"never": {"en": ["oops", "awesome", "the user"],
+                           "fr": ["oups", "génial"]}},
     ),
     # The glossary's canonical example, in the same demo domain: the settled word,
     # the ad-hoc synonym the app must not drift to, the literal translation that
@@ -273,7 +293,7 @@ COUNTER_EXAMPLES = [
 
 INTERFACE_PACKAGE = Package(
     name="interface",
-    version="0.2.1",
+    version="0.3.0",
     description="An interface's denotation as data: surfaces, elements, bindings, "
                 "content, denials, witnesses and (one day) constraints — the "
                 "formalism the craft laws' triggers bind to, the tree their "

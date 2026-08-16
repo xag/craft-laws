@@ -1,8 +1,52 @@
 # craft-laws
 
-Laws of interface and copy as **checkable data**. A law here is not advice: it carries the observation that would convict it (a falsifier), the property of an app that switches it on (a trigger), the authority that stated it (a citation, quoted verbatim), and the real defects it has caught (sightings). An app declares what it is; the laws whose triggers fire arrive; and a verdict is `fail` with the offending words — never *I don't like it*.
+The rules of good interfaces — say what the button does, never contradict your own empty state, resolve plurals through the language's own rules, put the error beside the field — as **data a machine can check**, instead of prose a person has to remember.
 
-**The check is red today, on purpose.** A handful of laws cite nobody — carried because they caught real defects, and visibly ungrounded until somebody sources or deletes them. `a-law-cites-a-source` names them, the publish gate refuses to let them travel as settled, and the check exits 1:
+## The problem
+
+A real app shipped a French localisation with hundreds of tests passing, every string key covered in both directions, syntax-checked, encoding-verified, and a dozen flight-recorder tapes replaying bit-for-bit. Every check was green. **None of them reads.** The empty screen told the user *"there is nothing to add"* — forty pixels above a button marked **AJOUTER**.
+
+Nothing in an ordinary test suite reads the screen. The rules that decide whether a screen is any good exist — WCAG, GOV.UK, RGAA, Baymard have stated them, with research attached — but they live in style guides, and a style guide is prose. Prose cannot fire. So the rules are enforced by whoever remembers them, on whatever screens somebody happens to look at, which is exactly how that sentence reached production.
+
+## What this is
+
+A catalogue of those rules as checkable data. Each **law** carries:
+
+- a **falsifier** — the observation that would convict it, stated so a verdict can be `fail` and never merely *I don't like it*;
+- **triggers** — the properties of an app that switch it on;
+- a **citation** — the authority that stated it, quoted verbatim (chosen for authority and falsifiability, never fame — `docs/sources.md` is the catalogue, with the overlap map so every law cites its strongest root);
+- **sightings** — the real defects it has caught. A law that has never caught anything is a law nobody should trust, and each law's sighting is why it is in the file.
+
+An app declares what it is in plain sentences — *"used on a phone"*, *"translated into a second language"*, *"has a zero state"* — and the laws whose triggers fire arrive. No app reads the whole catalogue.
+
+## How checking works
+
+The expensive judgment happens **once, at authoring time**; everything recurring is mechanical:
+
+1. **The app draws its twin** — a description of its interface in the `interface@` vocabulary this repo publishes: surfaces, the elements they show, the catalogue keys those bind, and per-element facts (this input is required, this control opens a sheet, this count stands beside a noun).
+2. **The decidable laws compile against the drawing** and are proved over *every reachable UI state* — a violation carries the click-path that reaches it. Subsecond, on every commit, and **retroactive: a law mined next year applies to a drawing made today, for free.** Simpler laws run as deciders and glossary/wordlist checks with no state space at all.
+3. **The drawing is licensed by evidence, never trusted.** Cheap recorded readings of the real screens ([surface-tape](https://github.com/xag/surface-tape) walks) are reconciled against the drawing mechanically, so a proof can never shine green over a description the app has drifted away from.
+4. **What no machine can decide** — does the metaphor land, does the tone survive translation — goes to a reading queue as packed, self-contained questions. That residue is measured and expected to shrink as the vocabulary grows; if it stops shrinking, a recorded falsifier says the whole approach is failing.
+
+An app's score is **coverage**: how much of the app its twin describes (surfaces drawn over surfaces walked, strings bound over strings shipped). At 100%, every law — current and future — applies wholesale and for free. Laws are never the app's grade; they are probes of whether the vocabulary suffices (`docs/mechanization.md` tracks that bet, with its own kill-criterion).
+
+## Adopting, in one command
+
+```bash
+uv add surface-tape        # pin by rev; surface-tape pins this repo
+uv run python -m surface_tape.adopt .
+```
+
+The survey computes your coverage and prints the ladder — each gap with the exact next artifact and a worked example to copy; `--scaffold` writes the template-shaped ones for you. **One dependency is the whole entry**: an app pins [surface-tape](https://github.com/xag/surface-tape) (the walk artifact, the critic, the deciders, the survey), which pins this repo; [vigil](https://github.com/xag/vigil) (the watch loop) rides along. The prover ([epure](https://github.com/xag/epure)) and the tree substrate ([quern](https://github.com/xag/quern)) join only when the app draws its twin. The dependency points one way: this library knows no consumer by design.
+
+## The pieces, and where each lives
+
+- **The laws** — `craft/laws.py`. Sources and the overlap map: `docs/sources.md`. [`LAWS.md`](LAWS.md) is a rendered *view* of the data — CI regenerates it and fails if view and data disagree, so the prose and the check cannot drift apart.
+- **The vocabulary** — `craft/interface.py`, published as **interface@**: surfaces, elements, bindings, witnesses, terms (the glossary as data), voice (the register as data).
+- **The compilers and solvers** — `craft/compile.py` (laws into invariants), `craft/lexicon.py` (glossary, ellipsis, voice checks), `craft/layout.py` (fits and target sizes solved over viewport intervals from measured premises), `craft/instruments.py` (the rendered-world probes: orientation, grayscale signal, touch phases, tab stops, RTL, truncation, text-in-images — pure functions any adopter's walker feeds).
+- **The doctrine** — `docs/mechanization.md` and the ledger in `craft/tree.py`: the convergence hypothesis, its falsifier, and the marginal-vocabulary series recorded per mechanization.
+
+## Why the check is red, on purpose
 
 ```bash
 $ uv run python -m craft.check
@@ -12,46 +56,11 @@ $ uv run python -m craft.check
   empty-state-never-contradicts: ... It stays, uncited and red ...
 ```
 
-That standing red is the repo's entire argument: **a style guide is prose, and prose cannot fire.** A rule that cannot go red is an opinion with formatting.
-
-How many laws, and how many are red, this file refuses to say — `counts-are-computed` earned its place when this very README said "twelve" long after the answer had changed. Run the check; it counts.
-
-```bash
-uv run python -m craft.check          # the laws' own rules; counts itself. Exit 1 while any is red.
-uv run python -m craft.render         # regenerates LAWS.md, the human view, stamped with its rev
-```
-
-[`LAWS.md`](LAWS.md) is a rendered *view* of the data — CI regenerates it and fails if view and data disagree, so the prose and the check cannot drift apart. An uncited law is not a special mechanism: it **is** a ledger hypothesis in quern's sense — a belief carried with the observation that would kill it — and the gate that blocks it is `nothing-unsound-passes-a-gate`, which ledger already ships. This repo did not invent its own rigor; it imported it.
-
-## This is the front door of a verification framework
-
-Point an agent here first. The pieces, and where each lives:
-
-- **The laws** (`craft/laws.py`) — mined from authoritative sources chosen for authority and falsifiability, never fame: `docs/sources.md` is the catalogue, with the overlap map so every law cites its strongest root and the gaps recorded as gaps.
-- **The vocabulary** (`craft/interface.py`, published as **interface@**) — an app's *semantic twin*: surfaces, elements, bindings, witnesses, terms (the glossary as data), voice (the register as data), constraints. An app authors its drawing once; every law that can compile then applies over **every reachable UI state**, with a click-path per conviction.
-- **The compilers and solvers** (`craft/compile.py`, `craft/lexicon.py`, `craft/layout.py`) — laws become épure invariants, glossary checks, layout claims solved over viewport intervals from measured premises.
-- **The doctrine** (`docs/mechanization.md` + the ledger in `craft/tree.py`) — the two claims under permanent test: *there is no judge-forever category* (any law compiles against a sufficient twin, and the vocabulary needed converges — the marginal-cost series is recorded per mechanization, with a standing falsifier), and *coverage is the metric* (an app is scored by how much of it its twin describes, toward 100%; laws are the vocabulary's probes, not the app's grade).
-
-## Adopting, in one command
-
-An app does not read all this. It runs the survey, which computes its coverage and prints the ladder — each gap with the exact next artifact and a worked example to copy:
-
-```bash
-uv add surface-tape        # pin by rev; surface-tape pins this repo
-uv run python -m surface_tape.adopt .
-```
-
-**One dependency is the whole entry**: an app pins [surface-tape](https://github.com/xag/surface-tape) (the walk artifact, the critic, the deciders, the survey), which pins this repo; [vigil](https://github.com/xag/vigil) (the watch loop) rides along. The prover ([epure](https://github.com/xag/epure)) and the tree substrate ([quern](https://github.com/xag/quern)) join only when the app draws its twin. The repos are many because each is one idea pinned by digest; the *adoption* surface is one pin and one command.
-
-The survey's rungs each carry a worked example to copy, and the laws' own sightings name the real runs where each law drew blood — those, not this README, are where adopting apps appear. The dependency points one way: this library knows no consumer by design.
-
-## Where the laws came from
-
-One run. A French localisation shipped to production with **hundreds of tests passing, every string key covered in both directions, syntax-checked, encoding-verified, and a dozen flight-recorder tapes replaying bit-for-bit.** Every check was green. **None of them reads.** The empty screen told the user *"there is nothing to add"* — forty pixels above a button marked **AJOUTER**. The sightings in `craft/laws.py` are runs like that one. They are not decoration; a law that has never caught anything is a law nobody should trust, and each law's sighting is why it is in the file.
+A handful of laws cite nobody — carried because they caught real defects, and visibly ungrounded until somebody sources or deletes them. `a-law-cites-a-source` names them, the publish gate refuses to let them travel as settled, and the check exits 1. This repo holds itself to its own standard: a rule that cannot go red is an opinion with formatting. How many laws, and how many are red, this file refuses to say — `counts-are-computed` earned its place when this very README said "twelve" long after the answer had changed. Run the check; it counts.
 
 ## The loop that grows this
 
-Every defect a person finds passes through one question before it is fixed: *what valid generic rule did it break?* The answer lands here as a law or a refinement — so the fix ships with a regression check for every adopter, not just the app that bled. The question may honestly answer "app taste, no law", and then nothing is minted: a package that absorbs every preference becomes a checklist, and checklists are ignored.
+Every defect a person finds passes through one question before it is fixed: *what valid generic rule did it break?* The answer lands here as a law or a refinement — so the fix ships with a regression check for every adopter, not just the app that bled. The question may honestly answer "app taste, no law", and then nothing is minted here (the adopter's own tree keeps it, and the critic enforces it locally): a package that absorbs every preference becomes a checklist, and checklists are ignored.
 
 ## License
 

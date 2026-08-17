@@ -401,6 +401,82 @@ LAWS = [
     ),
 
     _law(
+        "terms-defined-before-use",
+        "A term of art is defined at or before its first use — a reader never meets "
+        "a word whose definition is still ahead of them",
+        _cited("Google developer documentation style guide, Jargon"),
+        falsifier="A document's own coinage — a 'twin', a 'walk', a 'lane' — used "
+                  "before the sentence that says what it is. Observable from "
+                  "reading order alone, and mechanical the moment the document's "
+                  "terms are declared: the glossary's term kind already carries "
+                  "them.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        citations=[("Google developer documentation style guide — Jargon",
+                    "https://developers.google.com/style/jargon",
+                    "Are you using the term throughout your document? If so, "
+                    "briefly describe the term in parentheses on first reference, "
+                    "or link to a trusted definition.")],
+        sightings=[
+            ("craft-laws itself, 2026-08-17 — its own README",
+             "The front page used 'drawing', 'twin', 'critic' and 'witness' "
+             "before any sentence defined them — the framework's own coinages, "
+             "handed to a stranger undefined. Caught by the framework's owner "
+             "reading as that stranger; minted through the loop the same day."),
+        ],
+    ),
+
+    _law(
+        "a-readme-answers-what-why-how",
+        "A repository front page answers, in this order and before anything else: "
+        "what the project does, why it is useful, how to get started",
+        _cited("GitHub Docs, About READMEs"),
+        falsifier="A README a stranger can read to the bottom of without learning "
+                  "what the project is, why they would want it, or what command "
+                  "starts it — or one that opens on house doctrine, internal "
+                  "history, or its own cleverness before those three.",
+        triggers=["the project has a repository front page (a README)"],
+        citations=[("GitHub Docs — About READMEs",
+                    "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes",
+                    "A README is often the first item a visitor will see when "
+                    "visiting your repository. README files typically include "
+                    "information on: What the project does. Why the project is "
+                    "useful. How users can get started with the project.")],
+        sightings=[
+            ("craft-laws itself, 2026-08-17 — its own README",
+             "The front page of the whole framework opened on its cleverest "
+             "in-joke ('this repo does not pass its own check — on purpose'), "
+             "put the definition third, and kept the founding story — the "
+             "reason a reader would care — in the last section. Called an "
+             "insult to readers by the person the page exists to serve."),
+        ],
+    ),
+
+    _law(
+        "paragraphs-stay-under-five-sentences",
+        "No paragraph of documentation or interface prose runs past five sentences",
+        _cited("GOV.UK writing guidelines, Use clear language"),
+        falsifier="A paragraph of six or more sentences. Countable — the second "
+                  "mined law with a number in its falsifier, decider material "
+                  "exactly as sentences-stay-under-twenty-five-words is.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        citations=[("GOV.UK — Writing guidelines, Use clear language",
+                    "https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/writing-guidelines/clear-language/",
+                    "Keep chunks of text short. Paragraphs should have no more "
+                    "than 5 sentences each.")],
+        sightings=[
+            ("craft-laws itself, 2026-08-17 — its own README",
+             "The old opening carried the definition of a law, the red-gate "
+             "argument, the prose-cannot-fire thesis and the counts doctrine in "
+             "one seven-sentence paragraph — four ideas a reader had to "
+             "disentangle unaided."),
+        ],
+        note="The sibling of the 25-word sentence ceiling, one level up, from the "
+             "same authority and page.",
+    ),
+
+    _law(
         "status-is-visible",
         "Every act a person commits shows them something changed",
         _cited(NNG + ", #1 Visibility of System Status"),
@@ -1063,6 +1139,12 @@ LAWS = [
         citations=[("GOV.UK — Writing guidelines, Clear structure",
                     "https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/writing-guidelines/clear-structure/",
                     "descriptive – avoid generic headings like 'Introduction'")],
+        sightings=[
+            ("craft-laws itself, 2026-08-17 — its own README",
+             "The front page's first words were 'This repo does not pass its own "
+             "check today — on purpose' — the house paradox front-loaded ahead of "
+             "the one fact a visitor came for, what the repo is."),
+        ],
         note="Grounded on the same page: users 'only read 20 to 28% of text on a "
              "webpage' and read in an F-pattern — the first words are the only ones "
              "guaranteed to be read.",

@@ -84,7 +84,8 @@ def sentences(prose: str) -> list[str]:
     # markdown notation comes off first: a '?' closed by an italic marker is still
     # the end of a sentence, and the first version of this splitter missed it
     guarded = _ABBREV.sub(lambda m: m.group(0).replace(".", "․"), _plain(prose))
-    parts = re.split(r"(?<=[.!?])\s+", guarded)
+    # a period inside a closing quote or bracket still ends the sentence
+    parts = re.split(r"(?<=[.!?])[\"'”’)\]]*\s+", guarded)
     return [p.replace("․", ".").strip() for p in parts if p.strip()]
 
 

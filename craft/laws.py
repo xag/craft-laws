@@ -1496,6 +1496,82 @@ LAWS = [
                     "presentation, text is used to convey information rather than "
                     "images of text")],
     ),
+
+    # --- the deck, 2026-08-17 ----------------------------------------------------
+    # Three laws earned in one afternoon by spec-studio's one-card redesign: each is a
+    # defect the owner caught on their own screen within minutes of the deploy.
+
+    _law(
+        "type-stays-legible",
+        "No text ships below the platform's legibility floor",
+        Quantity(value=1, unit="law", provenance="asserted; authority known, text not "
+                 "yet captured", grounded=False,
+                 source="Apple's Human Interface Guidelines (Typography) state a "
+                        "minimum around 11 points for phone text; the HIG renders "
+                        "through script and the verbatim sentence has not been "
+                        "captured. Capture it and promote, or find a quotable floor."),
+        falsifier="Measure the smallest computed font size on a phone screen: a "
+                  "rendered string below about 11px/11pt. A measurement, not a "
+                  "judgement — the chip that fails is found by a style audit, not by "
+                  "squinting.",
+        triggers=["the app is used on a phone",
+                  "a status chip, badge, overline, or caption is styled"],
+        sightings=[("spec-studio sheet v2, 2026-08-17",
+                    "the status chip shipped at 9px and the group overline at 10px. "
+                    "The previous design's label 'took too much space'; the correction "
+                    "overshot straight through the floor — 'the tiny fonts are "
+                    "ridiculous'. Fixing one extreme by shipping the other is the "
+                    "shape of the defect; the floor is what stops the pendulum.")],
+        note="The ceiling complaint (a label eating the screen) and the floor "
+             "complaint (a chip nobody can read) are the same missing constraint "
+             "stated from opposite ends.",
+    ),
+
+    _law(
+        "controls-sit-where-the-gesture-goes",
+        "A gesture's on-screen alternative sits on the side the gesture ends",
+        _cited("Nielsen Norman Group, Natural Mappings and Stimulus-Response "
+               "Compatibility in User Interface Design"),
+        falsifier="Perform the gesture and read the buttons: the swipe that commits an "
+                  "action travels toward one side while the button naming that action "
+                  "sits on the other — swiping right keeps, but keep is the left-hand "
+                  "button.",
+        triggers=["a gesture and a visible control operate the same function"],
+        citations=[("NN/g — Natural Mappings and Stimulus-Response Compatibility",
+                    "https://www.nngroup.com/articles/natural-mappings/",
+                    "a design in which the system's controls represent or correspond "
+                    "to the desired outcome"),
+                   ("NN/g — Natural Mappings and Stimulus-Response Compatibility",
+                    "https://www.nngroup.com/articles/natural-mappings/",
+                    "When controls map to the actions that will result, systems are "
+                    "faster to learn and easier to remember.")],
+        sightings=[("spec-studio sheet v2, 2026-08-17",
+                    "swipe right = keep and swipe left = drop, while the buttons "
+                    "rendered keep on the left and drop on the right. Each half "
+                    "followed its own convention (swipe from card decks, buttons from "
+                    "affirmative-first ordering) and together they pointed a user's "
+                    "muscle memory at the destructive verb.")],
+    ),
+
+    _law(
+        "a-judgment-carries-its-example",
+        "A sentence offered for judgment shows a concrete instance of itself",
+        _uncited(),
+        falsifier="A card, review row, or approval line asking for keep/drop/rule "
+                  "whose claim is stated only in the abstract — no quote, no instance, "
+                  "no snapshot beside the sentence being judged.",
+        triggers=["anything is put in front of a person to keep, drop, or rule on"],
+        sightings=[("spec-studio sheet v2, 2026-08-17",
+                    "the ruling cards carried their convicting findings, quote and "
+                    "why; the authored promises arrived bare, and the owner asked "
+                    "where the examples were on the first cards. The evidence section "
+                    "existed — only the rows that happened to have findings fed it, "
+                    "so the law held exactly where the data made it free.")],
+        note="The rulings loop obeyed this from birth because convictions ARE "
+             "evidence; the authored specs broke it because a promise's example has "
+             "to be authored too. A field nobody must fill is a field that is empty "
+             "where it matters.",
+    ),
 ]
 
 # What the laws are allowed to travel through. Ungrounded authority — an uncited law — will not

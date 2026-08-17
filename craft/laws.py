@@ -1554,6 +1554,37 @@ LAWS = [
     ),
 
     _law(
+        "a-view-arrives-whole",
+        "What a host fetches to show is the whole view, not a stub that fetches the rest",
+        _cited("W3C, Content Security Policy Level 3, script-src and nonce-source"),
+        falsifier="Load the view in its real sandbox: styles and markup appear, "
+                  "behaviour does not — an empty frame in the shape of the real one. "
+                  "The tell is a runtime-created <script> that never executes and "
+                  "raises nothing the page can catch.",
+        triggers=["a view is delivered into a sandbox somebody else controls",
+                  "a page builds part of itself after loading"],
+        citations=[("W3C — Content Security Policy Level 3, §6.1 script-src",
+                    "https://www.w3.org/TR/CSP3/#directive-script-src",
+                    "The script-src directive restricts the locations from which "
+                    "scripts may be executed."),
+                   ("W3C — Content Security Policy Level 3, nonce-source",
+                    "https://www.w3.org/TR/CSP3/#grammardef-nonce-source",
+                    "The nonce-source grammar allows a script or style to execute if "
+                    "it carries a nonce attribute matching the one in the policy.")],
+        sightings=[("spec-studio sheet, 2026-08-17",
+                    "the card's resource was a bootstrap that called a tool for the "
+                    "real widget and injected it. It fetched, it ran, it called the "
+                    "tool twice — and the founder got a card-shaped empty box. The "
+                    "served document's inline script was permitted; the script node "
+                    "the stub created was not, so markup and styles landed and the "
+                    "behaviour was dropped in silence. The stub existed to defeat a "
+                    "cache that a content-hashed URI defeats natively.")],
+        note="A stub is a second round-trip and a second trust decision, bought to "
+             "solve a caching problem that a content-addressed name solves without "
+             "either.",
+    ),
+
+    _law(
         "yesterdays-names-keep-answering",
         "A name once served keeps answering, whatever today's name is",
         _cited("Hyrum Wright, Hyrum's Law"),

@@ -1554,6 +1554,32 @@ LAWS = [
     ),
 
     _law(
+        "yesterdays-names-keep-answering",
+        "A name once served keeps answering, whatever today's name is",
+        _cited("Hyrum Wright, Hyrum's Law"),
+        falsifier="Rename or remove a served name — a tool, a route, a resource URI — "
+                  "and drive a client that holds the old catalogue: 'Unknown tool', a "
+                  "404, or a dead widget where the same request answered yesterday.",
+        triggers=["a served name changes", "any client caches the catalogue of names"],
+        citations=[("Hyrum's Law", "https://www.hyrumslaw.com/",
+                    "With a sufficient number of users of an API, it does not matter "
+                    "what you promise in the contract: all observable behaviors of "
+                    "your system will be depended on by somebody.")],
+        sightings=[("spec-studio, 2026-08-17",
+                    "project_card was renamed project_deck to bust a platform cache "
+                    "and the old name was pruned in the same deploy — the founder's "
+                    "phone, holding the cached registry, got 'Unknown tool' where the "
+                    "sheet had answered an hour earlier. The repo already carried this "
+                    "rule for resource URIs, in a comment beside SHEET_URIS_PRIOR: "
+                    "'never prune a name a client may still hold'. It was broken the "
+                    "same afternoon for tool names — a rule stated for one kind of "
+                    "name is not yet a rule.")],
+        note="A rename busts a cache only where the client re-lists; everywhere else "
+             "it is an outage. Serve both names until no client can hold the old one, "
+             "which for an unexpirable cache means indefinitely.",
+    ),
+
+    _law(
         "a-judgment-carries-its-example",
         "A sentence offered for judgment shows a concrete instance of itself",
         _uncited(),

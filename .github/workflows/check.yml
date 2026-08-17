@@ -38,7 +38,10 @@ jobs:
                       "empty-state-never-contradicts", "counts-are-computed",
                       "internal-references-resolve", "type-stays-legible",
                       "a-judgment-carries-its-example",
-                      "a-ui-change-is-not-done-until-someone-has-looked", "publish"}
+                      "a-ui-change-is-not-done-until-someone-has-looked", "publish",
+                      # the practice: laws about the work, red on the same terms
+                      "the-users-attention-is-not-a-test-harness",
+                      "a-detour-is-announced-as-a-detour", "publish-practice"}
           assert red == declared, (
               f"the red set changed: {sorted(red)} != {sorted(declared)} - a law lost or "
               "gained a citation without the record moving. Update laws.py AND this list "

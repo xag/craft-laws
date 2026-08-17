@@ -12,6 +12,7 @@ from quern.library import consume
 from quern import Node
 
 from .laws import GATE, LAWS
+from .practice import PRACTICE, PRACTICE_GATE
 
 _ROOT = Path(__file__).resolve().parents[1]
 
@@ -293,8 +294,71 @@ def build() -> Quern:
 
     quern = Quern(packages=[r for r in refs if r.name in ("craft", "ledger")])
     quern = lib.effective(quern)
-    quern.root.children = [*LAWS, *DECISIONS, GATE]
+    quern.root.children = [*LAWS, *PRACTICE, *DECISIONS, GATE, PRACTICE_GATE]
     return quern
+
+
+DECISIONS.append(Node(
+    id="the-process-is-ruled-too",
+    kind="decision",
+    name="The WORK is governed by laws in this package, beside the laws about "
+         "interfaces — same shape (falsifier, trigger, citation, sighting), separate "
+         "family (craft/practice.py), because a claim like 'it is done' is exactly as "
+         "checkable as a claim about a screen, and exactly as prone to drift",
+    payload={
+        "rationale":
+            "2026-08-17 shipped a card that rendered as an empty rectangle and "
+            "declared the job finished fifteen times against a founder answering "
+            "'still nothing'. Not one of those claims was dishonest and not one was "
+            "evidence of the thing claimed: they cited green suites, deploy ids, log "
+            "lines and files on a machine — all producer-side, none an observation of "
+            "the surface a person touches. The estate already had the doctrine that "
+            "would have caught it (instrument the boundary; replay the tape rather "
+            "than re-derive what must have happened) and applied it to storage and "
+            "HTTP while leaving the one boundary that mattered — the widget's — dark. "
+            "A doctrine held in prose is a doctrine that binds where somebody "
+            "remembers it. The remedy is the same one this repo already made for "
+            "interfaces: state it as data with a falsifier, so the claim can be "
+            "checked instead of trusted. Agans wrote four of the six in 2002; they "
+            "are cited, because doing a known-catastrophic thing is worse than "
+            "inventing a new one.",
+        "consequence":
+            "Two families in one package and one rendered file. The practice gate is "
+            "red on the same terms as the interface gate — two of the six cite nobody "
+            "and say so. Their triggers are different in kind: an interface law fires "
+            "on a screen, a practice law fires on a CLAIM, which means the check that "
+            "would enforce them mechanically is a check on what a session asserts, and "
+            "that check does not exist yet. Until it does, these are read by the agent "
+            "at the moment of claiming and by the founder when a claim smells wrong — "
+            "which is exactly how the interface laws lived before the compiler, and "
+            "the compiler is where that history says this goes.",
+    },
+    children=[
+        Node(id="alt-put-the-process-in-a-skill", kind="alternative",
+             name="Write the lessons into the deploy/session skills as procedure",
+             payload={"why":
+                      "A procedure cannot go red. Skills say do this then that, and "
+                      "they are the right home for the HOW (both harnesses ran, "
+                      "pictures opened) — the widget procedure lives there and should. "
+                      "But 'the job is done' is a claim about the world, and a claim "
+                      "needs a falsifier, which is a law's shape and not a skill's."}),
+        Node(id="alt-write-them-as-memories", kind="alternative",
+             name="Store them as agent memories",
+             payload={"why":
+                      "Memory is for facts about the person and their preferences, and "
+                      "it travels with one agent's context. A law about the work has to "
+                      "bind every session in the estate, including the ones that never "
+                      "load that memory — and has to be arguable in a diff."}),
+        Node(id="alt-one-family-with-the-interface-laws", kind="alternative",
+             name="Mix them into laws.py as more laws",
+             payload={"why":
+                      "Their triggers name different things: 'the app is used on a "
+                      "phone' versus 'anything is reported as done'. A filter that "
+                      "asks which laws apply to a screen would have to skip half the "
+                      "file, and the compiler's whole premise is that a trigger is a "
+                      "property of the artifact under test."}),
+    ],
+))
 
 
 DECISIONS.append(Node(

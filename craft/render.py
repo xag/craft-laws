@@ -12,6 +12,10 @@ A consumer that needs the prose (a skill, a README, a plugin) ships the rendered
 rev it came from stamped on it, and re-renders rather than edits. Editing the view is how a view
 becomes a second source of truth, and a second source of truth is how the sentence stopped
 firing in the first place.
+
+Two families render here. `laws.py` convicts a screen; `practice.py` convicts a way of working.
+One file, because a reader who needs one usually needs the other, and a second file is a second
+thing to forget to re-render.
 """
 
 from __future__ import annotations
@@ -21,6 +25,7 @@ import subprocess
 import sys
 
 from .laws import GATE, LAWS
+from .practice import PRACTICE, PRACTICE_GATE
 
 
 def _rev() -> str:
@@ -51,7 +56,26 @@ def render() -> str:
       "anything is a law nobody should trust.\n\n")
     w("---\n\n")
 
-    for law in LAWS:
+    _render_laws(w, LAWS)
+
+    w("---\n\n## The gate\n\n")
+    w(f"{GATE.payload['note']}\n\n")
+
+    p_cited = [l for l in PRACTICE if l.params["authority"].grounded]
+    w("---\n\n# The practice\n\n")
+    w(f"{len(PRACTICE)} laws about the WORK rather than about the interface. "
+      f"**{len(p_cited)} cite a source.** They were earned in a single "
+      "session by a single defect, which was declared finished fifteen times before it "
+      "was.\n\n")
+    _render_laws(w, PRACTICE)
+
+    w("---\n\n## The practice gate\n\n")
+    w(f"{PRACTICE_GATE.payload['note']}\n")
+    return o.getvalue()
+
+
+def _render_laws(w, laws) -> None:
+    for law in laws:
         auth = law.params["authority"]
         flag = "" if auth.grounded else "  `UNCITED`"
         w(f"## {law.id.upper()}{flag}\n\n")
@@ -80,10 +104,6 @@ def render() -> str:
         if law.payload.get("note"):
             w(f"\n{law.payload['note']}\n")
         w("\n")
-
-    w("---\n\n## The gate\n\n")
-    w(f"{GATE.payload['note']}\n")
-    return o.getvalue()
 
 
 if __name__ == "__main__":

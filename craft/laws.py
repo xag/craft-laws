@@ -1554,6 +1554,27 @@ LAWS = [
     ),
 
     _law(
+        "a-ui-change-is-not-done-until-someone-has-looked",
+        "No interface change ships on a passing test alone — it ships on a rendered "
+        "picture somebody read",
+        _uncited(),
+        falsifier="Ask for the screenshot of the change. There is none, or it was "
+                  "taken before the change, or nobody looked at it — and the evidence "
+                  "offered instead is a green suite, a log line, or a deploy id.",
+        triggers=["anything a person will look at changes"],
+        sightings=[("spec-studio sheet, 2026-08-17",
+                    "a day of 'done' against a founder answering 'still nothing'. "
+                    "Every claim rested on servers, tapes and green tests; the widget "
+                    "was never rendered once. The first render found, in one look, two "
+                    "defects no test could state: an authored example set in monospace, "
+                    "so a sentence read as code, and the swipe hint placed below the "
+                    "quiet links, furthest from the card it explains. Both had been "
+                    "'verified' for hours.")],
+        note="A test says the wiring holds. A picture says whether anyone can read it, "
+             "and those are different questions — the second one is the product.",
+    ),
+
+    _law(
         "a-view-arrives-whole",
         "What a host fetches to show is the whole view, not a stub that fetches the rest",
         _cited("W3C, Content Security Policy Level 3, script-src and nonce-source"),

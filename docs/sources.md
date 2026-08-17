@@ -41,6 +41,22 @@ Excluded from the shortlist despite fame, with reasons: **Apple HIG** (restricti
 
 **Boundary categories, noted so the boundary is chosen:** gaming (Xbox Accessibility Guidelines — 23 numbered, checkable; Game Accessibility Guidelines — community tiers); automotive HMI (NHTSA distraction guidelines — quantified glance budgets; ISO 15008/26022); aviation (FAA HF-STD-001 — massive public-domain quantified HCI rulebook, underused); medical (IEC 62366-1 — process, not artifact rules); voice (both platform guides frozen or deprecated — the category is decaying, out of scope).
 
+## Editorial, readability and documentation clarity (surveyed 2026-08-17)
+
+The doc lane's own catalogue, added when the doc laws arrived. Ranked by the same two criteria as everything above.
+
+1. **ASD-STE100 Simplified Technical English** — issue 9 (2025): **53 numbered writing rules** plus a ~900-word controlled dictionary. The most falsifiable editorial standard in existence (sentence caps by text type, one instruction per sentence, one approved meaning per word) and a NUMBERED set, which makes it the next cost-blind census target. Access: free on request from ASD; do not quote until the official text is in hand — the rules are widely paraphrased and paraphrase is how fabrication starts. https://www.asd-ste100.org/
+2. **Google developer documentation style guide** — CC BY 4.0, page-per-rule, already the root of four shipped laws. Census'd whole: `python -m craft.census_editorial`.
+3. **GOV.UK writing guidelines** — the root of the sentence and paragraph ceilings and of say-it-once; the A-to-Z is a dictionary, not a ruleset, and is treated as one.
+4. **Readability Guidelines (Content Design London)** — a community style guide with usability evidence attached per rule, plus a checklist page that is nearly a falsifier list. Wiki frozen since 2020, still served; cite the evidence page, not the rule alone. https://readabilityguidelines.co.uk/
+5. **Federal plain language guidelines** — statutory (Plain Writing Act 2010), public domain; the canonical pages now live under digital.gov and several old plainlanguage.gov paths redirect or render client-side, so fetch carefully and keep the caught text.
+6. **18F Content Guide** — US government, CC0, concrete do/don't pairs; a good operational second citation.
+7. **Readability formulas** (Flesch, Flesch–Kincaid, SMOG) — research-rooted arithmetic over prose; WCAG's own Reading Level criterion (3.1.5) makes them law-adjacent, and they are decider material by construction.
+8. **Diátaxis** — the tutorial/how-to/reference/explanation structure doctrine; falsifiable at the document-purpose level ("a tutorial that explains is failing"), weaker per-sentence. CC BY-SA.
+9. **Microsoft Writing Style Guide** — word-level falsifiable, © Microsoft, quote briefly.
+10. **EU "How to write clearly"** — multilingual (24 languages), free; useful as the non-English root the doc lane otherwise lacks.
+11. **Write the Docs** — community practice, weak authority; mine for candidates, cite something stronger.
+
 ## Gaps found (searched, thin)
 
 Sweden and Spain lack national design systems with stated rules (Sweden has Klarspråk for language); voice UX has no living authoritative source; PlayStation/Nintendo guidelines are NDA'd; no third empirical org at NN/g/Baymard scale (academic HCI is paper-by-paper, not a catalogue); corporate content-design culture is anglophone — no non-English corporate style guide of note; Germany's KERN is real but young.

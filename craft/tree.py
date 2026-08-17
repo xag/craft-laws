@@ -190,6 +190,23 @@ DECISIONS = [
     Node(
         id="the-vocabulary-converges",
         kind="hypothesis",
+        meta={"amended":
+              "2026-08-17 — the series' evidence was impeached, correctly: the "
+              "miner picked laws it could see the compile route for, so a run of "
+              "+0s measured the sampling, not the vocabulary (the owner's words: "
+              "'I suspect you select laws that would compile at constant "
+              "vocabulary'). The remedy is the COST-BLIND CENSUS "
+              "(craft/census_rgaa.py): one authoritative source's entire numbered "
+              "set, every criterion classified, the distribution published "
+              "whatever it says. First run over RGAA 4.1: run the census, it "
+              "counts — and its vocab rows named real missing kinds (media, "
+              "tables-as-semantics, hover reveals, challenges, document "
+              "artifacts), clustered on content the estate's own apps do not "
+              "have, which is exactly why the biased series never met them. The "
+              "claim stands as written — 'vocabulary not built yet' predicted "
+              "precisely such clusters — but the evidence standard changes: the "
+              "mining series is anecdote now; the census, re-run as kinds land, "
+              "is the instrument."},
         name="Any law compiles against a sufficient semantic twin, and the vocabulary "
              "the twin needs CONVERGES: the new facts a newly mechanized law demands "
              "tend to zero. There is no judge-forever category — only laws whose "
@@ -238,6 +255,26 @@ DECISIONS = [
                         "(supersede, never delete), return that class to the "
                         "reading queue as a diagnosed limitation, and keep the "
                         "asymptote claim for the classes where the series holds.",
+                },
+            ),
+            Node(
+                id="the-census-vocab-bucket-does-not-shrink",
+                kind="falsification",
+                payload={
+                    "claim":
+                        "After the facts a cost-blind census names are built, a "
+                        "re-run of the same census does not shrink its vocab "
+                        "bucket — criteria enter it as fast as new kinds retire "
+                        "them. Convergence sampled blind, not convergence mined "
+                        "by a biased hand.",
+                    "cadence": "re-run python -m craft.census_rgaa at every "
+                               "vocabulary extension; add a second source's "
+                               "census before claiming the asymptote publicly",
+                    "discharge_route":
+                        "Same as the sibling: name the resisting class, bound "
+                        "it, return it to the reading queue as diagnosed — and "
+                        "say in mechanization.md that the asymptote holds only "
+                        "outside it.",
                 },
             ),
         ],

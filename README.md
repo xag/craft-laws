@@ -1,12 +1,12 @@
 # craft-laws
 
-The rules of good interfaces — say what the button does, never contradict your own empty state, resolve plurals through the language's own rules, put the error beside the field — as **data a machine can check**, instead of prose a person has to remember.
+The rules of good interfaces, as **data a machine can check** instead of prose a person has to remember. Say what the button does; never contradict your own empty state. Resolve plurals through the language's own rules; put the error beside the field. Rules of that kind — each held in a form that can convict.
 
 ## The problem
 
-A real app shipped a French localisation with hundreds of tests passing, every string key covered in both directions, syntax-checked, encoding-verified, and a dozen flight-recorder tapes replaying bit-for-bit. Every check was green. **None of them reads.** The empty screen told the user *"there is nothing to add"* — forty pixels above a button marked **AJOUTER**.
+A real app shipped a French localisation with hundreds of tests passing. Every string key was covered in both directions, syntax-checked and encoding-verified, and a dozen tapes replayed bit-for-bit. Every check was green. **None of them reads.** The empty screen told the user *"there is nothing to add"* — forty pixels above a button marked **AJOUTER**.
 
-Nothing in an ordinary test suite reads the screen. The rules that decide whether a screen is any good exist — WCAG, GOV.UK, RGAA, Baymard have stated them, with research attached — but they live in style guides, and a style guide is prose. Prose cannot fire. So the rules are enforced by whoever remembers them, on whatever screens somebody happens to look at, which is exactly how that sentence reached production.
+Nothing in an ordinary test suite reads the screen. The rules that decide whether a screen is any good exist: WCAG, GOV.UK, RGAA and Baymard have stated them, with research attached. But they live in style guides, and a style guide is prose. Prose cannot fire. So the rules are enforced by whoever remembers them, on whatever screens somebody looks at — which is how that sentence reached production.
 
 ## What this is
 
@@ -17,7 +17,7 @@ A catalogue of those rules as checkable data. Each **law** carries:
 - a **citation** — the authority that stated it, quoted verbatim (chosen for authority and falsifiability, never fame — `docs/sources.md` is the catalogue, with the overlap map so every law cites its strongest root);
 - **sightings** — the real defects it has caught. A law that has never caught anything is a law nobody should trust, and each law's sighting is why it is in the file.
 
-An app declares what it is in plain sentences — *"used on a phone"*, *"translated into a second language"*, *"has a zero state"* — and the laws whose triggers fire arrive. No app reads the whole catalogue.
+An app declares what it is in plain sentences: *"used on a phone"*, *"translated into a second language"*, *"has a zero state"*. The laws whose triggers fire arrive; no app reads the whole catalogue.
 
 ## How checking works
 
@@ -37,7 +37,11 @@ uv add surface-tape        # pin by rev; surface-tape pins this repo
 uv run python -m surface_tape.adopt .
 ```
 
-The survey computes your coverage and prints the ladder — each gap with the exact next artifact and a worked example to copy; `--scaffold` writes the template-shaped ones for you. **One dependency is the whole entry**: an app pins [surface-tape](https://github.com/xag/surface-tape) — the walk artifact, the deciders, the survey, and the **critic**, the tool that packs each screen owed a reading into a self-contained question and records the verdict — and surface-tape pins this repo; [vigil](https://github.com/xag/vigil) (the watch loop that fires when a walk's prose changes) rides along. The prover ([epure](https://github.com/xag/epure)) and the tree substrate ([quern](https://github.com/xag/quern)) join only when the app authors its drawing. The dependency points one way: this library knows no consumer by design.
+The survey computes your coverage and prints the ladder: each gap, its exact next artifact, and a worked example to copy. `--scaffold` writes the template-shaped artifacts for you.
+
+An app pins [surface-tape](https://github.com/xag/surface-tape), and surface-tape pins this repo — **one dependency is the whole entry**. That package carries the walk artifact, the deciders, the survey, and the **critic**. The critic packs each screen owed a reading into a self-contained question, and records the verdict. [vigil](https://github.com/xag/vigil), the watch loop that fires when a walk's prose changes, rides along.
+
+The prover ([epure](https://github.com/xag/epure)) and the tree substrate ([quern](https://github.com/xag/quern)) join only when the app authors its drawing. The dependency points one way: this library knows no consumer by design.
 
 ## The pieces, and where each lives
 
@@ -56,11 +60,13 @@ $ uv run python -m craft.check
   empty-state-never-contradicts: ... It stays, uncited and red ...
 ```
 
-A handful of laws cite nobody — carried because they caught real defects, and visibly ungrounded until somebody sources or deletes them. `a-law-cites-a-source` names them, the publish gate — the rule that decides what may ship to adopters as settled — refuses them, and the check exits 1. This repo holds itself to its own standard: a rule that cannot go red is an opinion with formatting. How many laws, and how many are red, this file refuses to say — `counts-are-computed` earned its place when this very README said "twelve" long after the answer had changed. Run the check; it counts.
+A handful of laws cite nobody — carried because they caught real defects, and visibly ungrounded until somebody sources or deletes them. `a-law-cites-a-source` names them, the publish gate — the rule that decides what may ship to adopters as settled — refuses them, and the check exits 1. This repo holds itself to its own standard: a rule that cannot go red is an opinion with formatting.
+
+How many laws, and how many are red, this file refuses to say. `counts-are-computed` earned its place when this very README said "twelve" long after the answer had changed. Run the check; it counts.
 
 ## The loop that grows this
 
-Every defect a person finds passes through one question before it is fixed: *what valid generic rule did it break?* The answer lands here as a law or a refinement — so the fix ships with a regression check for every adopter, not just the app that bled. The question may honestly answer "app taste, no law", and then nothing is minted here (the adopter's own tree keeps it, and the critic enforces it locally): a package that absorbs every preference becomes a checklist, and checklists are ignored.
+Every defect a person finds passes through one question before it is fixed: *what valid generic rule did it break?* The answer lands here as a law or a refinement. The fix then ships with a regression check for every adopter, not just the app that bled. The question may honestly answer "app taste, no law", and then nothing is minted here — the adopter's own law set keeps it, enforced locally. A package that absorbs every preference becomes a checklist, and checklists are ignored.
 
 ## License
 

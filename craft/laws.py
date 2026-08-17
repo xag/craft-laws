@@ -477,6 +477,108 @@ LAWS = [
     ),
 
     _law(
+        "say-it-once",
+        "A document states each fact once — an edit integrates into what is "
+        "already written, it never restates it",
+        _cited("GOV.UK writing guidelines, Create a clear structure"),
+        falsifier="Two sentences in one document saying the same thing in nearly "
+                  "the same words. Observable by comparison, and the signature of "
+                  "a machine edit that appended instead of integrating — the "
+                  "reader meets the same fact twice and wonders which copy is "
+                  "current.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        citations=[("GOV.UK — Writing guidelines, Clear structure",
+                    "https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/writing-guidelines/clear-structure/",
+                    "Do not repeat yourself. You’ll have to write a summary to go "
+                    "at the top of the page. Do not repeat the summary in the "
+                    "first paragraph.")],
+        note="Also the readability face of a deeper defect: two copies of one "
+             "fact drift independently, and then the document disagrees with "
+             "itself — the doc-lane twin of no-cross-context-string-reuse.",
+    ),
+
+    _law(
+        "references-name-their-target-not-its-position",
+        "A document refers to its own parts by name — never 'above', 'below', or "
+        "'as mentioned earlier', which break silently when an edit moves things",
+        _cited("Google developer documentation style guide, word list: above"),
+        falsifier="'See above', 'the section below', 'as mentioned earlier' — a "
+                  "wordlist over the document. Each is a reference that goes "
+                  "quietly wrong the day a paragraph moves, which is every day a "
+                  "machine edits.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        citations=[("Google developer documentation style guide — word list, "
+                    "'above'",
+                    "https://developers.google.com/style/word-list",
+                    "Don't use to refer to a position in a document. Instead, use "
+                    "earlier or preceding.")],
+        note="instructions-point-by-name-not-by-place, one lane over: that law "
+             "holds app copy that directs a person to a control; this one holds "
+             "a document that directs a reader to itself.",
+    ),
+
+    _law(
+        "acronyms-spell-out-on-first-reference",
+        "An abbreviation is spelled out the first time it appears; only then may "
+        "the short form travel alone",
+        _cited("Google developer documentation style guide, Abbreviations"),
+        falsifier="An acronym used bare before (or without) the sentence that "
+                  "spells it out — observable from reading order alone, exactly "
+                  "as terms-defined-before-use is, and mechanical without even a "
+                  "glossary: the short form and its parenthetical expansion have "
+                  "a fixed shape.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        citations=[("Google developer documentation style guide — Abbreviations",
+                    "https://developers.google.com/style/abbreviations",
+                    "Spell out abbreviations on first reference.")],
+        note="The source's own carve-out stands: standard acronyms the audience "
+             "reads faster than their expansions (API, URL, JSON) are exempt — "
+             "the decider carries that list, visibly.",
+    ),
+
+    _law(
+        "conditions-come-before-instructions",
+        "The circumstance, condition, or goal comes before the instruction it "
+        "qualifies — the reader learns whether a sentence applies before paying "
+        "for it",
+        _cited("Google developer documentation style guide, Sentence structure"),
+        falsifier="An instruction with its condition trailing — 'Click Delete if "
+                  "you want to delete the document', 'See X for more "
+                  "information' — the source's own not-recommended shapes, "
+                  "matchable by pattern.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        citations=[("Google developer documentation style guide — Sentence "
+                    "structure",
+                    "https://developers.google.com/style/sentence-structure",
+                    "If you want to tell the reader to do something, try to "
+                    "mention the circumstance, conditions, or goal before you "
+                    "provide the instruction. Mentioning the circumstance first "
+                    "lets the reader skip the instruction if it doesn't apply.")],
+    ),
+
+    _law(
+        "internal-references-resolve",
+        "Every reference a document makes to its own parts — an anchor, a section "
+        "name, a relative link — points at something that exists",
+        _uncited(),
+        falsifier="A markdown anchor with no matching heading, a relative link to "
+                  "a file that is not there, a named section nobody can find. "
+                  "Fully mechanical, and the doc-lane twin of drift: a green "
+                  "document over a moved target is a proof over a fiction.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        note="Uncited and red, in this repo's own tradition: universally enforced "
+             "by link checkers everywhere, yet no style authority has been found "
+             "STATING it as a writing rule. Source it or drop it — and meanwhile "
+             "it is the one defect class every long-lived document accumulates "
+             "under machine editing.",
+    ),
+
+    _law(
         "status-is-visible",
         "Every act a person commits shows them something changed",
         _cited(NNG + ", #1 Visibility of System Status"),

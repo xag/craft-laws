@@ -44,7 +44,8 @@ jobs:
                       "a-detour-is-announced-as-a-detour", "publish-practice",
                       # the judgment surface: a picture that shows what it convicts is
                       # ours alone so far — source it or carry the red
-                      "a-picture-shows-what-it-convicts"}
+                      "a-picture-shows-what-it-convicts",
+                      "a-question-agrees-with-its-evidence"}
           assert red == declared, (
               f"the red set changed: {sorted(red)} != {sorted(declared)} - a law lost or "
               "gained a citation without the record moving. Update laws.py AND this list "

@@ -179,8 +179,41 @@ def check_one_card_one_screen(name: str, cards: list[dict]) -> list[CardFinding]
     return out
 
 
+# What a card may not claim while its own evidence says otherwise. Each pair is
+# (a claim the question makes, a thing the evidence shows) — narrow on purpose: a
+# decider that guesses at meaning convicts good cards and teaches everyone to ignore it.
+_CONTRADICTIONS = (
+    (r"\bsays nothing\b|\bno message\b|\bnothing happens\b|\bin silence\b",
+     r"already taken|please fill|required|\bsays so\b|\berror\b|refus",
+     "the question says the app is silent while the evidence quotes what it says"),
+)
+
+
+def check_no_self_contradiction(name: str, cards: list[dict]) -> list[CardFinding]:
+    """A question may not contradict its own evidence.
+
+    A card asked whether to keep a button that «greys out and says nothing», beside a
+    photograph of the app saying «That name is already taken» in red. A person cannot
+    rule on that — they can only correct it, which is the founder's work done by the
+    founder. The claim and the evidence are both in the record, so the check is cheap.
+    """
+    out = []
+    for c in cards:
+        claim = (c.get("text") or "").lower()
+        shown = " ".join([(f.get("quote") or "") + " " + (f.get("why") or "")
+                          for f in c.get("findings") or []]).lower()
+        for says, shows, why in _CONTRADICTIONS:
+            if re.search(says, claim) and re.search(shows, shown):
+                out.append(CardFinding(
+                    "a-question-agrees-with-its-evidence", c.get("id", name),
+                    (re.search(says, claim).group(0) + " / "
+                     + re.search(shows, shown).group(0))[:60], why))
+                break
+    return out
+
+
 CHECKS = (check_no_repetition, check_no_jargon, check_pictures_show_the_defect,
-          check_one_card_one_screen)
+          check_one_card_one_screen, check_no_self_contradiction)
 
 
 def check_file(path: Path) -> list[CardFinding]:
@@ -209,6 +242,10 @@ def _alarm() -> int:
          "findings": [{"where": "edit-remove", "quote": "Remove",
                        "why": "nothing asks first: one tap is the loss."}],
          "has_screen": True, "shows": ["header-add"]},
+        {"id": "ruling:e",
+         "text": "The OK button greys out and says nothing. Keep it?",
+         "findings": [{"where": "cat-commit", "quote": "OK (greyed out)",
+                       "why": "the name is already taken and the app says so."}]},
         {"id": "ruling:d", "text": "Two screens, one question. Stand?",
          "findings": [{"where": "fold:ajouter-une-tache/when[empty]", "quote": "a",
                        "why": "one line reads as a fragment."},

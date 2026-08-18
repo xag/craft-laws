@@ -1537,6 +1537,29 @@ LAWS = [
     ),
 
     _law(
+        "a-question-agrees-with-its-evidence",
+        "A question put to a person never contradicts the evidence beside it",
+        _uncited(),
+        falsifier="Read the question, then read the evidence under it: the question "
+                  "asserts something the evidence disproves — «the app says nothing» "
+                  "beside a quotation of what it says, «nothing happens» beside a "
+                  "photograph of what happens.",
+        triggers=["anything is put in front of a person to keep, drop, or rule on"],
+        sightings=[("spec-studio ruling cards, 2026-08-18",
+                    "a card asked whether to keep a button that «greys out and says "
+                    "nothing», directly above its own photograph of the app saying "
+                    "«That name is already taken» in red under the box. The founder "
+                    "could not rule on it, only correct it — which is the reader "
+                    "doing the author's work. Underneath, the drawing had modelled "
+                    "the commit button and neither the box nor the refusal, so a law "
+                    "was argued from a silence that existed only in the model.")],
+        note="The decidable half is cheap because both halves are already in the "
+             "record: the claim is the card's text, the evidence is its findings. "
+             "The pairs are narrow on purpose — a decider that guesses at meaning "
+             "convicts good cards and teaches everyone to ignore it.",
+    ),
+
+    _law(
         "one-card-one-screen",
         "One question a person must answer covers one screen",
         _cited("Nielsen Norman Group, 10 Usability Heuristics, #8 Aesthetic and "

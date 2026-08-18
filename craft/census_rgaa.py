@@ -54,25 +54,27 @@ CENSUS: dict[str, tuple[str, str]] = {
                     "measured-premise route thumb-size already walks"),
     "3.3": ("zero", "UI component contrast: same arithmetic, same route"),
     # --- 4. Multimédia ---------------------------------------------------------------
-    "4.1": ("vocab", "no `media` kind exists: temporal media and its alternatives "
-                     "(transcript, audiodescription) are unsayable in the drawing"),
-    "4.2": ("judge", "transcript pertinent: a reading (once media is sayable)"),
-    "4.3": ("vocab", "subtitles present: the same missing `media` facts"),
+    "4.1": ("zero", "the `media` kind (interface@0.4.0) declares alternatives as "
+                    "resolvable references — 'a transcript exists' is a tree query"),
+    "4.2": ("judge", "transcript pertinent: a reading (media is sayable now)"),
+    "4.3": ("zero", "captions in the media kind's `alternatives`; presence compiles"),
     "4.4": ("judge", "subtitles pertinent: a reading"),
-    "4.5": ("vocab", "audiodescription present: the same missing `media` facts"),
+    "4.5": ("zero", "audiodescription in `alternatives`; presence compiles"),
     "4.6": ("judge", "audiodescription pertinent: a reading"),
     "4.7": ("judge", "media clearly identifiable: a reading, media-fact-triggered"),
-    "4.8": ("vocab", "non-temporal media alternative: same missing kind"),
+    "4.8": ("zero", "the media kind's `temporal: False` says non-temporal media; "
+                    "its alternative is a resolvable reference"),
     "4.9": ("judge", "alternative pertinent: a reading"),
-    "4.10": ("vocab", "needs an `autoplay` fact; then compiles — sound started by "
-                      "nobody must be controllable"),
-    "4.11": ("vocab", "media controls keyboard/pointer-operable: media facts plus "
-                      "the existing event-probe route"),
-    "4.12": ("vocab", "same, non-temporal"),
-    "4.13": ("vocab", "player AT-compatibility: media facts plus the DOM instrument"),
+    "4.10": ("zero", "the media kind's `autoplay` fact; compiles — sound started "
+                     "by nobody must be controllable"),
+    "4.11": ("zero", "the media kind's `controllable` fact plus the existing "
+                     "event-probe route"),
+    "4.12": ("zero", "same, `temporal: False`"),
+    "4.13": ("zero", "media kind plus the DOM instrument"),
     # --- 5. Tableaux -----------------------------------------------------------------
-    "5.1": ("vocab", "needs a `complex_table` fact — 'complex' is an authoring-time "
-                     "judgment the vocabulary has no seat for"),
+    "5.1": ("zero", "the `table` kind's `complex` fact (interface@0.4.0) is the "
+                    "seat for that authoring-time judgment; a complex table with "
+                    "no summary binding then convicts"),
     "5.2": ("judge", "summary pertinent: a reading"),
     "5.3": ("zero", "layout table linearizes: DOM instrument reads source order"),
     "5.4": ("zero", "caption association: DOM instrument"),
@@ -133,8 +135,8 @@ CENSUS: dict[str, tuple[str, str]] = {
                       "over measured premises — the fits machinery verbatim"),
     "10.12": ("zero", "text-spacing overrides survive: the doubling machinery with "
                       "spacing multipliers"),
-    "10.13": ("vocab", "needs a `reveals` fact (hover/focus popover: dismissable, "
-                       "hoverable, persistent) — the drawing cannot say a tooltip"),
+    "10.13": ("zero", "the element's `reveals` fact (interface@0.4.0) says a "
+                      "tooltip: dismissable, hoverable, persistent each compile"),
     "10.14": ("zero", "CSS-revealed content keyboard-reachable: event probe"),
     # --- 11. Formulaires -------------------------------------------------------------
     "11.1": ("covered", "every-input-labeled"),
@@ -187,8 +189,9 @@ CENSUS: dict[str, tuple[str, str]] = {
     "13.9": ("covered", "works-both-ways-up"),
     "13.10": ("covered", "gesture-has-a-plain-alternative"),
     "13.11": ("covered", "touch-commits-on-release"),
-    "13.12": ("vocab", "device-motion input: no fact says an act listens to the "
-                       "accelerometer"),
+    "13.12": ("zero", "the element's `motion` fact (interface@0.4.0) says an act "
+                      "listens to device motion, names its conventional "
+                      "alternative, and says whether it can be turned off"),
 }
 
 ROUTES = ("covered", "zero", "vocab", "judge")

@@ -1,4 +1,4 @@
-"""interface@0.3.0 — an interface's denotation as data: what each screen shows, held
+"""interface@0.4.0 — an interface's denotation as data: what each screen shows, held
 in a tree that rules can traverse, laws can compile against, and a render layer can be
 generated from.
 
@@ -68,7 +68,16 @@ VOCABULARY = [
         "orders of magnitude less often than its surface is visited (create a "
         "household vs switch one — rare-action-folds-away expects such an element's "
         "`when` to pass through a disclosure state variable, so seeing it costs a "
-        "deliberate act). These are the facts the compilable laws read — stated on "
+        "deliberate act); `reveals` says this element appears on hover or focus "
+        "rather than living on the surface — a dict {on: 'hover'|'focus', "
+        "dismissable, hoverable, persistent}, the three booleans WCAG 1.4.13 and "
+        "RGAA 10.13 read: it can be dismissed without moving the pointer, the "
+        "pointer can travel onto it, and it stays until dismissed; `motion` says "
+        "the act this element commits also listens to device motion — a dict "
+        "{input: 'device-motion'|'tilt'|'shake', alternative: element-id, "
+        "disableable} naming the conventional control that performs the same act "
+        "and whether the listening can be turned off (WCAG 2.5.4, RGAA 13.12). "
+        "These are the facts the compilable laws read — stated on "
         "the element because they are properties of the drawing, not observations of "
         "a screen, and each is a judgment a person makes ONCE at authoring time that "
         "the prover then enforces over every reachable state.",
@@ -145,6 +154,37 @@ VOCABULARY = [
         "three viewports at a time and becomes a solved interval query; carried "
         "honestly: no solver consumes this kind yet, and a kind without a consumer is "
         "a promise, not a capability.",
+    ),
+    KindDef(
+        kind="media",
+        description="A piece of media standing in an element — the content family "
+        "the cost-blind censuses named unsayable (RGAA 4.x whole, WCAG 1.2.x "
+        "whole) because the estate's own apps carry none of it. Payload: `temporal` "
+        "(a timeline: video, audio, animation — False for a chart or an image map "
+        "standing as non-temporal media), `live` (produced as it is consumed), "
+        "`autoplay` (it starts by nobody's act — the fact WCAG 1.4.2 and RGAA 4.10 "
+        "convict over when no reachable control stops it), `controllable` (play, "
+        "pause, stop, volume reachable — the operability laws' subject), and "
+        "`alternatives` (a list from: transcript, captions, audiodescription, "
+        "sign-language, media-alternative — each naming an element id that carries "
+        "it, so 'the transcript exists' is a reference the tree resolves, never a "
+        "recollection). What stays with a reader is pertinence — whether the "
+        "captions are any good — exactly as the censuses' judge rows say. Carried "
+        "honestly: no compiler consumes this kind yet; what it settles today is "
+        "expressibility, which is the census's whole question.",
+    ),
+    KindDef(
+        kind="table",
+        description="A data table's semantics as data — the seat RGAA 5.x had no "
+        "vocabulary for. Payload: `complex` (a header structure a scope attribute "
+        "cannot carry — the authoring-time judgment RGAA 5.1 demands a summary "
+        "for), `layout` (a table used for arrangement, owed the OPPOSITE care: no "
+        "data-table markup, linearizable source order). Its caption and summary "
+        "are bindings or content among its children, so a table accounts for its "
+        "words the way every element does. Header-cell association is the DOM "
+        "instrument's half — markup, read where it renders; this kind carries the "
+        "judgments only an author can make. Carried honestly: no compiler consumes "
+        "it yet; it settles expressibility, the census's question.",
     ),
 ]
 
@@ -227,6 +267,25 @@ EXAMPLES = [
                  "strays": {"en": ["cart"], "fr": ["chariot"]},
                  "calques": {"fr": ["corbeille d'achat"]}},
     ),
+    # The media and table kinds, in the same demo domain: the product's demo video
+    # with its declared alternatives, and the sizing chart as a data table.
+    Node(
+        id="the-product-video", kind="media", name="the product demo video",
+        payload={"temporal": True, "live": False, "autoplay": False,
+                 "controllable": True,
+                 "alternatives": [{"kind": "transcript",
+                                   "element": "ex-video-transcript"},
+                                  {"kind": "captions",
+                                   "element": "ex-video-captions"}]},
+    ),
+    Node(
+        id="the-sizing-chart", kind="table", name="the sizing chart",
+        payload={"complex": False, "layout": False},
+        children=[
+            Node(id="ex-table-caption", kind="binding",
+                 payload={"key": "sizes.caption", "role": "text"}),
+        ],
+    ),
     # The same screen as it actually shipped, before the fix: a LEGAL drawing of a
     # defective app. The vocabulary describes what is; the compiled empty-state law is
     # what convicts this description, in every reachable state that shows both
@@ -293,9 +352,10 @@ COUNTER_EXAMPLES = [
 
 INTERFACE_PACKAGE = Package(
     name="interface",
-    version="0.3.0",
+    version="0.4.0",
     description="An interface's denotation as data: surfaces, elements, bindings, "
-                "content, denials, witnesses and (one day) constraints — the "
+                "content, denials, witnesses, media, tables and (one day) "
+                "constraints — the "
                 "formalism the craft laws' triggers bind to, the tree their "
                 "decidable half compiles against, and the artifact a render layer's "
                 "static parts are generated from so that drift is impossible by "

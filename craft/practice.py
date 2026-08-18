@@ -117,7 +117,17 @@ PRACTICE = [
                     "script and a missing payload draw the identical blank box. One "
                     "beacon ('the script ran'; 'no payload came') settled it in two "
                     "log lines. The estate's own flight-recorder doctrine says exactly "
-                    "this and it was not applied at the one boundary that mattered.")],
+                    "this and it was not applied at the one boundary that mattered."),
+                   ("spec-studio, 2026-08-18",
+                    "the founder reported a card whose sentence the server no longer "
+                    "served, and the reply was a live re-fetch plus a theory about "
+                    "whose screen was stale — while the recorder, armed on this server "
+                    "since day one, held every deck fetch WITH the payload served. The "
+                    "founder asked one question — 'did you use flight recorder?' — and "
+                    "the tape then answered in one read what the theory had spent the "
+                    "founder's patience asserting: old sentence served through 15:22, "
+                    "new from 15:35. The instrument existed, was running, and was not "
+                    "consulted; that is a grade below not building one.")],
         note="The tell is symptom collision: when two very different faults produce "
              "one picture, no amount of reasoning separates them and one cheap signal "
              "does.",

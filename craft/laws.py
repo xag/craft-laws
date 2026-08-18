@@ -286,6 +286,14 @@ LAWS = [
              "Three unrelated jobs stacked flat — rename this team, set its language, create "
              "another — plus a bare text box holding the team's name with nothing saying it was "
              "a name."),
+        
+            ("spec-studio ruling cards, 2026-08-18",
+             "a ruling card is itself a surface with one job — one decision — and one "
+             "card gathered the chore form's rhythm line with the Today tab's swap "
+             "line, because its grouping matched a law with an empty surface prefix. "
+             "The founder: 'the two items are not related'. The law that was almost "
+             "minted for this ('one-card-one-screen') was this law, applied to a "
+             "card."),
         ],
         note="Weaker than the others as a standalone law: it derives from #8 and progressive "
              "disclosure, and so far it has never produced a verdict that rare-action-folds-away "
@@ -622,6 +630,13 @@ LAWS = [
              "act was already named by the menu that led there, so the commits became a "
              "generic confirm — and the ruling refined this law with the generic-confirm "
              "exemption, so every adopter inherits the sharper check."),
+        
+            ("spec-studio ruling cards, 2026-08-18",
+             "the ellipsis card carried twelve findings: six menu entries × two "
+             "languages, the identical sentence beneath each. A bilingual app finds "
+             "every string defect once per language BY CONSTRUCTION, so evidence "
+             "doubles unless something merges it — the founder: 'there is "
+             "duplication'. One line now quotes all twelve places."),
         ],
         note="Which labels count as generic is an authoring-time declaration (the compiler's "
              "generic_keys), not a hardcoded wordlist: 'OK' is generic everywhere, but an "
@@ -1506,105 +1521,47 @@ LAWS = [
                     "images of text")],
     ),
 
-    # --- the judgment surface, 2026-08-18 ----------------------------------------
-    # A surface built to enforce laws broke three in front of the founder, and each is
-    # decidable, which is why both arrive with a decider (craft/cards.py) rather than
-    # as advice.
+    # --- what accompanies a claim, 2026-08-18 --------------------------------------
+    # Minted once, after a correction: five card-specific laws were written here first,
+    # and the founder ruled the failure was at GENERALIZATION — «a rule about a card is
+    # not generic». Three were instances of laws this file already had (say-it-once,
+    # one-surface-one-job, no-system-vocabulary; their sightings moved there), one was
+    # an app's own product spec and went back to its app, and the two about evidence
+    # were one proposition wearing two costumes. This is that proposition, stated at
+    # its real generality.
 
     _law(
-        "evidence-says-it-once",
-        "One defect is one line, however many places it fires",
-        _cited("W3C, WCAG 2.2, SC 3.2.4 Consistent Identification, Level AA"),
-        falsifier="Two entries of evidence beside one question whose explanations end "
-                  "with the same sentence — the same finding restated per language, "
-                  "per element, or per instance.",
-        triggers=["evidence is shown beside something a person must decide",
-                  "the app is translated into any second language"],
-        citations=[("W3C — WCAG 2.2, SC 3.2.4 Consistent Identification",
-                    "https://www.w3.org/TR/WCAG22/#consistent-identification",
-                    "Components that have the same functionality within a set of Web "
-                    "pages are identified consistently.")],
+        "what-accompanies-a-claim-supports-it",
+        "Whatever is presented WITH a claim — a picture, a quotation, a figure — is "
+        "relevant to it and consistent with it",
+        _cited("H. P. Grice, Logic and Conversation — the maxims of Relation and "
+               "Quality"),
+        falsifier="Hold the claim against its own accompaniment: the picture does not "
+                  "contain what the claim is about, or the words assert what the "
+                  "accompaniment disproves — «the app says nothing» beside a "
+                  "quotation of what it says.",
+        triggers=["a claim is presented together with supporting material"],
+        citations=[("Grice — Logic and Conversation, the maxim of Relation",
+                    "https://plato.stanford.edu/entries/implicature/",
+                    "Be relevant."),
+                   ("Grice — Logic and Conversation, the maxim of Quality",
+                    "https://plato.stanford.edu/entries/implicature/",
+                    "Do not say what you believe to be false.")],
         sightings=[("spec-studio ruling cards, 2026-08-18",
-                    "the ellipsis card carried twelve findings: six menu entries × two "
-                    "languages, each with the identical sentence beneath it. The card "
-                    "showed two and counted ten, so it both repeated itself and hid "
-                    "its own scope. The founder: 'there is duplication'. Now one line "
-                    "quotes all twelve places and the weight counts places, not "
-                    "lines.")],
-        note="The bilingual case is the trap: a string defect is found once per "
-             "language by construction, so every catalogue check doubles its evidence "
-             "unless something merges it.",
-    ),
-
-    _law(
-        "a-question-agrees-with-its-evidence",
-        "A question put to a person never contradicts the evidence beside it",
-        _uncited(),
-        falsifier="Read the question, then read the evidence under it: the question "
-                  "asserts something the evidence disproves — «the app says nothing» "
-                  "beside a quotation of what it says, «nothing happens» beside a "
-                  "photograph of what happens.",
-        triggers=["anything is put in front of a person to keep, drop, or rule on"],
-        sightings=[("spec-studio ruling cards, 2026-08-18",
-                    "a card asked whether to keep a button that «greys out and says "
-                    "nothing», directly above its own photograph of the app saying "
-                    "«That name is already taken» in red under the box. The founder "
-                    "could not rule on it, only correct it — which is the reader "
-                    "doing the author's work. Underneath, the drawing had modelled "
-                    "the commit button and neither the box nor the refusal, so a law "
-                    "was argued from a silence that existed only in the model.")],
-        note="The decidable half is cheap because both halves are already in the "
-             "record: the claim is the card's text, the evidence is its findings. "
-             "The pairs are narrow on purpose — a decider that guesses at meaning "
-             "convicts good cards and teaches everyone to ignore it.",
-    ),
-
-    _law(
-        "one-card-one-screen",
-        "One question a person must answer covers one screen",
-        _cited("Nielsen Norman Group, 10 Usability Heuristics, #8 Aesthetic and "
-               "Minimalist Design"),
-        falsifier="Read the evidence beside one question: it names two different "
-                  "screens, so a reader must hold two unrelated places in mind and no "
-                  "single picture can show what is being asked about.",
-        triggers=["several findings are gathered into one question",
-                  "anything is put in front of a person to keep, drop, or rule on"],
-        citations=[(f"{NNG} — #8 Aesthetic and Minimalist Design", NNG_URL,
-                    "Interfaces should not contain information that is irrelevant or "
-                    "rarely needed. Every extra unit of information in an interface "
-                    "competes with the relevant units of information and diminishes "
-                    "their relative visibility.")],
-        sightings=[("spec-studio ruling cards, 2026-08-18",
-                    "one card gathered the chore form's rhythm line and the Today "
-                    "tab's swap line, because the grouping matched a law with an "
-                    "empty surface prefix — so it matched every screen. The "
-                    "photograph could show only one of them, and the founder read "
-                    "the other as unrelated to it: 'the two items are not related "
-                    "and the second is not related to the snapshot'. Grouping by law "
-                    "gathers a category; grouping by decision gathers a question.")],
-    ),
-
-    _law(
-        "a-picture-shows-what-it-convicts",
-        "An illustration beside a judgment contains the thing being judged",
-        _uncited(),
-        falsifier="Look at the picture and find the convicted element in it. It is not "
-                  "there — another screen, another state, or a diagram of the surface "
-                  "rather than the surface — or nothing recorded what the picture was "
-                  "verified to contain.",
-        triggers=["a picture is shown beside something a person must decide"],
-        sightings=[("spec-studio ruling cards, 2026-08-18",
-                    "the cards first carried a DRAWING of the surface ('these are fake "
-                    "screen shots'), then real captures that still did not have to "
-                    "contain the convicted control — the capture instrument walked to a "
-                    "screen and photographed whatever was there. The founder: 'I don't "
-                    "see how the screen captures or examples illustrate anything "
-                    "related to the conviction'. A picture nobody verified is "
-                    "decoration, and decoration beside a question answers one nobody "
-                    "asked.")],
-        note="The mechanical form is cheap: the instrument that takes the picture "
-             "records which elements were visible in frame, and the check compares that "
-             "list against what the card convicts.",
+                    "twice in one day. A conviction carried a photograph that did not "
+                    "contain the convicted control — the capture walked to a screen "
+                    "and photographed whatever was there, and once photographed the "
+                    "right controls in the WRONG state, a healthy sheet as evidence "
+                    "of a defect. Then a card claimed a button «greys out and says "
+                    "nothing» directly above its own photograph of the app saying "
+                    "«That name is already taken» in red. The founder found both.")],
+        note="The decidable half is cheap because claim and accompaniment are both in "
+             "the record. The checks live in craft/cards.py; they enforce THIS law in "
+             "the card context and existing laws (say-it-once, one-surface-one-job, "
+             "no-system-vocabulary) in the same pass. And a correction stands behind "
+             "this entry: five card-specific laws stood here first, and the bar is "
+             "now a proposition somebody outside that surface would recognize — "
+             "otherwise it is the app's own spec and belongs in the app.",
     ),
 
     # --- the deck, 2026-08-17 ----------------------------------------------------
@@ -1741,25 +1698,6 @@ LAWS = [
              "which for an unexpirable cache means indefinitely.",
     ),
 
-    _law(
-        "a-judgment-carries-its-example",
-        "A sentence offered for judgment shows a concrete instance of itself",
-        _uncited(),
-        falsifier="A card, review row, or approval line asking for keep/drop/rule "
-                  "whose claim is stated only in the abstract — no quote, no instance, "
-                  "no snapshot beside the sentence being judged.",
-        triggers=["anything is put in front of a person to keep, drop, or rule on"],
-        sightings=[("spec-studio sheet v2, 2026-08-17",
-                    "the ruling cards carried their convicting findings, quote and "
-                    "why; the authored promises arrived bare, and the owner asked "
-                    "where the examples were on the first cards. The evidence section "
-                    "existed — only the rows that happened to have findings fed it, "
-                    "so the law held exactly where the data made it free.")],
-        note="The rulings loop obeyed this from birth because convictions ARE "
-             "evidence; the authored specs broke it because a promise's example has "
-             "to be authored too. A field nobody must fill is a field that is empty "
-             "where it matters.",
-    ),
 ]
 
 # What the laws are allowed to travel through. Ungrounded authority — an uncited law — will not

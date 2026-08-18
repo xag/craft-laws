@@ -17,8 +17,11 @@ related to the conviction".
     python -m craft.cards ledger/convictions.json
     python -m craft.cards --alarm
 
-The input is a card file: `{"cards": [{id, law, text, findings: [{where, quote, why}],
-sketch?, shows?}]}`. `shows` is what the card's picture was VERIFIED to contain — the
+These deciders enforce GENERAL laws in the card context — say-it-once,
+one-surface-one-job, no-system-vocabulary, what-accompanies-a-claim-supports-it. No law
+is card-specific: five were minted that way first, and the founder ruled the failure
+was at generalization. The input is a card file: `{"cards": [{id, law, text,
+findings: [{where, quote, why}], sketch?, shows?}]}`. `shows` is what the card's picture was VERIFIED to contain — the
 capture instrument writes it, and a picture that cannot say what it shows is treated as
 showing nothing, because an illustration nobody checked is decoration.
 """
@@ -85,7 +88,7 @@ def check_no_repetition(name: str, cards: list[dict]) -> list[CardFinding]:
         for tail, n in tails.items():
             if n > 1:
                 out.append(CardFinding(
-                    "evidence-says-it-once", c.get("id", name), tail[:80],
+                    "say-it-once", c.get("id", name), tail[:80],
                     f"{n} findings on one card end with the same sentence — one defect "
                     "said {n} times is a card that repeats itself and hides its scope"
                     .replace("{n}", str(n))))
@@ -131,7 +134,7 @@ def check_pictures_show_the_defect(name: str, cards: list[dict]) -> list[CardFin
         shows = [s for s in (c.get("shows") or []) if s]
         if not shows:
             out.append(CardFinding(
-                "a-picture-shows-what-it-convicts", c.get("id", name),
+                "what-accompanies-a-claim-supports-it", c.get("id", name),
                 "(no record of what the picture contains)",
                 "the card carries an illustration that never said what it shows — an "
                 "illustration nobody verified is decoration"))
@@ -142,7 +145,7 @@ def check_pictures_show_the_defect(name: str, cards: list[dict]) -> list[CardFin
             parts.update(p for p in w.split("--") if p)
         if parts and not (parts & set(shows)):
             out.append(CardFinding(
-                "a-picture-shows-what-it-convicts", c.get("id", name),
+                "what-accompanies-a-claim-supports-it", c.get("id", name),
                 ", ".join(sorted(shows))[:60],
                 "the picture contains none of the places this card convicts "
                 f"({', '.join(sorted(parts))[:60]})"))
@@ -172,7 +175,7 @@ def check_one_card_one_screen(name: str, cards: list[dict]) -> list[CardFinding]
             seen.add(where.split("/")[0])
         if len(seen) > 1:
             out.append(CardFinding(
-                "one-card-one-screen", c.get("id", name), ", ".join(sorted(seen))[:70],
+                "one-surface-one-job", c.get("id", name), ", ".join(sorted(seen))[:70],
                 f"{len(seen)} different screens under one question — a person ruling "
                 "on this must hold two unrelated places in mind, and any picture can "
                 "show at most one of them"))
@@ -205,7 +208,7 @@ def check_no_self_contradiction(name: str, cards: list[dict]) -> list[CardFindin
         for says, shows, why in _CONTRADICTIONS:
             if re.search(says, claim) and re.search(shows, shown):
                 out.append(CardFinding(
-                    "a-question-agrees-with-its-evidence", c.get("id", name),
+                    "what-accompanies-a-claim-supports-it", c.get("id", name),
                     (re.search(says, claim).group(0) + " / "
                      + re.search(shows, shown).group(0))[:60], why))
                 break

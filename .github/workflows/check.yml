@@ -37,7 +37,10 @@ jobs:
           declared = {"no-calque", "untranslatable-tone",
                       "empty-state-never-contradicts", "counts-are-computed",
                       "internal-references-resolve", "type-stays-legible",
-                      "a-ui-change-is-not-done-until-someone-has-looked", "publish",
+                      # honest red since the audit: CSP3 documents the mechanism that
+                      # punishes the stub, not the norm — a citation that says
+                      # something adjacent is decoration, so it came off
+                      "a-view-arrives-whole", "publish",
                       # the practice: laws about the work, red on the same terms
                       "the-users-attention-is-not-a-test-harness",
                       "a-detour-is-announced-as-a-detour", "publish-practice"}

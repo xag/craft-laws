@@ -57,11 +57,24 @@ PRACTICE = [
                     "one was on the producing side: tests green, machine carrying the "
                     "file, OAuth door answering, CI passing. The card on the phone was "
                     "never once observed until the founder said 'you really won't test "
-                    "what you do'.")],
+                    "what you do'."),
+                   ("spec-studio sheet, 2026-08-17 — the UI-change case",
+                    "the same day, the same failure at a finer grain: every claim "
+                    "about the redesigned card rested on green tests, and the widget "
+                    "was never rendered once. The first actual render found, in one "
+                    "look, two defects no test could state — an authored example set "
+                    "in monospace, so a sentence read as code, and the swipe hint "
+                    "placed below the quiet links, furthest from the card it explains. "
+                    "Both had been 'verified' for hours. A law was minted for this "
+                    "('a-ui-change-is-not-done-until-someone-has-looked') and folded "
+                    "back here: it was this law, applied to interface changes.")],
         note="The corollary is what makes it actionable: if the user's surface cannot "
              "be observed from here, say so in the same breath as the claim, and name "
              "what WAS observed instead. 'Deployed; I cannot see the phone' is honest. "
-             "'Deployed and verified' is not.",
+             "'Deployed and verified' is not. For anything a person will look at, the "
+             "observation is a rendered picture somebody read — a test says the wiring "
+             "holds, a picture says whether anyone can read it, and the second "
+             "question is the product.",
     ),
 
     _law(

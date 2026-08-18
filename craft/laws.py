@@ -1565,7 +1565,7 @@ LAWS = [
     ),
 
     # --- the deck, 2026-08-17 ----------------------------------------------------
-    # Three laws earned in one afternoon by spec-studio's one-card redesign: each is a
+    # Two laws earned in one afternoon by spec-studio's one-card redesign: each is a
     # defect the owner caught on their own screen within minutes of the deploy.
 
     _law(
@@ -1620,45 +1620,32 @@ LAWS = [
                     "muscle memory at the destructive verb.")],
     ),
 
-    _law(
-        "a-ui-change-is-not-done-until-someone-has-looked",
-        "No interface change ships on a passing test alone — it ships on a rendered "
-        "picture somebody read",
-        _uncited(),
-        falsifier="Ask for the screenshot of the change. There is none, or it was "
-                  "taken before the change, or nobody looked at it — and the evidence "
-                  "offered instead is a green suite, a log line, or a deploy id.",
-        triggers=["anything a person will look at changes"],
-        sightings=[("spec-studio sheet, 2026-08-17",
-                    "a day of 'done' against a founder answering 'still nothing'. "
-                    "Every claim rested on servers, tapes and green tests; the widget "
-                    "was never rendered once. The first render found, in one look, two "
-                    "defects no test could state: an authored example set in monospace, "
-                    "so a sentence read as code, and the swipe hint placed below the "
-                    "quiet links, furthest from the card it explains. Both had been "
-                    "'verified' for hours.")],
-        note="A test says the wiring holds. A picture says whether anyone can read it, "
-             "and those are different questions — the second one is the product.",
-    ),
+    # A third law stood in that section — a-ui-change-is-not-done-until-someone-has-
+    # looked — and was folded into done-is-observed-where-the-user-stands
+    # (practice.py) when the laws were audited against the generalization bar: it was
+    # that law specialized to UI changes, misfiled among the laws about screens, and
+    # carried as uncited red while its twin held the Agans citation. Its sighting
+    # travelled with it.
 
     _law(
         "a-view-arrives-whole",
         "What a host fetches to show is the whole view, not a stub that fetches the rest",
-        _cited("W3C, Content Security Policy Level 3, script-src and nonce-source"),
+        Quantity(value=1, unit="law", provenance="asserted; the norm is practised "
+                 "widely, no authority stating it has been captured", grounded=False,
+                 source="The proposition is recognizable wherever views are delivered "
+                        "into a host someone else controls — mail clients strip "
+                        "scripts, AMP forbids author JavaScript outright — but no "
+                        "captured text STATES the norm. CSP3 was cited here once; it "
+                        "documents the mechanism that punishes the stub, not the rule, "
+                        "and a citation that says something adjacent is decoration "
+                        "(what-accompanies-a-claim-supports-it, applied to this file). "
+                        "Find a source that says it, or this stays honest red."),
         falsifier="Load the view in its real sandbox: styles and markup appear, "
                   "behaviour does not — an empty frame in the shape of the real one. "
                   "The tell is a runtime-created <script> that never executes and "
                   "raises nothing the page can catch.",
         triggers=["a view is delivered into a sandbox somebody else controls",
                   "a page builds part of itself after loading"],
-        citations=[("W3C — Content Security Policy Level 3, §6.1 script-src",
-                    "https://www.w3.org/TR/CSP3/#directive-script-src",
-                    "The script-src directive restricts the locations from which "
-                    "scripts may be executed."),
-                   ("W3C — Content Security Policy Level 3, nonce-source",
-                    "https://www.w3.org/TR/CSP3/#grammardef-nonce-source",
-                    "The nonce-source grammar allows a script or style to execute if "
-                    "it carries a nonce attribute matching the one in the policy.")],
         sightings=[("spec-studio sheet, 2026-08-17",
                     "the card's resource was a bootstrap that called a tool for the "
                     "real widget and injected it. It fetched, it ran, it called the "
@@ -1669,7 +1656,10 @@ LAWS = [
                     "cache that a content-hashed URI defeats natively.")],
         note="A stub is a second round-trip and a second trust decision, bought to "
              "solve a caching problem that a content-addressed name solves without "
-             "either.",
+             "either. The environment evidence, kept as evidence and not as authority: "
+             "CSP3 §6.1 script-src ('The script-src directive restricts the locations "
+             "from which scripts may be executed', w3.org/TR/CSP3) is why the stub's "
+             "injected script died silently — the mechanism, not the norm.",
     ),
 
     _law(

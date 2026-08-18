@@ -41,7 +41,10 @@ jobs:
                       "a-ui-change-is-not-done-until-someone-has-looked", "publish",
                       # the practice: laws about the work, red on the same terms
                       "the-users-attention-is-not-a-test-harness",
-                      "a-detour-is-announced-as-a-detour", "publish-practice"}
+                      "a-detour-is-announced-as-a-detour", "publish-practice",
+                      # the judgment surface: a picture that shows what it convicts is
+                      # ours alone so far — source it or carry the red
+                      "a-picture-shows-what-it-convicts"}
           assert red == declared, (
               f"the red set changed: {sorted(red)} != {sorted(declared)} - a law lost or "
               "gained a citation without the record moving. Update laws.py AND this list "
@@ -53,6 +56,8 @@ jobs:
       # see it — but the front page stays green or the build says so.
       - name: The claim deciders' alarms are live
         run: uv run python -m craft.claims --alarm
+      - name: The card deciders' alarms are live
+        run: uv run python -m craft.cards --alarm
       - name: This repo's own claims hold
         run: uv run python -m craft.claims claims.jsonl
       - name: The README passes its own laws

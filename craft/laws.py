@@ -1506,6 +1506,59 @@ LAWS = [
                     "images of text")],
     ),
 
+    # --- the judgment surface, 2026-08-18 ----------------------------------------
+    # A surface built to enforce laws broke three in front of the founder, and each is
+    # decidable, which is why both arrive with a decider (craft/cards.py) rather than
+    # as advice.
+
+    _law(
+        "evidence-says-it-once",
+        "One defect is one line, however many places it fires",
+        _cited("W3C, WCAG 2.2, SC 3.2.4 Consistent Identification, Level AA"),
+        falsifier="Two entries of evidence beside one question whose explanations end "
+                  "with the same sentence — the same finding restated per language, "
+                  "per element, or per instance.",
+        triggers=["evidence is shown beside something a person must decide",
+                  "the app is translated into any second language"],
+        citations=[("W3C — WCAG 2.2, SC 3.2.4 Consistent Identification",
+                    "https://www.w3.org/TR/WCAG22/#consistent-identification",
+                    "Components that have the same functionality within a set of Web "
+                    "pages are identified consistently.")],
+        sightings=[("spec-studio ruling cards, 2026-08-18",
+                    "the ellipsis card carried twelve findings: six menu entries × two "
+                    "languages, each with the identical sentence beneath it. The card "
+                    "showed two and counted ten, so it both repeated itself and hid "
+                    "its own scope. The founder: 'there is duplication'. Now one line "
+                    "quotes all twelve places and the weight counts places, not "
+                    "lines.")],
+        note="The bilingual case is the trap: a string defect is found once per "
+             "language by construction, so every catalogue check doubles its evidence "
+             "unless something merges it.",
+    ),
+
+    _law(
+        "a-picture-shows-what-it-convicts",
+        "An illustration beside a judgment contains the thing being judged",
+        _uncited(),
+        falsifier="Look at the picture and find the convicted element in it. It is not "
+                  "there — another screen, another state, or a diagram of the surface "
+                  "rather than the surface — or nothing recorded what the picture was "
+                  "verified to contain.",
+        triggers=["a picture is shown beside something a person must decide"],
+        sightings=[("spec-studio ruling cards, 2026-08-18",
+                    "the cards first carried a DRAWING of the surface ('these are fake "
+                    "screen shots'), then real captures that still did not have to "
+                    "contain the convicted control — the capture instrument walked to a "
+                    "screen and photographed whatever was there. The founder: 'I don't "
+                    "see how the screen captures or examples illustrate anything "
+                    "related to the conviction'. A picture nobody verified is "
+                    "decoration, and decoration beside a question answers one nobody "
+                    "asked.")],
+        note="The mechanical form is cheap: the instrument that takes the picture "
+             "records which elements were visible in frame, and the check compares that "
+             "list against what the card convicts.",
+    ),
+
     # --- the deck, 2026-08-17 ----------------------------------------------------
     # Three laws earned in one afternoon by spec-studio's one-card redesign: each is a
     # defect the owner caught on their own screen within minutes of the deploy.

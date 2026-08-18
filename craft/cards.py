@@ -44,7 +44,6 @@ class CardFinding:
 # id, or a term of art from the rule rather than from the world.
 _JARGON = (
     (r"\b[a-z][a-z0-9]*(?:_[a-z0-9]+)+\b", "a code identifier (snake_case)"),
-    (r"(?<![\w-])[a-z]+(?:-[a-z]+){2,}(?![\w-])", "a law or element id (kebab-case)"),
     (r"[#.][a-zA-Z][\w-]*\s*(?:>|\{|$)", "a CSS selector"),
     (r"\bbiconditional\b", "a term of art from the rule, not the world"),
     (r"\bno state may render it\b", "the prover's phrasing"),
@@ -56,6 +55,15 @@ _JARGON = (
 # Words a judgment card is allowed to keep even though they look like ids: the verdict
 # vocabulary itself, and the estate's own names for what a person is doing.
 _ALLOWED = ("stand", "exempt", "fix", "keep", "drop", "unclear")
+
+
+def _law_ids() -> set[str]:
+    """The actual law ids, so a card is convicted for naming a LAW rather than for
+    hyphenating English: «the take-it-off button» is a name a person can read, and
+    «rare-action-folds-away» is this package talking to itself."""
+    from craft.laws import LAWS
+    from craft.practice import PRACTICE
+    return {law.id for law in LAWS} | {law.id for law in PRACTICE}
 
 
 def _sentences(text: str) -> list[str]:
@@ -94,6 +102,12 @@ def check_no_jargon(name: str, cards: list[dict]) -> list[CardFinding]:
             plain = text
             for word in _ALLOWED:
                 plain = plain.replace(word, "·")
+            hit = next((lid for lid in _law_ids() if lid in plain), None)
+            if hit:
+                out.append(CardFinding(
+                    "no-system-vocabulary", f"{c.get('id', name)} / {where}", hit,
+                    "a law's own id on a surface whose only job is a person deciding"))
+                continue
             for pattern, what in _JARGON:
                 m = re.search(pattern, plain)
                 if m:

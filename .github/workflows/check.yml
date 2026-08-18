@@ -57,6 +57,13 @@ jobs:
         run: uv run python -m craft.claims --alarm
       - name: The card deciders' alarms are live
         run: uv run python -m craft.cards --alarm
+      # The founder's ruling, mechanized: «a rule about a card is not generic and
+      # should not go to craft laws». A law states itself in the world's vocabulary
+      # or the build fails — see craft/genericity.py for the bar and its exemptions.
+      - name: The genericity alarm is live
+        run: uv run python -m craft.genericity --alarm
+      - name: Every law is a proposition, not an app spec
+        run: uv run python -m craft.genericity
       - name: This repo's own claims hold
         run: uv run python -m craft.claims claims.jsonl
       - name: The README passes its own laws

@@ -473,9 +473,8 @@ LAWS = [
         "paragraphs-stay-under-five-sentences",
         "No paragraph of documentation or interface prose runs past five sentences",
         _cited("GOV.UK writing guidelines, Use clear language"),
-        falsifier="A paragraph of six or more sentences. Countable — the second "
-                  "mined law with a number in its falsifier, decider material "
-                  "exactly as sentences-stay-under-twenty-five-words is.",
+        falsifier="A paragraph of six or more sentences. Countable — checkable by "
+                  "machine exactly as sentences-stay-under-twenty-five-words is.",
         triggers=["the project ships documentation meant to be read long after it "
                   "is written (a README, a guide, a reference)"],
         citations=[("GOV.UK — Writing guidelines, Use clear language",
@@ -584,8 +583,8 @@ LAWS = [
         _uncited(),
         falsifier="A markdown anchor with no matching heading, a relative link to "
                   "a file that is not there, a named section nobody can find. "
-                  "Fully mechanical, and the doc-lane twin of drift: a green "
-                  "document over a moved target is a proof over a fiction.",
+                  "Fully mechanical, and the documentation counterpart of drift: a "
+                  "green document over a moved target is a proof over a fiction.",
         triggers=["the project ships documentation meant to be read long after it "
                   "is written (a README, a guide, a reference)"],
         note="Uncited and red, in this repo's own tradition: universally enforced "
@@ -993,7 +992,8 @@ LAWS = [
                   "executing with no confirmation; a confirm whose destructive button "
                   "has no paired cancel.",
         triggers=["an action is destructive, irreversible, or binding on somebody else "
-                  "(a chore assigned to another person; a proposal that redeals the week)"],
+                  "(a task assigned to another person; a schedule change for the "
+                  "whole group)"],
         citations=[("Shopify Polaris — Button group",
                     "https://shopify.dev/docs/api/app-home/web-components/actions/button-group",
                     "Pair a cancel button with a critical action for destructive "

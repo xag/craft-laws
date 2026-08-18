@@ -48,8 +48,9 @@ _JARGON = (
     (r"\bbiconditional\b", "a term of art from the rule, not the world"),
     (r"\bno state may render it\b", "the prover's phrasing"),
     (r"\bguard\b|\bvariable\b|\binvariant\b", "the checker's vocabulary"),
-    (r"\bcatalogue keys?\b", "the build's vocabulary"),
+    (r"\bcatalogue\b", "the build's word for the file of strings"),
     (r"#\d{2,}", "an issue number"),
+    (r"[a-zA-Z_]\w*\(\)", "a function call, verbatim from the code"),
 )
 
 # Words a judgment card is allowed to keep even though they look like ids: the verdict

@@ -70,6 +70,15 @@ LAWS = [
             ("chores 2026-07-13, the add-a-chore sheet",
              "« Tout l'équilibre se compte en minutes » — *l'équilibre* is the app's name for "
              "its own fairness ledger. A person counts minutes."),
+            ("chores ruling cards, 2026-08-18",
+             "The judgment surface itself: ungrouped conviction cards served law ids, "
+             "element ids, click paths and solver margins as the sentence to judge — "
+             "«targets-are-thumb-sized: '-8.6px margin at 15px' — 'header-all' renders "
+             "26.8x15.4px…» — on the one screen whose whole job is a person deciding. "
+             "The founder: 'humans don't read code to decide'. The drawing had named "
+             "every element in the owner's words all along (the All toggle beside the "
+             "date); the cards had never consulted it. A tool built to enforce laws is "
+             "not excused from them, and is where their breach costs most."),
         ],
     ),
 

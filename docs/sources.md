@@ -57,6 +57,14 @@ The doc lane's own catalogue, added when the doc laws arrived. Ranked by the sam
 10. **EU "How to write clearly"** — multilingual (24 languages), free; useful as the non-English root the doc lane otherwise lacks.
 11. **Write the Docs** — community practice, weak authority; mine for candidates, cite something stronger.
 
+## Survey methodology (added 2026-08-19, with the-answers-span-the-question)
+
+The discipline that studies closed questions — the natural root for every law about questions and answer sets rather than about controls, a lane the catalogue did not carry until a law needed it.
+
+1. **Krosnick & Presser, Question and Questionnaire Design** (Handbook of Survey Research, 2010, ch. 9) — the conventional-wisdom list is eight numbered design principles («Make response options exhaustive and mutually exclusive» is item 5, quoted verbatim from the Stanford-hosted PDF); the rest of the chapter is the empirical case. Free, quotable, and the root of the-answers-span-the-question. https://web.stanford.edu/dept/communication/faculty/krosnick/docs/2010/2010%20Handbook%20of%20Survey%20Research.pdf
+2. **US federal statistical agencies** (BLS, Census) — public-domain empirical work on classification error when response options fail exhaustiveness; chase Bosley/Fricker/Gillman (BLS 2012) for the measured consequence before citing it.
+3. **AAPOR best practices** — states the same requirement; only secondhand versions found so far, so it stays unquoted until the primary text is in hand — paraphrase is how fabrication starts.
+
 ## Gaps found (searched, thin)
 
 Sweden and Spain lack national design systems with stated rules (Sweden has Klarspråk for language); voice UX has no living authoritative source; PlayStation/Nintendo guidelines are NDA'd; no third empirical org at NN/g/Baymard scale (academic HCI is paper-by-paper, not a catalogue); corporate content-design culture is anglophone — no non-English corporate style guide of note; Germany's KERN is real but young.

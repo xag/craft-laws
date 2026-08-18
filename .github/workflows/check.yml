@@ -41,6 +41,9 @@ jobs:
                       # punishes the stub, not the norm — a citation that says
                       # something adjacent is decoration, so it came off
                       "a-view-arrives-whole", "publish",
+                      # the #9 and #11 candidates: caught real defects, no authority
+                      # found stating either — carried red in the house tradition
+                      "no-element-covers-another", "commit-is-a-bare-verb",
                       # the practice: laws about the work, red on the same terms
                       "the-users-attention-is-not-a-test-harness",
                       "a-detour-is-announced-as-a-detour", "publish-practice"}

@@ -1688,6 +1688,90 @@ LAWS = [
              "which for an unexpirable cache means indefinitely.",
     ),
 
+    _law(
+        "no-element-covers-another",
+        "No element a person must read or press is covered by another — two rendered "
+        "rectangles intersect only where one is declared the other's ground",
+        _uncited(),
+        falsifier="A close control rendered on top of a title: the title unreadable, "
+                  "part of what lies under both unreachable. Measurable: two "
+                  "elements' rects intersect and neither declares the other its "
+                  "ground (a sheet over a dimmed page, a menu over what opened it "
+                  "are declared coverings, not breaches).",
+        triggers=["any interface at all"],
+        sightings=[("spec-studio, 2026-08-17 (xag/spec-studio#13)",
+                    "The expanded view rendered its close button on top of its "
+                    "title — the title unreadable and part of what sat under both "
+                    "unreachable — while every layout check passed, because each "
+                    "checks one element against one box and overlap is a relation "
+                    "between two.")],
+        note="Nearest stated kin: WCAG 2.2 SC 2.4.11 (a focused component not "
+             "entirely hidden by author content) and SC 1.4.10 (no loss under "
+             "reflow) — each asserts a corner of this, neither the law itself, so "
+             "it stands uncited rather than wearing a citation that says something "
+             "adjacent. The mechanical route is the layout solver's own class: a "
+             "pairwise intersection test over measured rects, endpoint-exact "
+             "across the viewport interval, refusing on anything unmeasured — plus "
+             "one new fact, the declared ground.",
+    ),
+
+    _law(
+        "the-answers-span-the-question",
+        "The answers a surface offers span the answers its question admits",
+        _cited("Krosnick & Presser, Question and Questionnaire Design "
+               "(Handbook of Survey Research, 2010)"),
+        falsifier="A question posed beside a fixed answer set that cannot express "
+                  "an answer the question itself invites — the person is made to "
+                  "pick a word that answers something else, and the record shows a "
+                  "choice nobody made.",
+        triggers=["any interface that asks the user a question with a fixed "
+                  "answer set",
+                  "one verdict vocabulary is reused across rows that ask "
+                  "different questions"],
+        citations=[("Krosnick & Presser — Question and Questionnaire Design, "
+                    "Handbook of Survey Research (2010), ch. 9",
+                    "https://web.stanford.edu/dept/communication/faculty/krosnick/"
+                    "docs/2010/2010%20Handbook%20of%20Survey%20Research.pdf",
+                    "Make response options exhaustive and mutually exclusive")],
+        sightings=[("spec-studio, 2026-08-18 (xag/spec-studio#14)",
+                    "A judgment row carried a genuine open question in its text "
+                    "and declared no answer set, so it fell back to the sheet's "
+                    "default keep/drop — neither word answers it. Sibling rows on "
+                    "the same sheet carried their own three-word vocabulary, proof "
+                    "the row-specific set exists and this row simply never "
+                    "declared one.")],
+        note="Survey methodology is the discipline that studies closed questions, "
+             "and it is this law's root — a new lane in docs/sources.md. The "
+             "route is hybrid: the declared answer set is structural (the offered "
+             "options are data), whether it spans the question's own text is one "
+             "reading per question — the radar pattern.",
+    ),
+
+    _law(
+        "commit-is-a-bare-verb",
+        "A control that commits, creates or destroys is labelled with its verb — a "
+        "real object may follow, an object pronoun may not",
+        _uncited(),
+        falsifier="A commit control whose label is a verb plus a pronoun standing "
+                  "for the thing on the sheet («Make it», «Save it», «Take it "
+                  "off») where the bare verb — Save, Create, Remove — is what a "
+                  "person would say.",
+        triggers=["any interface with a control that commits something"],
+        sightings=[("chores, 2026-08-18 (xag/craft-laws#11)",
+                    "The create-a-household form commits with «Make it» and the "
+                    "edit sheet's remove control reads «Take it off». Both reached "
+                    "the judgment surface only as by-products of other findings — "
+                    "the wording itself was never the complaint, and would have "
+                    "survived a fix to either.")],
+        note="A verb with a real object — «Add a person», «Take a turn» — passes: "
+             "the defect is the pronoun, which names nothing its reader can "
+             "check. French wants the same bare form (Enregistrer, Créer, "
+             "Supprimer — never «Fais-le»), and its object clitics attach by "
+             "hyphen, which is what a decider should key on there. Decidable "
+             "from the label and the control's role alone — the lexicon family, "
+             "beside ellipsis-promises-more-input.",
+    ),
+
 ]
 
 # What the laws are allowed to travel through. Ungrounded authority — an uncited law — will not

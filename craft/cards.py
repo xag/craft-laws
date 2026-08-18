@@ -149,7 +149,38 @@ def check_pictures_show_the_defect(name: str, cards: list[dict]) -> list[CardFin
     return out
 
 
-CHECKS = (check_no_repetition, check_no_jargon, check_pictures_show_the_defect)
+def check_one_card_one_screen(name: str, cards: list[dict]) -> list[CardFinding]:
+    """One card is one decision, and a decision lives on one screen.
+
+    A card grouped by law alone gathered the chore form's rhythm line and the Today
+    tab's swap line under one question, with a photograph that could only show one of
+    them — so half the evidence had nothing to do with the picture, and the two halves
+    had nothing to do with each other. The founder: 'the two items are not related and
+    the second is not related to the snapshot'.
+
+    Walk surfaces are named `tab:x`, `sheet:x`, `fold:x/y`; findings from the prover
+    and the solver name elements instead and are exempt, since an element belongs to
+    whatever surface shows it.
+    """
+    out = []
+    for c in cards:
+        seen = set()
+        for f in c.get("findings") or []:
+            where = (f.get("where") or "").split("[")[0]
+            if ":" not in where:
+                continue
+            seen.add(where.split("/")[0])
+        if len(seen) > 1:
+            out.append(CardFinding(
+                "one-card-one-screen", c.get("id", name), ", ".join(sorted(seen))[:70],
+                f"{len(seen)} different screens under one question — a person ruling "
+                "on this must hold two unrelated places in mind, and any picture can "
+                "show at most one of them"))
+    return out
+
+
+CHECKS = (check_no_repetition, check_no_jargon, check_pictures_show_the_defect,
+          check_one_card_one_screen)
 
 
 def check_file(path: Path) -> list[CardFinding]:
@@ -178,6 +209,11 @@ def _alarm() -> int:
          "findings": [{"where": "edit-remove", "quote": "Remove",
                        "why": "nothing asks first: one tap is the loss."}],
          "has_screen": True, "shows": ["header-add"]},
+        {"id": "ruling:d", "text": "Two screens, one question. Stand?",
+         "findings": [{"where": "fold:ajouter-une-tache/when[empty]", "quote": "a",
+                       "why": "one line reads as a fragment."},
+                      {"where": "tab:today[seeded]", "quote": "b",
+                       "why": "another line reads as a fragment."}]},
     ]
     clean = [
         {"id": "ruling:c",

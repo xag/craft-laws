@@ -1537,6 +1537,31 @@ LAWS = [
     ),
 
     _law(
+        "one-card-one-screen",
+        "One question a person must answer covers one screen",
+        _cited("Nielsen Norman Group, 10 Usability Heuristics, #8 Aesthetic and "
+               "Minimalist Design"),
+        falsifier="Read the evidence beside one question: it names two different "
+                  "screens, so a reader must hold two unrelated places in mind and no "
+                  "single picture can show what is being asked about.",
+        triggers=["several findings are gathered into one question",
+                  "anything is put in front of a person to keep, drop, or rule on"],
+        citations=[(f"{NNG} — #8 Aesthetic and Minimalist Design", NNG_URL,
+                    "Interfaces should not contain information that is irrelevant or "
+                    "rarely needed. Every extra unit of information in an interface "
+                    "competes with the relevant units of information and diminishes "
+                    "their relative visibility.")],
+        sightings=[("spec-studio ruling cards, 2026-08-18",
+                    "one card gathered the chore form's rhythm line and the Today "
+                    "tab's swap line, because the grouping matched a law with an "
+                    "empty surface prefix — so it matched every screen. The "
+                    "photograph could show only one of them, and the founder read "
+                    "the other as unrelated to it: 'the two items are not related "
+                    "and the second is not related to the snapshot'. Grouping by law "
+                    "gathers a category; grouping by decision gathers a question.")],
+    ),
+
+    _law(
         "a-picture-shows-what-it-convicts",
         "An illustration beside a judgment contains the thing being judged",
         _uncited(),

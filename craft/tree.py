@@ -403,3 +403,66 @@ DECISIONS.append(Node(
                              "silence, not a pass."}),
     ],
 ))
+
+
+DECISIONS.append(Node(
+    id="the-ruling-pipeline-is-the-packages-the-questions-are-the-apps",
+    kind="decision",
+    name="The ruling-card pipeline — carding, readability, grouping, settling, "
+         "orphan reporting — lives here as craft/rulings.py, consumer-blind; an "
+         "app keeps only what only it can know: its authored question texts, its "
+         "grouping of findings into decisions, and its lanes",
+    payload={
+        "rationale":
+            "2026-08-19, the architecture ruling on the first adopter's copy: the "
+            "logic is load-bearing, the intent is not. Every function in the "
+            "adopter's rulings module below its question texts — settle's binding "
+            "of verdicts to the deck, the jargon-to-reading passes (plainer, "
+            "readable, speak), the merges that never synthesize a sentence "
+            "(dedupe, collapse), the sentence-safe cut, the drawing readers that "
+            "name and sketch, the orphan report — was written against generic "
+            "inputs (a drawing, findings, a rulings file) and carried lessons "
+            "every adopter will need: an owner cannot rule on a walker's "
+            "notation, a merged head must never invert a finding, an id drift "
+            "must be said out loud. Held in one app, the second adopter forks "
+            "the lessons and the third forks the fork. Dependencies point app → "
+            "harness libs, never the reverse: the module reads a drawing plus "
+            "findings plus a rulings file, and knows no app.",
+        "consequence":
+            "craft/rulings.py, with its own --alarm in the house style: every "
+            "transformer faces a guilty case it must change and a clean case it "
+            "must not (the element-names alarm caught its author's own wrong "
+            "expectation on first run). The app-side residue is data handed in: "
+            "GROUPS ((law, where-prefix) -> (group id, question)), QUESTIONS "
+            "(authored per-law texts), plainer extras for the app's own note "
+            "jargon, and the app's instruments feeding add_finding. The first "
+            "adopter re-adopts by deleting everything else.",
+    },
+    children=[
+        Node(id="alt-leave-it-in-the-adopter", kind="alternative",
+             name="Leave the pipeline in the app that grew it; let the next "
+                  "adopter copy the file",
+             payload={"why":
+                      "A copy forks the lessons: the next founder meets the raw "
+                      "walker notation again, because the fix that made cards "
+                      "readable lives in a repo their app does not read. The "
+                      "estate exists to make a defect fixed once fixed for every "
+                      "adopter."}),
+        Node(id="alt-put-it-in-the-judgment-surface", kind="alternative",
+             name="Put the pipeline in the deck app that renders the cards",
+             payload={"why":
+                      "The deck is one client family among several, a peer of "
+                      "the apps it serves, and the pipeline must run in the "
+                      "app's own CI with no door in sight. A pipeline living in "
+                      "the renderer couples conviction to display — the exact "
+                      "coupling the settle consultation was built to end."}),
+        Node(id="alt-put-it-in-surface-tape", kind="alternative",
+             name="Ship it with the walk artifact in surface-tape",
+             payload={"why":
+                      "The cards are the LAWS' loop: what they card are this "
+                      "package's convictions, and stand/exempt/fix is doctrine "
+                      "about how a law's red may be answered. surface-tape "
+                      "carries evidence, not doctrine; the rulings consult the "
+                      "drawing and the laws, both of which live here."}),
+    ],
+))

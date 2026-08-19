@@ -60,6 +60,8 @@ jobs:
         run: uv run python -m craft.claims --alarm
       - name: The card deciders' alarms are live
         run: uv run python -m craft.cards --alarm
+      - name: The ruling pipeline's alarms are live
+        run: uv run python -m craft.rulings --alarm
       # The founder's ruling, mechanized: «a rule about a card is not generic and
       # should not go to craft laws». A law states itself in the world's vocabulary
       # or the build fails — see craft/genericity.py for the bar and its exemptions.

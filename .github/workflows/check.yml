@@ -41,9 +41,12 @@ jobs:
                       # punishes the stub, not the norm — a citation that says
                       # something adjacent is decoration, so it came off
                       "a-view-arrives-whole", "publish",
-                      # the #9 and #11 candidates: caught real defects, no authority
-                      # found stating either — carried red in the house tradition
-                      "no-element-covers-another", "commit-is-a-bare-verb",
+                      # the #9 candidate: caught a real defect, no authority
+                      # found stating it — carried red in the house tradition
+                      # (its #11 sibling, commit-is-a-bare-verb, found its root
+                      # 2026-08-19: the Parliament Design System states the verb
+                      # half verbatim, and the pronoun refinement stays ours)
+                      "no-element-covers-another",
                       # the practice: laws about the work, red on the same terms
                       "the-users-attention-is-not-a-test-harness",
                       "a-detour-is-announced-as-a-detour", "publish-practice"}

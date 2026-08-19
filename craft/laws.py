@@ -1751,12 +1751,17 @@ LAWS = [
         "commit-is-a-bare-verb",
         "A control that commits, creates or destroys is labelled with its verb — a "
         "real object may follow, an object pronoun may not",
-        _uncited(),
+        _cited("UK Parliament Design System, Button — the verb half; the "
+               "no-object-pronoun refinement is this package's, from the sighting"),
         falsifier="A commit control whose label is a verb plus a pronoun standing "
                   "for the thing on the sheet («Make it», «Save it», «Take it "
                   "off») where the bare verb — Save, Create, Remove — is what a "
                   "person would say.",
         triggers=["any interface with a control that commits something"],
+        citations=[("UK Parliament Design System — Button",
+                    "https://designsystem.parliament.uk/components/button/",
+                    "Start button text with a verb (an action), for example, "
+                    "‘Save and continue’.")],
         sightings=[("chores, 2026-08-18 (xag/craft-laws#11)",
                     "The create-a-household form commits with «Make it» and the "
                     "edit sheet's remove control reads «Take it off». Both reached "

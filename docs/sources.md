@@ -65,6 +65,10 @@ The discipline that studies closed questions — the natural root for every law 
 2. **US federal statistical agencies** (BLS, Census) — public-domain empirical work on classification error when response options fail exhaustiveness; chase Bosley/Fricker/Gillman (BLS 2012) for the measured consequence before citing it.
 3. **AAPOR best practices** — states the same requirement; only secondhand versions found so far, so it stays unquoted until the primary text is in hand — paraphrase is how fabrication starts.
 
+## The red-law hunt (searched 2026-08-19, nothing citable verbatim yet)
+
+A targeted pass for the uncited laws, recorded so the next hunter starts where this one stopped. `commit-is-a-bare-verb`: GOV.UK and NHS both say only "Write button text in sentence case, describing the action it performs" — action, never *verb*, so it is adjacent; the UK Parliament Design System reportedly states "Button text should start with a verb (an action)" but the page refuses non-browser fetches, so no verbatim was verified — worth one browser visit. `no-element-covers-another`: WCAG 2.2 SC 2.4.11 (Focus Not Obscured) is the nearest normative text and is doubly narrower — focused elements only, entirely-hidden only — a citation from it would be decoration. `type-stays-legible`: Apple HIG's 11pt floor is the known root and the catalogue already licenses citing Apple where it is the root, but the HIG page serves a script shell to fetchers; the verbatim needs a browser session. `empty-state-never-contradicts`: NN/g's empty-state article commands a clear next action and never states the no-contradiction half. Adjacent is not cited here, on this file's own rule.
+
 ## Gaps found (searched, thin)
 
 Sweden and Spain lack national design systems with stated rules (Sweden has Klarspråk for language); voice UX has no living authoritative source; PlayStation/Nintendo guidelines are NDA'd; no third empirical org at NN/g/Baymard scale (academic HCI is paper-by-paper, not a catalogue); corporate content-design culture is anglophone — no non-English corporate style guide of note; Germany's KERN is real but young.

@@ -49,7 +49,11 @@ jobs:
                       "no-element-covers-another",
                       # the practice: laws about the work, red on the same terms
                       "the-users-attention-is-not-a-test-harness",
-                      "a-detour-is-announced-as-a-detour", "publish-practice"}
+                      "a-detour-is-announced-as-a-detour", "publish-practice",
+                      # 2026-08-20: a half-done job reported as a choice, three faces
+                      # of it, each with a decider; no authority found stating any
+                      "deliberate-names-its-decision", "a-remainder-names-its-debt",
+                      "a-census-is-read-from-its-source"}
           assert red == declared, (
               f"the red set changed: {sorted(red)} != {sorted(declared)} - a law lost or "
               "gained a citation without the record moving. Update laws.py AND this list "

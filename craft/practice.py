@@ -192,6 +192,74 @@ PRACTICE = [
              "the answer, because that ends the hunt for the cause while the cause is "
              "still there.",
     ),
+
+    # --- earned 2026-08-20, in one session, by one habit: a job left half done and
+    # --- reported as a choice. Three faces of it, each with its own decider.
+    _law(
+        "deliberate-names-its-decision",
+        "A state called deliberate, by design or on purpose names where the decision "
+        "was made",
+        _uncited(),
+        falsifier="A report or claim that calls some state deliberate, intentional, by "
+                  "design or on purpose, with no pointer to the ledger entry, issue or "
+                  "commit in which anyone decided it.",
+        triggers=["a gap, omission or limit is being explained",
+                  "the explanation uses a word of intent"],
+        sightings=[("a verification substrate and its first adopter, 2026-08-20",
+                    "'the app deliberately ships without the library' — quoted from a "
+                    "pyproject comment dated 2026-07-17 that called the dependency private. "
+                    "Every repo involved had been public for weeks; nobody had decided "
+                    "anything. A whole seam (a declaration table beside the code, instead "
+                    "of at the emission site) was then designed around the word.")],
+        note="The word 'deliberate' ends an inquiry: a reader stops asking why. So it "
+             "has to be earned by a pointer, the way a citation earns 'cited'. A state "
+             "nobody decided is an accident, and an accident is allowed to be fixed.",
+    ),
+
+    _law(
+        "a-remainder-names-its-debt",
+        "What a done-claim leaves undone is carried by a debt it names, never by a "
+        "sentence",
+        _uncited(),
+        falsifier="A done-claim whose evidence gap, or whose report, says that some part "
+                  "is later, next, not yet, deferred, owed or blocked, with no debt entry "
+                  "that carries it — so the remainder lives only in the scrollback and is "
+                  "gone the moment the conversation moves.",
+        triggers=["a done-claim is made", "part of the ask was not delivered"],
+        sightings=[("a verification substrate, 2026-08-20",
+                    "four of nine law families 'carried as a named debt' — the debt was "
+                    "real and in the ledger; the abstraction function, which the census's "
+                    "own source ranks as the most effective family, was left out of both "
+                    "the census and the debt and called 'a complement, later' in prose. "
+                    "Nothing red anywhere pointed at it.")],
+        note="A debt in a ledger is red-able: a rule can ask whether it still stands, a "
+             "brief lists it, a discharge condition names what ends it. A remainder in "
+             "prose is none of those. The claim decider asks for the pointer, and a "
+             "done-claim that names a remainder without one is convicted.",
+    ),
+
+    _law(
+        "a-census-is-read-from-its-source",
+        "A catalogue that claims to enumerate a source carries every item the source "
+        "lists, each covered or owed, and its count is computed from that list",
+        _uncited(),
+        falsifier="A catalogue stated as 'the N families/laws/items of <source>' where the "
+                  "source, read in full, lists an item the catalogue neither carries nor "
+                  "names as owed — an enumeration filtered by what was feasible to build.",
+        triggers=["a catalogue or census is authored from a cited source",
+                  "a count of families, laws or items is stated"],
+        sightings=[("a behavior-law catalogue, 2026-08-20",
+                    "'nine families, a census folded from Hughes's five approaches': the "
+                    "paper's model-based properties — which it says 'together form a "
+                    "complete specification' and rank first for bugs found — were folded "
+                    "into nothing, and every family kept was weakened from a value "
+                    "comparison to a presence check. The count 9 was grounded on the "
+                    "length of the catalogue, i.e. on itself.")],
+        note="The harness is a census node beside the catalogue: one entry per item the "
+             "source lists, linking to the law that covers it or the debt that owes it, "
+             "with the counts computed over the entries — so the number on the brief is "
+             "the source's, and what was left out is a number too.",
+    ),
 ]
 
 

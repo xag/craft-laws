@@ -466,3 +466,64 @@ DECISIONS.append(Node(
                       "drawing and the laws, both of which live here."}),
     ],
 ))
+
+
+DECISIONS.append(Node(
+    id="only-the-owner-exempts",
+    kind="decision",
+    name="An adjudicator may rule `fix` and `stand`; `exempt` is the escalation - the split "
+         "is not confidence, it is whether the verdict removes evidence",
+    payload={
+        "rationale":
+            "'The checks convict; only the owner rules' was written when the owner was the "
+            "only reader who could rule at all. That is no longer true, and the rule as "
+            "written spends the one scarce reviewer on the wrong cards. The verdicts are not "
+            "equally dangerous to delegate, and the axis is not how sure the adjudicator "
+            "sounds. `fix` leaves the red standing until the code moves - the verdict is an "
+            "instruction, the red is its own check, and a wrong one is corrected by the next "
+            "run. `stand` leaves the red standing, acknowledged - it hides nothing either. "
+            "`exempt` is the one verdict that makes an instance STOP COUNTING: it removes "
+            "evidence, permanently, and a wrong exempt is invisible afterwards because the "
+            "thing that would have shown it is the thing that was silenced. So the narrowed "
+            "contract is: the checks convict, an adjudicator rules, and only the owner "
+            "exempts.",
+        "consequence":
+            "Cards ruled `fix` or `stand` are settled by the adjudicator and recorded with "
+            "what they rested on - the finding, the drawing, the law - as any ruling is. A "
+            "card whose answer is `exempt` is not ruled: it is escalated, and the person's "
+            "queue holds only decisions that make something invisible, which is a small "
+            "fraction of cards and the fraction worth their attention. Two conditions carry "
+            "over unchanged, and they are what keep a delegated ruling checkable: a ruling "
+            "names what it rested on, and a ruling whose finding no longer exists is "
+            "reported rather than left standing - the pipeline's orphan check already does "
+            "this, and it is now load-bearing rather than tidy.",
+    },
+    children=[
+        Node(id="alt-the-owner-rules-everything", kind="alternative",
+             name="Keep the contract as written: every card, whatever its verdict, waits for "
+                  "the owner",
+             payload={"why":
+                      "The queue fills with `fix` and `stand` - technical readings of a law "
+                      "against a drawing, which an adjudicator settles as well or better - "
+                      "and the exempts, the only cards that need a person, wait behind them. "
+                      "A review queue that costs more than it decides stops being read, and "
+                      "then nothing is ruled at all."}),
+        Node(id="alt-the-adjudicator-rules-everything", kind="alternative",
+             name="Delegate all three verdicts, exempt included, and escalate nothing",
+             payload={"why":
+                      "An exempt silences the check that would have caught the exempt. It is "
+                      "the one verdict whose error cannot be found by running the tools "
+                      "again, and in the record a wrong one is indistinguishable from a sound "
+                      "one. Delegating it trades a bounded cost - a person reading a few "
+                      "cards - for an unbounded and undetectable one."}),
+        Node(id="alt-escalate-on-low-confidence", kind="alternative",
+             name="Let the adjudicator rule whatever it is sure of and escalate the rest",
+             payload={"why":
+                      "Confidence is the wrong axis, and picking it would put the queue in "
+                      "the adjudicator's gift. The dangerous card is a CONFIDENT exempt, "
+                      "which such a filter would keep; the harmless card is an unsure `fix`, "
+                      "which it would escalate. What the verdict does to the evidence is a "
+                      "property of the verdict, knowable in advance, and it does not move "
+                      "with how the reasoning happens to feel."}),
+    ],
+))

@@ -18,3 +18,9 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["craft"]
+
+
+# The ledger lives beside the code, not under ledger/: `quern brief` needs to be told
+# once, here, rather than by every reader passing --module.
+[tool.quern]
+ledger = "craft/tree.py:build"

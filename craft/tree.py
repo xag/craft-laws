@@ -582,12 +582,13 @@ DEBTS = [
         ],
     ),
     Node(
-        id="two-corrections-have-no-law",
+        id="corrections-outrun-the-laws",
         kind="debt",
         links={"rests_on": ["a-human-found-defect-enters-as-a-law"]},
-        name="Two defects a person found in one session have no law to break: a claim hedged "
-             "past its own evidence, and reasoning from one context written into another "
-             "context's record",
+        name="Defects a person found in one session, none of which any law forbids: a claim "
+             "hedged past its own evidence, reasoning from one context written into "
+             "another's record, and a decision the author's own evidence settled delegated "
+             "to the person anyway",
         payload={
             "what_it_costs":
                 "a-human-found-defect-enters-as-a-law says every defect a person finds passes "
@@ -601,26 +602,54 @@ DEBTS = [
                 "conversation written into a ledger entry, a code comment or a CI config, "
                 "where it is inert for that reader at best and doctrine at worst. It has the "
                 "same shape as the estate's standing rule that a library never names a "
-                "client: the dependency points one way.",
+                "client: the dependency points one way. A DECISION THE EVIDENCE SETTLED, "
+                "ASKED ANYWAY: a question put to the person whose answer the same turn had "
+                "just argued for. It is the exact sibling of "
+                "[[the-users-attention-is-not-a-test-harness]] - that law refuses to delegate "
+                "a CHECK the author can run, and this refuses to delegate a DECISION the "
+                "author's own evidence makes. Both spend the one attention that cannot be "
+                "replaced, and this one is the more insidious because asking reads as "
+                "deference.",
             "why_it_is_not_paid":
-                "Both want [[the-practice-family-cites-nothing]] paid first, or they enter as "
-                "two more house rules. They also mechanize very differently, and pretending "
-                "otherwise would sink the first: hedging-past-verification has a tight "
-                "predicate - a qualifier attached to something the same turn verified - while "
-                "context-leak has none yet and enters `owed`. A check that fires wrongly is "
-                "one everybody learns to skip, which costs more than the law was worth.",
+                "All three want [[the-practice-family-cites-nothing]] paid first, or they "
+                "enter as more house rules - and the third has a root already in this "
+                "package's own reach, since `never-ask-twice` states the interface form of "
+                "not asking for what you already hold. They mechanize very differently, and "
+                "pretending otherwise would sink the one that works: "
+                "hedging-past-verification has a tight predicate - a qualifier attached to "
+                "something the same turn verified - while the other two have none yet and "
+                "enter `owed`. The third's honest discriminator is whether the act was "
+                "reversible, which no predicate knows: confirming before something hard to "
+                "undo is right, and confirming before something the author could simply do "
+                "and report is the defect. A check that fires wrongly is one everybody learns "
+                "to skip, which costs more than the law was worth.",
+        },
+        params={
+            "corrections_without_a_law": Quantity(
+                value=3, unit="correction", provenance="verified", grounded=True,
+                source="one session, 2026-08-22: hedging past verification (a parallel test "
+                       "run called weaker evidence after its isolation had been checked), "
+                       "context leaking into a record (that same caution written into an "
+                       "app's ledger and CI), and a decision delegated after the evidence "
+                       "settled it (asking whether to sweep, one paragraph after arguing "
+                       "that building the vocabulary first would be guessing). Three in one "
+                       "session is the number that says this is a family, not an incident"),
         },
         children=[
             Node(id="discharge-cite-and-mechanize", kind="discharge",
-                 name="Both laws cited from the catalogue, the first mechanized and the "
-                      "second entered owed",
+                 name="Each law cited from the catalogue, the first mechanized and the rest "
+                      "entered owed",
                  payload={"route":
                           "Calibrated-language guidance is the root for the first - it exists "
                           "to stop an author picking a confidence term the evidence does not "
                           "license, in either direction. Plain-language guidance (statutory, "
                           "public domain, already in the interface catalogue) is the root for "
-                          "the second. Falsifiers and triggers as any law, and the census "
-                          "says covered or owed rather than the count of laws built."}),
+                          "the second. The third's root is the service-design rule against "
+                          "asking for what you already hold, which this package already "
+                          "carries in its interface form as `never-ask-twice` - the practice "
+                          "form is the same rule with the author on the other side of the "
+                          "question. Falsifiers and triggers as any law, and the census says "
+                          "covered or owed rather than the count of laws built."}),
         ],
     ),
     Node(

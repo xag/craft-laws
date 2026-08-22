@@ -43,16 +43,27 @@ def test_a_paragraph_of_six_sentences_is_counted():
     assert not any(f.law == "paragraphs-stay-under-five-sentences" for f in mechanical(five))
 
 
-def test_the_findings_are_addressed_to_the_author_not_the_person_waiting():
-    # an earlier version printed the breaches at Stop, where the only reader left is the
-    # person who was waiting for the answer — spending their attention on a check the
-    # author could run, which the-users-attention-is-not-a-test-harness forbids by name
+def test_the_findings_come_back_while_the_answer_can_still_change():
+    # two earlier shapes missed the window: a systemMessage at Stop reaches the person
+    # waiting rather than the writer, and injecting at the next prompt reaches the right
+    # party a turn late, when all that is left is an apology.
     from craft.answer import Finding
-    from craft.answer_hook import context
-    said = context([Finding(law="sentences-stay-under-twenty-five-words",
-                            sentence="a very long sentence", because="52 words unsplit",
-                            adjudicator="counted")])
-    assert "Your last answer" in said and "sentences-stay-under-twenty-five-words" in said
-    assert "52 words unsplit" in said
-    # and it asks for the habit to change, not for an apology about the answer already sent
-    assert "rather than apologising" in said
+    from craft.answer_hook import report
+    said = report([Finding(law="sentences-stay-under-twenty-five-words",
+                           sentence="a very long sentence", because="52 words unsplit",
+                           adjudicator="counted")])
+    assert "This answer breaks" in said
+    assert "sentences-stay-under-twenty-five-words" in said and "52 words unsplit" in said
+    # it reports; it does not overrule. The author decides what the sentence should be.
+    assert "nothing is refused" in said and "say so and carry on" in said
+
+
+def test_the_same_answer_is_handed_back_once_and_not_argued_over(tmp_path, monkeypatch):
+    # without this guard a revised answer still carrying a long sentence comes straight
+    # back, and again, and the loop never settles - a check that will not let go is one
+    # that gets switched off
+    import craft.answer_hook as H
+    monkeypatch.setattr(H, "_SEEN", tmp_path / "seen.json")
+    assert H._already_reported("an answer") is False
+    assert H._already_reported("an answer") is True
+    assert H._already_reported("a different answer") is False

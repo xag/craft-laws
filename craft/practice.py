@@ -24,7 +24,12 @@ from __future__ import annotations
 from quern import Node
 from quern.provenance import Quantity
 
-from .laws import _law, _uncited
+from .laws import _cited, _law, _uncited
+
+IPCC = ("IPCC, Guidance Note for Lead Authors of the Fifth Assessment Report "
+        "on Consistent Treatment of Uncertainties (Mastrandrea et al., 2010)")
+IPCC_URL = ("https://www.ipcc.ch/site/assets/uploads/2017/08/"
+            "AR5_Uncertainty_Guidance_Note.pdf")
 
 AGANS = ("David J. Agans, Debugging: The 9 Indispensable Rules for Finding Even the "
          "Most Elusive Software and Hardware Problems")
@@ -259,6 +264,52 @@ PRACTICE = [
              "source lists, linking to the law that covers it or the debt that owes it, "
              "with the counts computed over the entries — so the number on the brief is "
              "the source's, and what was left out is a number too.",
+    ),
+
+    # --- earned 2026-08-22, in one session, by one habit with two faces: a qualifier
+    # --- attached to something already checked, and the same modesty offered as deference.
+    # --- Sourced rather than asserted: the IPCC's guidance note exists to stop an author
+    # --- picking a confidence term the evidence does not license, and says so in a
+    # --- sentence. docs/practice-sources.md censuses that note whole - 21 items, 3
+    # --- covered, 8 owed, 10 set aside - so what it does NOT cover is a number too.
+    _law(
+        "a-qualifier-is-licensed-by-the-evidence",
+        "A finding the evidence settles is stated as fact; a hedge is licensed by a named "
+        "unknown, never by modesty",
+        _cited(IPCC),
+        falsifier="A statement qualified - weaker evidence, may, might, arguably, in "
+                  "principle - about something the same piece of work established: a "
+                  "command was run, an artifact was read, a check was made, and the result "
+                  "of THAT is then reported with a qualifier attached to it.",
+        triggers=["a claim is made about something the same session checked",
+                  "a result is reported to somebody who will act on it"],
+        citations=[(IPCC + ", paragraph 5", IPCC_URL,
+                    "Consider that, in some cases, it may be appropriate to describe "
+                    "findings for which evidence and understanding are overwhelming as "
+                    "statements of fact without using uncertainty qualifiers."),
+                   (IPCC + ", paragraph 6", IPCC_URL,
+                    "Consider all plausible sources of uncertainty. Experts tend to "
+                    "underestimate structural uncertainty arising from incomplete "
+                    "understanding of or competing conceptual frameworks for relevant "
+                    "systems and processes."),
+                   (IPCC + ", paragraph 10", IPCC_URL,
+                    "“About as likely as not” should not be used to express a lack of "
+                    "knowledge.")],
+        sightings=[("a test suite parallelised, 2026-08-22",
+                    "the suite's isolation was read out of its fixtures and confirmed by a "
+                    "green run, and the parallel result was then reported as 'weaker "
+                    "evidence than a green serial one' - a qualifier on the one thing that "
+                    "had actually been checked. It reached a commit message, an app's "
+                    "ledger and its CI config before a person said 'you keep insisting "
+                    "parallel is not decisive'.")],
+        note="It cuts both ways, and the second citation is why: the same note that says "
+             "drop the qualifier when the evidence is overwhelming says experts "
+             "underestimate what they do not understand. The law is not 'sound confident'. "
+             "It is that a hedge must be licensed by an unknown somebody can name - and if "
+             "one can be named, the honest sentence names it instead of hedging the whole "
+             "claim, which is the third citation's point about a term standing in for a "
+             "lack of knowledge. Understating is not the safe direction; it is the "
+             "direction that wears modesty and so goes uncorrected.",
     ),
 ]
 

@@ -535,9 +535,8 @@ DEBTS = [
         id="the-practice-family-cites-nothing",
         kind="debt",
         links={"rests_on": ["the-process-is-ruled-too"]},
-        name="The laws about the WORK were grown from bleeding and cite no source - five of "
-             "them stand RED for want of authority, and unlike the interface family they "
-             "have no catalogue to be mined from",
+        name="PARTLY DISCHARGED 2026-08-22 - the catalogue exists (docs/practice-sources.md) "
+             "and its first source is censused whole; thirteen laws still cite nothing",
         payload={
             "what_it_costs":
                 "the-laws-grew-by-mining-not-by-bleeding is true of the interface family and "
@@ -551,12 +550,14 @@ DEBTS = [
                 "that moved, and gives an adjudicator nothing to reason from when a card asks "
                 "whether the law was really broken.",
             "why_it_is_not_paid":
-                "Nobody has surveyed the field. The interface catalogue took a deliberate "
-                "sweep - standards bodies, platform owners, government systems, empirical "
-                "research - and the practice field has its own: uncertainty and calibrated "
-                "language, evidence standards, plain-language statutes, documentation "
-                "standards. Mining one law at a time as defects arrive would rebuild exactly "
-                "the accident the interface family was careful to avoid.",
+                "The survey is done and the mining is not. docs/practice-sources.md ranks "
+                "eight sources by authority and falsifiability, records the two gaps found "
+                "(nothing authoritative on delegating a decision; nothing on context leaking "
+                "between records), and censuses the first source WHOLE - the IPCC's "
+                "uncertainty guidance note, 21 items, 3 covered, 8 owed, 10 set aside, so "
+                "what it does not cover is a number rather than a silence. One law is cited "
+                "from it. The other seven sources are unread, and the five laws that were "
+                "red on 2026-08-22 are still red: none of them is about uncertainty.",
         },
         params={
             "laws_without_authority": Quantity(
@@ -578,7 +579,8 @@ DEBTS = [
                           "with the gaps recorded at the bottom, so a thin category is a "
                           "boundary chosen rather than one fallen into. Then every practice "
                           "law cited or marked owed, and the five reds go green or stay red "
-                          "for a stated reason."}),
+                          "for a stated reason. Agans is next: it already roots four of "
+                          "these laws in the prose and none of them in a citation."}),
         ],
     ),
     Node(
@@ -587,9 +589,9 @@ DEBTS = [
         links={"rests_on": ["a-human-found-defect-enters-as-a-law"]},
         name="Defects a person found in one session, none of which any law forbids: a claim "
              "hedged past its own evidence, reasoning from one context written into "
-             "another's record, and two ways of spending a person's attention badly - a "
-             "decision the evidence had settled, and a decision genuinely theirs "
-             "handed over with no recommendation",
+             "another's record, and two ways of spending a person's attention badly. ONE "
+             "IS NOW A LAW: a-qualifier-is-licensed-by-the-evidence, cited from the IPCC "
+             "guidance note. The rest are still only written here",
         payload={
             "what_it_costs":
                 "a-human-found-defect-enters-as-a-law says every defect a person finds passes "

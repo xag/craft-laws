@@ -7,19 +7,21 @@ One difference from the interface catalogue is worth stating up front. There is 
 ## The mining shortlist, in order
 
 1. **IPCC AR5 Guidance Note on Consistent Treatment of Uncertainties** (Mastrandrea et al., 2010) — 11 numbered paragraphs, 6 lettered criteria and two calibrated scales, written to stop authors picking a confidence term the evidence does not license. Publicly available, quotable, and unusually operational for a document about judgement. **Censused below.** https://www.ipcc.ch/site/assets/uploads/2017/08/AR5_Uncertainty_Guidance_Note.pdf
-2. **Agans, *Debugging: The 9 Indispensable Rules*** (2002) — already the root of four practice laws; nine rules, each a command with an observable breach. Copyrighted, so cite the rule name and quote briefly.
-3. **Federal plain language guidelines** (Plain Writing Act 2010; canonical pages now under digital.gov) — statutory, public domain, sentence-level and checkable. Already source #10 of the interface catalogue; the practice family needs the parts about writing for a reader who is not you.
-4. **ISO/IEC/IEEE 15289 and 26515** — what a work product must contain to be a record rather than a note. Paywalled: cite clause numbers, quote briefly.
-5. **CONSORT / ARRIVE / STROBE reporting checklists** — the strongest available model for "a claim carries what it rests on", each item numbered and each breach observable in a manuscript. Free, widely adopted, and about reporting rather than about our subject matter, so they transfer by analogy and must be cited as such.
-6. **Kahneman, Slovic & Tversky and successors on overconfidence and anchoring** — published empirical research, the root beneath IPCC paragraph 3. Principle-shaped; cite for the finding, never for a rule.
-7. **NASA/ESA anomaly-reporting standards and the Swiss-cheese/HFACS literature** — the root for "instrument before the second theory" if one exists outside Agans. Not yet read.
-8. **GOV.UK Service Manual** — "do the hard work to make it simple" and the service-assessment criteria; already the ancestor of much of the interface catalogue, and the plausible root for the laws about spending someone else's attention. Principle-shaped; the design system's numbered patterns are the falsifiable part.
+2. **Eidelman, Crandall & Pattershall, "The existence bias"** (*Journal of Personality and Social Psychology* 97(5), 765–775, 2009) — five studies establishing that mere existence is taken as evidence of goodness, and that the effect appears in aesthetic judgment where no choice among alternatives was ever made. Published empirical research, which is the authority; the finding is about people rather than about work, so it roots a law and does not state one. **Censused below.** Full text paywalled; the census is read from the abstract, which enumerates the studies. https://doi.org/10.1037/a0017058
+3. **Agans, *Debugging: The 9 Indispensable Rules*** (2002) — already the root of four practice laws; nine rules, each a command with an observable breach. Copyrighted, so cite the rule name and quote briefly.
+4. **Federal plain language guidelines** (Plain Writing Act 2010; canonical pages now under digital.gov) — statutory, public domain, sentence-level and checkable. Already source #10 of the interface catalogue; the practice family needs the parts about writing for a reader who is not you.
+5. **ISO/IEC/IEEE 15289 and 26515** — what a work product must contain to be a record rather than a note. Paywalled: cite clause numbers, quote briefly.
+6. **CONSORT / ARRIVE / STROBE reporting checklists** — the strongest available model for "a claim carries what it rests on", each item numbered and each breach observable in a manuscript. Free, widely adopted, and about reporting rather than about our subject matter, so they transfer by analogy and must be cited as such.
+7. **Kahneman, Slovic & Tversky and successors on overconfidence and anchoring** — published empirical research, the root beneath IPCC paragraph 3. Principle-shaped; cite for the finding, never for a rule.
+8. **NASA/ESA anomaly-reporting standards and the Swiss-cheese/HFACS literature** — the root for "instrument before the second theory" if one exists outside Agans. Not yet read.
+9. **GOV.UK Service Manual** — "do the hard work to make it simple" and the service-assessment criteria; already the ancestor of much of the interface catalogue, and the plausible root for the laws about spending someone else's attention. Principle-shaped; the design system's numbered patterns are the falsifiable part.
 
 Excluded despite fame, with reasons: **Clean Code / SOLID / most engineering-practice books** (assertions without an authority, and their empirical support is thin or contested); **Agile manifesto and derivatives** (values, not rules — nothing observable); **Google's SRE book** (excellent and specific to running services, not to claiming work done; CC BY-NC-ND).
 
 ## Gaps found
 
 - **Nothing authoritative was found on delegating a decision.** The laws about spending a person's attention (`the-users-attention-is-not-a-test-harness`, and the one the corrections named about asking for a decision the evidence settles) have no obvious root. Automation-levels research (Parasuraman/Sheridan) describes the design space without prescribing; GOV.UK prescribes for services, not for a working relationship. Searched and thin — recorded as a boundary chosen, not one fallen into.
+- **The longevity half is unread.** Eidelman, Pattershall & Crandall, "Longer is better" (*Journal of Experimental Social Psychology*, 2010, DOI 10.1016/j.jesp.2010.07.008) is the companion finding — the longer something is thought to have existed, the better it is judged. Elsevier, paywalled, and the abstract was not retrieved. Named here so its absence is a record rather than an oversight; the law it would strengthen cites only the 2009 paper.
 - **Nothing was found on context leaking between records.** The interface family states it for strings (`no-cross-context-string-reuse`); the practice analogue — reasoning from one context written into another's record — is asserted from the estate's own rule that a library never names a client. Owed.
 
 ---
@@ -56,3 +58,21 @@ The Guidance Note states 11 numbered paragraphs, 6 lettered criteria (A–F) und
 | S5 | Findings conditional on other findings are evaluated and reported separately | owed — an estate whose checks are chains of pins has exactly this problem and no rule for it |
 
 **Counted:** 21 items — 3 covered, 8 owed, 10 set aside. The count is read from the source, not from the laws built.
+
+
+---
+
+# Census: Eidelman, Crandall & Pattershall (2009), read from the abstract
+
+The full text is paywalled. The abstract enumerates the paper's whole structure — five studies and the conclusion drawn from them — so that is the unit censused, and the fact that it is the abstract and not the paper is stated rather than glossed. **6 items.**
+
+| # | What it states | Status |
+|---|---|---|
+| 1 | Study 1: an existing state is evaluated more favorably than an alternative | covered — `what-exists-is-not-thereby-chosen` |
+| 2 | Study 2: the same, replicated | covered — same law |
+| 3 | Study 3: imagining an event increases estimates of its likelihood, which in turn leads to favorable evaluation; the more likely something will be, the more positively it is evaluated | owed — the mechanism by which a plan already sketched starts to look right, which is a distinct defect from defending what exists |
+| 4 | Study 4: the more a form is described as prevalent, the more aesthetically attractive that form is — a causal relationship between aesthetic judgment and existence *in a domain lacking choice among alternatives* | covered — the naming sighting is exactly this case |
+| 5 | Study 5: the bias extends to gustatory evaluation and is not moderated by valence | set aside — establishes generality, prescribes nothing |
+| 6 | Conclusion: mere existence leads to assumptions of goodness; the status quo is seen as good, right, attractive, tasty, and desirable | covered — the law's statement |
+
+**Counted:** 6 items — 4 covered, 1 owed, 1 set aside.

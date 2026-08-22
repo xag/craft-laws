@@ -26,6 +26,10 @@ from quern.provenance import Quantity
 
 from .laws import _cited, _law, _uncited
 
+EXISTENCE_BIAS = ("Eidelman, Crandall & Pattershall, The existence bias, Journal "
+                  "of Personality and Social Psychology 97(5), 765-775, 2009")
+EXISTENCE_URL = "https://doi.org/10.1037/a0017058"
+
 IPCC = ("IPCC, Guidance Note for Lead Authors of the Fifth Assessment Report "
         "on Consistent Treatment of Uncertainties (Mastrandrea et al., 2010)")
 IPCC_URL = ("https://www.ipcc.ch/site/assets/uploads/2017/08/"
@@ -310,6 +314,52 @@ PRACTICE = [
              "claim, which is the third citation's point about a term standing in for a "
              "lack of knowledge. Understating is not the safe direction; it is the "
              "direction that wears modesty and so goes uncorrected.",
+    ),
+
+    # --- earned 2026-08-22, by defending two existing names against a proposed one on
+    # --- the ground that they had "earned" their obscurity. One had: epure's ledger holds
+    # --- the-name-is-the-drawing with two alternatives rejected. The other had not - quern
+    # --- carries 21 decisions and not one of them is about its name. The justification was
+    # --- read off the fact that the names exist, and half of it was invented.
+    _law(
+        "what-exists-is-not-thereby-chosen",
+        "An existing state is called deliberate only where the decision that made it can be "
+        "produced; existence, age and prevalence are not evidence that anybody chose",
+        _cited(EXISTENCE_BIAS),
+        falsifier="An existing thing defended or explained by its being there - it works, it "
+                  "has always been so, it earned its place, it is what we do - where no "
+                  "decision naming it can be produced, and a proposed alternative is judged "
+                  "against it on that footing.",
+        triggers=["an existing thing is weighed against a proposal",
+                  "a state is called deliberate, by design, earned or considered",
+                  "a convention is explained rather than looked up"],
+        citations=[(EXISTENCE_BIAS, EXISTENCE_URL,
+                    "The authors demonstrate that people treat the mere existence of "
+                    "something as evidence of its goodness."),
+                   (EXISTENCE_BIAS + ", Study 4", EXISTENCE_URL,
+                    "the more a form is described as prevalent, the more aesthetically "
+                    "attractive is that form. This indicates a causal relationship between "
+                    "aesthetic judgments and existence in a domain lacking choice among "
+                    "alternatives."),
+                   (EXISTENCE_BIAS + ", conclusion", EXISTENCE_URL,
+                    "mere existence leads to assumptions of goodness; the status quo is seen "
+                    "as good, right, attractive, tasty, and desirable.")],
+        sightings=[("this estate's own names, 2026-08-22",
+                    "a proposed project name was rejected against two incumbents on the "
+                    "ground that theirs 'earn their obscurity' because the metaphors do "
+                    "explanatory work. Checked afterwards: epure's ledger holds a naming "
+                    "decision with two rejected alternatives, and quern's holds 21 decisions "
+                    "of which none is about its name. Half the justification was read off "
+                    "the fact that the name exists - which is Study 4's finding about "
+                    "aesthetic judgment where no choice among alternatives was made.")],
+        note="The sibling of [[deliberate-names-its-decision]], and the harder direction. "
+             "That law catches CALLING a state deliberate without naming the decision; this "
+             "catches INFERRING that it was, which needs no words at all and so leaves no "
+             "sentence to convict. It is not an argument for change: Chesterton's fence "
+             "warns against removing what you have not understood, and both cautions have "
+             "the same discharge - go and find the decision. Its absence is not permission "
+             "to tear the thing down; it is information, and usually the most useful thing "
+             "you will learn that day.",
     ),
 ]
 

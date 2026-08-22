@@ -551,13 +551,15 @@ DEBTS = [
                 "whether the law was really broken.",
             "why_it_is_not_paid":
                 "The survey is done and the mining is not. docs/practice-sources.md ranks "
-                "eight sources by authority and falsifiability, records the two gaps found "
-                "(nothing authoritative on delegating a decision; nothing on context leaking "
-                "between records), and censuses the first source WHOLE - the IPCC's "
-                "uncertainty guidance note, 21 items, 3 covered, 8 owed, 10 set aside, so "
-                "what it does not cover is a number rather than a silence. One law is cited "
-                "from it. The other seven sources are unread, and the five laws that were "
-                "red on 2026-08-22 are still red: none of them is about uncertainty.",
+                "nine sources by authority and falsifiability, records the three gaps found "
+                "(delegating a decision; context leaking between records; the longevity "
+                "companion paper, paywalled and unread), and censuses TWO sources - the IPCC "
+                "guidance note whole (21 items: 3 covered, 8 owed, 10 set aside) and the "
+                "existence-bias paper from its abstract, which enumerates its own studies (6 "
+                "items: 4 covered). Two laws are cited from them, and what the sources do "
+                "not cover is a number rather than a silence. Seven sources are unread and "
+                "the five laws that were red are still red: none is about uncertainty or the "
+                "status quo.",
         },
         params={
             "laws_without_authority": Quantity(
@@ -589,9 +591,10 @@ DEBTS = [
         links={"rests_on": ["a-human-found-defect-enters-as-a-law"]},
         name="Defects a person found in one session, none of which any law forbids: a claim "
              "hedged past its own evidence, reasoning from one context written into "
-             "another's record, and two ways of spending a person's attention badly. ONE "
-             "IS NOW A LAW: a-qualifier-is-licensed-by-the-evidence, cited from the IPCC "
-             "guidance note. The rest are still only written here",
+             "another's record, two ways of spending a person's attention badly, and "
+             "reading an existing state as a chosen one. TWO ARE NOW LAWS, both cited - "
+             "a-qualifier-is-licensed-by-the-evidence and what-exists-is-not-thereby-chosen. "
+             "The rest are still only written here",
         payload={
             "what_it_costs":
                 "a-human-found-defect-enters-as-a-law says every defect a person finds passes "
@@ -633,7 +636,7 @@ DEBTS = [
         },
         params={
             "corrections_without_a_law": Quantity(
-                value=5, unit="correction", provenance="verified", grounded=True,
+                value=6, unit="correction", provenance="verified", grounded=True,
                 source="one session, 2026-08-22: hedging past verification (a parallel test "
                        "run called weaker evidence after its isolation had been checked), "
                        "context leaking into a record (that same caution written into an "
@@ -643,9 +646,14 @@ DEBTS = [
                        "decision that WAS the person's put as a blank question (a name "
                        "and a shape, with no proposal attached), and a fifth of the "
                        "same after both were written down - asking permission to run a "
-                       "command whose running was already agreed. FIVE in one session, "
-                       "each recorded as it happened, none of them prevented by the "
-                       "record: that is the number, and what it measures is not the "
+                       "command whose running was already agreed; and a sixth, defending "
+                       "two existing names against a proposed one because they had 'earned' "
+                       "their obscurity - one of them has no naming decision at all, so half "
+                       "that justification was read off the fact that the name exists. SIX "
+                       "in one session, "
+                       "each recorded as it happened, and the record prevented none of "
+                       "the ones after it. That is the number, and what it measures is "
+                       "not the "
                        "author's carelessness but the gap between a law written and a "
                        "law enforced. It is the case for "
                        "[[the-deciders-run-by-hand]] stated in evidence rather than in "

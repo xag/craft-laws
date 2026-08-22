@@ -39,23 +39,36 @@ from .practice import PRACTICE
 
 _ROOT = Path(__file__).resolve().parents[1]
 
-# The laws whose falsifier a reader can decide from a written answer and its evidence.
-# The test applied to each: could somebody holding this falsifier, the answer, and what the
-# tools established, say whether it was broken? Everything about pixels fails that test.
+# The laws whose TRIGGER fires for a written answer to a person, read one by one out of the
+# nodes rather than picked by whether the law is "about words".
+#
+# That distinction is the whole of it, and getting it wrong produced visible nonsense. An
+# earlier set was chosen by keyword and included sentences-stay-under-twenty-five-words,
+# whose own statement reads "No sentence of INTERFACE PROSE", whose falsifier reads "A
+# sentence in UI COPY", and whose trigger is "the app's voice does work of its own (dry,
+# terse, no explaining text)". An explanation is explaining text; the trigger never fires.
+# The check duly reported every long sentence in an answer and the answers came back chopped
+# into fragments to satisfy a counter that was never addressed to them.
+#
+# Six more triggered on "the project ships documentation meant to be read long after it is
+# written (a README, a guide, a reference)". A chat answer is read once, now. Three needed a
+# control that commits something.
+#
+# What survives is the practice family and its neighbours: laws about what a claim may
+# assert, which fire on "anything is reported as done", "a result is reported to somebody
+# who will act on it", "a gap is being explained". NONE of them is countable — every one
+# needs a reader, and that is a fact about this surface rather than a gap in the tooling.
 WRITTEN_ANSWER = [
-    # what a claim may say
-    "done-is-observed-where-the-user-stands", "a-detour-is-announced-as-a-detour",
-    "deliberate-names-its-decision", "a-remainder-names-its-debt",
-    "a-census-is-read-from-its-source", "the-users-attention-is-not-a-test-harness",
-    "a-qualifier-is-licensed-by-the-evidence", "what-exists-is-not-thereby-chosen",
+    "done-is-observed-where-the-user-stands",
+    "the-users-attention-is-not-a-test-harness",
+    "a-detour-is-announced-as-a-detour",
+    "deliberate-names-its-decision",
+    "a-remainder-names-its-debt",
+    "a-census-is-read-from-its-source",
+    "a-qualifier-is-licensed-by-the-evidence",
+    "what-exists-is-not-thereby-chosen",
     "a-thing-is-built-where-its-subject-lives",
-    "counts-are-computed", "what-accompanies-a-claim-supports-it", "says-what-happens",
-    # how it reads
-    "sentences-stay-under-twenty-five-words", "paragraphs-stay-under-five-sentences",
-    "front-load-first-words", "say-it-once", "speaks-to-you", "no-system-vocabulary",
-    "terms-defined-before-use", "acronyms-spell-out-on-first-reference",
-    "conditions-come-before-instructions", "references-name-their-target-not-its-position",
-    "instructions-point-by-name-not-by-place", "error-neither-begs-nor-blames",
+    "what-accompanies-a-claim-supports-it",
 ]
 
 
@@ -140,65 +153,12 @@ def turns(transcript: Path) -> list[Turn]:
     return out
 
 
-# --- the laws that need no reader ------------------------------------------------------
+# NO LAW HERE IS COUNTABLE, and that is the finding rather than a shortcoming. The
+# countable ones — sentence length, paragraph length, wordlists — all belong to surfaces this
+# is not: interface copy, or documentation read long after it was written. Every law whose
+# trigger fires for an answer is about what a claim may assert, and that needs a reader.
 #
-# Several falsifiers in this package say outright what they are: "Countable",
-# "A wordlist scan", "checkable by machine exactly as sentences-stay-under-twenty-five-words
-# is". Those laws do not want a reader and must not wait behind one — a reader costs one to
-# three minutes per answer, which is far too slow to sit in front of a person, and that
-# latency is the reason this split exists rather than any theory about which laws matter.
-#
-# Everything here is decided by counting or by a fixed list, and each is traceable to the
-# falsifier printed beside the law.
-
-_SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+")
-_POSITIONAL = re.compile(r"\b(see above|the section below|as mentioned earlier|"
-                         r"as mentioned above|see below|stated above|shown below|"
-                         r"above,|below,)\b", re.I)
-_BEGS_OR_BLAMES = re.compile(
-    r"\b(please|sorry|you forgot|illegal|forbidden|prohibited)\b", re.I)
-_CODE = re.compile(r"```.*?```", re.S)
-_INLINE = re.compile(r"`[^`]*`")
-
-
-def _prose(answer: str) -> str:
-    """Fenced blocks and inline code are not prose a person reads as sentences."""
-    return _INLINE.sub(" ", _CODE.sub(" ", answer))
-
-
-def mechanical(answer: str) -> list[Finding]:
-    """Every law here whose own falsifier says it is countable or a wordlist."""
-    out: list[Finding] = []
-    text = _prose(answer)
-
-    for para in [p.strip() for p in text.split("\n\n") if p.strip()]:
-        if para.startswith(("|", "#", "-", "*", ">")) or para.count("\n") > 2:
-            continue   # a table, a heading or a list is not a paragraph of prose
-        n = len([x for x in _SENTENCE_SPLIT.split(para) if x.strip()])
-        if n >= 6:
-            out.append(Finding(law="paragraphs-stay-under-five-sentences",
-                               sentence=para[:200], because=f"{n} sentences in one paragraph",
-                               adjudicator="counted"))
-
-    for sentence in _SENTENCE_SPLIT.split(text):
-        s = re.sub(r"^[-*+>#\d.\s]+", "", sentence.strip())
-        if not s:
-            continue
-        words = len(s.split())
-        if words > 25 and not s.startswith("|"):
-            out.append(Finding(law="sentences-stay-under-twenty-five-words",
-                               sentence=s[:200], because=f"{words} words unsplit",
-                               adjudicator="counted"))
-        if m := _POSITIONAL.search(s):
-            out.append(Finding(law="references-name-their-target-not-its-position",
-                               sentence=s[:200],
-                               because=f"'{m.group(0)}' points by position, not by name",
-                               adjudicator="wordlist"))
-        if m := _BEGS_OR_BLAMES.search(s):
-            out.append(Finding(law="error-neither-begs-nor-blames", sentence=s[:200],
-                               because=f"'{m.group(0)}'", adjudicator="wordlist"))
-    return out
-
+# So there is no fast path. `judge` costs one to three minutes and runs on demand.
 
 _PROMPT = """You are holding one written answer to the laws it is subject to.
 

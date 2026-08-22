@@ -1,17 +1,26 @@
-"""The Stop hook: hold the answer about to be handed back to the laws that need no reader.
+"""Hold a written answer to the laws — and put the findings where they can be acted on.
 
-It INFORMS. It never blocks, and the exit status is always 0.
+Two entry points, and the difference between them is the whole point.
 
-Only the COUNTABLE laws run here, and the reason is latency rather than principle. A reader
-(`python -m craft.answer`) judges the laws that need judgement — done-is-observed,
-a-qualifier-is-licensed, say-it-once — and measured on this machine it costs one to three
-minutes per answer. That cannot sit in front of a person, and a check that makes someone wait
-is a check that gets switched off. The laws whose own falsifiers say "Countable" or "A
-wordlist scan" cost 0.01s for thirty-nine answers, so they run every turn.
+`stop` runs when an answer is finished. It RECORDS the findings and says nothing to anybody.
+It cannot usefully say anything: the answer has already gone, and the only reader still
+present is the person who was waiting for it. Handing them a list of the author's breaches
+spends their attention on a check the author could run — which
+`the-users-attention-is-not-a-test-harness` forbids by name, and which is exactly what an
+earlier version of this file did.
 
-Every finding is recorded in `.craft/answers.jsonl` with what it rested on. A failure
-anywhere is silent: instrumentation that breaks the thing it instruments gets removed, and
-then nothing is checked at all.
+`prompt` runs when the person speaks again, before the next answer is written. It reads back
+what the last answer broke and hands it to the AUTHOR as context. That is the only moment
+the finding is worth anything: early enough to change the sentence, addressed to whoever can
+change it.
+
+Only the COUNTABLE laws run in either, and that is latency rather than principle. The laws
+whose own falsifiers say "Countable" or "A wordlist scan" cost 0.01s for thirty-nine answers.
+The ones needing a reader cost 150s or more and run on demand (`python -m craft.answer`).
+
+It never blocks; the exit status is always 0. A failure anywhere is silent, because
+instrumentation that breaks the thing it instruments gets removed, and then nothing is
+checked at all.
 """
 
 from __future__ import annotations
@@ -20,40 +29,53 @@ import json
 import sys
 from pathlib import Path
 
-CAP = 6
+CAP = 8
 
 
-def message(findings, total: int) -> str:
-    lines = [f"{total} finding(s) against the craft laws — a reading, not a block:"]
-    for f in findings[:CAP]:
-        lines.append(f"  {f.law} — {f.because}")
-        lines.append(f"    {f.sentence[:150]}")
-    if total > CAP:
-        lines.append(f"  ... and {total - CAP} more; `python -m craft.answer` for all of it")
-    lines.append("Each law carries a falsifier and a root outside this estate. The reader's "
-                 "laws — what a claim may assert, whether a hedge is licensed — are not run "
-                 "here: they cost minutes. `python -m craft.answer` runs those.")
-    return "\n".join(lines)
+def _findings(transcript: str):
+    from .answer import mechanical, turns
+    said = [t for t in turns(Path(transcript)) if t.said.strip()]
+    return mechanical(said[-1].said) if said else []
 
 
-def main() -> int:
+def context(findings) -> str:
+    """What the author is told, before writing the next answer."""
+    by_law: dict[str, list] = {}
+    for f in findings:
+        by_law.setdefault(f.law, []).append(f)
+    lines = [f"Your last answer broke {len(findings)} craft law(s). Not a block — a reading, "
+             "from laws with falsifiers and roots outside this estate. Fix the habit in this "
+             "answer rather than apologising for the last one."]
+    for law, group in by_law.items():
+        lines.append(f"  {law} — {len(group)}x")
+        for f in group[:3]:
+            lines.append(f"    ({f.because}) {f.sentence[:110]}")
+        if len(group) > 3:
+            lines.append(f"    ... and {len(group) - 3} more")
+    return "\n".join(lines[:CAP + 6])
+
+
+def main(mode: str) -> int:
     try:
         payload = json.load(sys.stdin)
         path = payload.get("transcript_path")
         if not path:
             return 0
-        from .answer import mechanical, record, turns
-        said = [t for t in turns(Path(path)) if t.said.strip()]
-        if not said:
+        found = _findings(path)
+        if not found:
             return 0
-        found = mechanical(said[-1].said)
-        if found:
+        if mode == "stop":
+            # record and stay silent: the answer has gone, and the only person here is the
+            # one who was waiting for it
+            from .answer import record
             record(found)
-            print(json.dumps({"systemMessage": message(found, len(found))}))
+        else:
+            # stdout from a UserPromptSubmit hook becomes context for the author
+            print(context(found))
     except Exception:
         return 0
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main("prompt" if "--prompt" in sys.argv else "stop"))

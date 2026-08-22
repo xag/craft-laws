@@ -41,3 +41,18 @@ def test_a_paragraph_of_six_sentences_is_counted():
     assert any(f.law == "paragraphs-stay-under-five-sentences" for f in mechanical(six))
     five = " ".join("One two three." for _ in range(5))
     assert not any(f.law == "paragraphs-stay-under-five-sentences" for f in mechanical(five))
+
+
+def test_the_findings_are_addressed_to_the_author_not_the_person_waiting():
+    # an earlier version printed the breaches at Stop, where the only reader left is the
+    # person who was waiting for the answer — spending their attention on a check the
+    # author could run, which the-users-attention-is-not-a-test-harness forbids by name
+    from craft.answer import Finding
+    from craft.answer_hook import context
+    said = context([Finding(law="sentences-stay-under-twenty-five-words",
+                            sentence="a very long sentence", because="52 words unsplit",
+                            adjudicator="counted")])
+    assert "Your last answer" in said and "sentences-stay-under-twenty-five-words" in said
+    assert "52 words unsplit" in said
+    # and it asks for the habit to change, not for an apology about the answer already sent
+    assert "rather than apologising" in said

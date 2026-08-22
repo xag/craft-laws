@@ -10,6 +10,3 @@ uv.lock
 
 # The publish runs record their nondeterminism boundary here; tapes are evidence, not source.
 .quern/flight/
-
-# Findings from craft.answer: evidence about one run, kept where it falls.
-.craft/

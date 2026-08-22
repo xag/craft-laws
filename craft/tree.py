@@ -534,53 +534,40 @@ DEBTS = [
     Node(
         id="triggers-are-prose-so-applicability-cannot-be-computed",
         kind="debt",
-        name="A law says when it applies in a sentence a person reads, so which laws bind a "
-             "given artifact is decided by whoever is looking - three times in one session, "
-             "three different answers",
-        links={"rests_on": ["a-human-found-defect-enters-as-a-law"]},
+        name="A law says when it applies in a sentence a person reads, so nothing can "
+             "compute which laws bind a README, an error message or an answer in a terminal",
         payload={
             "what_it_costs":
-                "Every law carries a `trigger` in prose: 'any interface with a control that "
+                "Every law carries a `trigger` in prose - 'any interface with a control that "
                 "commits something', 'the project ships documentation meant to be read long "
-                "after it is written'. That is exactly right for a person deciding whether a "
-                "law bears on their screen, and it makes selection unreproducible. Nothing "
-                "can compute which laws bind a README, an error message, or an answer typed "
-                "into a terminal; each caller re-decides, and nobody can check the answer "
-                "except by re-reading 91 triggers. The prose also drifts unseen, because "
-                "free text cannot be compared: 'the app coins domain concepts of its own' "
-                "exists twice, once with an example and once without, and 'the app's voice "
-                "does work of its own' exists as both '(dry, terse, no explaining text)' and "
-                "'(dry, warm, terse)'. Those are one condition written four ways, and no "
-                "check can see it.",
+                "after it is written'. That is right for a person deciding whether a law "
+                "bears on their screen, and it makes selection unreproducible: each caller "
+                "re-decides, and the only way to check an answer is to re-read ninety-one "
+                "triggers. The prose drifts unseen for the same reason. 'The app coins "
+                "domain concepts of its own' exists twice, once with an example and once "
+                "without; 'the app's voice does work of its own' exists as both '(dry, "
+                "terse, no explaining text)' and '(dry, warm, terse)'. One condition written "
+                "four ways, and no check can see it, because free text cannot be compared.",
             "why_it_is_not_paid":
-                "The two cheap answers are both wrong and both were tried in one session. "
-                "Picking by keyword - is this law about words - selected laws whose own "
-                "statements say 'interface prose' and 'UI copy' for a surface that is "
-                "neither, and the answers came back chopped into fragments to satisfy a "
-                "counter never addressed to them. Mapping trigger prose to condition ids by "
-                "table is the same matching with a nicer name: 55 hand-authored mappings, "
-                "which drift from the triggers the moment either is edited. The real answer "
-                "is a vocabulary change across 91 laws and a publish, and it wants its own "
-                "session rather than the end of somebody else's.",
+                "It is a vocabulary change across every law and a publish. The cheap "
+                "alternatives are worse than waiting: selecting by keyword picks laws whose "
+                "own statements name a different surface, and mapping trigger prose to "
+                "condition ids by table is the same matching under a better name - "
+                "hand-authored once per string, drifting from the triggers the moment either "
+                "side is edited.",
         },
         params={
             "distinct_trigger_strings": Quantity(
                 value=55, unit="string", provenance="verified", grounded=True,
                 source="counted over the 91 laws, 2026-08-22: 55 distinct trigger strings, "
                        "of which the six commonest cover 66 laws. The long tail is where the "
-                       "duplicates hide - a closed set would have about twenty entries and "
-                       "would make the near-duplicates collide instead of coexisting"),
-            "selections_that_disagreed": Quantity(
-                value=3, unit="selection", provenance="verified", grounded=True,
-                source="one surface, one session, three answers: 24 laws by keyword, then 10 "
-                       "by reading the triggers, then a proposed table that would have "
-                       "frozen a fourth. None is reproducible by anybody else, which is what "
-                       "the number is really measuring"),
+                       "duplicates hide - a closed set would have about twenty entries, and "
+                       "near-duplicates would collide on one id instead of coexisting"),
         },
         children=[
             Node(id="discharge-a-trigger-is-an-expr", kind="discharge",
-                 name="A trigger becomes an expression over a declared context, and quern "
-                      "solves it",
+                 name="A trigger becomes an expression over a declared context, and the "
+                      "substrate solves it",
                  payload={"route":
                           "This substrate already evaluates exprs over declared data - that "
                           "is what a ledger rule IS, and craft has been carrying prose where "
@@ -588,12 +575,11 @@ DEBTS = [
                           "can have (has_committing_control, ships_documentation, "
                           "reports_work_as_done, is_translated, runs_on_a_phone), let each "
                           "law state the expression it fires under, and applicability "
-                          "becomes solve(trigger, context): computed, reproducible, and "
-                          "arguable against the artifact's own declaration. Two checks come "
-                          "free that are impossible today - a law whose trigger names no "
-                          "known condition can never be selected and goes red, and two "
-                          "conditions meaning the same thing collide on one id instead of "
-                          "drifting apart in prose."}),
+                          "becomes solve(trigger, context): computed, reproducible, arguable "
+                          "against the artifact's own declaration. Two checks come free that "
+                          "are impossible today - a law whose trigger names no known "
+                          "condition can never be selected and goes red, and two conditions "
+                          "meaning the same thing collide on one id."}),
         ],
     ),
     Node(

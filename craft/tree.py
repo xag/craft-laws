@@ -10,6 +10,7 @@ from quern import Quern
 from quern.library import consume
 
 from quern import Node
+from quern.provenance import Quantity
 
 from .laws import GATE, LAWS
 from .practice import PRACTICE, PRACTICE_GATE
@@ -294,7 +295,7 @@ def build() -> Quern:
 
     quern = Quern(packages=[r for r in refs if r.name in ("craft", "ledger")])
     quern = lib.effective(quern)
-    quern.root.children = [*LAWS, *PRACTICE, *DECISIONS, GATE, PRACTICE_GATE]
+    quern.root.children = [*LAWS, *PRACTICE, *DECISIONS, *DEBTS, GATE, PRACTICE_GATE]
     return quern
 
 
@@ -527,3 +528,164 @@ DECISIONS.append(Node(
                       "with how the reasoning happens to feel."}),
     ],
 ))
+
+
+DEBTS = [
+    Node(
+        id="the-practice-family-cites-nothing",
+        kind="debt",
+        name="The laws about the WORK were grown from bleeding and cite no source - five of "
+             "them stand RED for want of authority, and unlike the interface family they "
+             "have no catalogue to be mined from",
+        payload={
+            "what_it_costs":
+                "the-laws-grew-by-mining-not-by-bleeding is true of the interface family and "
+                "false of this one. Those laws came from docs/sources.md - a survey chosen by "
+                "authority and falsifiability, category-exhaustive on purpose so coverage is "
+                "chosen rather than accidental. The practice laws came from defects: each one "
+                "is real, and each one is a house rule until something outside this repo says "
+                "it too. `a-law-cites-a-source` says exactly that on five of them, and the "
+                "publish-practice gate carries the red. The cost is not tidiness. A house "
+                "rule cannot be argued with from outside, cannot be checked against a source "
+                "that moved, and gives an adjudicator nothing to reason from when a card asks "
+                "whether the law was really broken.",
+            "why_it_is_not_paid":
+                "Nobody has surveyed the field. The interface catalogue took a deliberate "
+                "sweep - standards bodies, platform owners, government systems, empirical "
+                "research - and the practice field has its own: uncertainty and calibrated "
+                "language, evidence standards, plain-language statutes, documentation "
+                "standards. Mining one law at a time as defects arrive would rebuild exactly "
+                "the accident the interface family was careful to avoid.",
+        },
+        params={
+            "laws_without_authority": Quantity(
+                value=13, unit="law", provenance="verified", grounded=True,
+                source="quern brief, 2026-08-22: 13 laws RED on a-law-cites-a-source - 5 in "
+                       "the practice family (the-users-attention-is-not-a-test-harness, "
+                       "a-detour-is-announced-as-a-detour, deliberate-names-its-decision, "
+                       "a-remainder-names-its-debt, a-census-is-read-from-its-source) and 8 "
+                       "in the interface family, whose catalogue exists and simply has not "
+                       "been read down to them"),
+        },
+        children=[
+            Node(id="discharge-survey-the-practice-field", kind="discharge",
+                 name="A practice source catalogue, surveyed the way docs/sources.md was",
+                 payload={"route":
+                          "Same two ranking criteria, stated as the bias-guards: authority "
+                          "(standard, statute, or published empirical research - never fame) "
+                          "and falsifiability (can a breach be observed). Category-exhaustive, "
+                          "with the gaps recorded at the bottom, so a thin category is a "
+                          "boundary chosen rather than one fallen into. Then every practice "
+                          "law cited or marked owed, and the five reds go green or stay red "
+                          "for a stated reason."}),
+        ],
+    ),
+    Node(
+        id="two-corrections-have-no-law",
+        kind="debt",
+        name="Two defects a person found in one session have no law to break: a claim hedged "
+             "past its own evidence, and reasoning from one context written into another "
+             "context's record",
+        payload={
+            "what_it_costs":
+                "a-human-found-defect-enters-as-a-law says every defect a person finds passes "
+                "through one question before it is fixed: what valid generic rule did it "
+                "break. These two were found, the question was asked, and the answer has "
+                "nowhere to go. Both are recurring rather than incidental. HEDGING PAST "
+                "VERIFICATION: a fact established by running something, then reported with a "
+                "qualifier the evidence does not license - understating confidence is as much "
+                "an error as overstating it, and it is the harder one to notice because it "
+                "wears modesty. CONTEXT LEAKING INTO A RECORD: reasoning that belongs to the "
+                "conversation written into a ledger entry, a code comment or a CI config, "
+                "where it is inert for that reader at best and doctrine at worst. It has the "
+                "same shape as the estate's standing rule that a library never names a "
+                "client: the dependency points one way.",
+            "why_it_is_not_paid":
+                "Both want [[the-practice-family-cites-nothing]] paid first, or they enter as "
+                "two more house rules. They also mechanize very differently, and pretending "
+                "otherwise would sink the first: hedging-past-verification has a tight "
+                "predicate - a qualifier attached to something the same turn verified - while "
+                "context-leak has none yet and enters `owed`. A check that fires wrongly is "
+                "one everybody learns to skip, which costs more than the law was worth.",
+        },
+        children=[
+            Node(id="discharge-cite-and-mechanize", kind="discharge",
+                 name="Both laws cited from the catalogue, the first mechanized and the "
+                      "second entered owed",
+                 payload={"route":
+                          "Calibrated-language guidance is the root for the first - it exists "
+                          "to stop an author picking a confidence term the evidence does not "
+                          "license, in either direction. Plain-language guidance (statutory, "
+                          "public domain, already in the interface catalogue) is the root for "
+                          "the second. Falsifiers and triggers as any law, and the census "
+                          "says covered or owed rather than the count of laws built."}),
+        ],
+    ),
+    Node(
+        id="the-ruling-track-is-decided-and-unbuilt",
+        kind="debt",
+        name="only-the-owner-exempts says an adjudicator rules `fix` and `stand` and only "
+             "`exempt` escalates - and craft/rulings.py still deals every card to the owner",
+        payload={
+            "what_it_costs":
+                "The decision is recorded and nothing routes by it, so the queue still fills "
+                "with the cards that need no person and the exempts still wait behind them. "
+                "Every day it stays unbuilt is a day the reviewer's attention is spent on "
+                "readings a tool settles - which is the way a review track dies, and the "
+                "reason the decision was made.",
+            "why_it_is_not_paid":
+                "It needs a second surface as well as this one: the adjudicator's verdict has "
+                "to be recorded with what it rested on (the finding, the drawing, the law), "
+                "and an escalation has to reach the docket rather than a printed line. The "
+                "pipeline half is here; the queue half is not.",
+        },
+        children=[
+            Node(id="discharge-route-the-cards", kind="discharge",
+                 name="Adjudicated verdicts recorded like any ruling; exempts escalated",
+                 payload={"route":
+                          "craft/rulings.py gains the verdict's author beside its words, so a "
+                          "ruling says who settled it and on what; `exempt` from anyone but "
+                          "the owner is refused and dealt on. The orphan check, which reports "
+                          "a ruling whose finding no longer exists, stops being tidy and "
+                          "becomes the thing that keeps a delegated ruling honest."}),
+        ],
+    ),
+    Node(
+        id="the-deciders-run-by-hand",
+        kind="debt",
+        name="The practice deciders convict a claims file somebody remembered to write and "
+             "run - nothing reads what a turn actually produced, so a defect reaches a record "
+             "before any law is consulted",
+        payload={
+            "what_it_costs":
+                "craft.claims is real and it works, and it can only convict what was chosen "
+                "for it: a claim recorded, in a file, by the same agent whose work is being "
+                "judged. Both defects in [[two-corrections-have-no-law]] were found by a "
+                "person reading prose, and both had already reached a durable record - a "
+                "ledger entry, a CI comment, a commit message - by the time they were named. "
+                "Self-report catches the part already noticed, which is the part that needed "
+                "no check.",
+            "why_it_is_not_paid":
+                "The cheap version is the wrong one. A check over the turn's own writing has "
+                "to read what was actually produced - the diff AND the response, since the "
+                "reasoning appears in the response first and sets in the record afterwards, "
+                "and fail-fast puts the check at the earlier one. Only a mechanized law can "
+                "hold a handback; a reading law can only be reported, and a reading law "
+                "reported as a block is the noise that ends the practice.",
+        },
+        children=[
+            Node(id="discharge-check-the-turn", kind="discharge",
+                 name="A check over the turn's diff and its response, blocking on the "
+                      "mechanized laws only",
+                 payload={"route":
+                          "The deciders read what the turn wrote rather than what it said "
+                          "about itself. A correction from a person is the trigger to consult "
+                          "the laws first and name the generic rule before anything is fixed, "
+                          "which is a-human-found-defect-enters-as-a-law made unconditional "
+                          "instead of remembered. Wants "
+                          "[[the-practice-family-cites-nothing]] and "
+                          "[[two-corrections-have-no-law]] paid first: a harness that enforces "
+                          "house rules enforces them faster, not better."}),
+        ],
+    ),
+]

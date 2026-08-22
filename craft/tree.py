@@ -587,8 +587,9 @@ DEBTS = [
         links={"rests_on": ["a-human-found-defect-enters-as-a-law"]},
         name="Defects a person found in one session, none of which any law forbids: a claim "
              "hedged past its own evidence, reasoning from one context written into "
-             "another's record, and a decision the author's own evidence settled delegated "
-             "to the person anyway",
+             "another's record, and two ways of spending a person's attention badly - a "
+             "decision the evidence had settled, and a decision genuinely theirs "
+             "handed over with no recommendation",
         payload={
             "what_it_costs":
                 "a-human-found-defect-enters-as-a-law says every defect a person finds passes "
@@ -607,9 +608,13 @@ DEBTS = [
                 "just argued for. It is the exact sibling of "
                 "[[the-users-attention-is-not-a-test-harness]] - that law refuses to delegate "
                 "a CHECK the author can run, and this refuses to delegate a DECISION the "
-                "author's own evidence makes. Both spend the one attention that cannot be "
-                "replaced, and this one is the more insidious because asking reads as "
-                "deference.",
+                "author's own evidence makes. Asking reads as deference, which is what makes "
+                "it the more insidious. AND THE OTHER EDGE OF THE SAME LAW: a question "
+                "that IS the person's to answer, put with no recommendation - a repo "
+                "name and a shape, offered as a blank. The first over-delegates the "
+                "decision; the second under-prepares it. What reaches a person should "
+                "be the smallest decision left, already reasoned to a proposal they "
+                "can veto in one word.",
             "why_it_is_not_paid":
                 "All three want [[the-practice-family-cites-nothing]] paid first, or they "
                 "enter as more house rules - and the third has a root already in this "
@@ -626,14 +631,18 @@ DEBTS = [
         },
         params={
             "corrections_without_a_law": Quantity(
-                value=3, unit="correction", provenance="verified", grounded=True,
+                value=4, unit="correction", provenance="verified", grounded=True,
                 source="one session, 2026-08-22: hedging past verification (a parallel test "
                        "run called weaker evidence after its isolation had been checked), "
                        "context leaking into a record (that same caution written into an "
                        "app's ledger and CI), and a decision delegated after the evidence "
                        "settled it (asking whether to sweep, one paragraph after arguing "
-                       "that building the vocabulary first would be guessing). Three in one "
-                       "session is the number that says this is a family, not an incident"),
+                       "that building the vocabulary first would be guessing), and a "
+                       "decision that WAS the person's put as a blank question (a name "
+                       "and a shape, with no proposal attached). Four in one session is "
+                       "the number that says this is a family, not an incident - and the "
+                       "last two are one law with two edges, which is how it should be "
+                       "written"),
         },
         children=[
             Node(id="discharge-cite-and-mechanize", kind="discharge",

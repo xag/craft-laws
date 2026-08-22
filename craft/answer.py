@@ -39,25 +39,26 @@ from .practice import PRACTICE
 
 _ROOT = Path(__file__).resolve().parents[1]
 
-# The laws whose TRIGGER fires for a written answer to a person, read one by one out of the
-# nodes rather than picked by whether the law is "about words".
+# An ADJUDICATION, not a computation — and saying which it is matters, because the two are
+# told apart by whether somebody else could reproduce it.
 #
-# That distinction is the whole of it, and getting it wrong produced visible nonsense. An
-# earlier set was chosen by keyword and included sentences-stay-under-twenty-five-words,
-# whose own statement reads "No sentence of INTERFACE PROSE", whose falsifier reads "A
-# sentence in UI COPY", and whose trigger is "the app's voice does work of its own (dry,
-# terse, no explaining text)". An explanation is explaining text; the trigger never fires.
-# The check duly reported every long sentence in an answer and the answers came back chopped
-# into fragments to satisfy a counter that was never addressed to them.
+# Each law here carries a `trigger`: prose saying when it applies ("any interface with a
+# control that commits something", "the project ships documentation meant to be read long
+# after it is written"). Those were read one by one against this surface — a written answer
+# to a person in a terminal — and this is the list that survived. A reader can check the
+# reasoning by opening the same triggers. Nobody can compute it.
 #
-# Six more triggered on "the project ships documentation meant to be read long after it is
-# written (a README, a guide, a reference)". A chat answer is read once, now. Three needed a
-# control that commits something.
+# Two earlier attempts were worse and both failed the same way. Picking laws by keyword
+# ("is this about words?") pulled in sentences-stay-under-twenty-five-words, whose statement
+# says "interface prose", whose falsifier says "UI copy", and whose trigger is "the app's
+# voice does work of its own (dry, terse, no explaining text)". Answers came back chopped
+# into fragments to satisfy a counter never addressed to them. Mapping trigger prose to
+# condition ids by table was the same matching with a nicer name, hand-authored 55 times.
 #
-# What survives is the practice family and its neighbours: laws about what a claim may
-# assert, which fire on "anything is reported as done", "a result is reported to somebody
-# who will act on it", "a gap is being explained". NONE of them is countable — every one
-# needs a reader, and that is a fact about this surface rather than a gap in the tooling.
+# The durable answer is [[triggers-are-prose-so-applicability-cannot-be-computed]]: a
+# trigger becomes an expr over a declared context, quern evaluates it, and applicability is
+# solved. Until that exists this list is a judgement, recorded here so it can be argued
+# with, and the test below pins the excluded laws OUT so they cannot drift back by keyword.
 WRITTEN_ANSWER = [
     "done-is-observed-where-the-user-stands",
     "the-users-attention-is-not-a-test-harness",

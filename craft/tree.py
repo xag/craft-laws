@@ -643,9 +643,9 @@ DEBTS = [
         name="Defects a person found in one session, none of which any law forbids: a claim "
              "hedged past its own evidence, reasoning from one context written into "
              "another's record, two ways of spending a person's attention badly, and "
-             "reading an existing state as a chosen one. TWO ARE NOW LAWS, both cited - "
-             "a-qualifier-is-licensed-by-the-evidence and what-exists-is-not-thereby-chosen. "
-             "The rest are still only written here",
+             "reading an existing state as a chosen one, and building a thing away from "
+             "its subject. THREE ARE NOW LAWS, each cited; the rest are still only written "
+             "here",
         payload={
             "what_it_costs":
                 "a-human-found-defect-enters-as-a-law says every defect a person finds passes "
@@ -687,7 +687,7 @@ DEBTS = [
         },
         params={
             "corrections_without_a_law": Quantity(
-                value=6, unit="correction", provenance="verified", grounded=True,
+                value=7, unit="correction", provenance="verified", grounded=True,
                 source="one session, 2026-08-22: hedging past verification (a parallel test "
                        "run called weaker evidence after its isolation had been checked), "
                        "context leaking into a record (that same caution written into an "
@@ -701,7 +701,9 @@ DEBTS = [
                        "two existing names against a proposed one because they had 'earned' "
                        "their obscurity - one of them has no naming decision at all, so half "
                        "that justification was read off the fact that the name exists. SIX "
-                       "in one session, "
+                       "in one session, and a seventh - a law-checker built inside "
+                       "the project for pointers and hypotheses, now the law "
+                       "a-thing-is-built-where-its-subject-lives. SEVEN in one session, "
                        "each recorded as it happened, and the record prevented none of "
                        "the ones after it. That is the number, and what it measures is "
                        "not the "

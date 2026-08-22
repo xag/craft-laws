@@ -608,13 +608,13 @@ DEBTS = [
                 "just argued for. It is the exact sibling of "
                 "[[the-users-attention-is-not-a-test-harness]] - that law refuses to delegate "
                 "a CHECK the author can run, and this refuses to delegate a DECISION the "
-                "author's own evidence makes. Asking reads as deference, which is what makes "
-                "it the more insidious. AND THE OTHER EDGE OF THE SAME LAW: a question "
-                "that IS the person's to answer, put with no recommendation - a repo "
-                "name and a shape, offered as a blank. The first over-delegates the "
-                "decision; the second under-prepares it. What reaches a person should "
-                "be the smallest decision left, already reasoned to a proposal they "
-                "can veto in one word.",
+                "author's own evidence makes; asking reads as deference, which is what makes "
+                "it insidious. The same law's other edge: a question that IS the "
+                "person's, put with no recommendation. One over-delegates the decision, "
+                "the other under-prepares it. What reaches a person should be the "
+                "smallest decision left, already reasoned to a proposal they can veto "
+                "in one word - and once vetoed or agreed, acted on without asking "
+                "again.",
             "why_it_is_not_paid":
                 "All three want [[the-practice-family-cites-nothing]] paid first, or they "
                 "enter as more house rules - and the third has a root already in this "
@@ -631,7 +631,7 @@ DEBTS = [
         },
         params={
             "corrections_without_a_law": Quantity(
-                value=4, unit="correction", provenance="verified", grounded=True,
+                value=5, unit="correction", provenance="verified", grounded=True,
                 source="one session, 2026-08-22: hedging past verification (a parallel test "
                        "run called weaker evidence after its isolation had been checked), "
                        "context leaking into a record (that same caution written into an "
@@ -639,10 +639,15 @@ DEBTS = [
                        "settled it (asking whether to sweep, one paragraph after arguing "
                        "that building the vocabulary first would be guessing), and a "
                        "decision that WAS the person's put as a blank question (a name "
-                       "and a shape, with no proposal attached). Four in one session is "
-                       "the number that says this is a family, not an incident - and the "
-                       "last two are one law with two edges, which is how it should be "
-                       "written"),
+                       "and a shape, with no proposal attached), and a fifth of the "
+                       "same after both were written down - asking permission to run a "
+                       "command whose running was already agreed. FIVE in one session, "
+                       "each recorded as it happened, none of them prevented by the "
+                       "record: that is the number, and what it measures is not the "
+                       "author's carelessness but the gap between a law written and a "
+                       "law enforced. It is the case for "
+                       "[[the-deciders-run-by-hand]] stated in evidence rather than in "
+                       "argument"),
         },
         children=[
             Node(id="discharge-cite-and-mechanize", kind="discharge",

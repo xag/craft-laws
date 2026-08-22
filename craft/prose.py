@@ -9,7 +9,6 @@ documentation law, with the decider discipline throughout: convict with certaint
 or stay silent, and never guess.
 
     python -m craft.prose README.md docs/*.md
-    python -m craft.prose --terms twin,drawing,walk README.md
     python -m craft.prose --alarm
 
 The `--alarm` form runs every check against a convicting example and a clean one
@@ -25,7 +24,6 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
 
 from craft.laws import LAWS
 
@@ -286,27 +284,27 @@ def check_anchors(name: str, text: str, root: Path | None = None
     return out
 
 
-def check_terms_before_use(name: str, text: str, terms: Iterable[str]
-                           ) -> list[DocFinding]:
-    """terms-defined-before-use, given the document's declared terms and the
-    convention that a term's definition is its first **bold** occurrence."""
-    law = _law("terms-defined-before-use")
-    out = []
-    for term in terms:
-        bold = re.search(rf"\*\*{re.escape(term)}s?\*\*", text, re.IGNORECASE)
-        plain_use = re.search(rf"(?<!\*)\b{re.escape(term)}s?\b(?!\*)", text,
-                              re.IGNORECASE)
-        if bold and plain_use and plain_use.start() < bold.start():
-            out.append(DocFinding(
-                law=law, where=name, quote=term,
-                why="used before the bolded sentence that defines it — the "
-                    "reader meets the word with its definition still ahead."))
-    return out
+# terms-defined-before-use HAS NO DECIDER, and this note is why it should not get the
+# one it used to have. That check took the document's terms as a comma-separated string
+# typed at the call site, and identified a term's DEFINITION as its first **bold**
+# occurrence -- a typographic convention no document here ever declared, and one this
+# repo's own README breaks (**data a machine can check** is emphasis, not a definition).
+#
+# The consequence was worse than the crudeness. `if bold and plain_use and ...` means a
+# term that is NEVER defined -- the maximal breach of 'a reader never meets a word whose
+# definition is still ahead of them' -- produced no finding at all. It convicted documents
+# that had followed the convention and stayed silent on the ones that had not, which is
+# precision bought by aiming away from the violation. It also convicted this repo on its
+# own H1, because `laws?` matches after the hyphen in `craft-laws`.
+#
+# The law states the mechanism it actually wants: the terms are DECLARED, the way
+# interface@'s `term` kind declares the app's glossary. Until a document declares its own
+# coinages, this one is read by a person. See a-word-list-is-a-reading-not-a-mechanization.
 
 
 # --- one file, every decider ---------------------------------------------------------
 
-def check_file(path: Path, terms: Iterable[str] = ()) -> list[DocFinding]:
+def check_file(path: Path) -> list[DocFinding]:
     text = path.read_text(encoding="utf-8", errors="replace")
     name = path.name
     return (check_paragraph_length(name, text)
@@ -316,8 +314,7 @@ def check_file(path: Path, terms: Iterable[str] = ()) -> list[DocFinding]:
             + check_repetition(name, text)
             + check_acronyms(name, text)
             + check_trailing_conditions(name, text)
-            + check_anchors(name, text, root=path.parent)
-            + check_terms_before_use(name, text, terms))
+            + check_anchors(name, text, root=path.parent))
 
 
 # --- the alarm -----------------------------------------------------------------------
@@ -354,12 +351,6 @@ def _alarm() -> int:
     rings.append(("anchors",
                   bool(check_anchors("t", anchored)),
                   len(check_anchors("t", anchored)) == 1))
-    termy = "The twin is proved. A **twin** is the app's model."
-    rings.append(("terms", bool(check_terms_before_use("t", termy, ["twin"])),
-                  not check_terms_before_use(
-                      "t", "A **twin** is the app's model. The twin is proved.",
-                      ["twin"])))
-
     dead = [n for n, rang, clean in rings if not (rang and clean)]
     for n, rang, clean in rings:
         state = "ok " if rang and clean else "DEAD"
@@ -379,9 +370,6 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="python -m craft.prose",
                                  description=__doc__.splitlines()[0])
     ap.add_argument("files", nargs="*", help="markdown files to hold to the laws")
-    ap.add_argument("--terms", default="",
-                    help="comma-separated terms whose definitions (first bold "
-                         "use) must precede their first plain use")
     ap.add_argument("--alarm", action="store_true",
                     help="prove every decider can convict, then exit")
     args = ap.parse_args(argv)
@@ -389,10 +377,9 @@ def main(argv: list[str] | None = None) -> int:
         return _alarm()
     if not args.files:
         ap.error("give at least one file, or --alarm")
-    terms = [t.strip() for t in args.terms.split(",") if t.strip()]
     findings: list[DocFinding] = []
     for f in args.files:
-        findings += check_file(Path(f), terms)
+        findings += check_file(Path(f))
     for fd in findings:
         print(f"  RED {fd.law} [{fd.where}] «{fd.quote}»\n      {fd.why}")
     if not findings:

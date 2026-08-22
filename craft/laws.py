@@ -424,9 +424,8 @@ LAWS = [
         _cited("Google developer documentation style guide, Jargon"),
         falsifier="A document's own coinage — a 'twin', a 'walk', a 'lane' — used "
                   "before the sentence that says what it is. Observable from "
-                  "reading order alone, and mechanical the moment the document's "
-                  "terms are declared: the glossary's term kind already carries "
-                  "them.",
+                  "reading order alone, by a reader: no document here declares its "
+                  "own coinages, so nothing can compute which words are terms.",
         triggers=["the project ships documentation meant to be read long after it "
                   "is written (a README, a guide, a reference)"],
         citations=[("Google developer documentation style guide — Jargon",

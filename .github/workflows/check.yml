@@ -79,7 +79,7 @@ jobs:
       - name: This repo's own claims hold
         run: uv run python -m craft.claims claims.jsonl
       - name: The README passes its own laws
-        run: uv run python -m craft.prose --terms twin,drawing,walk,decider,critic,witness README.md
+        run: uv run python -m craft.prose README.md
       - name: LAWS.md is the data, rendered
         run: |
           uv run python -m craft.render > /tmp/laws.md

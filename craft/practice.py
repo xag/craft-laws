@@ -26,6 +26,11 @@ from quern.provenance import Quantity
 
 from .laws import _cited, _law, _uncited
 
+PARNAS = ("David L. Parnas, On the Criteria To Be Used in Decomposing Systems into "
+          "Modules, Communications of the ACM 15(12), 1053-1058, 1972")
+PARNAS_URL = ("https://www.win.tue.nl/~wstomv/edu/2ip30/references/"
+              "criteria_for_modularization.pdf")
+
 EXISTENCE_BIAS = ("Eidelman, Crandall & Pattershall, The existence bias, Journal "
                   "of Personality and Social Psychology 97(5), 765-775, 2009")
 EXISTENCE_URL = "https://doi.org/10.1037/a0017058"
@@ -360,6 +365,48 @@ PRACTICE = [
              "the same discharge - go and find the decision. Its absence is not permission "
              "to tear the thing down; it is information, and usually the most useful thing "
              "you will learn that day.",
+    ),
+
+    # --- earned 2026-08-22, by building a law-checker inside the project whose own first
+    # --- decision says it holds pointers, an ordering and hypotheses and no copy of what
+    # --- another ledger says. The misplacement then forced every ugly part of it.
+    _law(
+        "a-thing-is-built-where-its-subject-lives",
+        "Work goes where the decisions it depends on already live; a piece built away from "
+        "its subject pays for the distance in couplings that should not exist",
+        _cited(PARNAS),
+        falsifier="A module, file or feature added to a project whose stated purpose does "
+                  "not admit it - and the tell is the workaround it needs: a hand-copy of "
+                  "something another repository owns, a shell-out to read what an import "
+                  "would have given, a dependency that cannot be taken because the two "
+                  "homes disagree.",
+        triggers=["something is added to a project that already states what it is for",
+                  "a new piece needs data another project owns",
+                  "an interface between two parts is turning out awkward"],
+        citations=[(PARNAS, PARNAS_URL,
+                    "We propose instead that one begins with a list of difficult design "
+                    "decisions or design decisions which are likely to change. Each module "
+                    "is then designed to hide such a decision from the others."),
+                   (PARNAS + ", on the wrong criterion", PARNAS_URL,
+                    "it is almost always incorrect to begin the decomposition of a system "
+                    "into modules on the basis of a flowchart")],
+        sightings=[("quality-harness, 2026-08-22",
+                    "a checker holding written answers to craft laws was built inside the "
+                    "project for pointers, ordering and hypotheses - whose founding decision "
+                    "reads 'no copy of anything another ledger already says'. It immediately "
+                    "needed a hand-copied list of 24 law ids and a subprocess to read "
+                    "craft-laws from another virtualenv, because the two pin different "
+                    "revisions of a shared dependency and the import was impossible. Both "
+                    "workarounds were the misplacement announcing itself.")],
+        note="Parnas's criterion is about which DECISION a module hides, and it reads across "
+             "to repositories without stretching: a checker's reason to change is the laws, "
+             "so it belongs with the laws. The practical value is the TELL rather than the "
+             "principle - nobody notices they are in the wrong place, and everybody notices "
+             "a hand-copy or a shell-out. Treat those as evidence about location, not as "
+             "problems to solve where they appear. Symmetric with "
+             "[[what-exists-is-not-thereby-chosen]]: there the question is whether a state "
+             "was chosen, here whether a project's stated purpose was READ before something "
+             "was added to it. Both are answered by opening the record.",
     ),
 ]
 

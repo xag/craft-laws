@@ -8,13 +8,14 @@ One difference from the interface catalogue is worth stating up front. There is 
 
 1. **IPCC AR5 Guidance Note on Consistent Treatment of Uncertainties** (Mastrandrea et al., 2010) — 11 numbered paragraphs, 6 lettered criteria and two calibrated scales, written to stop authors picking a confidence term the evidence does not license. Publicly available, quotable, and unusually operational for a document about judgement. **Censused below.** https://www.ipcc.ch/site/assets/uploads/2017/08/AR5_Uncertainty_Guidance_Note.pdf
 2. **Eidelman, Crandall & Pattershall, "The existence bias"** (*Journal of Personality and Social Psychology* 97(5), 765–775, 2009) — five studies establishing that mere existence is taken as evidence of goodness, and that the effect appears in aesthetic judgment where no choice among alternatives was ever made. Published empirical research, which is the authority; the finding is about people rather than about work, so it roots a law and does not state one. **Censused below.** Full text paywalled; the census is read from the abstract, which enumerates the studies. https://doi.org/10.1037/a0017058
-3. **Agans, *Debugging: The 9 Indispensable Rules*** (2002) — already the root of four practice laws; nine rules, each a command with an observable breach. Copyrighted, so cite the rule name and quote briefly.
-4. **Federal plain language guidelines** (Plain Writing Act 2010; canonical pages now under digital.gov) — statutory, public domain, sentence-level and checkable. Already source #10 of the interface catalogue; the practice family needs the parts about writing for a reader who is not you.
-5. **ISO/IEC/IEEE 15289 and 26515** — what a work product must contain to be a record rather than a note. Paywalled: cite clause numbers, quote briefly.
-6. **CONSORT / ARRIVE / STROBE reporting checklists** — the strongest available model for "a claim carries what it rests on", each item numbered and each breach observable in a manuscript. Free, widely adopted, and about reporting rather than about our subject matter, so they transfer by analogy and must be cited as such.
-7. **Kahneman, Slovic & Tversky and successors on overconfidence and anchoring** — published empirical research, the root beneath IPCC paragraph 3. Principle-shaped; cite for the finding, never for a rule.
-8. **NASA/ESA anomaly-reporting standards and the Swiss-cheese/HFACS literature** — the root for "instrument before the second theory" if one exists outside Agans. Not yet read.
-9. **GOV.UK Service Manual** — "do the hard work to make it simple" and the service-assessment criteria; already the ancestor of much of the interface catalogue, and the plausible root for the laws about spending someone else's attention. Principle-shaped; the design system's numbered patterns are the falsifiable part.
+3. **Parnas, "On the Criteria To Be Used in Decomposing Systems into Modules"** (*Communications of the ACM* 15(12), 1053–1058, 1972) — the foundational statement of where a thing belongs: decompose by the design decisions each part hides, never by the steps of processing. Freely available, quotable, and it gives an observable criterion rather than a principle. **Censused below.** https://www.win.tue.nl/~wstomv/edu/2ip30/references/criteria_for_modularization.pdf
+4. **Agans, *Debugging: The 9 Indispensable Rules*** (2002) — already the root of four practice laws; nine rules, each a command with an observable breach. Copyrighted, so cite the rule name and quote briefly.
+5. **Federal plain language guidelines** (Plain Writing Act 2010; canonical pages now under digital.gov) — statutory, public domain, sentence-level and checkable. Already source #10 of the interface catalogue; the practice family needs the parts about writing for a reader who is not you.
+6. **ISO/IEC/IEEE 15289 and 26515** — what a work product must contain to be a record rather than a note. Paywalled: cite clause numbers, quote briefly.
+7. **CONSORT / ARRIVE / STROBE reporting checklists** — the strongest available model for "a claim carries what it rests on", each item numbered and each breach observable in a manuscript. Free, widely adopted, and about reporting rather than about our subject matter, so they transfer by analogy and must be cited as such.
+8. **Kahneman, Slovic & Tversky and successors on overconfidence and anchoring** — published empirical research, the root beneath IPCC paragraph 3. Principle-shaped; cite for the finding, never for a rule.
+9. **NASA/ESA anomaly-reporting standards and the Swiss-cheese/HFACS literature** — the root for "instrument before the second theory" if one exists outside Agans. Not yet read.
+10. **GOV.UK Service Manual** — "do the hard work to make it simple" and the service-assessment criteria; already the ancestor of much of the interface catalogue, and the plausible root for the laws about spending someone else's attention. Principle-shaped; the design system's numbered patterns are the falsifiable part.
 
 Excluded despite fame, with reasons: **Clean Code / SOLID / most engineering-practice books** (assertions without an authority, and their empirical support is thin or contested); **Agile manifesto and derivatives** (values, not rules — nothing observable); **Google's SRE book** (excellent and specific to running services, not to claiming work done; CC BY-NC-ND).
 
@@ -76,3 +77,24 @@ The full text is paywalled. The abstract enumerates the paper's whole structure 
 | 6 | Conclusion: mere existence leads to assumptions of goodness; the status quo is seen as good, right, attractive, tasty, and desirable | covered — the law's statement |
 
 **Counted:** 6 items — 4 covered, 1 owed, 1 set aside.
+
+
+---
+
+# Census: Parnas (1972), read whole
+
+Six pages, and the paper's structure is a worked comparison of two decompositions of one program followed by a list of criteria and a conclusion. **9 items.**
+
+| # | What it states | Status |
+|---|---|---|
+| 1 | Modularization is a mechanical decomposition into work assignments, and the criteria used to divide are the subject | set aside — framing |
+| 2 | Decomposition 1: modules follow the steps of processing (a flowchart) | set aside — the example |
+| 3 | Decomposition 2: each module is characterized by a design decision it hides from all others; its interface reveals as little as possible about its inner workings | covered — `a-thing-is-built-where-its-subject-lives` |
+| 4 | Changeability: a change to a hidden decision touches one module in the second decomposition and many in the first | owed — no law states that the cost of misplacement is measured in what a change touches |
+| 5 | Independent development: interfaces between modules must be defined so work can proceed separately | owed |
+| 6 | Comprehensibility: a module can be understood without understanding the others | owed |
+| 7 | Data representations, character codes and orderings should be hidden in a module | set aside — a programming instruction, not a practice one |
+| 8 | The sequence in which items are processed should as far as practical be hidden within a single module | set aside |
+| 9 | Conclusion: it is almost always incorrect to begin decomposition on the basis of a flowchart; begin with a list of difficult decisions or ones likely to change | covered — the second citation on the same law |
+
+**Counted:** 9 items — 2 covered, 3 owed, 4 set aside.

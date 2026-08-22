@@ -693,7 +693,7 @@ DEBTS = [
             "what_it_costs":
                 "craft.claims is real and it works, and it can only convict what was chosen "
                 "for it: a claim recorded, in a file, by the same agent whose work is being "
-                "judged. Both defects in [[two-corrections-have-no-law]] were found by a "
+                "judged. Every defect in [[corrections-outrun-the-laws]] was found by a "
                 "person reading prose, and both had already reached a durable record - a "
                 "ledger entry, a CI comment, a commit message - by the time they were named. "
                 "Self-report catches the part already noticed, which is the part that needed "
@@ -717,7 +717,7 @@ DEBTS = [
                           "which is a-human-found-defect-enters-as-a-law made unconditional "
                           "instead of remembered. Wants "
                           "[[the-practice-family-cites-nothing]] and "
-                          "[[two-corrections-have-no-law]] paid first: a harness that enforces "
+                          "[[corrections-outrun-the-laws]] paid first: a harness that enforces "
                           "house rules enforces them faster, not better."}),
         ],
     ),

@@ -534,6 +534,7 @@ DEBTS = [
     Node(
         id="the-practice-family-cites-nothing",
         kind="debt",
+        links={"rests_on": ["the-process-is-ruled-too"]},
         name="The laws about the WORK were grown from bleeding and cite no source - five of "
              "them stand RED for want of authority, and unlike the interface family they "
              "have no catalogue to be mined from",
@@ -583,6 +584,7 @@ DEBTS = [
     Node(
         id="two-corrections-have-no-law",
         kind="debt",
+        links={"rests_on": ["a-human-found-defect-enters-as-a-law"]},
         name="Two defects a person found in one session have no law to break: a claim hedged "
              "past its own evidence, and reasoning from one context written into another "
              "context's record",
@@ -624,6 +626,7 @@ DEBTS = [
     Node(
         id="the-ruling-track-is-decided-and-unbuilt",
         kind="debt",
+        links={"rests_on": ["only-the-owner-exempts"]},
         name="only-the-owner-exempts says an adjudicator rules `fix` and `stand` and only "
              "`exempt` escalates - and craft/rulings.py still deals every card to the owner",
         payload={
@@ -653,6 +656,7 @@ DEBTS = [
     Node(
         id="the-deciders-run-by-hand",
         kind="debt",
+        links={"rests_on": ["the-process-is-ruled-too"]},
         name="The practice deciders convict a claims file somebody remembered to write and "
              "run - nothing reads what a turn actually produced, so a defect reaches a record "
              "before any law is consulted",

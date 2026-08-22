@@ -281,6 +281,57 @@ DECISIONS = [
             ),
         ],
     ),
+    Node(
+        id="a-word-list-is-a-reading-not-a-mechanization",
+        kind="decision",
+        name="A law checked by matching words in prose is unmechanized, and says so - it "
+             "does not get a decider, and it never holds a handback",
+        payload={
+            "rationale":
+                "Three claim deciders were built by matching words: /deliberate|by design|"
+                "on purpose/, /later|next|not yet|deferred|owed|blocked|remains/, and a "
+                "count-noun pattern. The defence was that the match only TRIGGERED and the "
+                "verdict was structural - a word hit, then a missing field convicts - and "
+                "that distinction is real. It is not enough of one. Choosing WHICH claims "
+                "are subject to a law by reading their prose is the reading, whatever "
+                "decides afterwards, and this repo has the measurement: a word list over a "
+                "turn's prose was wrong about seven times in eight, and twice convicted the "
+                "law being OBEYED, because the difference between a hedge that is a defect "
+                "and a hedge that names its own unknown is meaning. The same is true of "
+                "'later': a done-claim whose gap says a part comes later may be the law "
+                "broken or the law obeyed, and no pattern separates them.",
+            "consequence":
+                "The three are removed from craft.claims, and the LAWS stay. They carry "
+                "falsifiers and real sightings and they are red on a-law-cites-a-source, "
+                "which is this repo's honest state for a law with no root. What they no "
+                "longer have is a mechanism, which is the accurate position rather than a "
+                "gap: unmechanized, not faked. Five deciders remain, and every one of them "
+                "reads a field - the shape of the evidence, a boolean, the length of a "
+                "list - and never a word. The aggravation these three carried is that they "
+                "fired at Stop with exit 2, so an uncited, reading-shaped rule was holding "
+                "a handback, which [[the-deciders-run-by-hand]] rejects.",
+        },
+        children=[
+            Node(id="alt-keep-them-the-match-only-triggers", kind="alternative",
+                 name="Keep them: the regex selects, the missing field convicts, so a "
+                      "false trigger costs one extra field and never a wrong verdict",
+                 payload={"why":
+                          "It is the strongest argument for them and it was mine. It fails "
+                          "on where the cost lands: the extra field is demanded at Stop, "
+                          "with exit 2, from an author who is mid-sentence and cannot "
+                          "argue with it - and a check that asks for a field on a sentence "
+                          "it misread is exactly the noise that gets a check switched off. "
+                          "A trigger nobody can argue with is a verdict."}),
+            Node(id="alt-delete-the-three-laws-as-well", kind="alternative",
+                 name="Delete the laws too, since nothing can check them",
+                 payload={"why":
+                          "A law is not the check. Each of these three has a falsifier a "
+                          "person can observe and a sighting where it caught something "
+                          "real, which is the whole argument for a law. Deleting them "
+                          "would lose the finding to keep the tooling tidy, and would "
+                          "leave the habit they name unnamed."}),
+        ],
+    ),
 ]
 
 

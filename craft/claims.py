@@ -159,91 +159,27 @@ def check_detours_say_so(name: str, claims: list[dict]) -> list[ClaimFinding]:
     return out
 
 
-import re as _re
-
-_INTENT = _re.compile(r"\b(deliberate(?:ly)?|by design|on purpose|intentional(?:ly)?)\b",
-                      _re.I)
-_REMAINDER = _re.compile(r"\b(later|next|not yet|deferred|owed|blocked|remains?)\b", _re.I)
-_COUNT = (r"\b(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
-          r"all|every|the whole|complete|entire(?:ty)?)\b\s+(?:of\s+)?(?:the\s+)?"
-          r"(?:[a-z-]+\s+)?(?:law|famil|item|rule|propert|heuristic|approach)\w*")
-# A count of a SOURCE's items: the count-noun followed by its provenance ("of the paper",
-# "from RFC 9110", "in Hughes"). "88 rule(s), nothing unaccounted for" is a tool's tally
-# and "all 85 laws" is a catalogue's own length — neither claims to enumerate a source,
-# so neither is this decider's. Precision over recall: the census node in the ledger is
-# the harness; this decider only refuses the sentence that skips it.
-_COUNTED = _re.compile(
-    rf"{_COUNT}\s+(?:of|from|in)\s+(?:the\s+)?(?:paper|source|spec|rfc|standard|book|"
-    rf"guide|heuristics|census|catalogue|[A-Z]\w+)", _re.S)
-
-
-def _words(c: dict) -> str:
-    """Everything a claim says, in one string: its text, its gaps, its notes."""
-    parts = [str(c.get("text", "")), str(c.get("still_broken", "")), str(c.get("note", ""))]
-    for e in c.get("evidence") or []:
-        parts.append(str(e.get("what", "")))
-        parts.append(str(e.get("gap", "")))
-    return " ".join(parts)
-
-
-def check_deliberate_names_its_decision(name: str, claims: list[dict]) -> list[ClaimFinding]:
-    """A claim that calls a state deliberate carries `decided_at`: the ledger node, issue
-    or commit where somebody decided it. The word is not evidence of the decision."""
-    out = []
-    for i, c in enumerate(claims):
-        m = _INTENT.search(_words(c))
-        if not m or str(c.get("decided_at") or "").strip():
-            continue
-        out.append(ClaimFinding(_law("deliberate-names-its-decision"),
-                                f"{name}#{i + 1}", str(c.get("text", ""))[:120],
-                                f"'{m.group(0)}' with no `decided_at` — a state nobody is "
-                                "shown to have decided is an accident wearing a choice"))
-    return out
-
-
-def check_a_remainder_names_its_debt(name: str, claims: list[dict]) -> list[ClaimFinding]:
-    """A done/fixed claim that names a remainder carries `owed`: the debt entries that
-    hold what was not delivered. A remainder in prose is gone with the scrollback."""
-    out = []
-    for i, c in enumerate(claims):
-        if c.get("kind") not in ("done", "fixed"):
-            continue
-        gaps = " ".join(str(e.get("gap", "")) for e in c.get("evidence") or [])
-        m = _REMAINDER.search(gaps)
-        if not m or c.get("owed"):
-            continue
-        out.append(ClaimFinding(_law("a-remainder-names-its-debt"),
-                                f"{name}#{i + 1}", str(c.get("text", ""))[:120],
-                                f"the gap says '{m.group(0)}' and no `owed` names the debt "
-                                "that carries it — a half-done job reported as done"))
-    return out
-
-
-def check_a_census_is_read_from_its_source(name: str, claims: list[dict]
-                                           ) -> list[ClaimFinding]:
-    """A done-claim that states a count of laws, families, items or rules — or claims
-    all of them — carries `census`: the node where the source's own list lives, each
-    entry covered or owed. A count grounded on the catalogue's own length is a count
-    of what was built, not of what the source says."""
-    out = []
-    for i, c in enumerate(claims):
-        if c.get("kind") != "done":
-            continue
-        m = _COUNTED.search(_words(c))
-        if not m or str(c.get("census") or "").strip():
-            continue
-        out.append(ClaimFinding(_law("a-census-is-read-from-its-source"),
-                                f"{name}#{i + 1}", str(c.get("text", ""))[:120],
-                                f"'{m.group(0)}' with no `census` naming the source's own "
-                                "list — an enumeration that may be filtered by what was "
-                                "feasible"))
-    return out
+# THREE DECIDERS WERE REMOVED HERE, 2026-08-22, and this note is why they should not come
+# back in this shape. deliberate-names-its-decision, a-remainder-names-its-debt and
+# a-census-is-read-from-its-source were checked by matching WORDS in a claim's prose --
+# /deliberate|by design|on purpose/, /later|next|not yet|deferred|owed|blocked|remains/,
+# a count-noun pattern -- and requiring a structured field once a word hit. The match only
+# TRIGGERED and the verdict was structural, which is a real distinction and not enough of
+# one: a word list over prose is a reading, and this repo has already measured what a
+# reading costs when it fires as a check. Seven convictions in eight were not defects, and
+# two of them convicted the law being OBEYED. These three fired at Stop, with exit 2, on
+# laws that cite nobody, which the-deciders-run-by-hand rejects: 'a reading law reported as
+# a block is the noise that ends the practice'.
+#
+# The three laws STAY. They carry falsifiers and real sightings, and they are red because
+# they cite nobody, which is this repo's honest state for a law with no root. What they no
+# longer have is a mechanism, and that is the accurate position: unmechanized, not faked.
+# The decision is recorded at `a-word-list-is-a-reading-not-a-mechanization` in the ledger.
 
 
 CHECKS = (check_done_is_observed, check_fixed_reproduced_first,
           check_one_candidate_per_fix, check_theories_carry_observations,
-          check_detours_say_so, check_deliberate_names_its_decision,
-          check_a_remainder_names_its_debt, check_a_census_is_read_from_its_source)
+          check_detours_say_so)
 
 
 def check_file(path: Path) -> list[ClaimFinding]:
@@ -271,13 +207,6 @@ def _alarm() -> int:
         {"kind": "detour", "text": "use /deck instead"},
         {"kind": "done", "text": "it renders",
          "evidence": [{"where": "stand-in", "what": "jsdom run"}]},
-        {"kind": "done", "text": "the app deliberately ships without the lib",
-         "evidence": [{"where": "user-surface", "what": "seen"}]},
-        {"kind": "done", "text": "the natives are built",
-         "evidence": [{"where": "user-surface", "what": "seen",
-                       "gap": "the abstraction function comes later"}]},
-        {"kind": "done", "text": "the nine families of the paper are catalogued",
-         "evidence": [{"where": "user-surface", "what": "seen"}]},
     ]
     clean = [
         {"kind": "done", "text": "the sheet renders on the phone",
@@ -291,16 +220,6 @@ def _alarm() -> int:
          "new_observation": "beacon: after-initialized then no-payload"},
         {"kind": "detour", "text": "use /deck meanwhile",
          "still_broken": "the MCP card until the host refreshes"},
-        {"kind": "done", "text": "the app ships without the lib on purpose",
-         "decided_at": "ledger: the-runtime-image-carries-no-verifier",
-         "evidence": [{"where": "user-surface", "what": "seen"}]},
-        {"kind": "done", "text": "the natives are built",
-         "owed": ["four-families-compare-two-stretches"], "census": "hughes-2020-census",
-         "evidence": [{"where": "user-surface", "what": "seen",
-                       "gap": "four families are owed, not yet witnessed by a tape"}]},
-        {"kind": "done", "text": "all 31 properties of the paper are catalogued",
-         "census": "hughes-2020-census",
-         "evidence": [{"where": "user-surface", "what": "seen"}]},
     ]
     dead = []
     for check in CHECKS:

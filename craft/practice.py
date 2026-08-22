@@ -208,7 +208,8 @@ PRACTICE = [
     ),
 
     # --- earned 2026-08-20, in one session, by one habit: a job left half done and
-    # --- reported as a choice. Three faces of it, each with its own decider.
+    # --- reported as a choice. Three faces of it. All three are UNMECHANIZED: the word
+    # --- lists that used to check them were removed 2026-08-22 (see craft/claims.py).
     _law(
         "deliberate-names-its-decision",
         "A state called deliberate, by design or on purpose names where the decision "
@@ -248,8 +249,8 @@ PRACTICE = [
                     "Nothing red anywhere pointed at it.")],
         note="A debt in a ledger is red-able: a rule can ask whether it still stands, a "
              "brief lists it, a discharge condition names what ends it. A remainder in "
-             "prose is none of those. The claim decider asks for the pointer, and a "
-             "done-claim that names a remainder without one is convicted.",
+             "prose is none of those. Nothing checks this one: the pointer is asked "
+             "for by a reader, because the only mechanism tried was a word list.",
     ),
 
     _law(

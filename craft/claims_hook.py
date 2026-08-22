@@ -1,7 +1,7 @@
 """The Stop hook: run the claim deciders before the turn is handed back.
 
-`craft.claims` is the check, and it has been all along: eight code deciders, one per
-practice law, over the claims a session records. Its own docstring says the move — "give
+`craft.claims` is the check, and it has been all along: five code deciders over the claims
+a session records, each reading a field and never a word of prose. Its own docstring says the move — "give
 the subject a data shape, then convict with certainty or stay silent." It costs a
 millisecond.
 

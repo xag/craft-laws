@@ -1,4 +1,6 @@
-"""The Stop hook: hold the report of work to the laws about work, and hand back what it broke.
+"""The Stop hook: hold an answer to the laws about how work is reported.
+
+What it broke comes back to the author while the sentence can still be rewritten.
 
 The finding is worth something only while the sentence can still be rewritten. Two earlier
 shapes both missed that window, and both are worth naming because the mistake is easy. A
@@ -55,7 +57,7 @@ def _already_reported(answer: str) -> bool:
 
 def report(findings) -> str:
     """What the author is handed, while the answer can still be changed."""
-    lines = [f"This report breaks {len(findings)} law(s) about how work is reported — each "
+    lines = [f"This answer breaks {len(findings)} law(s) about how work is reported — each "
              "with a falsifier and a root outside this estate. Fix it and finish; nothing is "
              "refused, and if a reading is wrong, say so and carry on."]
     for f in findings:

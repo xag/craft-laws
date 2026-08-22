@@ -1,4 +1,4 @@
-"""A report of work, held to the laws about work."""
+"""An answer, held to the laws about how work is reported."""
 
 import json
 
@@ -22,12 +22,12 @@ def test_a_law_travels_with_its_falsifier():
         assert says and falsifier, lid
 
 
-def test_no_reader_is_not_a_clean_report(monkeypatch):
+def test_no_reader_is_not_a_clean_answer(monkeypatch):
     # an absent reader and an empty law set are both NOT CHECKED. Recording either as clean
     # is the difference between a check and a decoration.
     monkeypatch.setattr(answer, "_ask", lambda p, **k: None)
-    assert answer.judge("some report", "evidence") is None
-    assert answer.judge("some report", "evidence", law_set=[]) is None
+    assert answer.judge("some answer", "evidence") is None
+    assert answer.judge("some answer", "evidence", law_set=[]) is None
 
 
 def test_a_finding_names_a_law_that_exists(monkeypatch):
@@ -35,7 +35,7 @@ def test_a_finding_names_a_law_that_exists(monkeypatch):
     monkeypatch.setattr(answer, "_ask", lambda p, **k: {"findings": [
         {"law": "done-is-observed-where-the-user-stands", "sentence": "s", "because": "w"},
         {"law": "a-law-nobody-wrote", "sentence": "s", "because": "w"}]})
-    got = answer.judge("report", "evidence")
+    got = answer.judge("an answer", "evidence")
     assert [f.law for f in got] == ["done-is-observed-where-the-user-stands"]
 
 
@@ -57,16 +57,16 @@ def test_a_turn_ends_when_the_person_speaks(tmp_path):
     assert got[0].tools == 1 and got[1].said.strip() == "second"
 
 
-def test_the_same_report_is_handed_back_once(tmp_path, monkeypatch):
-    # without this a revised report still carrying a breach comes straight back, and again,
+def test_the_same_answer_is_handed_back_once(tmp_path, monkeypatch):
+    # without this a revised answer still carrying a breach comes straight back, and again,
     # and the loop never settles — a check that will not let go gets switched off
     monkeypatch.setattr(hook, "_SEEN", tmp_path / "seen.json")
-    assert hook._already_reported("a report") is False
-    assert hook._already_reported("a report") is True
-    assert hook._already_reported("a different report") is False
+    assert hook._already_reported("an answer") is False
+    assert hook._already_reported("an answer") is True
+    assert hook._already_reported("a different answer") is False
 
 
-def test_the_report_goes_to_the_author_and_refuses_nothing():
+def test_the_finding_goes_to_the_author_and_refuses_nothing():
     said = hook.report([Finding(law="done-is-observed-where-the-user-stands",
                                 sentence="the suite is green so it works",
                                 because="no observation of a surface a person touches")])

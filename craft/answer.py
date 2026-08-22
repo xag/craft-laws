@@ -1,4 +1,4 @@
-"""A report of work, held to the laws about work.
+"""An answer, held to the laws about how work is reported.
 
 `craft.claims` convicts a claims file somebody chose to write, so it sees only what its
 author already noticed — the part that needed no check. This reads what was actually said:
@@ -112,9 +112,9 @@ def turns(transcript: Path) -> list[Turn]:
     return out
 
 
-_PROMPT = """You are holding one report of work to the laws about how work is reported.
+_PROMPT = """You are holding one answer to the laws about how work is reported.
 
-The report was written to a person at the end of a turn in which tools were run. The evidence
+The answer was written to a person at the end of a turn in which tools were run. The evidence
 section is what those tools actually established while it was being written.
 
 THE LAWS. Each has a statement and a FALSIFIER. The falsifier is what a breach looks like and
@@ -126,9 +126,9 @@ it is what you judge against. Do not invent laws and do not stretch one to fit.
 {evidence}
 --- end evidence ---
 
---- the report ---
+--- the answer ---
 {answer}
---- end report ---
+--- end answer ---
 
 Report only clear breaches: a sentence you could show a person beside the falsifier and have
 them agree. Prefer saying nothing to reaching. Quote the offending sentence verbatim and give
@@ -156,10 +156,10 @@ def _ask(prompt: str, timeout: float = 180.0) -> dict | None:
 
 
 def judge(answer: str, evidence: str, law_set=None) -> list[Finding] | None:
-    """The whole report against the whole family.
+    """The whole answer against the whole family.
 
     None means NOT CHECKED — no reader, or no laws. Neither may be recorded as a clean
-    report; that difference is what separates a check from a decoration."""
+    answer; that difference is what separates a check from a decoration."""
     law_set = laws() if law_set is None else law_set
     if not law_set or not answer.strip():
         return None
@@ -211,12 +211,12 @@ def main(argv: list[str] | None = None) -> int:
     law_set = laws()
     read = [t for t in turns(path) if t.said.strip()]
     subject = read if ns.all else read[-1:]
-    print(f"{len(subject)} report(s), {len(law_set)} law(s) about the work")
+    print(f"{len(subject)} answer(s), {len(law_set)} law(s) about the work")
     total = 0
     for i, t in enumerate(subject):
         found = judge(t.said, t.results, law_set)
         if found is None:
-            print(f"  report {i}: NOT CHECKED (no reader)")
+            print(f"  answer {i}: NOT CHECKED (no reader)")
             continue
         for f in found:
             total += 1

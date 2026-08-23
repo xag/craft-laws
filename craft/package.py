@@ -199,7 +199,7 @@ COUNTER_EXAMPLES = [
 
 CRAFT_PACKAGE = Package(
     name="craft",
-    version="0.1.2",
+    version="0.1.3",
     description="The laws of interface and copy, as checkable data: each carrying the "
                 "observation that would convict it, the property of an app's intent that "
                 "switches it on, the source that authorises it, and the real defects it has "
@@ -217,7 +217,7 @@ CRAFT_PACKAGE = Package(
         # line. No kind, rule or example changed; a closure that mixes ledger versions
         # is a diamond, so a consumer wanting the legible contracts needs craft to name
         # the same ones.
-        PackageRef(name="ledger", version="0.6.0"),
+        PackageRef(name="ledger", version="0.7.0"),
         PackageRef(name="grounding", version="1.2.0"),
     ],
     vocabulary=VOCABULARY,

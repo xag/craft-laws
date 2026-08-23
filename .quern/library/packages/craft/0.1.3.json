@@ -1,0 +1,301 @@
+{
+  "name": "craft",
+  "version": "0.1.3",
+  "description": "The laws of interface and copy, as checkable data: each carrying the observation that would convict it, the property of an app's intent that switches it on, the source that authorises it, and the real defects it has actually caught. An uncited law is an ungrounded param, so the ledger's own gate can refuse to let it travel as though it were settled. The point is not to write the best practice down — a style guide already does that, and a style guide cannot fire.",
+  "publisher": "poietic.studio",
+  "requires": [
+    {
+      "name": "ledger",
+      "version": "0.7.0"
+    },
+    {
+      "name": "grounding",
+      "version": "1.2.0"
+    }
+  ],
+  "vocabulary": [
+    {
+      "kind": "law",
+      "description": "A claim about interface or copy that holds across apps, domains and languages — not a preference. It carries an `authority` param, which is grounded when a reputable source has actually said this and ungrounded when it is somebody's taste. An ungrounded law is not deleted: it is carried, visibly, as the ledger carries a debt, and the gate below will not let it pass as though it were settled.",
+      "params": {},
+      "links": {
+        "supersedes": "the law this one replaces, if any"
+      },
+      "operations": {}
+    },
+    {
+      "kind": "citation",
+      "description": "Where the law actually comes from: a publisher, a title, a URL, and — the part that matters — the QUOTE. A citation without the words is a citation nobody can check, and an unfalsifiable appeal to authority is worse than an honest opinion.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "falsifier",
+      "description": "The observation that constitutes a violation. Stated so that a verdict can be `fail` and not merely 'I do not like it'. A law whose violation cannot be observed is a taste, and tastes do not belong in a package.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "trigger",
+      "description": "A property of an app's INTENT or scenarios that switches this law on. This is what makes the laws free to the author: they write what the app is for, and the relevant laws arrive. A law with no trigger is a checklist item, and checklists are ignored — which is why the rule below insists on one.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "sighting",
+      "description": "A real defect this law actually caught, in a real app, on a real screen. Evidence, not decoration: a law that has never caught anything is a law nobody should trust, and one that has caught the same thing twice has earned its place.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    }
+  ],
+  "rules": [
+    {
+      "name": "a-law-can-be-violated-observably",
+      "expr": "len(nodes('falsifier', self)) >= 1",
+      "description": "A law whose breach cannot be observed cannot produce a verdict, and a verdict is the only thing a law is for. Without this, a package of laws is a package of opinions with a version number.",
+      "kind": "law"
+    },
+    {
+      "name": "a-law-is-switched-on-by-something",
+      "expr": "len(nodes('trigger', self)) >= 1",
+      "description": "Laws arrive because the app's intent called for them. A law that applies to everything applies to nothing: it becomes a checklist item, and a checklist item is read once and never again.",
+      "kind": "law"
+    },
+    {
+      "name": "a-law-cites-a-source",
+      "expr": "len(nodes('citation', self)) >= 1",
+      "description": "The rule this package exists for. These laws were first written from memory, by the agent that had just been burnt by the defects they describe — which is the same act as inventing a translation glossary and handing it to a translator as binding, and it is the very thing GLOSSARY-FIRST forbids. A law that cannot name who said it is a hypothesis. It may be carried, and it will be red, and that is the honest state of it.",
+      "kind": "law"
+    }
+  ],
+  "solvers": [],
+  "examples": [
+    {
+      "id": "a-well-formed-law",
+      "kind": "law",
+      "name": "A control's label describes the action it performs",
+      "params": {
+        "authority": {
+          "value": 1.0,
+          "unit": "law",
+          "provenance": "cited",
+          "grounded": true,
+          "source": "GOV.UK Design System, Button",
+          "derived_from": []
+        }
+      },
+      "links": {},
+      "meta": {},
+      "payload": {},
+      "children": [
+        {
+          "id": "ex-falsifier",
+          "kind": "falsifier",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "claim": "A button labelled with a noun, or with the name of the section it sits in."
+          },
+          "children": []
+        },
+        {
+          "id": "ex-trigger",
+          "kind": "trigger",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "when": "any interface with a control that commits something"
+          },
+          "children": []
+        },
+        {
+          "id": "ex-citation",
+          "kind": "citation",
+          "name": "GOV.UK Design System — Button",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "url": "https://design-system.service.gov.uk/components/button/",
+            "quote": "Write button text in sentence case, describing the action it performs."
+          },
+          "children": []
+        },
+        {
+          "id": "ex-sighting",
+          "kind": "sighting",
+          "name": "chores, the member sheet",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "what": "A section headed 'Absence' whose submit button was also labelled 'Absence'."
+          },
+          "children": []
+        }
+      ]
+    }
+  ],
+  "counter_examples": [
+    {
+      "rule": "a-law-cites-a-source",
+      "nodes": [
+        {
+          "id": "feels-wrong-to-me",
+          "kind": "law",
+          "name": "Buttons should be blue",
+          "params": {
+            "authority": {
+              "value": 1.0,
+              "unit": "law",
+              "provenance": "asserted",
+              "grounded": false,
+              "source": "I think so",
+              "derived_from": []
+            }
+          },
+          "links": {},
+          "meta": {},
+          "payload": {},
+          "children": [
+            {
+              "id": "cx1-f",
+              "kind": "falsifier",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "claim": "a button that is not blue"
+              },
+              "children": []
+            },
+            {
+              "id": "cx1-t",
+              "kind": "trigger",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "when": "any interface"
+              },
+              "children": []
+            }
+          ]
+        }
+      ],
+      "because": "a law that names no authority — which is an opinion with a version number, and is exactly how this package's own laws were first written"
+    },
+    {
+      "rule": "a-law-can-be-violated-observably",
+      "nodes": [
+        {
+          "id": "be-elegant",
+          "kind": "law",
+          "name": "The interface should feel elegant",
+          "params": {
+            "authority": {
+              "value": 1.0,
+              "unit": "law",
+              "provenance": "cited",
+              "grounded": true,
+              "source": "a design book",
+              "derived_from": []
+            }
+          },
+          "links": {},
+          "meta": {},
+          "payload": {},
+          "children": [
+            {
+              "id": "cx2-t",
+              "kind": "trigger",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "when": "any interface"
+              },
+              "children": []
+            },
+            {
+              "id": "cx2-c",
+              "kind": "citation",
+              "name": "A design book",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "url": "https://example.invalid",
+                "quote": "Be elegant."
+              },
+              "children": []
+            }
+          ]
+        }
+      ],
+      "because": "a law whose breach cannot be observed can never produce a verdict, so it is a taste and not a law"
+    },
+    {
+      "rule": "a-law-is-switched-on-by-something",
+      "nodes": [
+        {
+          "id": "always-applies",
+          "kind": "law",
+          "name": "Contrast must meet WCAG AA",
+          "params": {
+            "authority": {
+              "value": 1.0,
+              "unit": "law",
+              "provenance": "cited",
+              "grounded": true,
+              "source": "WCAG 2.2",
+              "derived_from": []
+            }
+          },
+          "links": {},
+          "meta": {},
+          "payload": {},
+          "children": [
+            {
+              "id": "cx3-f",
+              "kind": "falsifier",
+              "name": "",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "claim": "a contrast ratio below 4.5:1 on body text"
+              },
+              "children": []
+            },
+            {
+              "id": "cx3-c",
+              "kind": "citation",
+              "name": "WCAG 2.2",
+              "params": {},
+              "links": {},
+              "meta": {},
+              "payload": {
+                "url": "https://www.w3.org/TR/WCAG22/",
+                "quote": "Contrast (Minimum): 4.5:1."
+              },
+              "children": []
+            }
+          ]
+        }
+      ],
+      "because": "a law that nothing switches on is a checklist item, and a checklist item is read once and never again"
+    }
+  ]
+}

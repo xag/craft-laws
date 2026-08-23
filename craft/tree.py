@@ -42,6 +42,11 @@ DECISIONS = [
                 "cannot be told without exposing a user is genericized or kept out.",
         },
         children=[
+            Node(id="every-sighting-was-re-read", kind="grounds",
+                 name="Every sighting in laws.py was re-read for this decision",
+                 payload={"what": "Each exposes the app's name, a date, a screen and the defective copy — no user, no household, no stored data, no identifier. The app's name is already the estate's public case study.",
+                           "where": "producer",
+                           "gap": "A review of what the sightings contain today. It does not bound what a future sighting might expose."}),
             Node(id="alt-genericize-the-app", kind="alternative",
                  name="Scrub the app name from every sighting ('a household app')",
                  payload={"why":
@@ -81,6 +86,11 @@ DECISIONS = [
                 "what is generated.",
         },
         children=[
+            Node(id="the-trigger-was-prose-matched-by-judgment", kind="grounds",
+                 name="A law's trigger named app properties that had no formalism",
+                 payload={"what": "'Any count is shown to a person' was prose matched by judgment. With the drawing as a tree the property IS a node shape — an element declaring count_var — and both halves of the filter become functions.",
+                           "where": "producer",
+                           "gap": "Shown for the compilable laws. Whether every trigger reduces to a node shape is the open question the mechanization census exists to answer."}),
             Node(id="alt-interface-in-its-own-repo", kind="alternative",
                  name="Mint interface@ in a repo of its own",
                  payload={"why":
@@ -128,6 +138,11 @@ DECISIONS = [
                 "honest uncited red.",
         },
         children=[
+            Node(id="the-first-exercise-of-the-protocol", kind="grounds",
+                 name="one-act-one-name's first sighting ran the protocol end to end",
+                 payload={"what": "'Add it' committing three different acts was proved co-offered by the compiler, ruled a defect by a person, and the ruling itself was generic — so it became the law's generic-confirm exemption, in the falsifier text and the compiler both.",
+                           "where": "user-surface",
+                           "gap": "One exercise. It shows the protocol can run; it does not show the ruling is generic often enough to be worth the ceremony."}),
             Node(id="alt-fix-and-move-on", kind="alternative",
                  name="Fix the app and record nothing",
                  payload={"why": "The defect class survives the fix and re-enters "
@@ -173,6 +188,11 @@ DECISIONS = [
                 "queues because the law set changed.",
         },
         children=[
+            Node(id="four-mining-passes-over-a-catalogue", kind="grounds",
+                 name="Four mining passes worked a catalogue built to be category-exhaustive",
+                 payload={"what": "Accessibility, government/forms/copy, localization and empirical/content, with the gaps recorded as gaps and an overlap map so each law cites its strongest root: WCAG for the rule, GOV.UK for the wording, Baymard for the statistic.",
+                           "where": "producer",
+                           "gap": "The catalogue was assembled by the same people who mined it. The cost-blind censuses exist because this pass could not test its own sampling."}),
             Node(id="alt-wait-for-wounds", kind="alternative",
                  name="Keep growing one defect at a time",
                  payload={"why": "Focused but blind: the estate would never have "
@@ -312,6 +332,11 @@ DECISIONS = [
                 "a handback, which [[the-deciders-run-by-hand]] rejects.",
         },
         children=[
+            Node(id="three-deciders-built-by-matching", kind="grounds",
+                 name="Three claim deciders were built by matching words, and the defence did not hold",
+                 payload={"what": "The patterns were /deliberate|by design|on purpose/, /later|next|not yet|deferred|owed|blocked|remains/, and a count-noun pattern. The defence was that the match only TRIGGERED and the verdict was structural. The distinction is real and is not enough of one.",
+                           "where": "producer",
+                           "gap": "Three deciders in one package. It says a wordlist trigger is a reading; it does not measure how often such a trigger picks the wrong claims."}),
             Node(id="alt-keep-them-the-match-only-triggers", kind="alternative",
                  name="Keep them: the regex selects, the missing field convicts, so a "
                       "false trigger costs one extra field and never a wrong verdict",
@@ -386,6 +411,11 @@ DECISIONS.append(Node(
             "the compiler is where that history says this goes.",
     },
     children=[
+        Node(id="fifteen-done-claims-against-an-empty-rectangle", kind="grounds",
+             name="A card rendered as an empty rectangle and the job was declared finished fifteen times",
+             payload={"what": "2026-08-17. Not one of the fifteen claims was dishonest and not one was evidence of the thing claimed: green suites, deploy ids, log lines and files on a machine — all producer-side, none an observation of the surface a person touches, while the founder answered 'still nothing'.",
+                       "where": "user-surface",
+                       "gap": "One session, one card. It establishes that producer-side evidence can accompany fifteen false done-claims, not the base rate at which it does."}),
         Node(id="alt-put-the-process-in-a-skill", kind="alternative",
              name="Write the lessons into the deploy/session skills as procedure",
              payload={"why":
@@ -491,6 +521,11 @@ DECISIONS.append(Node(
             "adopter re-adopts by deleting everything else.",
     },
     children=[
+        Node(id="the-first-adopters-rulings-module-read-line-by-line", kind="grounds",
+             name="Every function in the first adopter's rulings module was read and classified",
+             payload={"what": "2026-08-19: settle's binding of verdicts to the deck, the jargon-to-reading passes, the merges that never synthesize a sentence, the sentence-safe cut, the drawing readers, the orphan report — the logic is load-bearing and generic, the question texts are the app's.",
+                       "where": "producer",
+                       "gap": "One adopter. The split held for its module; a second adopter could put app-specific logic where this one put none."}),
         Node(id="alt-leave-it-in-the-adopter", kind="alternative",
              name="Leave the pipeline in the app that grew it; let the next "
                   "adopter copy the file",
@@ -551,6 +586,11 @@ DECISIONS.append(Node(
             "this, and it is now load-bearing rather than tidy.",
     },
     children=[
+        Node(id="the-rule-was-written-when-the-owner-was-the-only-reader", kind="grounds",
+             name="'The checks convict; only the owner rules' outlived the condition that made it true",
+             payload={"what": "It was written when the owner was the only reader who could rule at all. The verdicts are not equally dangerous to delegate: `fix` leaves the red standing until the code moves, so the verdict is an instruction and the red is its own check.",
+                       "where": "producer",
+                       "gap": "An argument from how the verdicts differ, not an observation of a delegated ruling going wrong. No exempt has yet been wrongly granted, because none has been delegated."}),
         Node(id="alt-the-owner-rules-everything", kind="alternative",
              name="Keep the contract as written: every card, whatever its verdict, waits for "
                   "the owner",

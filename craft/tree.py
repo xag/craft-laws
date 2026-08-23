@@ -849,4 +849,103 @@ DEBTS = [
                           "house rules enforces them faster, not better."}),
         ],
     ),
+    Node(
+        id="a-laws-scope-is-baked-into-its-statement",
+        kind="debt",
+        name="A law says WHERE it applies inside the rule itself, so a rule that is true of "
+             "more than one surface can only ever be checked on one of them",
+        payload={
+            "what_it_costs":
+                "sentences-stay-under-twenty-five-words is the worked example. Its statement "
+                "says 'interface prose', its falsifier says 'a sentence in UI copy', and its "
+                "citation is GOV.UK's Writing guidelines - content design rules for "
+                "everything they publish, not for chrome. The law is NARROWER THAN ITS OWN "
+                "SOURCE, and the narrowing lives in the two fields a check reads. So the doc "
+                "lane, which wanted exactly this rule, could not legitimately run it and the "
+                "only remedy available was deletion: the rule is gone from documentation "
+                "even though its authority covers documentation. A law with a scope in its "
+                "falsifier cannot be re-aimed, only rewritten.\n\n"
+                ""
+                "This is NOT [[triggers-are-prose-so-applicability-cannot-be-computed]], "
+                "though the two compound. That debt says nothing can COMPUTE which laws bind "
+                "a subject. This one says that even computed perfectly, a falsifier reading "
+                "'UI copy' still cannot convict a README - the trigger would fire and the "
+                "law would have nothing to say.",
+            "why_it_is_not_paid":
+                "It is a per-law reading and not a sweep. Scope in a falsifier is CORRECT "
+                "wherever the law is genuinely about a screen (empty-state-never-contradicts) "
+                "or genuinely physical (targets-are-thumb-sized); the defect is only where "
+                "the law is narrower than the source it cites, and that question is one "
+                "reading per law against nine sources. Re-scoping also changes what "
+                "convicts, so each one is a publish and a re-run of every adopter's "
+                "findings - which is why it wants doing deliberately, a law at a time, and "
+                "never as a regex over the catalogue.",
+        },
+        params={
+            "laws_scoped_in_statement_or_falsifier": Quantity(
+                value=38, unit="law", provenance="verified", grounded=True,
+                source="counted over the 91 laws, 2026-08-23: 38 carry a scope word "
+                       "(interface, UI, screen, app, control, documentation, README) in "
+                       "their statement or falsifier, 31 of them in the falsifier. How many "
+                       "are narrower than their own citation is unread - that is the "
+                       "reading this debt owes, and 38 is its upper bound, not its size"),
+        },
+        children=[
+            Node(id="discharge-scope-lives-in-the-trigger", kind="discharge",
+                 name="The rule is stated scope-free and the trigger carries the surface",
+                 payload={"route":
+                          "A law states what is true; its triggers state where. Twenty-three "
+                          "laws already carry more than one trigger, so the shape needs no "
+                          "invention - a law then serves every surface whose trigger fires, "
+                          "and the doc lane gets the 25-word rule back by pointing at it "
+                          "rather than by copying it. Each law is re-read against its "
+                          "citation first: the source's scope is the law's scope, and a "
+                          "narrowing the source does not make is the defect."}),
+        ],
+    ),
+    Node(
+        id="the-prose-lane-has-no-drawing",
+        kind="debt",
+        name="Markdown is reduced to units inside every decider instead of once, so each "
+             "law brings its own reader and the reduction itself is what breaks",
+        payload={
+            "what_it_costs":
+                "Every other lane reduces its subject ONCE and lets the laws read the "
+                "reduction. An app authors a drawing; a claim is a record in a known shape. "
+                "Markdown has neither, so craft/prose.py re-derives its units inside each "
+                "check - five of the seven deciders open with the same walk over "
+                "paragraphs(text), and paragraphs, sentences and _plain are called eighteen "
+                "times across the module. A law wanting a unit nobody has built yet - a "
+                "heading, a term, a code fence, a table - brings its own reader, so this "
+                "lane's cost is linear in laws where the drawing's is flat.\n\n"
+                ""
+                "The reduction is also where it actually breaks, twice this week, and "
+                "neither defect could produce a finding: a paragraph opening in bold was "
+                "classified as a list item and never judged at all, and a run-in heading "
+                "was counted as one of the paragraph's five sentences. A skipped paragraph "
+                "leaves no finding for a decider to be wrong about, so the lane reported "
+                "green over text it had never read. That is worse than checking nothing, "
+                "and it is invisible to every check the lane runs on itself.",
+            "why_it_is_not_paid":
+                "The honest fix is a document's own drawing - its units declared as data, "
+                "the way interface@ declares surfaces, elements and bindings - and that is a "
+                "vocabulary addition and a publish, plus an authoring cost per document that "
+                "no README pays today. The cheap version is worse than waiting: handing "
+                "every decider one shared parse is the same per-decider reading with one "
+                "fewer call, and it leaves the reduction exactly as unchecked as it was.",
+        },
+        children=[
+            Node(id="discharge-a-document-declares-its-units", kind="discharge",
+                 name="A document declares its units; deciders become predicates over them",
+                 payload={"route":
+                          "The reduction is authored and checkable rather than re-derived "
+                          "per law, so a defect in it is something somebody can convict "
+                          "instead of a silence. Deciders stop parsing and start deciding, "
+                          "and a new law costs a predicate rather than a reader. The pins "
+                          "standing in craft/prose.py's alarm - a bold-led paragraph is "
+                          "read, a list item is not prose, a run-in heading is not a "
+                          "sentence - are the reduction's first tests and say what the "
+                          "declared units have to get right."}),
+        ],
+    ),
 ]

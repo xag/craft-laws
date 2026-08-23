@@ -30,6 +30,27 @@ from craft.laws import LAWS
 _LAW_IDS = {law.id for law in LAWS}
 
 
+# --- language is a parameter of the DATA, never of the machinery ---------------------
+#
+# The shape craft/lexicon.py already uses for terms and voices, brought here because this
+# lane did not have it: every rule table below is keyed by language, and a decider whose
+# table has no entry for the document's language DOES NOT RUN and is reported by
+# unruled(). That report is the whole point. A word list that speaks only English,
+# pointed at a French README, finds nothing -- and "found nothing" is byte-identical to
+# "this document is clean". This repository's founding defect was a French screen that
+# every green check had missed, so a lane that goes quiet in French is the same failure
+# wearing the same green.
+#
+# The language is DECLARED (--lang, default "en"), never sniffed. Guessing a document's
+# language from its bytes is a prediction, and a prediction that is wrong reports the
+# wrong rules as authoritative rather than reporting that it has none.
+#
+# Three deciders need no language at all and always run: check_anchors (markdown
+# structure), check_repetition (two spans of text are equal or they are not), and
+# check_paragraph_length (counting stops between .!?). The last is Latin-script rather
+# than universal, and its abbreviation guard is per-language: without one it over-counts
+# sentences, which is a false positive a reader can see, not a silence they cannot.
+
 @dataclass
 class DocFinding:
     law: str
@@ -56,8 +77,12 @@ _HEADING = re.compile(r"^#{1,6}\s+(.*)$")
 _NONPROSE = re.compile(r"^(\s*([-*+]\s|\d+\.\s|\||>)|\s*[-*_]{3,}\s*$|\s*$)")
 _INLINE_CODE = re.compile(r"`[^`]*`")
 _MD_LINK = re.compile(r"\[([^\]]*)\]\(([^)\s]+)\)")
-# sentence-splitter guards: dots that end no sentence
-_ABBREV = re.compile(r"\b(e\.g|i\.e|vs|etc|cf|Mr|Ms|Dr|St|no)\.", re.IGNORECASE)
+# sentence-splitter guards: dots that end no sentence. Keyed by language like every
+# other rule table here -- an abbreviation list is a fact about a language, and using
+# English's on French text splits « cf. » into two sentences and over-counts.
+_ABBREV = {
+    "en": re.compile(r"\b(e\.g|i\.e|vs|etc|cf|Mr|Ms|Dr|St|no)\.", re.IGNORECASE),
+}
 
 
 def paragraphs(text: str) -> list[tuple[int, str]]:
@@ -101,11 +126,13 @@ def _strip_run_in(prose: str) -> str:
     return prose[m.end():] if m and len(m.group("label").split()) <= 6 else prose
 
 
-def sentences(prose: str) -> list[str]:
+def sentences(prose: str, lang: str = "en") -> list[str]:
     # markdown notation comes off first: a '?' closed by an italic marker is still
     # the end of a sentence, and the first version of this splitter missed it
-    guarded = _ABBREV.sub(lambda m: m.group(0).replace(".", "․"),
-                          _plain(_strip_run_in(prose)))
+    plain = _plain(_strip_run_in(prose))
+    abbrev = _ABBREV.get(lang)
+    guarded = (abbrev.sub(lambda m: m.group(0).replace(".", "․"), plain)
+               if abbrev else plain)
     # a period inside a closing quote or bracket still ends the sentence
     parts = re.split(r"(?<=[.!?])[\"'”’)\]]*\s+", guarded)
     return [p.replace("․", ".").strip() for p in parts if p.strip()]
@@ -120,14 +147,14 @@ def _plain(prose: str) -> str:
 
 # --- the deciders --------------------------------------------------------------------
 
-def check_paragraph_length(name: str, text: str, root: Path | None = None, ceiling: int = 5
-                           ) -> list[DocFinding]:
+def check_paragraph_length(name: str, text: str, root: Path | None = None,
+                           lang: str = "en", ceiling: int = 5) -> list[DocFinding]:
     """paragraphs-stay-under-five-sentences (GOV.UK: 'no more than 5 sentences
     each')."""
     law = _law("paragraphs-stay-under-five-sentences")
     out = []
     for n, prose in paragraphs(text):
-        count = len(sentences(prose))
+        count = len(sentences(prose, lang))
         if count > ceiling:
             out.append(DocFinding(
                 law=law, where=f"{name} ¶{n}",
@@ -156,18 +183,24 @@ def check_paragraph_length(name: str, text: str, root: Path | None = None, ceili
 # as an unconditional counter with no judge, twice.
 
 
-_TIME_ANCHORS = ("currently", "at the time of writing", "coming soon",
-                 "will soon", "recently added", "as of today")
+_TIME_ANCHORS = {
+    "en": ("currently", "at the time of writing", "coming soon",
+           "will soon", "recently added", "as of today"),
+}
 
 
-def check_time_anchors(name: str, text: str, root: Path | None = None) -> list[DocFinding]:
+def check_time_anchors(name: str, text: str, root: Path | None = None,
+                       lang: str = "en") -> list[DocFinding]:
     """docs-do-not-date-themselves: the words that anchor a document to the day it
     was written."""
     law = _law("docs-do-not-date-themselves")
+    anchors = _TIME_ANCHORS.get(lang)
+    if anchors is None:
+        return []                    # no rules for this language; unruled() says so
     out = []
     for n, prose in paragraphs(text):
         low = _plain(prose).lower()
-        for word in _TIME_ANCHORS:
+        for word in anchors:
             if re.search(rf"\b{re.escape(word)}\b", low):
                 out.append(DocFinding(
                     law=law, where=f"{name} ¶{n}", quote=word,
@@ -176,22 +209,27 @@ def check_time_anchors(name: str, text: str, root: Path | None = None) -> list[D
     return out
 
 
-_POSITIONAL = (r"\bas (mentioned|described|noted|shown|discussed) "
-               r"(above|earlier|previously)\b",
-               r"\bsee (above|below)\b",
-               r"\b(the|this) section (above|below)\b",
-               r"\bmentioned (above|below)\b")
+_POSITIONAL = {
+    "en": (r"\bas (mentioned|described|noted|shown|discussed) "
+           r"(above|earlier|previously)\b",
+           r"\bsee (above|below)\b",
+           r"\b(the|this) section (above|below)\b",
+           r"\bmentioned (above|below)\b"),
+}
 
 
-def check_positional_references(name: str, text: str,
-                               root: Path | None = None) -> list[DocFinding]:
+def check_positional_references(name: str, text: str, root: Path | None = None,
+                               lang: str = "en") -> list[DocFinding]:
     """references-name-their-target-not-its-position: 'above' breaks the day a
     paragraph moves, which is every day a machine edits."""
     law = _law("references-name-their-target-not-its-position")
+    patterns = _POSITIONAL.get(lang)
+    if patterns is None:
+        return []                    # no rules for this language; unruled() says so
     out = []
     for n, prose in paragraphs(text):
         low = _plain(prose).lower()
-        for pat in _POSITIONAL:
+        for pat in patterns:
             m = re.search(pat, low)
             if m:
                 out.append(DocFinding(
@@ -201,8 +239,8 @@ def check_positional_references(name: str, text: str,
     return out
 
 
-def check_repetition(name: str, text: str, root: Path | None = None, floor_words: int = 8
-                     ) -> list[DocFinding]:
+def check_repetition(name: str, text: str, root: Path | None = None,
+                     lang: str = "en", floor_words: int = 8) -> list[DocFinding]:
     """say-it-once: two sentences saying the same thing in the same words — the
     signature of an edit appended instead of integrated. Convicts only on a
     normalized exact match of a substantial sentence: certainty, not similarity."""
@@ -210,7 +248,7 @@ def check_repetition(name: str, text: str, root: Path | None = None, floor_words
     seen: dict[str, str] = {}
     out = []
     for n, prose in paragraphs(text):
-        for s in sentences(prose):
+        for s in sentences(prose, lang):
             norm = re.sub(r"[^a-z0-9 ]", "", _plain(s).lower())
             norm = " ".join(norm.split())
             if len(norm.split()) < floor_words:
@@ -228,16 +266,29 @@ def check_repetition(name: str, text: str, root: Path | None = None, floor_words
 
 
 # Standard short forms the audience reads faster than their expansions — the
-# source's own carve-out, carried visibly.
-ACRONYM_EXEMPT = frozenset({
+# source's own carve-out, carried visibly. Split in two because the halves are not the
+# same kind of fact: the technical set travels between languages unchanged (a French
+# README says API and JSON too), while the prose words are English and have French
+# counterparts nobody has written down.
+_ACRONYM_TECHNICAL = frozenset({
     "API", "URL", "URI", "JSON", "JSONL", "HTML", "CSS", "HTTP", "HTTPS", "CLI",
     "CI", "CD", "PDF", "README", "TODO", "UI", "UX", "SDK", "ID", "IDS", "OK",
     "FAQ", "RTL", "LTR", "ASCII", "UTF", "PNG", "SVG", "DOM", "SEO", "MIT",
-    "NOTE", "WARNING", "MUST", "SHOULD", "MAY", "NOT", "AI", "LLM", "MCP",
+    "AI", "LLM", "MCP",
 })
 
+_ACRONYM_PROSE = {
+    "en": frozenset({"NOTE", "WARNING", "MUST", "SHOULD", "MAY", "NOT"}),
+}
 
-def check_acronyms(name: str, text: str, root: Path | None = None) -> list[DocFinding]:
+
+def acronym_exempt(lang: str) -> frozenset[str]:
+    """What this language leaves alone: the shared technical set plus its own words."""
+    return _ACRONYM_TECHNICAL | _ACRONYM_PROSE.get(lang, frozenset())
+
+
+def check_acronyms(name: str, text: str, root: Path | None = None,
+                   lang: str = "en") -> list[DocFinding]:
     """acronyms-spell-out-on-first-reference — the certain half: an acronym the
     document itself later expands with '(ACRO)' was, provably, this document's own
     term to introduce, and every bare use before that expansion met a reader who
@@ -245,10 +296,11 @@ def check_acronyms(name: str, text: str, root: Path | None = None) -> list[DocFi
     it may be as standard as the exempt list's."""
     law = _law("acronyms-spell-out-on-first-reference")
     plain = "\n".join(p for _, p in paragraphs(text))
+    exempt = acronym_exempt(lang)
     out = []
     for m in re.finditer(r"\(([A-Z][A-Za-z]{1,7})\)", plain):
         acro = m.group(1)
-        if acro.upper() in ACRONYM_EXEMPT or not acro.isupper():
+        if acro.upper() in exempt or not acro.isupper():
             continue
         first_bare = re.search(rf"\b{acro}\b", plain)
         if first_bare and first_bare.start() < m.start() - len(acro) - 2:
@@ -259,20 +311,25 @@ def check_acronyms(name: str, text: str, root: Path | None = None) -> list[DocFi
     return out
 
 
-_TRAILING = (r"^see .{3,80} for more information\.?$",
-             r"^(click|run|use|call|open|press|select)\b[^.]*\bif you want\b")
+_TRAILING = {
+    "en": (r"^see .{3,80} for more information\.?$",
+           r"^(click|run|use|call|open|press|select)\b[^.]*\bif you want\b"),
+}
 
 
-def check_trailing_conditions(name: str, text: str,
-                              root: Path | None = None) -> list[DocFinding]:
+def check_trailing_conditions(name: str, text: str, root: Path | None = None,
+                              lang: str = "en") -> list[DocFinding]:
     """conditions-come-before-instructions: the source's own not-recommended
     shapes, matched as patterns."""
     law = _law("conditions-come-before-instructions")
+    patterns = _TRAILING.get(lang)
+    if patterns is None:
+        return []                    # no rules for this language; unruled() says so
     out = []
     for n, prose in paragraphs(text):
-        for s in sentences(prose):
+        for s in sentences(prose, lang):
             low = _plain(s).lower().strip()
-            for pat in _TRAILING:
+            for pat in patterns:
                 if re.match(pat, low):
                     out.append(DocFinding(
                         law=law, where=f"{name} ¶{n}", quote=_plain(s)[:100],
@@ -289,8 +346,8 @@ def _slug(heading: str) -> str:
     return s.replace(" ", "-")
 
 
-def check_anchors(name: str, text: str, root: Path | None = None
-                  ) -> list[DocFinding]:
+def check_anchors(name: str, text: str, root: Path | None = None,
+                  lang: str = "en") -> list[DocFinding]:
     """internal-references-resolve: every anchor matches a heading, every relative
     link a file. The doc-lane twin of drift."""
     law = _law("internal-references-resolve")
@@ -342,12 +399,29 @@ def check_anchors(name: str, text: str, root: Path | None = None
 CHECKS = (check_paragraph_length, check_time_anchors, check_positional_references,
           check_repetition, check_acronyms, check_trailing_conditions, check_anchors)
 
+# Which decider is nothing without its language, and where its rules live. A decider
+# absent from this map runs in every language.
+_NEEDS_RULES = {
+    check_time_anchors: _TIME_ANCHORS,
+    check_positional_references: _POSITIONAL,
+    check_trailing_conditions: _TRAILING,
+}
 
-def check_file(path: Path) -> list[DocFinding]:
+LANGS = sorted({lang for table in _NEEDS_RULES.values() for lang in table})
+
+
+def unruled(lang: str) -> list[str]:
+    """The deciders that have no rules for this language, and so said nothing without
+    having looked. Their silence is not a clean document, and a report that does not
+    print this is claiming a check it never ran."""
+    return sorted(c.__name__ for c, table in _NEEDS_RULES.items() if lang not in table)
+
+
+def check_file(path: Path, lang: str = "en") -> list[DocFinding]:
     text = path.read_text(encoding="utf-8", errors="replace")
     out: list[DocFinding] = []
     for check in CHECKS:
-        out.extend(check(path.name, text, path.parent))
+        out.extend(check(path.name, text, path.parent, lang))
     return out
 
 
@@ -400,12 +474,27 @@ def _alarm() -> int:
     dead: list[str] = []
     for check in CHECKS:
         bad = []
-        if not check("guilty.md", GUILTY, None):
+        if not check("guilty.md", GUILTY, None, "en"):
             bad.append(f"{check.__name__} missed the guilty document")
-        if check("clean.md", CLEAN, None):
+        if check("clean.md", CLEAN, None, "en"):
             bad.append(f"{check.__name__} convicted the clean document")
         dead += bad
         print(f"  {'DEAD' if bad else 'ok  '} {check.__name__}")
+    # A language with no rules must produce no findings AND be named by unruled(). The
+    # pair is the point: silence alone is what a clean document looks like.
+    lang_bad = []
+    want_named = sorted(c.__name__ for c in _NEEDS_RULES)
+    convicted = [c.__name__ for c in _NEEDS_RULES
+                 if c("guilty.md", GUILTY, None, "zz")]
+    if convicted:
+        lang_bad.append(f"convicted in a language it has no rules for: {convicted}")
+    named = unruled("zz")
+    if named != want_named:
+        lang_bad.append(f"unruled('zz') said {named}, expected {want_named}")
+    dead += lang_bad
+    print(f"  {'DEAD' if lang_bad else 'ok  '} language: an unruled language "
+          "convicts nothing and is named")
+
     for what, text, want in _MODEL:
         got = len(check_paragraph_length("t", text))
         state = "ok  " if got == want else "DEAD"
@@ -419,7 +508,8 @@ def _alarm() -> int:
         return 1
     print()
     print(f"every alarm rings: {len(CHECKS)} decider(s) over one guilty document "
-          f"and one clean one, and {len(_MODEL)} pin(s) on the paragraph model.")
+          f"and one clean one, {len(_MODEL)} pin(s) on the paragraph model, and "
+          f"one on language. Rules exist for: {', '.join(LANGS)}.")
     return 0
 
 
@@ -431,6 +521,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("files", nargs="*", help="markdown files to hold to the laws")
     ap.add_argument("--alarm", action="store_true",
                     help="prove every decider can convict, then exit")
+    ap.add_argument("--lang", default="en",
+                    help=f"the language the documents are written in (default en; "
+                         f"rules exist for: {', '.join(LANGS)})")
     args = ap.parse_args(argv)
     if args.alarm:
         return _alarm()
@@ -438,7 +531,13 @@ def main(argv: list[str] | None = None) -> int:
         ap.error("give at least one file, or --alarm")
     findings: list[DocFinding] = []
     for f in args.files:
-        findings += check_file(Path(f))
+        findings += check_file(Path(f), args.lang)
+    silent = unruled(args.lang)
+    if silent:
+        print(f"  NO RULES for {args.lang!r}, so these did not run: "
+              f"{', '.join(silent)}")
+        print("  Their silence is not a verdict. Rules exist for: "
+              f"{', '.join(LANGS)}.")
     for fd in findings:
         print(f"  RED {fd.law} [{fd.where}] «{fd.quote}»\n      {fd.why}")
     if not findings:

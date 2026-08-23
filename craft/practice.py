@@ -44,6 +44,10 @@ AGANS = ("David J. Agans, Debugging: The 9 Indispensable Rules for Finding Even 
          "Most Elusive Software and Hardware Problems")
 AGANS_URL = "https://debuggingrules.com/"
 
+STARD = ("Cohen et al., STARD 2015 guidelines for reporting diagnostic accuracy "
+         "studies: explanation and elaboration, BMJ Open 6:e012799, item 19")
+STARD_URL = "https://doi.org/10.1136/bmjopen-2016-012799"
+
 
 def _agans(rule: str) -> Quantity:
     return Quantity(value=1, unit="law", provenance="cited", grounded=True,
@@ -408,6 +412,47 @@ PRACTICE = [
              "[[what-exists-is-not-thereby-chosen]]: there the question is whether a state "
              "was chosen, here whether a project's stated purpose was READ before something "
              "was added to it. Both are answered by opening the record.",
+    ),
+    # --- earned 2026-08-24, by a reading that reported itself as selective and was total.
+    # --- Rooted rather than asserted: reporting standards for diagnostic accuracy exist
+    # --- because a proportion is only as good as the set it was taken over, and STARD's
+    # --- flow-diagram item says so in a sentence.
+    _law(
+        "a-rate-names-the-population-it-was-computed-over",
+        "A rate is stated over the set the measurement could actually reach, and names "
+        "that set beside the number",
+        _cited("STARD 2015, item 19 and its explanation: a flow diagram exists so a "
+               "reader can find the correct denominator"),
+        falsifier="A rate, share or coverage figure whose denominator includes items the "
+                  "measurement could never have counted in the numerator. Countable: "
+                  "compare the stated denominator against the set the measurement can "
+                  "reach, and a gap between them is the breach.",
+        triggers=["a rate, share, coverage or hit count is reported",
+                  "a check reports how much of something it found"],
+        citations=[(STARD, STARD_URL,
+                    "By providing the exact number of participants at each stage of the "
+                    "study, including the number of true-positive, false-positive, "
+                    "true-negative and false-negative index test results, the diagram "
+                    "also helps identifying the correct denominator for calculating "
+                    "proportions")],
+        sightings=[
+            ("an argument reading over five ledgers, 2026-08-24",
+             "A check for claims argued only by attacking their alternatives reported "
+             "4 of 16 arguments here and 19 of 96 in another ledger. Both read as "
+             "selective. Counted over the set the check can reach - entries that attack "
+             "something, which is entries that HAVE an alternative - it was 4 of 4 and "
+             "19 of 19. The denominator was inflated by nodes the check could never "
+             "convict, and 100% of the eligible population was reported as 25% of the "
+             "graph. A structural fact passed for a finding, and the fix was one line "
+             "of arithmetic, not one line of reasoning."),
+        ],
+        note="The remedy is the source's: state the set beside the number. STARD asks "
+             "for a diagram because the reader cannot otherwise tell which patients were "
+             "eligible; a check that prints '4 findings' owes the same - 4 of how many "
+             "it could have found. Where the two differ the check is measuring itself, "
+             "and that is worth reporting rather than hiding, because a check that "
+             "convicts most of what it can reach has found a missing input and not a "
+             "defect.",
     ),
 ]
 

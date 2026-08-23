@@ -384,12 +384,9 @@ DECISIONS.append(Node(
          "checkable as a claim about a screen, and exactly as prone to drift",
     payload={
         "rationale":
-            "2026-08-17 shipped a card that rendered as an empty rectangle and "
-            "declared the job finished fifteen times against a founder answering "
-            "'still nothing'. Not one of those claims was dishonest and not one was "
-            "evidence of the thing claimed: they cited green suites, deploy ids, log "
-            "lines and files on a machine — all producer-side, none an observation of "
-            "the surface a person touches. The estate already had the doctrine that "
+            "Fifteen done-claims cited green suites, deploy ids and log lines "
+            "— producer-side every one, and none an observation of the surface "
+            "a person touches. The estate already had the doctrine that "
             "would have caught it (instrument the boundary; replay the tape rather "
             "than re-derive what must have happened) and applied it to storage and "
             "HTTP while leaving the one boundary that mattered — the widget's — dark. "

@@ -69,6 +69,15 @@ jobs:
         run: uv run python -m craft.cards --alarm
       - name: The ruling pipeline's alarms are live
         run: uv run python -m craft.rulings --alarm
+      # Six alarms exist in this package and CI ran four. The two it skipped were
+      # craft.prose and craft.instruments -- and prose is the lane that shipped two
+      # defects in one week, both in the reduction, both invisible to every check the
+      # lane runs on itself. An alarm nobody runs is the thing an alarm exists to
+      # prevent, one level up: a checker never seen red.
+      - name: The prose deciders' alarms are live
+        run: uv run python -m craft.prose --alarm
+      - name: The rendered-world probes' alarms are live
+        run: uv run python -m craft.instruments --alarm
       # The founder's ruling, mechanized: «a rule about a card is not generic and
       # should not go to craft laws». A law states itself in the world's vocabulary
       # or the build fails — see craft/genericity.py for the bar and its exemptions.

@@ -120,7 +120,7 @@ def _plain(prose: str) -> str:
 
 # --- the deciders --------------------------------------------------------------------
 
-def check_paragraph_length(name: str, text: str, ceiling: int = 5
+def check_paragraph_length(name: str, text: str, root: Path | None = None, ceiling: int = 5
                            ) -> list[DocFinding]:
     """paragraphs-stay-under-five-sentences (GOV.UK: 'no more than 5 sentences
     each')."""
@@ -160,7 +160,7 @@ _TIME_ANCHORS = ("currently", "at the time of writing", "coming soon",
                  "will soon", "recently added", "as of today")
 
 
-def check_time_anchors(name: str, text: str) -> list[DocFinding]:
+def check_time_anchors(name: str, text: str, root: Path | None = None) -> list[DocFinding]:
     """docs-do-not-date-themselves: the words that anchor a document to the day it
     was written."""
     law = _law("docs-do-not-date-themselves")
@@ -183,7 +183,8 @@ _POSITIONAL = (r"\bas (mentioned|described|noted|shown|discussed) "
                r"\bmentioned (above|below)\b")
 
 
-def check_positional_references(name: str, text: str) -> list[DocFinding]:
+def check_positional_references(name: str, text: str,
+                               root: Path | None = None) -> list[DocFinding]:
     """references-name-their-target-not-its-position: 'above' breaks the day a
     paragraph moves, which is every day a machine edits."""
     law = _law("references-name-their-target-not-its-position")
@@ -200,7 +201,7 @@ def check_positional_references(name: str, text: str) -> list[DocFinding]:
     return out
 
 
-def check_repetition(name: str, text: str, floor_words: int = 8
+def check_repetition(name: str, text: str, root: Path | None = None, floor_words: int = 8
                      ) -> list[DocFinding]:
     """say-it-once: two sentences saying the same thing in the same words — the
     signature of an edit appended instead of integrated. Convicts only on a
@@ -236,7 +237,7 @@ ACRONYM_EXEMPT = frozenset({
 })
 
 
-def check_acronyms(name: str, text: str) -> list[DocFinding]:
+def check_acronyms(name: str, text: str, root: Path | None = None) -> list[DocFinding]:
     """acronyms-spell-out-on-first-reference — the certain half: an acronym the
     document itself later expands with '(ACRO)' was, provably, this document's own
     term to introduce, and every bare use before that expansion met a reader who
@@ -262,7 +263,8 @@ _TRAILING = (r"^see .{3,80} for more information\.?$",
              r"^(click|run|use|call|open|press|select)\b[^.]*\bif you want\b")
 
 
-def check_trailing_conditions(name: str, text: str) -> list[DocFinding]:
+def check_trailing_conditions(name: str, text: str,
+                              root: Path | None = None) -> list[DocFinding]:
     """conditions-come-before-instructions: the source's own not-recommended
     shapes, matched as patterns."""
     law = _law("conditions-come-before-instructions")
@@ -328,73 +330,98 @@ def check_anchors(name: str, text: str, root: Path | None = None
 # coinages, this one is read by a person. See a-word-list-is-a-reading-not-a-mechanization.
 
 
-# --- one file, every decider ---------------------------------------------------------
+# --- the deciders, as data ------------------------------------------------------------
+#
+# A tuple, not a hand-written call list, and the same tuple the alarm walks. This is the
+# shape craft/claims.py already uses, copied rather than re-invented: adding a decider is
+# one entry, and the alarm then DEMANDS a violation of it in the guilty document or
+# reports itself dead. The red example stops being something a person remembers to write.
+# Every decider takes (name, text, root) so the loop needs no special case for the one
+# that reads the filesystem.
+
+CHECKS = (check_paragraph_length, check_time_anchors, check_positional_references,
+          check_repetition, check_acronyms, check_trailing_conditions, check_anchors)
+
 
 def check_file(path: Path) -> list[DocFinding]:
     text = path.read_text(encoding="utf-8", errors="replace")
-    name = path.name
-    return (check_paragraph_length(name, text)
-            + check_time_anchors(name, text)
-            + check_positional_references(name, text)
-            + check_repetition(name, text)
-            + check_acronyms(name, text)
-            + check_trailing_conditions(name, text)
-            + check_anchors(name, text, root=path.parent))
+    out: list[DocFinding] = []
+    for check in CHECKS:
+        out.extend(check(path.name, text, path.parent))
+    return out
 
 
 # --- the alarm -----------------------------------------------------------------------
 
+# One document carrying a breach of every decider, and one carrying none. A decider added
+# to CHECKS whose violation is absent here reports DEAD -- which is the point: the corpus
+# is the thing that must grow, and it grows where a reader can see every breach at once.
+GUILTY = """# Guilty
+
+One. Two. Three. Four. Five. Six sentences in one paragraph here.
+
+This feature is currently supported, and as mentioned above it works.
+
+The survey computes coverage and prints the ladder of gaps today.
+
+The survey computes coverage and prints the ladder of gaps today.
+
+The ACME test came first. Later we meet the consortium (ACME) again.
+
+See the manual for more information.
+
+A link that goes [nowhere](#missing).
+"""
+
+CLEAN = """# Clean
+
+One sentence. Two sentences. Three of them.
+
+This feature is supported, and the section on adoption explains it.
+
+For more information, read the manual.
+
+A link that goes [home](#clean).
+"""
+
+# The paragraph MODEL is not a decider and gets its own pins: what counts as prose, and
+# what counts as a sentence. Both were wrong in ways no decider could have reported,
+# because a skipped paragraph and a miscounted label leave no finding to be wrong about.
+_MODEL = (
+    ("a bold-led paragraph is read", "**Note.** One. Two. Three. Four. Five. Six.", 1),
+    ("a list item is not prose", "- One. Two. Three. Four. Five. Six. Seven.", 0),
+    ("a run-in heading is not a sentence", "**Note.** One. Two. Three. Four. Five.", 0),
+    ("a whole bold sentence still is",
+     "**One.** **Two.** Three. Four. Five. Six. Seven.", 1),
+)
+
+
 def _alarm() -> int:
-    rings: list[tuple[str, bool, bool]] = []
-    six = "One. Two. Three. Four. Five. Six sentences here."
-    rings.append(("paragraphs", bool(check_paragraph_length("t", six)),
-                  not check_paragraph_length("t", "One. Two.")))
-    rings.append(("time-anchors",
-                  bool(check_time_anchors("t", "This is currently supported.")),
-                  not check_time_anchors("t", "This is supported.")))
-    rings.append(("positional",
-                  bool(check_positional_references("t", "As mentioned above, x.")),
-                  not check_positional_references("t", "See the Adopting "
-                                                       "section.")))
-    twice = ("The survey computes coverage and prints the ladder of gaps today.\n\n"
-             "The survey computes coverage and prints the ladder of gaps today.")
-    rings.append(("repetition", bool(check_repetition("t", twice)),
-                  not check_repetition("t", "Said once. Said differently twice.")))
-    late = "The RGAA test came first. Later we meet the framework (RGAA) again."
-    early = "The framework (RGAA) is introduced, and RGAA travels alone after."
-    rings.append(("acronyms", bool(check_acronyms("t", late)),
-                  not check_acronyms("t", early)))
-    rings.append(("conditions",
-                  bool(check_trailing_conditions(
-                      "t", "See the manual for more information.")),
-                  not check_trailing_conditions(
-                      "t", "For more information, see the manual.")))
-    # the marker distinction, both ways: bold-led prose is judged, a list item is not
-    bold_led = "**Note.** One. Two. Three. Four. Five. Six."
-    listed = "- One. Two. Three. Four. Five. Six. Seven."
-    rings.append(("bold-led-prose", bool(check_paragraph_length("t", bold_led)),
-                  not check_paragraph_length("t", listed)))
-    # the label itself is not one of the five, and a whole bold sentence still is
-    rings.append(("run-in-heading",
-                  bool(check_paragraph_length("t", bold_led)),
-                  not check_paragraph_length(
-                      "t", "**Note.** One. Two. Three. Four. Five.")))
-    anchored = "# A Heading\n\n[good](#a-heading) and [bad](#gone)"
-    rings.append(("anchors",
-                  bool(check_anchors("t", anchored)),
-                  len(check_anchors("t", anchored)) == 1))
-    dead = [n for n, rang, clean in rings if not (rang and clean)]
-    for n, rang, clean in rings:
-        state = "ok " if rang and clean else "DEAD"
-        print(f"  {state} {n}: convicting example "
-              f"{'convicts' if rang else 'PASSES'}, clean example "
-              f"{'passes' if clean else 'CONVICTS'}")
+    dead: list[str] = []
+    for check in CHECKS:
+        bad = []
+        if not check("guilty.md", GUILTY, None):
+            bad.append(f"{check.__name__} missed the guilty document")
+        if check("clean.md", CLEAN, None):
+            bad.append(f"{check.__name__} convicted the clean document")
+        dead += bad
+        print(f"  {'DEAD' if bad else 'ok  '} {check.__name__}")
+    for what, text, want in _MODEL:
+        got = len(check_paragraph_length("t", text))
+        state = "ok  " if got == want else "DEAD"
+        if got != want:
+            dead.append(f"model: {what} (wanted {want} finding(s), got {got})")
+        print(f"  {state} model: {what}")
     if dead:
-        print(f"\nthe alarm is DEAD for: {', '.join(dead)}")
+        for d in dead:
+            print()
+            print("DEAD ALARM  " + d)
         return 1
-    print(f"\nevery alarm rings: {len(rings)} prose decider(s), each seen red "
-          "and each seen green.")
+    print()
+    print(f"every alarm rings: {len(CHECKS)} decider(s) over one guilty document "
+          f"and one clean one, and {len(_MODEL)} pin(s) on the paragraph model.")
     return 0
+
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -57,6 +57,21 @@ The doc lane's own catalogue, added when the doc laws arrived. Ranked by the sam
 10. **EU "How to write clearly"** — multilingual (24 languages), free; useful as the non-English root the doc lane otherwise lacks.
 11. **Write the Docs** — community practice, weak authority; mine for candidates, cite something stronger.
 
+## Argument and evidence (surveyed 2026-08-23)
+
+A fourth lane, opened because the practice family's laws are about claims and their support and nothing in this estate models an argument. These sources judge the RELATION between a claim and what is offered for it, which is the one thing neither the interface twin nor the doc lane carries. Ranked by the same two criteria.
+
+1. **Greenwell, Holloway & Knight, "A Taxonomy of Fallacies in System Safety Arguments"** (DSN 2005, NASA/UVa) — **33 fallacies in 8 categories**, consolidated from a survey of five general taxonomies and then filtered against three real industrial safety cases, so every entry is a fallacy somebody actually committed in an engineering argument. The closest published set to this estate's own subject. Free from NTRS. Census'd whole: `python -m craft.census_argument`. https://ntrs.nasa.gov/api/citations/20060027794/downloads/20060027794.pdf
+2. **Walton, Reed & Macagno, *Argumentation Schemes*** (CUP 2008) — **65 schemes** of defeasible inference, each carrying its own **critical questions**. A critical question is a falsifier in this package's exact sense, written by somebody else and cited; appeal to expert opinion carries six. The next census target after Greenwell, and the larger one. Book, not free — do not paraphrase the schemes from secondary sources.
+3. **GSN Community Standard** (2011, Origin Consortium) — the notation UK MoD and London Underground safety cases are written in: goals, strategies, solutions, context, assumptions, justifications, plus a published catalogue of argument PATTERNS. Free. The structural half of an argument twin, already standardised and already adopted industrially.
+4. **AIF, the Argument Interchange Format** (Chesñevar et al. 2006; Rahwan et al.) — I-nodes for propositions, S-nodes for inference (RA), conflict (CA) and preference (PA), with reifications in RDF, JSON and Prolog. The interchange format an argument twin would serialise to, and where Walton's schemes are typed.
+5. **GRADE** (Cochrane, WHO, CDC) — five domains that downgrade certainty in evidence (risk of bias, inconsistency, indirectness, imprecision, publication bias) and three that upgrade it. Rules about the evidence-to-claim relation from a field that had to make them auditable. Free handbooks.
+6. **Dung, "On the acceptability of arguments"** (Artificial Intelligence 1995) — abstract argumentation frameworks and their semantics: which sets of claims can be held together once the attacks are known. The evaluation layer above the other two, and the only one that yields a proof rather than a finding.
+7. **Toulmin, *The Uses of Argument*** (1958) — claim, grounds, warrant, backing, qualifier, rebuttal. Famous and foundational, ranked below the others deliberately: it gives an argument's parts and no catalogue of legitimate warrants and no test for when one fails, so it is descriptive where this package needs falsifiable. `claims.jsonl` came out Toulmin-shaped without anybody consulting it.
+8. **Bradford Hill criteria** (1965) — nine considerations for inferring causation from association. Narrow, but the only citable root for the correlation-implies-causation family if it is ever built.
+
+**What the first census found, before anything is built on it:** 6 of Greenwell's 33 are decidable from an argument graph; 16 need a fact the graph does not carry, and 11 stay with a reader. Yuan, Manandhar, Kelly & Wells reached the same boundary in 2016 building this over GSN — the graph decides structure, and content flaws need a hand-authored per-domain ontology inside the nodes. Any claim that an argument twin mechanizes this lane has to survive that number.
+
 ## Survey methodology (added 2026-08-19, with the-answers-span-the-question)
 
 The discipline that studies closed questions — the natural root for every law about questions and answer sets rather than about controls, a lane the catalogue did not carry until a law needed it.

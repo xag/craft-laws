@@ -83,10 +83,29 @@ def paragraphs(text: str) -> list[tuple[int, str]]:
     return out
 
 
+# A paragraph may open with a RUN-IN HEADING -- `**Pointers.** A reference to an entry...`.
+# Markdown has no syntax for one, so authors write bold, and the splitter counted the label as a
+# sentence: every labelled paragraph started with four of its five sentences left, and the
+# paragraph law convicted the signpost rather than the density it is about. Same family as the
+# `**` that read as a bullet -- a structural device mistaken for content.
+#
+# Two things must both hold, or it is not a label: the bold run ends the way a label ends, and
+# PROSE FOLLOWS IT in the same paragraph. A paragraph that is one whole bold sentence is a
+# sentence and stays one. The six-word bound is what keeps an emphasised opening SENTENCE from
+# being swallowed as a heading; a real run-in heading is a couple of words.
+_RUN_IN = re.compile(r"^\*\*(?P<label>[^*]+?[.!?:])\*\*\s+(?=\S)")
+
+
+def _strip_run_in(prose: str) -> str:
+    m = _RUN_IN.match(prose)
+    return prose[m.end():] if m and len(m.group("label").split()) <= 6 else prose
+
+
 def sentences(prose: str) -> list[str]:
     # markdown notation comes off first: a '?' closed by an italic marker is still
     # the end of a sentence, and the first version of this splitter missed it
-    guarded = _ABBREV.sub(lambda m: m.group(0).replace(".", "․"), _plain(prose))
+    guarded = _ABBREV.sub(lambda m: m.group(0).replace(".", "․"),
+                          _plain(_strip_run_in(prose)))
     # a period inside a closing quote or bracket still ends the sentence
     parts = re.split(r"(?<=[.!?])[\"'”’)\]]*\s+", guarded)
     return [p.replace("․", ".").strip() for p in parts if p.strip()]
@@ -351,10 +370,15 @@ def _alarm() -> int:
                   not check_trailing_conditions(
                       "t", "For more information, see the manual.")))
     # the marker distinction, both ways: bold-led prose is judged, a list item is not
-    bold_led = "**Note.** One. Two. Three. Four. Five."
+    bold_led = "**Note.** One. Two. Three. Four. Five. Six."
     listed = "- One. Two. Three. Four. Five. Six. Seven."
     rings.append(("bold-led-prose", bool(check_paragraph_length("t", bold_led)),
                   not check_paragraph_length("t", listed)))
+    # the label itself is not one of the five, and a whole bold sentence still is
+    rings.append(("run-in-heading",
+                  bool(check_paragraph_length("t", bold_led)),
+                  not check_paragraph_length(
+                      "t", "**Note.** One. Two. Three. Four. Five.")))
     anchored = "# A Heading\n\n[good](#a-heading) and [bad](#gone)"
     rings.append(("anchors",
                   bool(check_anchors("t", anchored)),

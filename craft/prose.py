@@ -48,7 +48,12 @@ def _law(law_id: str) -> str:
 
 _FENCE = re.compile(r"^(```|~~~)")
 _HEADING = re.compile(r"^#{1,6}\s+(.*)$")
-_NONPROSE = re.compile(r"^(\s*([-*+]|\d+\.|\||>)|\s*$)")
+# A bullet marker is a marker only when whitespace follows it. Without that space the `**` of
+# a bold run read as a bullet, so EVERY paragraph opening in bold left the prose lane before
+# any decider saw it -- and the checks then reported green over text they had never been
+# handed, which is worse than reporting nothing. Thematic breaks are matched on their own:
+# they carry no space either, and they genuinely are not prose.
+_NONPROSE = re.compile(r"^(\s*([-*+]\s|\d+\.\s|\||>)|\s*[-*_]{3,}\s*$|\s*$)")
 _INLINE_CODE = re.compile(r"`[^`]*`")
 _MD_LINK = re.compile(r"\[([^\]]*)\]\(([^)\s]+)\)")
 # sentence-splitter guards: dots that end no sentence
@@ -347,6 +352,11 @@ def _alarm() -> int:
                       "t", "See the manual for more information.")),
                   not check_trailing_conditions(
                       "t", "For more information, see the manual.")))
+    # the marker distinction, both ways: bold-led prose is judged, a list item is not
+    bold_led = "**Note.** " + "word " * 26 + "end."
+    listed = "- " + "word " * 26 + "end."
+    rings.append(("bold-led-prose", bool(check_sentence_length("t", bold_led)),
+                  not check_sentence_length("t", listed)))
     anchored = "# A Heading\n\n[good](#a-heading) and [bad](#gone)"
     rings.append(("anchors",
                   bool(check_anchors("t", anchored)),

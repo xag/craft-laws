@@ -118,21 +118,23 @@ def check_paragraph_length(name: str, text: str, ceiling: int = 5
     return out
 
 
-def check_sentence_length(name: str, text: str, ceiling: int = 25
-                          ) -> list[DocFinding]:
-    """sentences-stay-under-twenty-five-words, applied to documentation prose."""
-    law = _law("sentences-stay-under-twenty-five-words")
-    out = []
-    for n, prose in paragraphs(text):
-        for s in sentences(prose):
-            words = len(_plain(s).split())
-            if words > ceiling:
-                out.append(DocFinding(
-                    law=law, where=f"{name} ¶{n}",
-                    quote=_plain(s)[:120] + ("…" if len(s) > 120 else ""),
-                    why=f"{words} words in one sentence, against the {ceiling}-word "
-                        "ceiling."))
-    return out
+# sentences-stay-under-twenty-five-words HAS NO DECIDER HERE, and it is not an oversight.
+# It is an INTERFACE law: its statement says 'interface prose', its falsifier says 'a sentence
+# in UI copy', and its trigger is 'the app's voice does work of its own (dry, terse, no
+# explaining text)'. None of that fires on a README. Every other decider in this lane runs a
+# law whose trigger names documentation read long after it is written; this one was picked
+# because it was countable, which is a property of the check and not of the law.
+#
+# The same mistake was made in craft/answer.py and fixed there (claims.jsonl: 'the law set was
+# chosen by keyword - is this law about words - instead of by reading each law's trigger').
+# It survived here because each caller hand-picks its own set, which is the recorded debt
+# triggers-are-prose-so-applicability-cannot-be-computed: 'selecting by keyword picks laws
+# whose own statements name a different surface'. Until a trigger is an expression, the only
+# defence is to read the trigger of every law a lane runs. The eight above were read.
+#
+# The source it came from says 'TRY to split up sentences that are over 25 words long' -
+# guidance for public service copy, with deliberate exceptions going to a judge. It was wired
+# as an unconditional counter with no judge, twice.
 
 
 _TIME_ANCHORS = ("currently", "at the time of writing", "coming soon",
@@ -313,7 +315,6 @@ def check_file(path: Path) -> list[DocFinding]:
     text = path.read_text(encoding="utf-8", errors="replace")
     name = path.name
     return (check_paragraph_length(name, text)
-            + check_sentence_length(name, text)
             + check_time_anchors(name, text)
             + check_positional_references(name, text)
             + check_repetition(name, text)
@@ -329,9 +330,6 @@ def _alarm() -> int:
     six = "One. Two. Three. Four. Five. Six sentences here."
     rings.append(("paragraphs", bool(check_paragraph_length("t", six)),
                   not check_paragraph_length("t", "One. Two.")))
-    long_s = "word " * 26 + "end."
-    rings.append(("sentences", bool(check_sentence_length("t", long_s)),
-                  not check_sentence_length("t", "Short enough.")))
     rings.append(("time-anchors",
                   bool(check_time_anchors("t", "This is currently supported.")),
                   not check_time_anchors("t", "This is supported.")))
@@ -353,10 +351,10 @@ def _alarm() -> int:
                   not check_trailing_conditions(
                       "t", "For more information, see the manual.")))
     # the marker distinction, both ways: bold-led prose is judged, a list item is not
-    bold_led = "**Note.** " + "word " * 26 + "end."
-    listed = "- " + "word " * 26 + "end."
-    rings.append(("bold-led-prose", bool(check_sentence_length("t", bold_led)),
-                  not check_sentence_length("t", listed)))
+    bold_led = "**Note.** One. Two. Three. Four. Five."
+    listed = "- One. Two. Three. Four. Five. Six. Seven."
+    rings.append(("bold-led-prose", bool(check_paragraph_length("t", bold_led)),
+                  not check_paragraph_length("t", listed)))
     anchored = "# A Heading\n\n[good](#a-heading) and [bad](#gone)"
     rings.append(("anchors",
                   bool(check_anchors("t", anchored)),

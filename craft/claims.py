@@ -101,7 +101,8 @@ _WHERES = ("user-surface", "stand-in", "producer")
 # this is the checking side's list, and tests/test_claims_package.py holds the two
 # equal so the published meaning and the running deciders cannot drift apart silently
 # — the LAWS.md discipline, applied to a vocabulary that first grew invisibly in code.
-CLAIM_KINDS = ("done", "fixed", "diagnosis", "detour", "confirmation", "measurement")
+CLAIM_KINDS = ("done", "fixed", "diagnosis", "detour", "confirmation", "measurement",
+               "protocol")
 
 
 def check_done_is_observed(name: str, claims: list[dict]) -> list[ClaimFinding]:
@@ -288,6 +289,61 @@ EVIDENCE_STRENGTH = ("limited", "medium", "robust")
 AGREEMENT = ("low", "medium", "high")
 
 
+# What a protocol record must state to BE the artifact the law demands: the corpus the
+# run will read, the expectations or thresholds it will hold, and the stopping rule —
+# where "none" is an honest stopping rule and absence is not (the null is stated).
+_PROTOCOL_FIELDS = ("name", "corpus", "expectations", "stopping")
+
+
+def check_prespecification_has_its_artifact(name: str, claims: list[dict]
+                                            ) -> list[ClaimFinding]:
+    """a-protocol-is-an-artifact-before-the-run, mechanized on its own note's route.
+
+    A claim saying `prespecified: true` names its `protocol`: either an earlier
+    {"kind": "protocol"} record in the same file (the file is append-only, so earlier
+    in the file is earlier in time — and git dates the line for anyone who doubts it),
+    or `"external: <where the dated artifact lives>"` for a protocol that predates the
+    record, a census's source checklist being the standing example. Saying
+    prespecified with neither is the claim of prespecification resting on the
+    claimant's memory, which is the law's falsifier verbatim. A protocol record itself
+    states its corpus, expectations and stopping rule, or it is a name wearing the
+    kind."""
+    law = "a-protocol-is-an-artifact-before-the-run"
+    out = []
+    seen_protocols: set[str] = set()
+    for i, c in enumerate(claims):
+        where, quote = f"{name}#{i + 1}", str(c.get("text", ""))[:120]
+        if c.get("kind") == "protocol":
+            for field in _PROTOCOL_FIELDS:
+                if not str(c.get(field) or "").strip():
+                    out.append(ClaimFinding(_law(law), where, quote,
+                                            f"a protocol record with no {field} — a "
+                                            "name wearing the kind is not the "
+                                            "artifact the law demands"))
+            if str(c.get("name") or "").strip():
+                seen_protocols.add(str(c["name"]).strip())
+            continue
+        if not c.get("prespecified"):
+            continue
+        ref = str(c.get("protocol") or "").strip()
+        if not ref:
+            out.append(ClaimFinding(_law(law), where, quote,
+                                    "prespecified: true with no protocol named — "
+                                    "the claim of prespecification rests on the "
+                                    "claimant's memory"))
+        elif ref.startswith("external:"):
+            if not ref[len("external:"):].strip():
+                out.append(ClaimFinding(_law(law), where, quote,
+                                        "an external protocol reference that names "
+                                        "no artifact"))
+        elif ref not in seen_protocols:
+            out.append(ClaimFinding(_law(law), where, quote,
+                                    f"protocol {ref!r} is not an earlier protocol "
+                                    "record in this file — an artifact dated after "
+                                    "the run, or never filed, is not before it"))
+    return out
+
+
 def check_grades_are_calibrated(name: str, claims: list[dict]) -> list[ClaimFinding]:
     """Three graded laws in one pass over the agreed scales: a term outside them, one
     dimension without the other, and a low end without its reason."""
@@ -327,7 +383,8 @@ def check_grades_are_calibrated(name: str, claims: list[dict]) -> list[ClaimFind
 CHECKS = (check_done_is_observed, check_fixed_reproduced_first,
           check_one_candidate_per_fix, check_theories_carry_observations,
           check_detours_say_so, check_confirmations_carry_their_account,
-          check_measurements_state_their_protocol, check_grades_are_calibrated)
+          check_measurements_state_their_protocol, check_grades_are_calibrated,
+          check_prespecification_has_its_artifact)
 
 
 def check_file(path: Path) -> list[ClaimFinding]:
@@ -364,6 +421,11 @@ def _alarm() -> int:
          "evidence_strength": "robust"},
         {"kind": "diagnosis", "text": "low with no reason",
          "evidence_strength": "limited", "agreement": "low"},
+        {"kind": "measurement", "text": "prespecified on memory alone",
+         "corpus": "x", "size_declared_before": True, "prespecified": True,
+         "reference_standard": "r", "author_knew_answers": True,
+         "judge_saw_verdict": True, "caught": 0, "misses": "none"},
+        {"kind": "protocol", "text": "a name wearing the kind", "name": "bare"},
     ]
     clean = [
         {"kind": "done", "text": "the sheet renders on the phone",
@@ -382,7 +444,13 @@ def _alarm() -> int:
         {"kind": "diagnosis", "text": "a finding graded on the agreed scales",
          "evidence_strength": "limited", "agreement": "high",
          "why_low": "one run only; the suite has not been re-run on another machine"},
+        {"kind": "protocol", "name": "wordlist-sweep",
+         "text": "the word-list sweep, declared before running it",
+         "corpus": "every markdown file under the estate's checkouts, exhaustive glob",
+         "expectations": "hits read in context by a person; the lists convict nothing",
+         "stopping": "none — the glob is finite and read to its end"},
         {"kind": "measurement", "text": "the three word lists over the estate's docs",
+         "protocol": "wordlist-sweep",
          "corpus": "87 markdown files across the estate, exhaustive glob",
          "size_declared_before": True, "prespecified": True,
          "reference_standard": "a person reading every hit in its paragraph",

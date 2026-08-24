@@ -1,7 +1,7 @@
-"""claims@0.1.0 — a session's assertions as data: the record the practice laws fire on.
+"""claims@ — a session's assertions as data: the record the practice laws fire on.
 
 Minted beside craft@ the way interface@ was: craft@ holds the LAWS about the work, and
-this holds the DENOTATION of what a session asserts — the six claim kinds, the evidence
+this holds the DENOTATION of what a session asserts — the claim kinds, the evidence
 grading, the measurement protocol, the agreed calibration scales. The wire format stays
 one JSON object per claim in a repo's claims.jsonl; this package is that format's
 meaning, published and pinned so a consumer can name the version it writes and a reader
@@ -88,6 +88,21 @@ VOCABULARY = [
         "recorded gap, not a silent one.",
     ),
     KindDef(
+        kind="protocol",
+        description="The before-artifact: what a run WILL measure, declared before it "
+        "runs. Carries `name` (what measurements reference it by), `corpus` (what the "
+        "run will read), `expectations` (the thresholds or hypotheses, set before the "
+        "results exist to tune them), and `stopping` (the rule for ending early — "
+        "'none' is an honest value and absence is not). A measurement claiming "
+        "`prespecified: true` names its protocol: an earlier protocol record in the "
+        "same append-only file, or 'external: <where the dated artifact lives>' for a "
+        "protocol that predates the record, a census's source checklist being the "
+        "standing example. The root is a-protocol-is-an-artifact-before-the-run "
+        "(SPIRIT item 5, TOP's Study Protocol practice, ARRIVE item 19): saying "
+        "thresholds were set in advance is a memory, and the artifact is checkable "
+        "against the file's order and git's dates.",
+    ),
+    KindDef(
         kind="evidence",
         description="One observation offered for a claim. Carries `where` — "
         "user-surface (the thing the user touches was observed), stand-in (a faithful "
@@ -149,6 +164,13 @@ EXAMPLES = [
          payload={"text": "the suite already gates itself correctly",
                   "checked": "ran the tests with credentials stripped: 87 tests, "
                              "6.4s, 2 skipped"}),
+    Node(id="an-example-protocol", kind="protocol",
+         name="An example: the before-artifact a measurement references",
+         payload={"name": "wordlist-sweep",
+                  "text": "the word-list sweep, declared before running it",
+                  "corpus": "every markdown file under the estate, exhaustive glob",
+                  "expectations": "hits read in context by a person",
+                  "stopping": "none — the glob is finite and read to its end"}),
     Node(id="an-example-measurement", kind="measurement",
          name="An example: a figure with its whole protocol",
          payload={"text": "the three word lists over the estate's docs",
@@ -179,8 +201,8 @@ COUNTER_EXAMPLES = [
 
 CLAIMS_PACKAGE = Package(
     name="claims",
-    version="0.1.0",
-    description="A session's assertions as data: six claim kinds, graded evidence, "
+    version="0.2.0",
+    description="A session's assertions as data: seven claim kinds, graded evidence, "
                 "the measurement protocol and the agreed calibration scales — the "
                 "record the practice laws fire on, published so the vocabulary is "
                 "versioned and visible instead of accumulating silently in code. "

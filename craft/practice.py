@@ -64,6 +64,10 @@ PRISMA = ("Page et al., The PRISMA 2020 statement: an updated guideline for "
           "reporting systematic reviews, BMJ 2021;372:n71")
 PRISMA_URL = "https://doi.org/10.1136/bmj.n71"
 
+SPIRIT = ("Chan et al., SPIRIT 2025 statement: updated guideline for protocols of "
+          "randomised trials, PLOS Medicine 2025;22:e1004589")
+SPIRIT_URL = "https://doi.org/10.1371/journal.pmed.1004589"
+
 
 def _agans(rule: str) -> Quantity:
     return Quantity(value=1, unit="law", provenance="cited", grounded=True,
@@ -818,7 +822,10 @@ PRACTICE = [
                   "size was settled after the results were in.",
         triggers=["a check's accuracy is calibrated or claimed"],
         citations=[(STARD + ", item 18", STARD_URL,
-                    "Intended sample size and how it was determined")],
+                    "Intended sample size and how it was determined"),
+                   (SPIRIT + ", item 19 — the before side", SPIRIT_URL,
+                    "How sample size was determined, including all assumptions "
+                    "supporting the sample size calculation")],
         sightings=[
             ("the first turn checker, 2026-08-22",
              "Calibrated on one session with one hit and reported as zero false "
@@ -995,7 +1002,10 @@ PRACTICE = [
                     "If no criteria were set, state this explicitly. ... If there "
                     "were no exclusions, state so."),
                    (ARRIVE + ", item 4", ARRIVE_URL,
-                    "If confounders were not controlled, state this explicitly.")],
+                    "If confounders were not controlled, state this explicitly."),
+                   (SPIRIT + ", items 28a and 29", SPIRIT_URL,
+                    "Alternatively, an explanation of why a DMC is not needed ... "
+                    "If there is no monitoring, give explanation")],
         sightings=[
             ("this estate's own reports, 2026-08-24",
              "The prose lane reported 'no prose decider convicts' over paragraphs it "
@@ -1017,7 +1027,11 @@ PRACTICE = [
         citations=[(CONSORT + ", item 16b", CONSORT_URL,
                     "Explanation of any interim analyses and stopping guidelines"),
                    (CONSORT + ", item 23b", CONSORT_URL,
-                    "If relevant, why the trial ended or was stopped")],
+                    "If relevant, why the trial ended or was stopped"),
+                   (SPIRIT + ", item 28b — the before side", SPIRIT_URL,
+                    "Explanation of any interim analyses and stopping guidelines, "
+                    "including who will have access to these interim results and "
+                    "make the final decision to terminate the trial")],
         note="Stopping on a peek is the tuning defect in disguise: the moment chosen "
              "to stop selects the result. The trial standards demand the stopping "
              "rule in advance and the reason after, and both halves transfer whole.",
@@ -1071,6 +1085,33 @@ PRACTICE = [
              "the misses of a check, this wants the misses of the RECORD the checks "
              "read. It is the intake debt's premise as a falsifiable law, which means "
              "the debt's eventual discharge has a rule to answer to.",
+    ),
+    # --- the SPIRIT census, 2026-08-25: the before-standard's one owed row.
+    _law(
+        "a-protocol-is-an-artifact-before-the-run",
+        "What a run will measure, over what corpus, with what thresholds and what "
+        "stopping rule, exists as an accessible artifact dated before the run — "
+        "prespecification is a document, never a recollection",
+        _cited("SPIRIT 2025: the protocol standard itself — the entire instrument "
+               "exists so the declaration precedes the trial"),
+        falsifier="A report claiming its expectations were set in advance, where no "
+                  "artifact dated before the run states them — the claim of "
+                  "prespecification resting on the claimant's memory.",
+        triggers=["a measurement claims its thresholds or expectations were set in "
+                  "advance"],
+        citations=[(SPIRIT + ", item 5", SPIRIT_URL,
+                    "Where the trial protocol and statistical analysis plan can be "
+                    "accessed"),
+                   (SPIRIT + ", item 31", SPIRIT_URL,
+                    "Plans for communicating important protocol modifications to "
+                    "relevant parties")],
+        note="The teeth prespecified-is-distinguished-from-exploratory lacks: that "
+             "law asks a report to SAY whether thresholds were set in advance, and "
+             "saying is a memory. This asks for the dated artifact, which in this "
+             "estate is a committed record — the declaration is checkable against "
+             "the history, not against sincerity. The decider route exists the day "
+             "somebody wants it: a protocol filed in the claims record before the "
+             "run, referenced by the measurement after it.",
     ),
 ]
 

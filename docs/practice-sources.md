@@ -18,7 +18,7 @@ One difference from the interface catalogue is worth stating up front. There is 
 10. **NASA/ESA anomaly-reporting standards and the Swiss-cheese/HFACS literature** — this row existed as "the root for instrument-before-the-second-theory if one exists outside Agans", and its purpose is served: Agans is censused whole and roots it directly. Downgraded to optional; no census, and the reason is recorded here rather than left to look like an oversight.
 11. **GOV.UK Service Manual** — the Service Standard's **14 points censused below**; the practice-shaped points were already covered and the rest are the interface catalogue's ancestry, confirmed.
 12. **Model Cards for Model Reporting** (Mitchell et al., FAT* 2019) and **Datasheets for Datasets** (Gebru et al., CACM 2021) — **read and censused below**, closing the reinvention question with the papers instead of a flag: the measurement kind's fields are independently demanded by both, and the one demand they add (per-factor disaggregation) is recorded as the kind's known gap.
-13. **SPIRIT 2025** (BMJ/Lancet/Nature Medicine/PLOS Medicine, April 2025, open access) — **34 minimum items for a trial PROTOCOL**: what must be declared *before* the work runs. The mirror this catalogue lacks: STARD and CONSORT govern the report after, and four laws here demand things be "declared before the run" with only the after-the-fact side sourced. SPIRIT is the before side's own standard, from the same consortium as CONSORT 2025, sharing a website and a fillable checklist. **Not yet read.** https://doi.org/10.1371/journal.pmed.1004589
+13. **SPIRIT 2025** (PLOS Medicine, April 2025, open access) — 34 protocol items, the before side of CONSORT. **Censused below**: five laws gained their before-side citations, and `a-protocol-is-an-artifact-before-the-run` was minted — prespecification as a dated document, never a recollection. https://doi.org/10.1371/journal.pmed.1004589
 14. **PRISMA 2020** (BMJ 2021, open access) — 27 items and a four-phase flow diagram for reporting **systematic reviews**. **Censused below**, and the prediction held: it is the root of `a-census-is-read-from-its-source`, which left the red set the same day, and of `a-corpus-of-reports-carries-its-reporting-bias`. https://doi.org/10.1136/bmj.n71
 15. **GUM (JCGM 100) and VIM (JCGM 200)** — the BIPM's Guide to the Expression of Uncertainty in Measurement and International Vocabulary of Metrology, **official PDFs free from bipm.org**. The metrology community's answer to what a number with an error bar means: uncertainty budgets, coverage, the vocabulary grounding@'s `tolerance` and `trusted_within` gesture at without a root. Authority as high as it gets; falsifiability high (an uncertainty statement conforms to the GUM's expression rules or does not). **Not yet read.** https://www.bipm.org/en/committees/jc/jcgm/publications
 16. **TOP Guidelines** (Nosek et al., *Science* 2015; TOP 2025 update) — **eight modular standards at graded levels** (disclose < require < verify) for data, code, materials, design, preregistration and replication. Two uses: roots for the open-science rows CONSORT 2025 added, and the disclose/require/verify ladder itself — a published shape for how a rule hardens, which is what the radar-to-decider route here does informally. **Not yet read.** https://www.cos.io/initiatives/top-guidelines
@@ -323,3 +323,40 @@ The statement (BMJ 2021;372:n71, open access, read from PubMed Central's hosting
 | 27 | which materials are publicly available and where | covered — the TOP lane's subject; here, the repo |
 
 **Counted: 37 rows — 31 covered, 6 set aside, 0 owed.** Two firsts: the law that drove every census in this document was rooted BY one — uncited from its minting until this table — and the intake debt's premise (self-report catches the already-noticed) became a falsifiable law with a standing authority behind it.
+
+
+# Census: SPIRIT 2025, read whole (2026-08-25)
+
+The protocol standard (PLOS Medicine 2025;22:e1004589, open access), **34 items, 46 rows** with splits. SPIRIT is CONSORT's mirror: what a trial declares *before* it runs, from the same consortium, sharing a website. For this catalogue it is the before side of every after-side law STARD and CONSORT rooted — which is exactly what the shortlist predicted, and the census confirms it row by row rather than by trust.
+
+| rows | what they state | status |
+|---|---|---|
+| 1a, 1b, 2 | title, structured summary, protocol version and date | set aside — announcement and versioning (the estate's versioning is git and the lock) |
+| 3a–3d, 7a, 7b, 8, 11 | roles, sponsors, funding, conflicts, dissemination, public involvement | set aside — organisational |
+| 4 | registration, **"If not yet registered, name of intended registry"** | covered — `a-null-is-stated-not-implied`'s shape at the registry |
+| 5 | **where the protocol and analysis plan can be accessed** | covered — roots `a-protocol-is-an-artifact-before-the-run`, minted 2026-08-25 from this census |
+| 6 | where data, code and materials will be accessible | covered — the TOP lane's subject; here, the repo |
+| 9a | background including **published and unpublished** studies | covered — `a-corpus-of-reports-carries-its-reporting-bias`, corroborated from the before side |
+| 9b | **explanation for choice of comparator** | covered — `the-reference-standard-is-named-with-its-rationale`, before side |
+| 10, 12 | objectives; design and framework including exploratory | covered — the falsifier in advance; `prespecified-is-distinguished-from-exploratory` |
+| 13, 14a, 14b | setting; eligibility | covered — `a-corpus-names-its-assembly`, declared rather than reported |
+| 15a | intervention **with sufficient details to allow replication** | covered — `a-check-is-stated-to-replication`, before side |
+| 15b | **criteria for discontinuing or modifying, declared in advance** | covered — `a-stopped-run-says-why`'s before half |
+| 15c, 15d | adherence strategies; concomitant care | set aside — clinical conduct |
+| 16 | outcomes with variable, metric, aggregation, time point | covered — the measurement kind's fields, declared before |
+| 17 | harms | set aside |
+| 18 | participant timeline, schematic recommended | set aside — scheduling |
+| 19 | **how sample size was determined, all assumptions** | covered — `calibration-size-is-declared-before-the-run` gains this as its before-side citation, which is the side the law's own name promises |
+| 20 | recruitment strategies | set aside |
+| 21a–24c | randomisation, concealment, implementation, blinding plans and unblinding circumstances | covered — `blindness-is-disclosed`, declared rather than disclosed after |
+| 25a | instruments **with their reliability and validity, if known** | covered — the reference standard's ground; the if-known clause is the null-statement shape |
+| 25b | retention plans; **outcome data for those who discontinue** | covered — `missing-input-is-reported-with-its-handling`, planned rather than reported |
+| 26 | data management and quality (double entry, range checks) | judge — process quality plans; the estate's analogue is schema checks, no law states the demand |
+| 27a–27d | statistical methods; who is in each analysis; missing data; additional analyses | covered — as CONSORT 21, declared before |
+| 28a | data monitoring committee, **"or an explanation of why a DMC is not needed"** | covered — `a-null-is-stated-not-implied` gains this citation |
+| 28b | **interim analyses and stopping guidelines, and who decides** | covered — `a-stopped-run-says-why` gains this as its before-side citation |
+| 29 | monitoring frequency, **"If there is no monitoring, give explanation"** | covered — the null-statement law's third verbatim demand in one standard |
+| 30, 32a, 32b, 33, 34 | ethics approval, consent, confidentiality, post-trial care | set aside — human-subjects machinery |
+| 31 | **plans for communicating protocol modifications** | covered — the protocol-artifact law's second citation: an amended declaration is announced, never silently edited |
+
+**Counted: 46 rows — 26 covered, 19 set aside, 1 judge, 0 owed after the mint.** What the census delivered: the before side of five laws now cited from the before-standard itself (calibration size, stopping, nulls, reporting bias, replication), and one new law — prespecification is an accessible dated artifact, not a memory — which is the demand that gives `prespecified-is-distinguished-from-exploratory` something checkable to stand on.

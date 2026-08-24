@@ -52,8 +52,11 @@ jobs:
                       "a-detour-is-announced-as-a-detour", "publish-practice",
                       # 2026-08-20: a half-done job reported as a choice, three faces
                       # of it, each with a decider; no authority found stating any
-                      "deliberate-names-its-decision", "a-remainder-names-its-debt",
-                      "a-census-is-read-from-its-source"}
+                      # a-census-is-read-from-its-source left this set 2026-08-24:
+                      # censusing PRISMA found the systematic-review community
+                      # stating the census discipline item by item, and the law
+                      # that drove every census was rooted by one
+                      "deliberate-names-its-decision", "a-remainder-names-its-debt"}
           assert red == declared, (
               f"the red set changed: {sorted(red)} != {sorted(declared)} - a law lost or "
               "gained a citation without the record moving. Update laws.py AND this list "

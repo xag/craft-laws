@@ -19,7 +19,7 @@ One difference from the interface catalogue is worth stating up front. There is 
 11. **GOV.UK Service Manual** — the Service Standard's **14 points censused below**; the practice-shaped points were already covered and the rest are the interface catalogue's ancestry, confirmed.
 12. **Model Cards for Model Reporting** (Mitchell et al., FAT* 2019) and **Datasheets for Datasets** (Gebru et al., CACM 2021) — **read and censused below**, closing the reinvention question with the papers instead of a flag: the measurement kind's fields are independently demanded by both, and the one demand they add (per-factor disaggregation) is recorded as the kind's known gap.
 13. **SPIRIT 2025** (BMJ/Lancet/Nature Medicine/PLOS Medicine, April 2025, open access) — **34 minimum items for a trial PROTOCOL**: what must be declared *before* the work runs. The mirror this catalogue lacks: STARD and CONSORT govern the report after, and four laws here demand things be "declared before the run" with only the after-the-fact side sourced. SPIRIT is the before side's own standard, from the same consortium as CONSORT 2025, sharing a website and a fillable checklist. **Not yet read.** https://doi.org/10.1371/journal.pmed.1004589
-14. **PRISMA 2020** (BMJ 2021, open access) — 27 items and a four-phase flow diagram for reporting **systematic reviews**: sources identified, screened, excluded with reasons. The census discipline this catalogue already practises, stated as a standard — `a-census-is-read-from-its-source` is uncited and red today, and this is its likeliest root. **Not yet read.** https://doi.org/10.1136/bmj.n71
+14. **PRISMA 2020** (BMJ 2021, open access) — 27 items and a four-phase flow diagram for reporting **systematic reviews**. **Censused below**, and the prediction held: it is the root of `a-census-is-read-from-its-source`, which left the red set the same day, and of `a-corpus-of-reports-carries-its-reporting-bias`. https://doi.org/10.1136/bmj.n71
 15. **GUM (JCGM 100) and VIM (JCGM 200)** — the BIPM's Guide to the Expression of Uncertainty in Measurement and International Vocabulary of Metrology, **official PDFs free from bipm.org**. The metrology community's answer to what a number with an error bar means: uncertainty budgets, coverage, the vocabulary grounding@'s `tolerance` and `trusted_within` gesture at without a root. Authority as high as it gets; falsifiability high (an uncertainty statement conforms to the GUM's expression rules or does not). **Not yet read.** https://www.bipm.org/en/committees/jc/jcgm/publications
 16. **TOP Guidelines** (Nosek et al., *Science* 2015; TOP 2025 update) — **eight modular standards at graded levels** (disclose < require < verify) for data, code, materials, design, preregistration and replication. Two uses: roots for the open-science rows CONSORT 2025 added, and the disclose/require/verify ladder itself — a published shape for how a rule hardens, which is what the radar-to-decider route here does informally. **Not yet read.** https://www.cos.io/initiatives/top-guidelines
 
@@ -290,3 +290,36 @@ The official document (March 2011, Rev. 1 May 2011), fetched from the Internet A
 | V | test your content: paraphrase testing, usability testing, controlled comparative studies | covered in doctrine — testing content on the person who reads it is the walk and the blind-usability practice; no law minted because the source prescribes methods, not observable breaches of a document |
 
 **Counted: 44 rows — 5 minted this day, 18 covered before it, 12 judge, 8 set aside, 1 owed with its reason (short sections, no ceiling given).** The five minted rows are the ones where the source states the rule as an observable: a verb hidden in a noun, "shall" where "must" belongs, stacked negatives, a paragraph without its topic sentence, a paragraph with two topics.
+
+
+# Census: PRISMA 2020, read whole (2026-08-24)
+
+The statement (BMJ 2021;372:n71, open access, read from PubMed Central's hosting), **27 items, 37 rows** with splits. A systematic review IS a census — sources identified, screened, included or excluded with reasons — so this is the source closest to the method that produced every table in this document, and it rooted the law that demanded them.
+
+| rows | what they state | status |
+|---|---|---|
+| 1, 2 | title; abstract | set aside — how a paper announces itself |
+| 3, 4 | rationale; explicit objective | covered — the motivating debt and the falsifier stated in advance |
+| 5 | **inclusion and exclusion criteria** | covered — roots `a-census-is-read-from-its-source`, with items 6 and 16b |
+| 6 | **all sources searched or consulted** | covered — the same law's root; this catalogue's shortlist is item 6 practised |
+| 7 | full search strategies, including filters and limits | covered — `a-check-is-stated-to-replication` and `a-corpus-names-its-assembly`: the search is the assembly |
+| 8, 9 | methods to decide inclusion; methods to collect data | covered — the same two laws |
+| 10a, 10b | all outcomes and variables **for which data were sought** | covered — `prespecified-is-distinguished-from-exploratory`; sought-but-not-found pairs with `a-null-is-stated-not-implied` |
+| 11 | risk of bias in included studies | covered — `structural-unknowns-are-considered`, `blindness-is-disclosed` |
+| 12 | effect measures per outcome | covered — the measurement kind |
+| 13a–13f | synthesis eligibility, preparation, display, methods with rationale, heterogeneity, sensitivity | covered — replication and nulls carry the "describe any" rows; 13e's heterogeneity is `validity-is-evidence-and-agreement`'s disagreement dimension |
+| 14 | **methods to assess risk of bias due to missing results** | covered — roots `a-corpus-of-reports-carries-its-reporting-bias`, minted 2026-08-24 from this row |
+| 15, 22 | certainty in the body of evidence, assessed and presented | covered — the calibration vocabulary and its decider |
+| 16a | the flow from records identified to studies included | covered — `a-rate-names-the-population-it-was-computed-over` (the flow diagram, third standard to demand it) |
+| 16b | **near-misses cited and excluded, with reasons** | covered — the census law's root; this document's judge and set-aside columns are 16b practised |
+| 17, 18, 19 | per-study characteristics, bias, estimates with precision | covered — grounds, grades, grounding@'s tolerance |
+| 20a–20d | synthesis results, heterogeneity, sensitivity | covered — with 13 |
+| 21 | **reporting-bias assessments presented per synthesis** | covered — the new law's second citation |
+| 23a–23d | interpretation; limitations of the evidence; **limitations of the review process itself**; implications | covered — `a-qualifier-is-licensed-by-the-evidence`, the `gap` field, and 23c is the why_low this catalogue's own claims already carry |
+| 24a | registration | set aside — the repo is the register |
+| 24b | protocol accessible **or state that a protocol was not prepared** | covered — `a-null-is-stated-not-implied`, corroborated; the before-half itself is the SPIRIT sitting |
+| 24c | amendments to registration or protocol | covered — `prespecified-is-distinguished-from-exploratory` |
+| 25, 26 | funding; competing interests | set aside |
+| 27 | which materials are publicly available and where | covered — the TOP lane's subject; here, the repo |
+
+**Counted: 37 rows — 31 covered, 6 set aside, 0 owed.** Two firsts: the law that drove every census in this document was rooted BY one — uncited from its minting until this table — and the intake debt's premise (self-report catches the already-noticed) became a falsifiable law with a standing authority behind it.

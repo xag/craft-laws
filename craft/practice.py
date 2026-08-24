@@ -60,6 +60,10 @@ TK1974 = ("Tversky & Kahneman, Judgment under Uncertainty: Heuristics and "
           "Biases, Science 185:1124-1131, 1974")
 TK1974_URL = "https://doi.org/10.1126/science.185.4157.1124"
 
+PRISMA = ("Page et al., The PRISMA 2020 statement: an updated guideline for "
+          "reporting systematic reviews, BMJ 2021;372:n71")
+PRISMA_URL = "https://doi.org/10.1136/bmj.n71"
+
 
 def _agans(rule: str) -> Quantity:
     return Quantity(value=1, unit="law", provenance="cited", grounded=True,
@@ -273,12 +277,22 @@ PRACTICE = [
         "a-census-is-read-from-its-source",
         "A catalogue that claims to enumerate a source carries every item the source "
         "lists, each covered or owed, and its count is computed from that list",
-        _uncited(),
+        _cited("PRISMA 2020, items 5, 6 and 16b: the systematic-review "
+               "community's statement of the census discipline"),
         falsifier="A catalogue stated as 'the N families/laws/items of <source>' where the "
                   "source, read in full, lists an item the catalogue neither carries nor "
                   "names as owed — an enumeration filtered by what was feasible to build.",
         triggers=["a catalogue or census is authored from a cited source",
                   "a count of families, laws or items is stated"],
+        citations=[(PRISMA + ", item 6", PRISMA_URL,
+                    "Specify all databases, registers, websites, organisations, "
+                    "reference lists and other sources searched or consulted."),
+                   (PRISMA + ", item 5", PRISMA_URL,
+                    "Specify the inclusion and exclusion criteria for the review "
+                    "and how studies were grouped for the syntheses."),
+                   (PRISMA + ", item 16b", PRISMA_URL,
+                    "Cite studies that might appear to meet the inclusion "
+                    "criteria, but which were excluded, and explain why.")],
         sightings=[("a behavior-law catalogue, 2026-08-20",
                     "'nine families, a census folded from Hughes's five approaches': the "
                     "paper's model-based properties — which it says 'together form a "
@@ -289,7 +303,11 @@ PRACTICE = [
         note="The harness is a census node beside the catalogue: one entry per item the "
              "source lists, linking to the law that covers it or the debt that owes it, "
              "with the counts computed over the entries — so the number on the brief is "
-             "the source's, and what was left out is a number too.",
+             "the source's, and what was left out is a number too. Uncited from its "
+             "minting on 2026-08-20 until 2026-08-24, when censusing PRISMA found the "
+             "systematic-review community stating the same discipline item by item — "
+             "the law that drove every census was rooted BY one, which is the loop "
+             "closing in the right direction.",
     ),
 
     # --- earned 2026-08-22, in one session, by one habit with two faces: a qualifier
@@ -1024,6 +1042,35 @@ PRACTICE = [
              "performance improved after it - the improvement was regression. The "
              "practice form: the failing check fixed on its worst day, the flaky "
              "test stabilised right after the retry was added.",
+    ),
+    # --- the PRISMA census, 2026-08-24: the one owed row, and it is the intake debt's
+    # --- premise stated as a law by a standing authority.
+    _law(
+        "a-corpus-of-reports-carries-its-reporting-bias",
+        "Findings drawn from a corpus of reports state the risk that what was never "
+        "reported differs from what was — the file drawer is part of the corpus",
+        _cited("PRISMA 2020, items 14 and 21: risk of bias due to missing results"),
+        falsifier="A conclusion from filed records presented as a conclusion about the "
+                  "practice, with no word on what systematically never gets filed — "
+                  "observable wherever the filing itself selects for being noticed.",
+        triggers=["a conclusion is drawn from a corpus of self-filed records"],
+        citations=[(PRISMA + ", item 14", PRISMA_URL,
+                    "Describe any methods used to assess risk of bias due to missing "
+                    "results in a synthesis."),
+                   (PRISMA + ", item 21", PRISMA_URL,
+                    "Present assessments of risk of bias due to missing results "
+                    "(arising from reporting biases) for each synthesis assessed.")],
+        sightings=[
+            ("the claims record itself, standing",
+             "the-deciders-run-by-hand has said it in prose since 2026-08-22: "
+             "self-report catches the part already noticed, which is the part that "
+             "needed no check. Every conviction statistic from the claims hook is "
+             "drawn from claims somebody chose to file, and until this law nothing "
+             "required that selection to be named beside the number.")],
+        note="The sibling of a-check-reports-its-misses one level up: that law wants "
+             "the misses of a check, this wants the misses of the RECORD the checks "
+             "read. It is the intake debt's premise as a falsifiable law, which means "
+             "the debt's eventual discharge has a rule to answer to.",
     ),
 ]
 

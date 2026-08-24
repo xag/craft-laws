@@ -13,7 +13,7 @@ One difference from the interface catalogue is worth stating up front. There is 
 5. **STARD 2015** (Cohen et al., *BMJ Open* 2016;6:e012799; checklist hosted by the EQUATOR Network) — 30 numbered items, 34 rows, stating what a report of a diagnostic accuracy study must contain. A reporting standard for measurement claims, from a community that had to make them auditable because careers rest on them, and unusually falsifiable: each item is either present in a report or it is not. Already the root of `a-rate-names-the-population-it-was-computed-over`. **Censused whole:** `python -m craft.census_stard`. https://doi.org/10.1136/bmjopen-2016-012799
 6. **Federal plain language guidelines** (Plain Writing Act 2010; the official March 2011 document, Rev. 1, fetched from the Internet Archive after plainlanguage.gov folded into digital.gov) — statutory, public domain, sentence-level and checkable. **Censused below.**
 7. **ISO/IEC/IEEE 15289 and 26515** — what a work product must contain to be a record rather than a note. Paywalled: cite clause numbers, quote briefly. **Census blocked, stated rather than glossed:** the text is not in hand and a census from summaries is how fabrication starts; this row stays unread until somebody buys the standard or finds a lawful copy.
-8. **CONSORT / ARRIVE / STROBE reporting checklists** — the strongest available model for "a claim carries what it rests on". **All three censused below** (CONSORT 2025's 41 rows, STROBE's 34, ARRIVE's Essential 10; ARRIVE's Recommended Set is recorded as a second sitting). The finding is corroboration: the STARD-rooted measurement laws are independently demanded by all three, and the only new demands were the stopped-early row and the null-statement rule that became `a-null-is-stated-not-implied`.
+8. **CONSORT / ARRIVE / STROBE reporting checklists** — the strongest available model for "a claim carries what it rests on". **All three censused below** (CONSORT 2025's 41 rows, STROBE's 34, ARRIVE's Essential 10; ARRIVE's Recommended Set was censused 2026-08-25 in its recorded second sitting — no new law, two new roots). The finding is corroboration: the STARD-rooted measurement laws are independently demanded by all three, and the only new demands were the stopped-early row and the null-statement rule that became `a-null-is-stated-not-implied`.
 9. **Tversky & Kahneman 1974, "Judgment under Uncertainty"** (*Science* 185:1124–1131) — the empirical root beneath several laws, exactly as this row predicted. **Censused below** from a full-text mirror: 3 heuristics, 13 biases, 8 rooting laws, 3 roots waiting. Principle-shaped; cite for the finding, never for a rule.
 10. **NASA/ESA anomaly-reporting standards and the Swiss-cheese/HFACS literature** — this row existed as "the root for instrument-before-the-second-theory if one exists outside Agans", and its purpose is served: Agans is censused whole and roots it directly. Downgraded to optional; no census, and the reason is recorded here rather than left to look like an oversight.
 11. **GOV.UK Service Manual** — the Service Standard's **14 points censused below**; the practice-shaped points were already covered and the rest are the interface catalogue's ancestry, confirmed.
@@ -420,3 +420,29 @@ The International Vocabulary of Metrology, third edition, official BIPM PDF, 108
 | bibliography | — | set aside |
 
 **Counted: 8 rows — 1 covered (chapter 2, six terms landing on four laws), 7 set aside, 0 owed.** No law minted, and that is the finding: the VIM is a vocabulary, and its value to this catalogue is words for things already ruled — verification versus validation being the pair the practice family was founded on without knowing metrology had already named it.
+
+
+# Census: ARRIVE 2.0 Recommended Set, read whole (2026-08-25)
+
+The second sitting the Essential 10 census recorded as owed, now sat: **items 11–21, 16 rows** with splits, from the same author-consortium PDF. The set "complements the Essential 10 and adds important context", and for this catalogue it is a corroboration pass — which the census demonstrates row by row rather than asserts.
+
+| rows | what they state | status |
+|---|---|---|
+| 11 | abstract | set aside — announcement |
+| 12a | scientific background and rationale | covered — the motivating debt; CONSORT 6's ground |
+| 12b | **how the animal model addresses the objectives, and its relevance to human biology** | covered — the stand-in's charter: why the model is faithful and for what, which is `evidence.where: stand-in` with its `gap`, stated by the standard that governs model organisms |
+| 13 | research question, objectives, hypotheses | covered — the falsifier stated in advance |
+| 14 | ethical approval; **"If ethical approval was not sought or granted, provide a justification"** | set aside — subjects machinery; the null-statement shape noted |
+| 15 | housing and husbandry | set aside |
+| 16a | steps to reduce pain and distress | set aside — welfare conduct |
+| 16b | **expected or unexpected adverse events, reported** | covered — `the-trail-is-written-as-it-happens`: the unexpected event is precisely what a reconstructed account loses |
+| 16c | **humane endpoints, the signs monitored, the frequency; "If the study did not have humane endpoints, state this"** | covered — `a-stopped-run-says-why` gains this as a citation: the stopping rule declared with its signs and monitoring cadence, and the null stated |
+| 17a | interpretation against objectives, theory, and the literature | covered — `a-qualifier-is-licensed-by-the-evidence` |
+| 17b | **limitations: bias, limitations of the animal model, imprecision** | covered — the `gap` field and `structural-unknowns-are-considered`; "limitations of the animal model" is the stand-in's gap in the source's own words |
+| 18 | generalisability to other species and conditions | covered — as CONSORT 30, the `gap`'s reach |
+| 19 | **whether a protocol was prepared before the study, and if and where registered** | covered — `a-protocol-is-an-artifact-before-the-run` gains this as a citation: its third standard in two days |
+| 20 | data access statement | covered — the TOP lane; here, the repo |
+| 21a | conflicts; **"If none exist, this should be stated"** | set aside — disclosure machinery; the third null-statement clause in this one set, noted for the law's census trail |
+| 21b | funding and the funder's role | set aside |
+
+**Counted: 16 rows — 9 covered, 7 set aside, 0 owed.** The set's fingerprint: three of its sixteen rows restate the null-statement rule, and two rows landed as citations on laws minted this week — the stopping law and the protocol-artifact law, the latter now carried by SPIRIT, TOP and ARRIVE independently. A recorded second sitting that produced no new law and two new roots is the census discipline working exactly as intended.

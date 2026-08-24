@@ -1049,7 +1049,11 @@ PRACTICE = [
                    (SPIRIT + ", item 28b — the before side", SPIRIT_URL,
                     "Explanation of any interim analyses and stopping guidelines, "
                     "including who will have access to these interim results and "
-                    "make the final decision to terminate the trial")],
+                    "make the final decision to terminate the trial"),
+                   (ARRIVE + ", Recommended Set item 16c", ARRIVE_URL,
+                    "Describe the humane endpoints established for the study, the "
+                    "signs that were monitored and the frequency of monitoring. If "
+                    "the study did not have humane endpoints, state this.")],
         note="Stopping on a peek is the tuning defect in disguise: the moment chosen "
              "to stop selects the result. The trial standards demand the stopping "
              "rule in advance and the reason after, and both halves transfer whole.",
@@ -1122,7 +1126,12 @@ PRACTICE = [
                     "accessed"),
                    (SPIRIT + ", item 31", SPIRIT_URL,
                     "Plans for communicating important protocol modifications to "
-                    "relevant parties")],
+                    "relevant parties"),
+                   (ARRIVE + ", Recommended Set item 19", ARRIVE_URL,
+                    "Provide a statement indicating whether a protocol (including "
+                    "the research question, key design features, and analysis "
+                    "plan) was prepared before the study, and if and where this "
+                    "protocol was registered.")],
         note="The teeth prespecified-is-distinguished-from-exploratory lacks: that "
              "law asks a report to SAY whether thresholds were set in advance, and "
              "saying is a memory. This asks for the dated artifact, which in this "

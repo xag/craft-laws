@@ -989,9 +989,9 @@ DEBTS = [
         id="the-prose-lane-contradicts-the-word-list-decision",
         kind="debt",
         links={"rests_on": ["a-word-list-is-a-reading-not-a-mechanization"]},
-        name="This repository decided that a law checked by matching words gets no "
-             "decider and never holds a handback, and the documentation lane gives three "
-             "such laws deciders and gates the build on them",
+        name="PAID 2026-08-24 - this repository decided that a law checked by matching "
+             "words never holds a handback, the documentation lane gated the build on "
+             "three such laws for a week, and they now report without holding it",
         payload={
             "what_it_costs":
                 "The decision above says it in one line - a law checked by matching words "
@@ -1011,19 +1011,16 @@ DEBTS = [
                 "is the reading whatever decides afterwards. And CI runs "
                 "`craft.prose README.md`, so all three hold a handback.\n\n"
                 ""
-                "What is NOT known is how wrong they are. The seven-in-eight number "
-                "belongs to a different word list on a different corpus; these three have "
-                "never been measured. So the cost recorded here is the contradiction and "
-                "not its size, and finding the size is the first thing the discharge "
-                "asks for.",
+                "The size is in the grounds below; the contradiction is what this entry "
+                "is for.",
             "why_it_is_not_paid":
-                "Deleting them is cheap and leaves three documentation laws with no check "
-                "at all, on a lane whose other four checks cannot reach what they cover. "
-                "The two honest routes both cost more than an afternoon. Mechanizing them "
-                "wants a declared document model, which is "
-                "[[the-prose-lane-has-no-drawing]] and a vocabulary publish. Demoting "
-                "them wants a route this package has used once - the string-id skew radar "
-                "- and no second instance, so the shape is not yet a pattern.",
+                "The contradiction is paid and the deeper half is not. Deleting the three "
+                "would leave three documentation laws with no check at all, and the other "
+                "four cannot reach what they cover. Mechanizing them properly wants a "
+                "declared document model - [[the-prose-lane-has-no-drawing]], a "
+                "vocabulary publish - so until that is paid they stay word lists that "
+                "report. This is the radar route's second instance after the string-id "
+                "skew, which makes it a shape rather than an exception.",
         },
         children=[
             Node(id="three-of-seven-read-meaning-from-words", kind="grounds",
@@ -1038,18 +1035,35 @@ DEBTS = [
                           "gap": "A reading of the module as it stands. It establishes "
                                  "the contradiction and measures nothing about how often "
                                  "these three are wrong."}),
+            Node(id="the-three-fire-three-times-in-eighty-seven-files", kind="grounds",
+                 name="Measured over the estate before demoting: three hits in 87 files, "
+                      "and two of the three are the laws quoting the words they forbid",
+                 payload={"what": "time-anchors 2, positional 1, trailing 0. Two hits are "
+                                  "LAWS.md: 'never now, no new, no currently' and 'never "
+                                  "above, below, or as mentioned earlier'. On the 31 "
+                                  "READMEs the build gates, one hit, arguably true.",
+                          "where": "producer",
+                          "gap": "The false positives are STRUCTURAL and no tuning "
+                                 "removes them: a rule forbidding a word cannot be "
+                                 "written without using it, so any word list convicts "
+                                 "its own statement and every document discussing it. "
+                                 "The measurement says the size and not whether a word "
+                                 "list can ever be a mechanization."}),
             Node(id="discharge-measure-then-demote-or-mechanize", kind="discharge",
-                 name="Measure the three against a corpus, then demote them to a radar or "
-                      "mechanize them against a declared model",
+                 name="PAID: measured, then demoted to a radar - they report and the "
+                      "exit status ignores them",
                  payload={"route":
-                          "The decision was made on a number and these three have none, "
-                          "so the first step is the number: run them over the "
-                          "documentation this estate already has and read every hit. If "
-                          "they are wrong at anything like seven in eight they come out "
-                          "of the build that day. If they are not, the contradiction is "
-                          "still real and the route is the radar - report candidates, "
-                          "hold nothing - until [[the-prose-lane-has-no-drawing]] is paid "
-                          "and they can be mechanized properly."}),
+                          "The number came first, as the decision's own did. It said "
+                          "nearly inert rather than dangerous, so the route was the "
+                          "radar and not deletion. "
+                          "DONE 2026-08-24. The number came first, as the decision's "
+                          "own did. craft/prose.py now splits its checks into those "
+                          "that may hold a handback and those that may only report; "
+                          "the three word lists are in the second set, print under a "
+                          "reading heading that says they hold nothing, and no longer "
+                          "reach the exit status. What is NOT paid is the deeper half: "
+                          "they are still word lists, and mechanizing them properly "
+                          "still wants [[the-prose-lane-has-no-drawing]]."}),
         ],
     ),
 ]

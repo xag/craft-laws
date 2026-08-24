@@ -399,6 +399,38 @@ def check_anchors(name: str, text: str, root: Path | None = None,
 CHECKS = (check_paragraph_length, check_time_anchors, check_positional_references,
           check_repetition, check_acronyms, check_trailing_conditions, check_anchors)
 
+# --- what may hold a handback, and what may only report -------------------------------
+#
+# a-word-list-is-a-reading-not-a-mechanization: "A law checked by matching words in prose
+# is unmechanized, and says so - it does not get a decider, and it never holds a
+# handback." Three of the checks above are exactly that shape, and for a week they gated
+# this repository's build in contradiction of its own decision.
+#
+# MEASURED BEFORE DEMOTING, because the decision was made on a number and these three had
+# none (2026-08-24, 87 markdown files across the estate):
+#
+#   time-anchors 2 hits, positional 1, trailing 0 - three in eighty-seven files
+#   two of the three are LAWS.md convicting the law's own statement: "never 'now', no
+#   'new', no 'currently'" and "never 'above', 'below', or 'as mentioned earlier'"
+#   on the 31 READMEs the build actually gates: one hit, arguably true
+#
+# So they are not wrong seven times in eight. They are nearly inert, and wrong two times
+# in three when they fire - and the false positives are STRUCTURAL rather than tunable: a
+# rule that forbids a word cannot be written down without using it, so any wordlist law
+# convicts its own statement and every document that discusses it. No word list escapes
+# that, which is the decision's point restated by measurement.
+#
+# The remedy is the decision's own: they keep running and reporting, and they stop holding
+# the build. A reading that fires once in eighty-seven files is worth a reader's glance and
+# is not worth a red build, and the exit status is the difference between the two.
+READINGS = frozenset({check_time_anchors, check_positional_references,
+                      check_trailing_conditions})
+
+
+def holds_the_build(check) -> bool:
+    """Structural checks convict; readings report. The split is the decision above."""
+    return check not in READINGS
+
 # Which decider is nothing without its language, and where its rules live. A decider
 # absent from this map runs in every language.
 _NEEDS_RULES = {
@@ -530,8 +562,13 @@ def main(argv: list[str] | None = None) -> int:
     if not args.files:
         ap.error("give at least one file, or --alarm")
     findings: list[DocFinding] = []
+    readings: list[DocFinding] = []
     for f in args.files:
-        findings += check_file(Path(f), args.lang)
+        path = Path(f)
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for check in CHECKS:
+            got = check(path.name, text, path.parent, args.lang)
+            (findings if holds_the_build(check) else readings).extend(got)
     silent = unruled(args.lang)
     if silent:
         print(f"  NO RULES for {args.lang!r}, so these did not run: "
@@ -540,6 +577,14 @@ def main(argv: list[str] | None = None) -> int:
               f"{', '.join(LANGS)}.")
     for fd in findings:
         print(f"  RED {fd.law} [{fd.where}] «{fd.quote}»\n      {fd.why}")
+    for fd in readings:
+        print(f"  reading {fd.law} [{fd.where}] «{fd.quote}»\n      {fd.why}")
+    if readings:
+        print(f"\n  {len(readings)} reading(s) above hold nothing. They are word lists "
+              f"over prose, and\n  a-word-list-is-a-reading-not-a-mechanization says such "
+              f"a law never holds a handback.\n  Measured 2026-08-24: three hits in "
+              f"eighty-seven files, two of them the laws quoting\n  the words they "
+              f"forbid. Worth a glance, not worth a red build.")
     if not findings:
         print(f"{len(args.files)} file(s): no prose decider convicts.")
     else:

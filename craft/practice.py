@@ -72,6 +72,10 @@ GUM = ("JCGM 100:2008, Evaluation of measurement data - Guide to the expression 
        "of uncertainty in measurement (BIPM)")
 GUM_URL = "https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf"
 
+VIM = ("JCGM 200:2012, International vocabulary of metrology (VIM, 3rd edition, "
+       "BIPM)")
+VIM_URL = "https://www.bipm.org/documents/20126/2071204/JCGM_200_2012.pdf"
+
 
 def _agans(rule: str) -> Quantity:
     return Quantity(value=1, unit="law", provenance="cited", grounded=True,
@@ -92,7 +96,12 @@ PRACTICE = [
         triggers=["anything is reported as done", "a fix is deployed"],
         citations=[(f"{AGANS} — rule 9",
                     AGANS_URL,
-                    "If you didn't fix it, it ain't fixed")],
+                    "If you didn't fix it, it ain't fixed"),
+                   (VIM + ", 2.44 and 2.45", VIM_URL,
+                    "verification: provision of objective evidence that a given "
+                    "item fulfils specified requirements ... validation: "
+                    "verification, where the specified requirements are adequate "
+                    "for an intended use")],
         sightings=[("spec-studio, 2026-08-17",
                     "fifteen rounds of 'deployed and verified' against a founder "
                     "answering 'still nothing'. Every verification was real and every "
@@ -646,7 +655,12 @@ PRACTICE = [
                     "“robust”), and the degree of agreement (summary terms: "
                     "“low,” “medium,” or “high”). "
                     "... Provide a traceable account describing your evaluation of "
-                    "evidence and agreement in the text of your chapter.")],
+                    "evidence and agreement in the text of your chapter."),
+                   (VIM + ", 2.21 and 2.25", VIM_URL,
+                    "measurement repeatability: measurement precision under a set "
+                    "of repeatability conditions of measurement ... measurement "
+                    "reproducibility: measurement precision under reproducibility "
+                    "conditions of measurement")],
         note="Covers the census's rows 8, S3 and S4 in one law: the two summary-term "
              "scales are the dimensions' vocabulary, not separate demands. The claims "
              "record has one dimension today (where the evidence stands) and no "

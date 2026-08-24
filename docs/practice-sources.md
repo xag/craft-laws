@@ -20,8 +20,8 @@ One difference from the interface catalogue is worth stating up front. There is 
 12. **Model Cards for Model Reporting** (Mitchell et al., FAT* 2019) and **Datasheets for Datasets** (Gebru et al., CACM 2021) — **read and censused below**, closing the reinvention question with the papers instead of a flag: the measurement kind's fields are independently demanded by both, and the one demand they add (per-factor disaggregation) is recorded as the kind's known gap.
 13. **SPIRIT 2025** (PLOS Medicine, April 2025, open access) — 34 protocol items, the before side of CONSORT. **Censused below**: five laws gained their before-side citations, and `a-protocol-is-an-artifact-before-the-run` was minted — prespecification as a dated document, never a recollection. https://doi.org/10.1371/journal.pmed.1004589
 14. **PRISMA 2020** (BMJ 2021, open access) — 27 items and a four-phase flow diagram for reporting **systematic reviews**. **Censused below**, and the prediction held: it is the root of `a-census-is-read-from-its-source`, which left the red set the same day, and of `a-corpus-of-reports-carries-its-reporting-bias`. https://doi.org/10.1136/bmj.n71
-15. **GUM (JCGM 100) and VIM (JCGM 200)** — the BIPM's Guide to the Expression of Uncertainty in Measurement and International Vocabulary of Metrology, **official PDFs free from bipm.org**. The metrology community's answer to what a number with an error bar means: uncertainty budgets, coverage, the vocabulary grounding@'s `tolerance` and `trusted_within` gesture at without a root. Authority as high as it gets; falsifiability high (an uncertainty statement conforms to the GUM's expression rules or does not). **Not yet read.** https://www.bipm.org/en/committees/jc/jcgm/publications
-16. **TOP Guidelines** (Nosek et al., *Science* 2015; TOP 2025 update) — **eight modular standards at graded levels** (disclose < require < verify) for data, code, materials, design, preregistration and replication. Two uses: roots for the open-science rows CONSORT 2025 added, and the disclose/require/verify ladder itself — a published shape for how a rule hardens, which is what the radar-to-decider route here does informally. **Not yet read.** https://www.cos.io/initiatives/top-guidelines
+15. **GUM (JCGM 100) and VIM (JCGM 200)** — the BIPM's uncertainty guide and metrology vocabulary, official PDFs free. **The GUM is censused below** — it rooted `an-uncertainty-names-its-components` and left three roots recorded for grounding@. **The VIM stays unread**: it is the vocabulary lane's subject and a sitting of its own. https://www.bipm.org/en/committees/jc/jcgm/publications
+16. **TOP Guidelines** (Center for Open Science; TOP 2025) — **censused below from the live framework**, which had reorganised the 2015 paper's eight standards into seven Research Practices while this entry sat unread: the census records the move. Everything corroborates; the level-3 ladder rung (independent certification) is recorded as the estate's stated ceiling. https://www.cos.io/initiatives/top-guidelines
 
 Excluded despite fame, with reasons: **Clean Code / SOLID / most engineering-practice books** (assertions without an authority, and their empirical support is thin or contested); **Agile manifesto and derivatives** (values, not rules — nothing observable); **Google's SRE book** (excellent and specific to running services, not to claiming work done; CC BY-NC-ND).
 
@@ -360,3 +360,45 @@ The protocol standard (PLOS Medicine 2025;22:e1004589, open access), **34 items,
 | 31 | **plans for communicating protocol modifications** | covered — the protocol-artifact law's second citation: an amended declaration is announced, never silently edited |
 
 **Counted: 46 rows — 26 covered, 19 set aside, 1 judge, 0 owed after the mint.** What the census delivered: the before side of five laws now cited from the before-standard itself (calibration size, stopping, nulls, reporting bias, replication), and one new law — prespecification is an accessible dated artifact, not a memory — which is the demand that gives `prespecified-is-distinguished-from-exploratory` something checkable to stand on.
+
+
+# Census: the GUM (JCGM 100:2008), read whole (2026-08-25)
+
+The BIPM's Guide to the Expression of Uncertainty in Measurement, official PDF, 134 pages. The unit is the document's own structure: **nine chapters and ten annexes, 19 rows.** Most of the GUM is the mathematics of propagating uncertainty — method, not reporting rules — and the census says so row by row instead of mining only the reporting clause and calling it the document.
+
+| rows | what they hold | status |
+|---|---|---|
+| 0, 1, 2 | introduction, scope, definitions | set aside — front matter; the definitions are Annex B/C's subject |
+| 3 | basic concepts: measurement, **errors versus uncertainty**, corrections | covered as doctrine — error is what a correction fixes and uncertainty is what remains; grounding@'s split between a value and its trustworthiness practises this, and the root is recorded here for grounding@ to cite when it is next published |
+| 4 | evaluating standard uncertainty: **Type A (statistical) versus Type B (other means, including judgment)** | covered — the provenance split (measured versus asserted) that grounding@'s `provenance` field and the claims record's `where` grading both practise; the root recorded for both |
+| 5 | combined standard uncertainty: **propagation from input quantities, correlated and not** | covered — `a-conditional-finding-grades-its-condition`'s quantitative sibling: a chained result's uncertainty is computed from its inputs', which is what that law demands in words |
+| 6 | expanded uncertainty and **the coverage factor** | covered — the root `trusted_within` gestures at: a tolerance means nothing without its coverage, recorded for grounding@ |
+| 7 | **reporting uncertainty** | covered — roots `an-uncertainty-names-its-components`, minted 2026-08-25: clause 7.1.4's budget demand, with 7.1.2's keep-references-consistent as the drift clause |
+| 8 | summary of procedure | set aside — a recap of 4–7 |
+| A | the CIPM recommendations the GUM implements | set aside — provenance of the method |
+| B, C | metrological and statistical terms | set aside — the vocabulary lane's subject (VIM is the fuller form, unread) |
+| D | "true" value, error, and uncertainty | covered as doctrine — with chapter 3 |
+| E | motivation for Recommendation INC-1: "safe", "random", and "systematic"; **the case against deliberately pessimistic uncertainties** | covered — `low-confidence-is-reserved-and-explained`'s metrology twin: padding an uncertainty to be safe is the same defect as routine lowballing, and the annex argues it at length |
+| F, G | practical guidance on components; degrees of freedom and confidence levels | set aside — method detail |
+| H, J | worked examples; glossary of symbols | set aside |
+| bibliography | — | set aside |
+
+**Counted: 19 rows — 6 covered, 13 set aside, 0 owed after the mint.** Three roots recorded for grounding@ (error-versus-uncertainty, Type A/B provenance, coverage), to be cited there when that package is next published; recording them here rather than editing another repository mid-census is the boundary, stated.
+
+# Census: TOP Guidelines, read whole (2026-08-25)
+
+**The source moved while it sat on the shortlist**: the entry promised the 2015 paper's eight standards, and the Center for Open Science's live framework is **TOP 2025 — seven Research Practices, three implementation levels, plus verification practices** — reorganised from the eight. The census reads the live framework from cos.io and records the reorganisation instead of censusing the version that no longer governs; the 2015 paper stays citable as history.
+
+| row | what it states | status |
+|---|---|---|
+| Study Registration | the study is registered, discoverably, before it runs | covered — `a-protocol-is-an-artifact-before-the-run` |
+| Study Protocol | the protocol exists and is accessible | covered — the same law; SPIRIT is the protocol's own standard |
+| Analysis Plan | the analysis is planned before the data | covered — `prespecified-is-distinguished-from-exploratory` and the artifact law |
+| Materials Transparency | materials shared and cited from trusted repositories | covered — `a-check-is-stated-to-replication`; the estate's materials are the repo |
+| Analysis Code Transparency | code shared and cited | covered — the check IS code in the repo |
+| Data Transparency | data shared and cited | covered — tapes, claims and censuses are committed; the citation half is `a-law-cites-a-source`'s ground |
+| Reporting Transparency | reporting follows the relevant standard | covered — the measurement protocol, which is STARD-CONSORT-SPIRIT censused into fields |
+| Levels 1–3: **disclosed < shared-and-cited < independently certified** | the ladder itself | covered as a shape — the published form of how a rule hardens: the demoted word lists report (level 1), the deciders require (level 2), and nothing here certifies independently (level 3 is the estate's recorded ceiling, unclaimed) |
+| Verification practices (results transparency, computational reproducibility; verification studies) | independent re-execution | covered in vocabulary — the agreement dimension's "independent judges concur"; no law requires a second runner, and the calibration scales cap an unreplicated figure at medium agreement rather than demanding more |
+
+**Counted: 9 rows — 9 covered, 0 owed, 0 set aside.** The whole framework corroborates laws already minted, which is the right result for the last source on a shortlist that the earlier censuses drove: by the fourteenth source a new demand should be rare — and the one thing TOP adds that nothing here claims, level-3 independent certification, is recorded as the estate's stated ceiling rather than silently absorbed.

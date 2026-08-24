@@ -68,6 +68,10 @@ SPIRIT = ("Chan et al., SPIRIT 2025 statement: updated guideline for protocols o
           "randomised trials, PLOS Medicine 2025;22:e1004589")
 SPIRIT_URL = "https://doi.org/10.1371/journal.pmed.1004589"
 
+GUM = ("JCGM 100:2008, Evaluation of measurement data - Guide to the expression "
+       "of uncertainty in measurement (BIPM)")
+GUM_URL = "https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf"
+
 
 def _agans(rule: str) -> Quantity:
     return Quantity(value=1, unit="law", provenance="cited", grounded=True,
@@ -1112,6 +1116,38 @@ PRACTICE = [
              "the history, not against sincerity. The decider route exists the day "
              "somebody wants it: a protocol filed in the claims record before the "
              "run, referenced by the measurement after it.",
+    ),
+    # --- the GUM census, 2026-08-25: metrology's reporting clause, one owed row.
+    _law(
+        "an-uncertainty-names-its-components",
+        "A stated uncertainty lists what contributes to it and how each contribution "
+        "was evaluated — a single error bar with no budget behind it is a number "
+        "about a number",
+        _cited("JCGM 100 (the GUM), clause 7.1.4"),
+        falsifier="A figure carrying one aggregate uncertainty where the components — "
+                  "sampling, instrument, reader, environment — are neither listed nor "
+                  "evaluated, so nobody can tell which contribution dominates or "
+                  "re-evaluate any of them.",
+        triggers=["a figure is reported with an uncertainty, tolerance or error bar"],
+        citations=[(GUM + ", clause 7.1.4", GUM_URL,
+                    "when reporting the result of a measurement and its uncertainty, "
+                    "it is preferable to err on the side of providing too much "
+                    "information rather than too little. For example, one should ... "
+                    "b) list all uncertainty components and document fully how they "
+                    "were evaluated; c) present the data analysis in such a way that "
+                    "each of its important steps can be readily followed and the "
+                    "calculation of the reported result can be independently repeated"),
+                   (GUM + ", clause 7.1.2", GUM_URL,
+                    "it is imperative that these publications be kept up-to-date so "
+                    "that they are consistent with the measurement procedure actually "
+                    "in use")],
+        note="The root grounding@'s tolerance has gestured at without naming: a "
+             "Quantity carries one tolerance today, and the GUM says the honest form "
+             "is the budget — the components, each evaluated, so the dominant one is "
+             "visible and each is re-checkable. The second citation is the drift "
+             "clause: a referenced procedure stays consistent with the procedure "
+             "actually in use, which is the witness-and-walk doctrine stated by "
+             "metrology in 2008.",
     ),
 ]
 

@@ -98,11 +98,12 @@ CENSUS: dict[str, tuple[str, str, str]] = {
     "14": ("set aside", "Methods for estimating or comparing measures of diagnostic "
            "accuracy",
            "statistical machinery for a paper; a check's arithmetic is its code"),
-    "15": ("owed", "How indeterminate index test or reference standard results were "
-           "handled",
-           "what a decider does when it cannot decide. The convention here is convict "
-           "with certainty or stay silent, and silence is indistinguishable from a clean "
-           "corpus unless the report says how much it could not judge"),
+    "15": ("covered", "How indeterminate index test or reference standard results "
+           "were handled",
+           "a-check-reports-what-it-could-not-judge, minted 2026-08-24 from this "
+           "item. The convention here was convict with certainty or stay silent, "
+           "and silence is indistinguishable from a clean corpus until the report "
+           "says how much went untested and why"),
     "16": ("owed", "How missing data on the index test and reference standard were "
            "handled",
            "harness.check reports an unreadable ledger as UNKNOWN rather than gone, "

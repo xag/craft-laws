@@ -454,6 +454,52 @@ PRACTICE = [
              "convicts most of what it can reach has found a missing input and not a "
              "defect.",
     ),
+    # --- earned 2026-08-23/24, twice in one week, by a lane that reported clean over text
+    # --- it had never read. Rooted in the same source as the rate law and its neighbouring
+    # --- item: STARD asks what happened to the results a test could not call, because
+    # --- ignoring them biases the estimate whenever they are not a random slice.
+    _law(
+        "a-check-reports-what-it-could-not-judge",
+        "A check reports how much of its input it did not examine, and why, beside what "
+        "it found",
+        _cited("STARD 2015, item 15: how indeterminate results were handled, reported "
+               "with their frequencies and their reasons"),
+        falsifier="A report of findings from a check that left part of its input "
+                  "unexamined without saying how much. Countable: the units its "
+                  "reading of the input produced, against the units it actually "
+                  "tested.",
+        triggers=["a check reports findings over a corpus",
+                  "a report of no findings is made"],
+        citations=[(STARD, STARD_URL,
+                    "authors are encouraged to always report the respective frequencies "
+                    "with reasons, as well as failures to complete the testing "
+                    "procedure ... Ignoring indeterminate test results can produce "
+                    "biased estimates of accuracy, if these results do not occur at "
+                    "random")],
+        sightings=[
+            ("the prose lane, 2026-08-23",
+             "The non-prose test matched any line beginning with an asterisk, so every "
+             "paragraph opening in bold left the lane untested - eight of "
+             "twenty-nine in one README. The lane reported 'no prose decider convicts'. "
+             "The skipped eight were not a random slice: they were the bold-led ones, "
+             "which is to say the ones carrying the argument, which is the exact "
+             "condition the source names as biasing."),
+            ("an argument reader over five ledgers, 2026-08-23",
+             "project() skips every node kind it does not understand, by design and for "
+             "a good reason - inventing an argument for a node nobody wrote would put "
+             "findings in the report that no ledger asserted. It said so in a docstring "
+             "and never in a report, so a reader saw the findings and not the share of "
+             "the tree they were drawn from."),
+        ],
+        note="Two readings of the same demand, and only the weaker one is bookkeeping. "
+             "The weak reading is a coverage figure beside the findings. The strong one "
+             "is the source's: what a check cannot judge is rarely a random slice of "
+             "what it reads, so the share it skipped predicts the direction of its bias "
+             "and not merely its size. A prose lane that drops bold-led paragraphs drops "
+             "the paragraphs that open arguments; a projection that skips unknown kinds "
+             "skips whatever the vocabulary has not caught up with. The frequency is the "
+             "cheap half and the REASON is the half worth having.",
+    ),
 ]
 
 

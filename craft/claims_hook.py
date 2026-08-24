@@ -60,6 +60,59 @@ def touched(transcript: Path) -> list[Path]:
     return sorted(r / "claims.jsonl" for r in roots if (r / "claims.jsonl").exists())
 
 
+def silent_repos(transcript: Path) -> list[Path]:
+    """The repositories this turn WROTE TO whose claims file the turn never touched.
+
+    The intake debt's diff half, mechanized: the deciders convict filed claims, and
+    until this function nothing saw the turn whose work never reached the record at
+    all — self-report catches the part already noticed. The diff IS data: the same
+    transcript parse that finds the claims files also shows which repositories got
+    writes, and whether any tool call touched their claims.jsonl (a file_path ending
+    in it, or a shell command naming it — claims are filed both ways). A command
+    that names claims.jsonl without naming a repository clears EVERY written repo:
+    under-reporting beats a false alarm, because a noisy informant is one that gets
+    switched off. A repo written-to with its record untouched is not a conviction —
+    a turn may be mid-work — it is the record's reporting bias, measured per turn
+    and said to the author while the sentence can still be fixed."""
+    wrote: set[Path] = set()
+    filed: set[Path] = set()
+    cleared_all = False
+    for line in transcript.read_text(encoding="utf-8",
+                                     errors="replace").splitlines()[-4000:]:
+        try:
+            rec = json.loads(line)
+        except ValueError:
+            continue
+        if rec.get("type") != "assistant":
+            continue
+        for block in (rec.get("message") or {}).get("content") or []:
+            if not isinstance(block, dict) or block.get("type") != "tool_use":
+                continue
+            inp = block.get("input") or {}
+            path = inp.get("file_path")
+            if path:
+                here = Path(str(path)).parent
+                for parent in [here, *here.parents]:
+                    if (parent / ".git").exists():
+                        wrote.add(parent)
+                        if str(path).replace("\\", "/").endswith("claims.jsonl"):
+                            filed.add(parent)
+                        break
+            cmd = str(inp.get("command") or "")
+            if "claims.jsonl" in cmd:
+                named = False
+                norm = cmd.replace("\\", "/")
+                for repo in list(wrote):
+                    if str(repo).replace("\\", "/") in norm or repo.name in cmd:
+                        filed.add(repo)
+                        named = True
+                if not named:
+                    cleared_all = True
+    if cleared_all:
+        return []
+    return sorted(r for r in wrote - filed if (r / "claims.jsonl").exists())
+
+
 def _already_reported(findings) -> bool:
     key = hashlib.sha256(
         "|".join(f"{f.law}{f.where}{f.quote}" for f in findings).encode("utf-8", "replace")
@@ -89,17 +142,42 @@ def report(findings) -> str:
     return "\n".join(lines)
 
 
+def _silence_note(repos: list[Path]) -> str:
+    names = ", ".join(r.name for r in repos)
+    return ("\n".join([
+        f"This turn wrote files in {names} and touched no claims record there.",
+        "If the turn's sentence reports work finished, fixed, diagnosed or a "
+        "workaround, the record is silent exactly where the work happened — "
+        "a-corpus-of-reports-carries-its-reporting-bias, and the conviction "
+        "statistics are drawn only from what gets filed. File the claim, or say "
+        "the work is mid-flight. This is information, not a conviction; nothing "
+        "is refused."]))
+
+
 def main() -> int:
     try:
         payload = json.load(sys.stdin)
         path = payload.get("transcript_path")
         if not path or payload.get("stop_hook_active"):
             return 0
-        from .claims import check_file
+        from .claims import ClaimFinding, check_file
         findings = [f for claims in touched(Path(path)) for f in check_file(claims)]
-        if not findings or _already_reported(findings):
+        silent = silent_repos(Path(path))
+        # the silence rides the same once-per-content throttle as the findings: a
+        # repo the author was told about, and chose to leave silent, is not nagged —
+        # a noisy informant is one that gets switched off
+        notes = []
+        if silent:
+            marker = [ClaimFinding(law="intake-silence", quote="",
+                                   where="|".join(sorted(r.name for r in silent)),
+                                   why="")]
+            if not _already_reported(marker):
+                notes.append(_silence_note(silent))
+        if findings and not _already_reported(findings):
+            notes.insert(0, report(findings))
+        if not notes:
             return 0
-        print(report(findings), file=sys.stderr)
+        print("\n\n".join(notes), file=sys.stderr)
         return 2
     except Exception:
         return 0

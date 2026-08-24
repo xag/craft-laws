@@ -911,9 +911,9 @@ DEBTS = [
         id="the-deciders-run-by-hand",
         kind="debt",
         links={"rests_on": ["the-process-is-ruled-too"]},
-        name="The practice deciders convict a claims file somebody remembered to write and "
-             "run - nothing reads what a turn actually produced, so a defect reaches a record "
-             "before any law is consulted",
+        name="PAID IN ITS DIFF HALF 2026-08-25 - the hook now sees the turn whose work "
+             "reached no record, and the intake rate is measured; the RESPONSE half "
+             "stays open, with both dead attempts recorded",
         payload={
             "what_it_costs":
                 "craft.claims is real and it works, and it can only convict what was chosen "
@@ -922,7 +922,19 @@ DEBTS = [
                 "person reading prose, and both had already reached a durable record - a "
                 "ledger entry, a CI comment, a commit message - by the time they were named. "
                 "Self-report catches the part already noticed, which is the part that needed "
-                "no check.",
+                "no check. "
+                "WHAT IS PAID, 2026-08-25, and what the first measurement said. The diff "
+                "half is code: claims_hook.silent_repos names, at Stop, every repository "
+                "the turn wrote to whose record it never touched - information, not a "
+                "conviction, throttled so it says each silence once. And craft.intake "
+                "measures the bias over git: across twelve repos, the share of working "
+                "commits filing a claim in the same commit runs from zero to about a "
+                "quarter, with most repos near three percent - a floor, since same-turn "
+                "separate-commit filings count as silence, and the first number the "
+                "reporting-bias law ever had. The RESPONSE half - reading the sentence "
+                "itself - stays open, and its two dead attempts stand recorded below as "
+                "the boundary: a word list was wrong seven times in eight, and a model "
+                "per turn cost 33-47 seconds aimed at the wrong substrate.",
             "why_it_is_not_paid":
                 "The cheap version is the wrong one. A check over the turn's own writing has "
                 "to read what was actually produced - the diff AND the response, since the "

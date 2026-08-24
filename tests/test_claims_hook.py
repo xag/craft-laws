@@ -69,3 +69,61 @@ def test_the_finding_goes_to_the_author_and_refuses_nothing():
     assert "done-is-observed-where-the-user-stands" in said
     assert "every item of evidence is producer-side" in said
     assert "Nothing is refused" in said
+
+
+def _transcript_with(tmp_path: Path, rows: list) -> Path:
+    t = tmp_path / "t2.jsonl"
+    t.write_text("\n".join(json.dumps(r) for r in rows), encoding="utf-8")
+    return t
+
+
+def _tool(input_):
+    return {"type": "assistant", "message": {"content": [
+        {"type": "tool_use", "id": "x", "name": "T", "input": input_}]}}
+
+
+def test_a_written_repo_with_an_untouched_record_is_named(tmp_path):
+    repo = tmp_path / "delta"
+    (repo / ".git").mkdir(parents=True)
+    (repo / "claims.jsonl").write_text("", encoding="utf-8")
+    t = _transcript_with(tmp_path, [_tool({"file_path": str(repo / "src.py")})])
+    assert hook.silent_repos(t) == [repo]
+
+
+def test_filing_by_file_path_clears_the_repo(tmp_path):
+    repo = tmp_path / "delta"
+    (repo / ".git").mkdir(parents=True)
+    (repo / "claims.jsonl").write_text("", encoding="utf-8")
+    t = _transcript_with(tmp_path, [
+        _tool({"file_path": str(repo / "src.py")}),
+        _tool({"file_path": str(repo / "claims.jsonl")})])
+    assert hook.silent_repos(t) == []
+
+
+def test_filing_by_shell_command_clears_the_named_repo(tmp_path):
+    repo = tmp_path / "delta"
+    (repo / ".git").mkdir(parents=True)
+    (repo / "claims.jsonl").write_text("", encoding="utf-8")
+    t = _transcript_with(tmp_path, [
+        _tool({"file_path": str(repo / "src.py")}),
+        _tool({"command": f"cd {repo} && python -c \"open('claims.jsonl','a')\""})])
+    assert hook.silent_repos(t) == []
+
+
+def test_an_unattributable_filing_clears_everything(tmp_path):
+    # under-reporting beats a false alarm: a bare mention of the record clears all,
+    # because a noisy informant is one that gets switched off
+    repo = tmp_path / "delta"
+    (repo / ".git").mkdir(parents=True)
+    (repo / "claims.jsonl").write_text("", encoding="utf-8")
+    t = _transcript_with(tmp_path, [
+        _tool({"file_path": str(repo / "src.py")}),
+        _tool({"command": "python - <<PY\nopen('claims.jsonl','a')\nPY"})])
+    assert hook.silent_repos(t) == []
+
+
+def test_a_repo_without_a_record_is_not_nagged_about_one(tmp_path):
+    repo = tmp_path / "epsilon"
+    (repo / ".git").mkdir(parents=True)
+    t = _transcript_with(tmp_path, [_tool({"file_path": str(repo / "src.py")})])
+    assert hook.silent_repos(t) == []

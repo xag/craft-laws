@@ -127,3 +127,47 @@ def test_a_repo_without_a_record_is_not_nagged_about_one(tmp_path):
     (repo / ".git").mkdir(parents=True)
     t = _transcript_with(tmp_path, [_tool({"file_path": str(repo / "src.py")})])
     assert hook.silent_repos(t) == []
+
+
+def test_the_radar_names_the_kind_shape_and_the_sentence():
+    hits = hook.claim_shapes(
+        "The empty card is fixed and the suite is all green. "
+        "You're right that the host never refreshes. "
+        "Coverage sits at 87% now.")
+    kinds = [k for k, _ in hits]
+    assert "fixed" in kinds and "done" in kinds
+    assert "confirmation" in kinds and "measurement" in kinds
+    assert any("empty card is fixed" in s for _, s in hits)
+
+
+def test_the_radar_reports_one_hit_per_kind_and_skips_fenced_code():
+    hits = hook.claim_shapes(
+        "```\nassert done\nfixed = True\n```\nNothing to report yet.")
+    assert hits == []
+    hits = hook.claim_shapes("Fixed the parser. Also fixed the lexer.")
+    assert [k for k, _ in hits] == ["fixed"]
+
+
+def test_a_plain_handback_raises_no_shape():
+    assert hook.claim_shapes(
+        "Reading the transcript now; the next step is the debt entry.") == []
+
+
+def test_the_handback_is_the_final_assistant_text(tmp_path):
+    t = _transcript_with(tmp_path, [
+        {"type": "assistant", "message": {"content": [
+            {"type": "text", "text": "Working on it."}]}},
+        _tool({"file_path": str(tmp_path / "x.py")}),
+        {"type": "assistant", "message": {"content": [
+            {"type": "text", "text": "The card is fixed and deployed."}]}},
+    ])
+    assert hook.handback_text(t) == "The card is fixed and deployed."
+
+
+def test_the_note_quotes_the_shapes_only_when_there_are_some(tmp_path):
+    repo = tmp_path / "zeta"
+    said = hook._silence_note([repo], [("fixed", "The card is fixed.")])
+    assert "fixed-shaped: The card is fixed." in said
+    assert "never a judgment" in said and "nothing is refused" in said
+    bare = hook._silence_note([repo], [])
+    assert "mid-flight" in bare and "shaped" not in bare

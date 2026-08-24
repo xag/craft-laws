@@ -911,9 +911,9 @@ DEBTS = [
         id="the-deciders-run-by-hand",
         kind="debt",
         links={"rests_on": ["the-process-is-ruled-too"]},
-        name="PAID IN ITS DIFF HALF 2026-08-25 - the hook now sees the turn whose work "
-             "reached no record, and the intake rate is measured; the RESPONSE half "
-             "stays open, with both dead attempts recorded",
+        name="PAID 2026-08-25, both halves - the hook sees the turn whose work reached "
+             "no record, reads the handback for claim shapes, and the intake rate is "
+             "measured; conviction stays in code over the filed record",
         payload={
             "what_it_costs":
                 "craft.claims is real and it works, and it can only convict what was chosen "
@@ -931,17 +931,30 @@ DEBTS = [
                 "commits filing a claim in the same commit runs from zero to about a "
                 "quarter, with most repos near three percent - a floor, since same-turn "
                 "separate-commit filings count as silence, and the first number the "
-                "reporting-bias law ever had. The RESPONSE half - reading the sentence "
-                "itself - stays open, and its two dead attempts stand recorded below as "
-                "the boundary: a word list was wrong seven times in eight, and a model "
-                "per turn cost 33-47 seconds aimed at the wrong substrate.",
+                "reporting-bias law ever had. "
+                "THE RESPONSE HALF, paid the same day as the third shape the two dead "
+                "attempts left open: a claim-shape radar over the handback that "
+                "PROPOSES and never judges. The word list that judged prose against a "
+                "law was wrong seven times in eight because word-shapes do not carry "
+                "meaning; the model per turn cost 33-47 seconds on the wrong "
+                "substrate. The radar keeps the words and drops the judging - it fires "
+                "only when the record is already silent where the turn worked, names "
+                "the sentence that wears a claim kind's shape, and asks for the claim "
+                "or a reword; every conviction still happens in code over the filed "
+                "record. Its first calibration, protocoled before the run and filed "
+                "with per-kind rows: 106 caught, 70 false alarms over one session's "
+                "297 handbacks - precise where the shape is a verdict (confirmation, "
+                "measurement), noisy where a verb doubles as a proposal (fixed) - and "
+                "a false positive costs one line of information behind an "
+                "already-earned note, which is the price the design set.",
             "why_it_is_not_paid":
-                "The cheap version is the wrong one. A check over the turn's own writing has "
-                "to read what was actually produced - the diff AND the response, since the "
-                "reasoning appears in the response first and sets in the record afterwards, "
-                "and fail-fast puts the check at the earlier one. Only a mechanized law can "
-                "hold a handback; a reading law can only be reported, and a reading law "
-                "reported as a block is the noise that ends the practice.",
+                "PAID, and the boundary that made it hard is kept, not crossed: only a "
+                "mechanized law holds a handback, and a reading law can only be "
+                "reported. Both halves of the payment are information - the silence "
+                "note and the shape note inform the author while the sentence can "
+                "still be fixed, and nothing blocks on a reading. The check reads "
+                "what the turn actually produced, diff and response both, which is "
+                "what this field always demanded.",
         },
         children=[
             Node(id="discharge-check-the-turn", kind="discharge",

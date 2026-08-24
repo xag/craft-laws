@@ -618,6 +618,66 @@ DECISIONS.append(Node(
 ))
 
 
+DECISIONS.append(Node(
+    id="the-calibration-vocabulary",
+    kind="decision",
+    name="The words that grade a finding are two closed scales, adopted from the IPCC "
+         "note's own summary terms - evidence: limited, medium, robust; agreement: "
+         "low, medium, high - and there is deliberately no confidence scale",
+    payload={
+        "rationale":
+            "calibration-is-agreed-before-the-case demands the grading vocabulary be "
+            "agreed in advance, and on 2026-08-24 the owner said: agree it. The scales "
+            "are paragraph 8's own summary terms, not an invention, with each term "
+            "bound to an observable so a grade is a fact about the record and not a "
+            "mood. EVIDENCE: limited - one source or one run; medium - repeated runs "
+            "or one independent replication; robust - the note's own bar, multiple "
+            "consistent independent lines of high-quality evidence. AGREEMENT: low - "
+            "a named dissent stands; medium - one judge and no dissent; high - "
+            "independent judges concur. Confidence stays what this estate already "
+            "enforces: a finding is stated as fact when the evidence settles it, or "
+            "hedged by a NAMED unknown - the qualifier law's two positions - and "
+            "never graded on a five-term scale.",
+        "consequence":
+            "Three of the tranche's graded laws become code the day this is agreed: "
+            "a term outside these scales convicts under "
+            "calibration-is-agreed-before-the-case, one dimension without the other "
+            "convicts under validity-is-evidence-and-agreement, and a low grade "
+            "without its reason convicts under "
+            "low-confidence-is-reserved-and-explained. The scales are a closed set, "
+            "so widening them is an edit to this decision, made deliberately, never "
+            "a synonym slipped into a claim.",
+    },
+    params={
+        "evidence_strength": Quantity(
+            value=3, unit="term", provenance="cited", grounded=True,
+            source="IPCC AR5 uncertainty guidance, paragraph 8: summary terms "
+                   "'limited,' 'medium,' or 'robust'"),
+        "agreement": Quantity(
+            value=3, unit="term", provenance="cited", grounded=True,
+            source="IPCC AR5 uncertainty guidance, paragraph 8: summary terms "
+                   "'low,' 'medium,' or 'high'"),
+    },
+    children=[
+        Node(id="alt-the-ipcc-confidence-scale", kind="alternative",
+             name="Adopt the note's five-term confidence scale as well",
+             payload={"why": "The census already ruled on it: set aside, because 'the "
+                             "estate's finding is observed or not; a five-term scale "
+                             "would invite invented middles.' That ruling stands - a "
+                             "ruling outlives its turn - and the qualifier law "
+                             "already gives confidence its two honest positions: "
+                             "stated as fact, or hedged by a named unknown."}),
+        Node(id="alt-counted-agreement", kind="alternative",
+             name="Record agreement as counts of judges and dissents instead of terms",
+             payload={"why": "More precise on paper and ceremony in practice: the "
+                             "judges of a finding are rarely enumerable (a suite, a "
+                             "person, a replay), and a count field nobody can fill "
+                             "honestly is worse than a term bound to an observable. "
+                             "The observables are in the definitions instead: a named "
+                             "dissent, one judge, independent concurrence."}),
+    ],
+))
+
 DEBTS = [
     Node(
         id="triggers-are-prose-so-applicability-cannot-be-computed",

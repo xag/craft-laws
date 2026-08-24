@@ -273,10 +273,55 @@ def check_measurements_state_their_protocol(name: str, claims: list[dict]
     return out
 
 
+# The calibration vocabulary, agreed 2026-08-24 (the-calibration-vocabulary in the
+# ledger): two closed scales from the IPCC note's paragraph 8, and no confidence scale
+# on purpose. A grade is optional on any claim; a claim that grades itself does it in
+# these words, states both dimensions, and explains its low end. Closed means closed:
+# widening a scale is an edit to the decision, never a synonym slipped into a claim.
+EVIDENCE_STRENGTH = ("limited", "medium", "robust")
+AGREEMENT = ("low", "medium", "high")
+
+
+def check_grades_are_calibrated(name: str, claims: list[dict]) -> list[ClaimFinding]:
+    """Three graded laws in one pass over the agreed scales: a term outside them, one
+    dimension without the other, and a low end without its reason."""
+    out = []
+    for i, c in enumerate(claims):
+        ev, ag = c.get("evidence_strength"), c.get("agreement")
+        if ev is None and ag is None:
+            continue
+        where, quote = f"{name}#{i + 1}", str(c.get("text", ""))[:120]
+        if ev is not None and ev not in EVIDENCE_STRENGTH:
+            out.append(ClaimFinding(_law("calibration-is-agreed-before-the-case"),
+                                    where, quote,
+                                    f"evidence_strength {ev!r} is no term of the "
+                                    f"agreed scale {EVIDENCE_STRENGTH} — an improvised "
+                                    "grade, which is what the agreed vocabulary "
+                                    "exists to end"))
+        if ag is not None and ag not in AGREEMENT:
+            out.append(ClaimFinding(_law("calibration-is-agreed-before-the-case"),
+                                    where, quote,
+                                    f"agreement {ag!r} is no term of the agreed scale "
+                                    f"{AGREEMENT}"))
+        if (ev is None) != (ag is None):
+            out.append(ClaimFinding(_law("validity-is-evidence-and-agreement"),
+                                    where, quote,
+                                    "one dimension is graded and the other is not — "
+                                    "evidence with no word on agreement, or the "
+                                    "reverse, is half a validity"))
+        if (ev == "limited" or ag == "low") and not str(c.get("why_low") or "").strip():
+            out.append(ClaimFinding(_law("low-confidence-is-reserved-and-explained"),
+                                    where, quote,
+                                    "the low end of a scale with no stated reason — "
+                                    "low grades are reserved for areas of real "
+                                    "concern and carry why_low"))
+    return out
+
+
 CHECKS = (check_done_is_observed, check_fixed_reproduced_first,
           check_one_candidate_per_fix, check_theories_carry_observations,
           check_detours_say_so, check_confirmations_carry_their_account,
-          check_measurements_state_their_protocol)
+          check_measurements_state_their_protocol, check_grades_are_calibrated)
 
 
 def check_file(path: Path) -> list[ClaimFinding]:
@@ -307,6 +352,12 @@ def _alarm() -> int:
         {"kind": "confirmation", "text": "you are right, the tests are irrelevant"},
         {"kind": "measurement", "text": "the checker is accurate",
          "corpus": "twenty transcripts", "caught": 18},
+        {"kind": "diagnosis", "text": "graded with an improvised word",
+         "evidence_strength": "overwhelming"},
+        {"kind": "diagnosis", "text": "half a validity",
+         "evidence_strength": "robust"},
+        {"kind": "diagnosis", "text": "low with no reason",
+         "evidence_strength": "limited", "agreement": "low"},
     ]
     clean = [
         {"kind": "done", "text": "the sheet renders on the phone",
@@ -322,6 +373,9 @@ def _alarm() -> int:
          "still_broken": "the MCP card until the host refreshes"},
         {"kind": "confirmation", "text": "the suite already gates itself correctly",
          "checked": "ran npm test with credentials stripped: 87 tests, 6.4s, 2 skipped"},
+        {"kind": "diagnosis", "text": "a finding graded on the agreed scales",
+         "evidence_strength": "limited", "agreement": "high",
+         "why_low": "one run only; the suite has not been re-run on another machine"},
         {"kind": "measurement", "text": "the three word lists over the estate's docs",
          "corpus": "87 markdown files across the estate, exhaustive glob",
          "size_declared_before": True, "prespecified": True,

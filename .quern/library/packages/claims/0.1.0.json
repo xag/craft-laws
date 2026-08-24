@@ -1,0 +1,231 @@
+{
+  "name": "claims",
+  "version": "0.1.0",
+  "description": "A session's assertions as data: six claim kinds, graded evidence, the measurement protocol and the agreed calibration scales — the record the practice laws fire on, published so the vocabulary is versioned and visible instead of accumulating silently in code. The deciders stay code in the repository that owns the laws; this is the meaning they implement.",
+  "publisher": "xag",
+  "requires": [],
+  "vocabulary": [
+    {
+      "kind": "done",
+      "description": "Work reported finished. Carries `text` (the claim, one utterance about one state of the world) and evidence children. The law it answers to: done is observed where the user stands, so evidence that is all producer-side does not close it, and a stand-in closes it only with a named gap. Optional grade facts on any claim kind: `evidence_strength` (limited | medium | robust) and `agreement` (low | medium | high) — the calibration vocabulary agreed 2026-08-24 and recorded at the-calibration-vocabulary in this repository's ledger; both dimensions or neither, and the low end carries `why_low`. The scales are closed: widening one is an edit to that decision, never a synonym in a record.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "fixed",
+      "description": "A defect reported repaired. Carries `text`, `reproduced_first` (the run that showed the failure before the change — without it the fix is a theory wearing a verb), `changes` (ONE candidate; two candidates on one claim mean the outcome names no cause), and evidence like a done-claim.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "diagnosis",
+      "description": "A cause reported identified. Carries `text`, `prior_theories` (how many explanations preceded this one) and `new_observation` (the signal separating this theory from the last — required whenever prior_theories is nonzero, because two explanations with no new observation between them is guessing). A diagnosis of a law going red also carries the `red` record: check, culprit, tool_named, session.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "detour",
+      "description": "A report resolved by a different route. Carries `text` and `still_broken` — what remains wrong. A detour that does not name what stays broken is a fix-claim in costume.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "confirmation",
+      "description": "An agreement filed as a claim: you are right, the premise holds, that is the cause. Carries `text` and `checked` — what was actually run or read before agreeing. The root is the IPCC note's paragraph 2: a finding is explained by a traceable account, and an agreement is a finding at the highest confidence there is. An unchecked confirmation reads as deference, which is what makes it insidious; assent that rests on nothing is worth nothing when it agrees.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "measurement",
+      "description": "An accuracy, coverage, hit-rate or calibration figure filed as a claim, carrying STARD 2015's items as fields: `corpus` (how assembled — exhaustive, random, or convenience), `size_declared_before`, `prespecified`, `reference_standard`, `author_knew_answers` and `judge_saw_verdict` (disclosure, not virtue — false passes, silence convicts), `caught`, `false_alarms`, and `misses` (the cross-tabulation's other row; 'unmeasured: why' is an honest value and absence is the breach). Corroborated blind by CONSORT 2025, STROBE and ARRIVE, and by Model Cards and Datasheets for Datasets, all censused 2026-08-24; the one demand those add that this kind cannot yet say — per-factor disaggregation of results — is the kind's recorded gap, not a silent one.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    },
+    {
+      "kind": "evidence",
+      "description": "One observation offered for a claim. Carries `where` — user-surface (the thing the user touches was observed), stand-in (a faithful reconstruction, honest only with a `gap` naming what it cannot show), or producer (tests, deploys, logs — necessary, never sufficient for a done-claim alone) — and `what`, the observation in enough detail to be checked again. In the JSONL wire format evidence rides as a list under the claim; as a tree it is the claim's children, which is what the rules below read.",
+      "params": {},
+      "links": {},
+      "operations": {}
+    }
+  ],
+  "rules": [
+    {
+      "name": "a-done-claim-carries-evidence",
+      "expr": "len(nodes('evidence', self)) >= 1",
+      "description": "A done-claim with no evidence at all is an assertion nobody could stand behind. WHICH evidence suffices is the deciders' question, answered in code where payload can be read; that a claim carries some is the structural floor, and it is all a tree rule can honestly check.",
+      "kind": "done"
+    },
+    {
+      "name": "a-fixed-claim-carries-evidence",
+      "expr": "len(nodes('evidence', self)) >= 1",
+      "description": "The same floor for a fix: something was observed, or nothing supports the verb.",
+      "kind": "fixed"
+    }
+  ],
+  "solvers": [],
+  "examples": [
+    {
+      "id": "an-example-done",
+      "kind": "done",
+      "name": "An example: work reported finished, with the observation that closes it",
+      "params": {},
+      "links": {},
+      "meta": {},
+      "payload": {
+        "text": "the sheet renders on the phone"
+      },
+      "children": [
+        {
+          "id": "an-example-done-evidence",
+          "kind": "evidence",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "where": "user-surface",
+            "what": "beacon self-fetched; four card reports after"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "an-example-fixed",
+      "kind": "fixed",
+      "name": "An example: a fix, reproduced first, one candidate, gap named",
+      "params": {},
+      "links": {},
+      "meta": {},
+      "payload": {
+        "text": "the empty card",
+        "reproduced_first": true,
+        "changes": [
+          "self-fetch on missing payload"
+        ]
+      },
+      "children": [
+        {
+          "id": "an-example-fixed-evidence",
+          "kind": "evidence",
+          "name": "",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "where": "stand-in",
+            "what": "NO_PAYLOAD harness green",
+            "gap": "the phone itself not observed"
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "an-example-diagnosis",
+      "kind": "diagnosis",
+      "name": "An example: a cause, with the observation that separates it",
+      "params": {},
+      "links": {},
+      "meta": {},
+      "payload": {
+        "text": "the host never pushes tool results",
+        "prior_theories": 4,
+        "new_observation": "beacon: after-initialized then no-payload"
+      },
+      "children": []
+    },
+    {
+      "id": "an-example-detour",
+      "kind": "detour",
+      "name": "An example: a workaround that says what stays broken",
+      "params": {},
+      "links": {},
+      "meta": {},
+      "payload": {
+        "text": "judge on /deck meanwhile",
+        "still_broken": "the MCP card until the host refreshes"
+      },
+      "children": []
+    },
+    {
+      "id": "an-example-confirmation",
+      "kind": "confirmation",
+      "name": "An example: an agreement with its traceable account",
+      "params": {},
+      "links": {},
+      "meta": {},
+      "payload": {
+        "text": "the suite already gates itself correctly",
+        "checked": "ran the tests with credentials stripped: 87 tests, 6.4s, 2 skipped"
+      },
+      "children": []
+    },
+    {
+      "id": "an-example-measurement",
+      "kind": "measurement",
+      "name": "An example: a figure with its whole protocol",
+      "params": {},
+      "links": {},
+      "meta": {},
+      "payload": {
+        "text": "the three word lists over the estate's docs",
+        "corpus": "87 markdown files, exhaustive glob",
+        "size_declared_before": true,
+        "prespecified": true,
+        "reference_standard": "a person reading every hit in its paragraph",
+        "author_knew_answers": true,
+        "judge_saw_verdict": true,
+        "caught": 3,
+        "false_alarms": 2,
+        "misses": "unmeasured: files with no hits were not sampled"
+      },
+      "children": []
+    }
+  ],
+  "counter_examples": [
+    {
+      "rule": "a-done-claim-carries-evidence",
+      "nodes": [
+        {
+          "id": "just-done",
+          "kind": "done",
+          "name": "Deployed and verified",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "text": "it works now"
+          },
+          "children": []
+        }
+      ],
+      "because": "done with nothing observed at all — the fifteen-times failure in its purest form, an assertion with no observation anywhere under it"
+    },
+    {
+      "rule": "a-fixed-claim-carries-evidence",
+      "nodes": [
+        {
+          "id": "just-fixed",
+          "kind": "fixed",
+          "name": "Fixed the empty card",
+          "params": {},
+          "links": {},
+          "meta": {},
+          "payload": {
+            "text": "the empty card"
+          },
+          "children": []
+        }
+      ],
+      "because": "a fix nobody watched fail or pass — the change is real, the claim about it rests on nothing"
+    }
+  ]
+}

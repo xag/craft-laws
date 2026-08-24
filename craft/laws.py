@@ -49,6 +49,10 @@ def _law(law_id, name, authority, *, falsifier, triggers, citations=(), sighting
 NNG = "Nielsen Norman Group, 10 Usability Heuristics for User Interface Design"
 NNG_URL = "https://www.nngroup.com/articles/ten-usability-heuristics/"
 
+FEDPL = ("Federal Plain Language Guidelines, March 2011, Rev. 1 May 2011 "
+         "(Plain Writing Act of 2010)")
+FEDPL_URL = "https://www.archive.org/details/FederalPLGuidelines"
+
 LAWS = [
 
     # --- language and vocabulary ------------------------------------------------
@@ -1776,6 +1780,83 @@ LAWS = [
              "beside ellipsis-promises-more-input.",
     ),
 
+    # --- the Federal Plain Language census, 2026-08-24: the five rows the source
+    # --- states as observables, each quoting the document fetched this day. All five
+    # --- are radar material under a-word-list-is-a-reading-not-a-mechanization: they
+    # --- report, they never hold a handback.
+    _law(
+        "a-verb-travels-as-a-verb",
+        "An action is written as its verb, never buried in a noun that needs a "
+        "weaker verb to carry it",
+        _cited("Federal Plain Language Guidelines, III.a.1.iii"),
+        falsifier="A hidden verb: the action nominalized and towed by make, do, "
+                  "conduct, provide or perform — 'make an application' where 'apply' "
+                  "exists.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        citations=[(FEDPL + " — Avoid hidden verbs", FEDPL_URL,
+                    "Use the strongest, most direct form of the verb possible. ... "
+                    "Too often, we hide verbs by turning them into nouns, making "
+                    "them less effective and using more words than we need.")],
+    ),
+    _law(
+        "must-marks-a-requirement",
+        "A requirement says must; shall is left to the legal style it came from",
+        _cited("Federal Plain Language Guidelines, III.a.1.iv"),
+        falsifier="'Shall' carrying a requirement in documentation — a word whose "
+                  "obligation a reader cannot tell from its prediction.",
+        triggers=["documentation states requirements"],
+        citations=[(FEDPL + " — Use “must” to indicate requirements",
+                    FEDPL_URL,
+                    "The word “must” is the clearest way to convey to "
+                    "your audience that they have to do something. “Shall"
+                    "” is one of those officious and obsolete words that has "
+                    "encumbered legal style writing for many years.")],
+    ),
+    _law(
+        "a-negative-is-not-stacked",
+        "A rule is stated in the positive; negatives are not stacked and exceptions "
+        "do not take exceptions",
+        _cited("Federal Plain Language Guidelines, III.b.3"),
+        falsifier="Two negatives in one clause resolving to a positive, or an "
+                  "exception clause hanging off another exception.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        citations=[(FEDPL + " — Avoid double negatives and exceptions to exceptions",
+                    FEDPL_URL,
+                    "When we write in the negative, we place another stumbling "
+                    "block in audience's way and make it more difficult for them to "
+                    "understand us.")],
+    ),
+    _law(
+        "a-paragraph-opens-with-its-topic",
+        "A paragraph's first sentence says what the paragraph establishes; the "
+        "details follow the point, never precede it",
+        _cited("Federal Plain Language Guidelines, III.c.1"),
+        falsifier="A paragraph whose opening sentence states nothing the rest "
+                  "supports — the reader floods in details before knowing what they "
+                  "are for.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        citations=[(FEDPL + " — Have a topic sentence", FEDPL_URL,
+                    "Establish a context for your audience before you provide them "
+                    "with the details. If you flood readers with details first, "
+                    "they become impatient and may resist hearing your message.")],
+    ),
+    _law(
+        "one-topic-per-paragraph",
+        "Each paragraph carries one topic; the second topic is the next paragraph",
+        _cited("Federal Plain Language Guidelines, III.c.4"),
+        falsifier="A paragraph whose sentences support two topics a reader would "
+                  "not summarise in one line.",
+        triggers=["the project ships documentation meant to be read long after it "
+                  "is written (a README, a guide, a reference)"],
+        citations=[(FEDPL + " — Cover only one topic in each paragraph", FEDPL_URL,
+                    "Limit each paragraph or section to one topic to make it easier "
+                    "for your audience to understand your information. Each "
+                    "paragraph should start with a topic sentence that captures the "
+                    "essence of everything in the paragraph.")],
+    ),
 ]
 
 # What the laws are allowed to travel through. Ungrounded authority — an uncited law — will not

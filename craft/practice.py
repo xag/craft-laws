@@ -48,6 +48,18 @@ STARD = ("Cohen et al., STARD 2015 guidelines for reporting diagnostic accuracy 
          "studies: explanation and elaboration, BMJ Open 6:e012799, item 19")
 STARD_URL = "https://doi.org/10.1136/bmjopen-2016-012799"
 
+CONSORT = ("CONSORT 2025 statement: updated guideline for reporting randomised "
+           "trials, BMJ 2025;388:e081123")
+CONSORT_URL = "https://doi.org/10.1136/bmj-2024-081123"
+
+ARRIVE = ("Percie du Sert et al., The ARRIVE guidelines 2.0: updated guidelines "
+          "for reporting animal research, PLOS Biology 2020")
+ARRIVE_URL = "https://doi.org/10.1371/journal.pbio.3000410"
+
+TK1974 = ("Tversky & Kahneman, Judgment under Uncertainty: Heuristics and "
+          "Biases, Science 185:1124-1131, 1974")
+TK1974_URL = "https://doi.org/10.1126/science.185.4157.1124"
+
 
 def _agans(rule: str) -> Quantity:
     return Quantity(value=1, unit="law", provenance="cited", grounded=True,
@@ -947,6 +959,71 @@ PRACTICE = [
              "asserted work withdrawn as wrong. The owner brought in a fresh reader "
              "for the review, and the misclassification was the first thing the "
              "fresh reading found.")],
+    ),
+    # --- the remaining-sources censuses, 2026-08-24: the three practice rows that
+    # --- were owed across CONSORT, ARRIVE and Tversky-Kahneman, each quoting the
+    # --- source text fetched this day.
+    _law(
+        "a-null-is-stated-not-implied",
+        "A report states its empty sets in words — no exclusions, no criteria, no "
+        "confounders controlled — and never leaves absence to be inferred from "
+        "silence",
+        _cited("ARRIVE 2.0, Essential 10 item 3"),
+        falsifier="A report enumerating what was found, excluded or controlled that "
+                  "is silent about a set that is empty — so a reader cannot tell an "
+                  "empty set from an unexamined one.",
+        triggers=["a report enumerates findings, exclusions or controls"],
+        citations=[(ARRIVE + ", item 3", ARRIVE_URL,
+                    "If no criteria were set, state this explicitly. ... If there "
+                    "were no exclusions, state so."),
+                   (ARRIVE + ", item 4", ARRIVE_URL,
+                    "If confounders were not controlled, state this explicitly.")],
+        sightings=[
+            ("this estate's own reports, 2026-08-24",
+             "The prose lane reported 'no prose decider convicts' over paragraphs it "
+             "had never read, and the argument reader skipped node kinds silently "
+             "for a day - both fixed this week by making the report say what went "
+             "unexamined, which is this law obeyed before it was found stated.")],
+    ),
+    _law(
+        "a-stopped-run-says-why",
+        "A run that ends early — stopped, interrupted, abandoned — reports that it "
+        "did and why, because a result from a stopped run is a different kind of "
+        "result",
+        _cited("CONSORT 2025, items 16b and 23b"),
+        falsifier="A figure or verdict from a run that did not complete, reported "
+                  "without saying the run was stopped or why — a peek dressed as a "
+                  "measurement.",
+        triggers=["a run, sweep or calibration ends before its declared corpus is "
+                  "exhausted"],
+        citations=[(CONSORT + ", item 16b", CONSORT_URL,
+                    "Explanation of any interim analyses and stopping guidelines"),
+                   (CONSORT + ", item 23b", CONSORT_URL,
+                    "If relevant, why the trial ended or was stopped")],
+        note="Stopping on a peek is the tuning defect in disguise: the moment chosen "
+             "to stop selects the result. The trial standards demand the stopping "
+             "rule in advance and the reason after, and both halves transfer whole.",
+    ),
+    _law(
+        "regression-is-the-null-after-an-extreme",
+        "An improvement measured after selecting on an extreme is regression to the "
+        "mean until something rules that out — the fix that follows the worst day "
+        "gets credit it has not earned",
+        _cited("Tversky & Kahneman 1974, misconceptions of regression"),
+        falsifier="A change credited for an improvement in a metric that was "
+                  "selected for intervention BECAUSE it was at an extreme, with no "
+                  "control for regression — observable wherever the trigger for "
+                  "acting was the bad reading itself.",
+        triggers=["a change is credited for improving the metric that triggered it"],
+        citations=[(TK1974, TK1974_URL,
+                    "misconceptions of regression"),
+                   (TK1974 + " (the mechanism)", TK1974_URL,
+                    "regression toward the mean")],
+        note="The citation quotes the paper's own section heads; the worked example "
+             "there is flight instructors concluding that punishment works because "
+             "performance improved after it - the improvement was regression. The "
+             "practice form: the failing check fixed on its worst day, the flaky "
+             "test stabilised right after the retry was added.",
     ),
 ]
 

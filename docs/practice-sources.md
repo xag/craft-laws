@@ -11,13 +11,13 @@ One difference from the interface catalogue is worth stating up front. There is 
 3. **Parnas, "On the Criteria To Be Used in Decomposing Systems into Modules"** (*Communications of the ACM* 15(12), 1053–1058, 1972) — the foundational statement of where a thing belongs: decompose by the design decisions each part hides, never by the steps of processing. Freely available, quotable, and it gives an observable criterion rather than a principle. **Censused below.** https://www.win.tue.nl/~wstomv/edu/2ip30/references/criteria_for_modularization.pdf
 4. **Agans, *Debugging: The 9 Indispensable Rules*** (2002) — the root of nine practice laws; nine rules, each a command with an observable breach. Copyrighted, so cite the rule name and quote briefly. **Censused whole:** `python -m craft.census_agans`, from the author's own chapter-2 PDF; the census checks its law ids against practice.py, so a renamed law breaks it rather than silently orphaning a rule.
 5. **STARD 2015** (Cohen et al., *BMJ Open* 2016;6:e012799; checklist hosted by the EQUATOR Network) — 30 numbered items, 34 rows, stating what a report of a diagnostic accuracy study must contain. A reporting standard for measurement claims, from a community that had to make them auditable because careers rest on them, and unusually falsifiable: each item is either present in a report or it is not. Already the root of `a-rate-names-the-population-it-was-computed-over`. **Censused whole:** `python -m craft.census_stard`. https://doi.org/10.1136/bmjopen-2016-012799
-6. **Federal plain language guidelines** (Plain Writing Act 2010; canonical pages now under digital.gov) — statutory, public domain, sentence-level and checkable. Already source #10 of the interface catalogue; the practice family needs the parts about writing for a reader who is not you.
-7. **ISO/IEC/IEEE 15289 and 26515** — what a work product must contain to be a record rather than a note. Paywalled: cite clause numbers, quote briefly.
-8. **CONSORT / ARRIVE / STROBE reporting checklists** — the strongest available model for "a claim carries what it rests on", each item numbered and each breach observable in a manuscript. Free, widely adopted, and about reporting rather than about our subject matter, so they transfer by analogy and must be cited as such.
-9. **Kahneman, Slovic & Tversky and successors on overconfidence and anchoring** — published empirical research, the root beneath IPCC paragraph 3. Principle-shaped; cite for the finding, never for a rule.
-10. **NASA/ESA anomaly-reporting standards and the Swiss-cheese/HFACS literature** — the root for "instrument before the second theory" if one exists outside Agans. Not yet read.
-11. **GOV.UK Service Manual** — "do the hard work to make it simple" and the service-assessment criteria; already the ancestor of much of the interface catalogue, and the plausible root for the laws about spending someone else's attention. Principle-shaped; the design system's numbered patterns are the falsifiable part.
-12. **Model Cards for Model Reporting** (Mitchell et al., FAT* 2019) and **Datasheets for Datasets** (Gebru et al., CACM 2021) — the ML community's answer to the same question STARD answers for medicine: what a report of an evaluation must state (evaluation data and its collection, metrics, caveats; a datasheet's collection-process section is `a-corpus-names-its-assembly` in another field's words). **Not yet read.** Flagged when the measurement claim kind was built from STARD alone (2026-08-24) and the owner asked whether a protocol was being reinvented: the field list is STARD's, but these two may state the same demands closer to this estate's subject, and a census could strengthen or re-root the six laws. Do not cite until the papers are in hand.
+6. **Federal plain language guidelines** (Plain Writing Act 2010; the official March 2011 document, Rev. 1, fetched from the Internet Archive after plainlanguage.gov folded into digital.gov) — statutory, public domain, sentence-level and checkable. **Censused below.**
+7. **ISO/IEC/IEEE 15289 and 26515** — what a work product must contain to be a record rather than a note. Paywalled: cite clause numbers, quote briefly. **Census blocked, stated rather than glossed:** the text is not in hand and a census from summaries is how fabrication starts; this row stays unread until somebody buys the standard or finds a lawful copy.
+8. **CONSORT / ARRIVE / STROBE reporting checklists** — the strongest available model for "a claim carries what it rests on". **All three censused below** (CONSORT 2025's 41 rows, STROBE's 34, ARRIVE's Essential 10; ARRIVE's Recommended Set is recorded as a second sitting). The finding is corroboration: the STARD-rooted measurement laws are independently demanded by all three, and the only new demands were the stopped-early row and the null-statement rule that became `a-null-is-stated-not-implied`.
+9. **Tversky & Kahneman 1974, "Judgment under Uncertainty"** (*Science* 185:1124–1131) — the empirical root beneath several laws, exactly as this row predicted. **Censused below** from a full-text mirror: 3 heuristics, 13 biases, 8 rooting laws, 3 roots waiting. Principle-shaped; cite for the finding, never for a rule.
+10. **NASA/ESA anomaly-reporting standards and the Swiss-cheese/HFACS literature** — this row existed as "the root for instrument-before-the-second-theory if one exists outside Agans", and its purpose is served: Agans is censused whole and roots it directly. Downgraded to optional; no census, and the reason is recorded here rather than left to look like an oversight.
+11. **GOV.UK Service Manual** — the Service Standard's **14 points censused below**; the practice-shaped points were already covered and the rest are the interface catalogue's ancestry, confirmed.
+12. **Model Cards for Model Reporting** (Mitchell et al., FAT* 2019) and **Datasheets for Datasets** (Gebru et al., CACM 2021) — **read and censused below**, closing the reinvention question with the papers instead of a flag: the measurement kind's fields are independently demanded by both, and the one demand they add (per-factor disaggregation) is recorded as the kind's known gap.
 
 Excluded despite fame, with reasons: **Clean Code / SOLID / most engineering-practice books** (assertions without an authority, and their empirical support is thin or contested); **Agile manifesto and derivatives** (values, not rules — nothing observable); **Google's SRE book** (excellent and specific to running services, not to claiming work done; CC BY-NC-ND).
 
@@ -116,3 +116,173 @@ The analogy the census applies throughout, stated once: a diagnostic accuracy st
 - **Items 5, 12a** (pre-specified versus exploratory) ask whether a threshold was set before or after seeing what it caught. The six-word bound on a run-in heading was set after.
 
 Two more are uncomfortable and worth keeping uncomfortable. **Item 13a** asks whether the reader of the index test was blinded: the alarm corpora in this package are written by the same hand as the deciders they exercise. **Item 13b** asks the same of the assessor: the adjudicator reads the finding before ruling on it, always, and that is nowhere recorded as a limitation.
+
+
+---
+
+# Census: CONSORT 2025, read whole (2026-08-24)
+
+The current statement (BMJ 2025;388:e081123, open access; the 2010 version's 25 items became 30, with an open-science section). The unit is the checklist's own rows — items with a/b/c splits counted as the table lists them, **41 rows**. Read as the practice family's cross-check on STARD: two reporting standards, censused independently, should demand the same things of a measurement's report — the same corroboration the interface catalogue got from censusing RGAA and WCAG blind.
+
+| rows | what they state | status |
+|---|---|---|
+| 1a, 1b | identification and structured summary | set aside — how a paper announces itself |
+| 2, 3, 4 | registration; where protocol and analysis plan can be accessed; where data, code and materials can be accessed | set aside for the register (the repo is the registry and the protocol is the code) — but row 3's demand is `a-check-is-stated-to-replication`, corroborated |
+| 5a, 5b | funding and conflicts | set aside — no counterpart |
+| 6, 7 | background; specific objectives | covered — the falsifier stated in advance (`a-hypothesis-is-falsifiable`, kill-criterion kinds) |
+| 8 | patient and public involvement | set aside |
+| 9 | trial design and framework | covered — `the-reference-standard-is-named-with-its-rationale`'s ground |
+| 10 | important changes after commencement, **including any outcomes or analyses that were not prespecified, with reason** | covered — `prespecified-is-distinguished-from-exploratory`, corroborated in stronger words than STARD's |
+| 11, 12a, 12b | setting; eligibility | covered — `a-corpus-names-its-assembly`, `a-rate-names-the-population-it-was-computed-over` |
+| 13 | intervention **with sufficient details to allow replication** | covered — `a-check-is-stated-to-replication`, near-verbatim corroboration |
+| 14 | prespecified outcomes with measurement variable, metric, aggregation, time point | covered — the measurement kind's fields are this row's shape |
+| 15, 27 | harms, defined and assessed; all harms in each group | set aside — clinical |
+| 16a | **how sample size was determined, including all assumptions** | covered — `calibration-size-is-declared-before-the-run`, corroborated |
+| 16b | interim analyses and stopping guidelines | owed — nothing here says when a running check may be stopped early, and stopping on a peek is the tuning defect in disguise |
+| 17a, 17b, 18, 19 | randomisation, concealment, implementation | set aside — allocation machinery; the census notes `a-corpus-names-its-assembly` carries the random/convenience half |
+| 20a, 20b | who was blinded, how | covered — `blindness-is-disclosed`, corroborated |
+| 21a, 21b, 21c, 21d | statistical methods; who is in each analysis; **how missing data were handled**; additional analyses, **distinguishing prespecified from post hoc** | covered — `missing-input-is-reported-with-its-handling`, `prespecified-is-distinguished-from-exploratory`, and 21b is the rate law's denominator demand |
+| 22a, 22b | participant flow; losses and exclusions **with reasons** | covered — `a-rate-names-the-population-it-was-computed-over` (STARD's flow diagram, same demand) |
+| 23a, 23b | recruitment dates; why the trial ended or was stopped | 23a set aside; 23b owed with 16b — the stopped-early row |
+| 24a, 24b | intervention as actually administered (fidelity); concomitant care | covered — the drift half: what ran is reported, not what was intended (witness/walk doctrine, corroborated from outside) |
+| 25 | baseline characteristics table | set aside — clinical |
+| 26 | per outcome: **numbers analysed, available data, effect size and its precision** | covered — `a-check-reports-its-misses` and grounding@'s tolerance |
+| 28 | ancillary analyses, prespecified vs post hoc | covered — with 21d |
+| 29 | **interpretation consistent with results, balancing benefits and harms** | covered — `a-qualifier-is-licensed-by-the-evidence`, corroborated |
+| 30 | limitations: bias, imprecision, generalisability | covered — the `gap` field on grounds; `a-remainder-names-its-debt` |
+
+**Counted: 41 rows — 26 covered, 3 owed (16b, 23b as one demand: a stopped run says why; and nothing else), 12 set aside.** The cross-check the census was for: every measurement-protocol law minted from STARD is independently demanded by CONSORT, none contradicted.
+
+# Census: STROBE (observational studies), read whole (2026-08-24)
+
+The combined checklist (cohort, case-control, cross-sectional), **22 items, 34 rows** with splits. Same verdict at every transferable row as CONSORT, so the table records only where it differs; rows not listed are the same demand as the CONSORT row above and carry its status.
+
+| rows | what they state | status |
+|---|---|---|
+| 4–8 | design, setting, participants, variables, measurement | covered — corpus/assembly/reference-standard family |
+| 9 | **efforts to address potential sources of bias** | covered — `structural-unknowns-are-considered`, corroborated |
+| 10 | how the study size was arrived at | covered — `calibration-size-is-declared-before-the-run` |
+| 12(a–e), 13, 16 | statistical methods, missing data, participant numbers | covered — as CONSORT 21/22/26 |
+| 14–15, 17–18 | descriptive/outcome data, other analyses | set aside / covered as CONSORT |
+| 19 | limitations | covered — as CONSORT 30 |
+| 21 | generalisability | covered — the `gap` field |
+| 22 | funding | set aside |
+
+**Counted: 34 rows — no demand found that CONSORT does not make; 0 owed beyond CONSORT's. The corroboration is the finding.**
+
+# Census: ARRIVE 2.0 Essential 10, read whole (2026-08-24)
+
+The author consortium's own PDF. The Essential 10 is the set the guidelines name as the minimum, and the unit here; the Recommended Set exists and is recorded as **not censused** — a second sitting, stated rather than glossed.
+
+| item | what it states | status |
+|---|---|---|
+| 1 | study design: groups compared, **rationale if no control group**, the experimental unit | covered — reference-standard and corpus family |
+| 2 | exact n per group; **how the sample size was decided, a priori calculation if done** | covered — `calibration-size-is-declared-before-the-run` |
+| 3 | inclusion/exclusion criteria, **established a priori; "If no criteria were set, state this explicitly ... If there were no exclusions, state so"** | covered — roots `a-null-is-stated-not-implied`, minted 2026-08-24 from this row |
+| 4 | randomisation and confounder strategy, **"If confounders were not controlled, state this explicitly"** | covered — the same law's second verbatim demand |
+| 5 | who was aware of group allocation at each stage | covered — `blindness-is-disclosed` |
+| 6 | all outcome measures defined; the primary named | covered — reference-standard family |
+| 7 | statistical methods, the unit of analysis | covered — as CONSORT 21 |
+| 8 | experimental animals: species, strain, sex, age/weight | set aside — the subject's biology |
+| 9 | procedures: what, when, where, why | covered — `the-trail-is-written-as-it-happens` |
+| 10 | results: summary statistics **with a measure of variability** | covered — grounding@'s tolerance |
+
+**Counted: 10 items — 9 covered, 1 set aside, 0 owed.** Item 3 is the one row in all three trial standards that states the null-reporting rule outright, which is why the law roots here and not in CONSORT.
+
+# Census: Tversky & Kahneman 1974, read whole (2026-08-24)
+
+*Judgment under Uncertainty: Heuristics and Biases* (Science 185:1124–1131), from a full-text university mirror. The paper's own unit: **three heuristics and the thirteen biases it enumerates under them.** The shortlist's warning holds — this source ROOTS laws and states none, so the census records which law each bias grounds; a row with no law is a root waiting.
+
+| # | bias | status |
+|---|---|---|
+| R1 | insensitivity to prior probability of outcomes | root waiting — base rates; nearest law is the rate law's denominator, not the same thing |
+| R2 | **insensitivity to sample size** | roots `calibration-size-is-declared-before-the-run` (second, empirical root beside STARD 18) |
+| R3 | misconceptions of chance (gambler's fallacy) | recorded in the argument census (Greenwell row) — vocab lane |
+| R4 | insensitivity to predictability | root waiting |
+| R5 | the illusion of validity | roots `blindness-is-disclosed`'s worry: consistency of inputs breeds confidence regardless of accuracy |
+| R6 | **misconceptions of regression** | roots `regression-is-the-null-after-an-extreme`, minted 2026-08-24 from this row |
+| A1 | biases due to the retrievability of instances | roots `an-imagined-plan-is-not-thereby-likely`'s family (availability) |
+| A2 | biases due to the effectiveness of a search set | root waiting |
+| A3 | biases of **imaginability** | roots `an-imagined-plan-is-not-thereby-likely` (second, older root beside Eidelman study 3) |
+| A4 | illusory correlation | argument-lane (Greenwell: correlation family) — vocab lane |
+| An1 | **insufficient adjustment** from an anchor | roots `a-view-moves-on-observation-not-on-company`'s anchoring half (the empirical root beneath IPCC ¶3, exactly as the shortlist predicted) |
+| An2 | biases in the evaluation of **conjunctive and disjunctive events** | roots `a-conditional-finding-grades-its-condition` — chained pins are a conjunctive event, overestimated exactly as the paper says |
+| An3 | anchoring in the assessment of subjective probability distributions | with An1 |
+
+**Counted: 3 heuristics, 13 biases — 8 rooting existing or same-day laws, 2 recorded in the argument lane, 3 roots waiting (R1, R4, A2).** Roots waiting are not owed laws: a bias grounds a rule only when a work-shaped rule can carry a falsifier, and none has been stated for these three.
+
+# Census: Model Cards and Datasheets, read whole (2026-08-24)
+
+The reinvention question's answer, now from the read papers instead of a flag. Model Cards (Mitchell et al., FAT* 2019): **nine sections, 4.1–4.9.** Datasheets for Datasets (Gebru et al.): **seven workflow sections.** Unit: the papers' own section lists.
+
+| section | status |
+|---|---|
+| MC 4.1 Model Details / 4.2 Intended Use | covered — the trigger states where a law applies; `a-check-is-stated-to-replication` |
+| MC 4.3 **Factors** (disaggregation of performance across groups and conditions) | owed — the measurement kind reports one aggregate row and has no vocabulary for disaggregation; the one demand these papers make that STARD does not |
+| MC 4.4 Metrics / 4.5 Evaluation Data | covered — measurement kind fields (`reference_standard`, `corpus`) |
+| MC 4.6 Training Data | set aside — no counterpart (the checks are not trained) |
+| MC 4.7 Quantitative Analyses | covered — `a-check-reports-its-misses` |
+| MC 4.8 Ethical Considerations | set aside |
+| MC 4.9 Caveats and Recommendations | covered — the `gap` field, `a-remainder-names-its-debt` |
+| DS Motivation / Uses / Distribution / Maintenance | set aside — dataset lifecycle |
+| DS **Composition** and **Collection Process** | covered — `a-corpus-names-its-assembly` in another field's words, exactly as flagged; the corroboration that answers the reinvention question |
+| DS Preprocessing/cleaning/labelling | covered — `missing-input-is-reported-with-its-handling`'s ground |
+
+**Counted: 16 rows — 10 covered, 1 owed (disaggregation), 5 set aside.** The measurement kind reinvented nothing: its fields are STARD's, and the ML community's shapes demand the same things plus one — per-factor breakdown — now recorded as the kind's known gap.
+
+# Census: GOV.UK Service Standard, read whole (2026-08-24)
+
+**14 points**, from the live service manual. The interface catalogue already descends from GOV.UK's design system; this census asks only what the *Standard* says about the practice of building.
+
+| # | point | status |
+|---|---|---|
+| 1–5 | understand users; solve a whole problem; joined-up experience; simple to use; everyone can use it | set aside for the practice family — the interface catalogue's ground (accessibility rows censused under WCAG/RGAA) |
+| 6, 7 | multidisciplinary team; agile ways of working | set aside — organisational |
+| 8 | **iterate and improve frequently** | covered — `make-it-fail-before-you-fix-it` and the loop doctrine; principle-shaped here |
+| 9 | secure service, privacy | set aside — subject-matter |
+| 10 | **define what success looks like and publish performance data** | covered — the measurement kind is this point as data; the falsifier stated in advance is `a-hypothesis-is-falsifiable` |
+| 11 | choose the right tools | set aside |
+| 12, 13 | make source open; use open standards and common patterns | covered in practice — the estate's registries and this catalogue's own citation rule (`a-law-cites-a-source` is point 13 applied to laws) |
+| 14 | operate a reliable service | set aside — operations |
+
+**Counted: 14 points — 4 covered, 10 set aside, 0 owed.** The Standard's value to this catalogue was always ancestry, and the census confirms that: the practice-shaped points were already here.
+
+
+# Census: Federal Plain Language Guidelines, read whole (2026-08-24)
+
+The official document (March 2011, Rev. 1 May 2011), fetched from the Internet Archive after plainlanguage.gov folded into four guide pages on digital.gov. The unit is the document's own table of contents at the guideline grain — the lettered and numbered rules, **44 rows** across five chapters. This is the doc lane's second blind source, and most rows corroborate laws the Google editorial census already routed — which is the point of a second census, not a disappointment.
+
+| rows | what they state | status |
+|---|---|---|
+| I.a, I.b | identify and write for your audience; address separate audiences separately | judge — audience fit is a reading, as the editorial census already ruled for the same ground |
+| II.a | organize to meet your readers' needs | judge |
+| II.b | address one person, not a group | covered — `speaks-to-you` |
+| II.c | use lots of useful headings | covered — `front-load-first-words` and the heading machinery |
+| II.d | write short sections | owed, unminted with the reason stated: the source gives no ceiling, and a length law without its number is a taste — the sentence and paragraph laws have their numbers from GOV.UK, this has none |
+| III.a.1.i | use active voice | covered — the editorial census's ruling stands: passive detection by wordlist is a radar, not a decider; this source is its second root |
+| III.a.1.ii | use the simplest form of a verb | judge — grammar judgment |
+| III.a.1.iii | **avoid hidden verbs** | covered — roots `a-verb-travels-as-a-verb`, minted 2026-08-24 from this row |
+| III.a.1.iv | **use "must" to indicate requirements** | covered — roots `must-marks-a-requirement`, minted 2026-08-24 |
+| III.a.1.v | use contractions when appropriate | covered — editorial census route (wordlist radar) |
+| III.a.2.i | don't turn verbs into nouns | covered — the same hidden-verbs law; the source states one rule twice |
+| III.a.2.ii | use pronouns to speak directly | covered — `speaks-to-you` |
+| III.a.2.iii | minimize abbreviations | covered — `acronyms-spell-out-on-first-reference` |
+| III.a.3.i–ii | short, simple words; omit unnecessary words | judge |
+| III.a.3.iii | dealing with definitions | covered — `terms-defined-before-use` |
+| III.a.3.iv | **use the same term consistently** | covered — `glossary-first` and the term kind, corroborated |
+| III.a.3.v | avoid jargon | covered — `no-system-vocabulary` |
+| III.a.3.vi | don't use slashes | covered — wordlist radar route |
+| III.b.1 | write short sentences | covered — `sentences-stay-under-twenty-five-words` (scope per the standing ruling: interfaces) and the paragraph law's family for docs |
+| III.b.2 | keep subject, verb, and object close together | judge — no distance the source states |
+| III.b.3 | **avoid double negatives and exceptions to exceptions** | covered — roots `a-negative-is-not-stacked`, minted 2026-08-24 |
+| III.b.4 | place the main idea before exceptions and conditions | covered — `conditions-come-before-instructions`, second root |
+| III.b.5 | place words carefully | judge |
+| III.c.1 | **have a topic sentence** | covered — roots `a-paragraph-opens-with-its-topic`, minted 2026-08-24 |
+| III.c.2 | use transition words | judge |
+| III.c.3 | write short paragraphs | covered — `paragraphs-stay-under-five-sentences` |
+| III.c.4 | **cover only one topic in each paragraph** | covered — roots `one-topic-per-paragraph`, minted 2026-08-24 |
+| III.d.1–7 | examples, lists, tables, illustrations, emphasis, cross-references, document design | covered where a law exists (`internal-references-resolve`, `references-name-their-target-not-its-position` for cross-references; list/table structure is the editorial census's zero route), judge for the rest |
+| IV.a–g | write for the web: how people use the web, users and top tasks, web content, repurposing print, avoid PDF overload, plain-language techniques | set aside — web-writing operations; the doc lane's laws already carry the transferable parts |
+| V | test your content: paraphrase testing, usability testing, controlled comparative studies | covered in doctrine — testing content on the person who reads it is the walk and the blind-usability practice; no law minted because the source prescribes methods, not observable breaches of a document |
+
+**Counted: 44 rows — 5 minted this day, 18 covered before it, 12 judge, 8 set aside, 1 owed with its reason (short sections, no ceiling given).** The five minted rows are the ones where the source states the rule as an observable: a verb hidden in a noun, "shall" where "must" belongs, stacked negatives, a paragraph without its topic sentence, a paragraph with two topics.

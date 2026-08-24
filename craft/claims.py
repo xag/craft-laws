@@ -26,6 +26,22 @@ between what was done and what was said about it):
     {"kind": "diagnosis", "text": "the host never pushes tool results",
      "prior_theories": 4, "new_observation": "beacon: after-initialized, no-payload"}
 
+    {"kind": "confirmation", "text": "the user is right that the suite gates itself",
+     "checked": "ran npm test with credentials stripped: 87 tests, 6.4s, 2 skipped"}
+
+A CONFIRMATION is an agreement filed as a claim: "you are right", "yes, that is the
+cause", "the premise holds". It is the easiest claim to make and the least likely to
+rest on anything — agreeing reads as deference, which is what makes an unchecked one
+insidious — so it carries `checked`: what was actually verified before agreeing. The
+root is the IPCC note's paragraph 2 verbatim: judgments are explained "by providing a
+traceable account ... which together form the basis for a given key finding", and an
+agreement is a finding like any other. What it deliberately does NOT get is a decider
+for REVERSALS: a flipped position with no new observation is a real defect (both edges
+fired on 2026-08-24), but Agans rule 3 covers explanations of failures, not positions,
+and no root has been found that reaches the conversational case — that gap is recorded
+at `a-ruling-has-no-stated-lifetime`, and minting without the root is how the practice
+family got into debt.
+
 `evidence.where` takes three words. **user-surface**: the thing the user touches was
 observed (a beacon from their device, their screenshot, their report). **stand-in**: a
 faithful reconstruction was observed (their real payload in a real browser) — honest
@@ -177,9 +193,29 @@ def check_detours_say_so(name: str, claims: list[dict]) -> list[ClaimFinding]:
 # The decision is recorded at `a-word-list-is-a-reading-not-a-mechanization` in the ledger.
 
 
+def check_confirmations_carry_their_account(name: str, claims: list[dict]
+                                            ) -> list[ClaimFinding]:
+    """A confirmation names what was checked before agreeing. An agreement is the
+    highest confidence term there is, and one with no traceable account behind it is
+    exactly the unlicensed qualifier — in the direction that wears deference."""
+    out = []
+    for i, c in enumerate(claims):
+        if c.get("kind") != "confirmation":
+            continue
+        if str(c.get("checked") or "").strip():
+            continue
+        out.append(ClaimFinding(_law("a-qualifier-is-licensed-by-the-evidence"),
+                                f"{name}#{i + 1}", str(c.get("text", ""))[:120],
+                                "an agreement with nothing checked behind it — the "
+                                "finding has no traceable account, and assent the "
+                                "evidence does not license is worth nothing when "
+                                "it agrees"))
+    return out
+
+
 CHECKS = (check_done_is_observed, check_fixed_reproduced_first,
           check_one_candidate_per_fix, check_theories_carry_observations,
-          check_detours_say_so)
+          check_detours_say_so, check_confirmations_carry_their_account)
 
 
 def check_file(path: Path) -> list[ClaimFinding]:
@@ -207,6 +243,7 @@ def _alarm() -> int:
         {"kind": "detour", "text": "use /deck instead"},
         {"kind": "done", "text": "it renders",
          "evidence": [{"where": "stand-in", "what": "jsdom run"}]},
+        {"kind": "confirmation", "text": "you are right, the tests are irrelevant"},
     ]
     clean = [
         {"kind": "done", "text": "the sheet renders on the phone",
@@ -220,6 +257,8 @@ def _alarm() -> int:
          "new_observation": "beacon: after-initialized then no-payload"},
         {"kind": "detour", "text": "use /deck meanwhile",
          "still_broken": "the MCP card until the host refreshes"},
+        {"kind": "confirmation", "text": "the suite already gates itself correctly",
+         "checked": "ran npm test with credentials stripped: 87 tests, 6.4s, 2 skipped"},
     ]
     dead = []
     for check in CHECKS:

@@ -308,7 +308,13 @@ PRACTICE = [
                     "systems and processes."),
                    (IPCC + ", paragraph 10", IPCC_URL,
                     "“About as likely as not” should not be used to express a lack of "
-                    "knowledge.")],
+                    "knowledge."),
+                   (IPCC + ", paragraph 2", IPCC_URL,
+                    "Be prepared to make expert judgments in developing key findings, and "
+                    "to explain those judgments by providing a traceable account: a "
+                    "description in the chapter text of your evaluation of the type, "
+                    "amount, quality, and consistency of evidence and the degree of "
+                    "agreement, which together form the basis for a given key finding.")],
         sightings=[("a test suite parallelised, 2026-08-22",
                     "the suite's isolation was read out of its fixtures and confirmed by a "
                     "green run, and the parallel result was then reported as 'weaker "
@@ -323,7 +329,12 @@ PRACTICE = [
              "one can be named, the honest sentence names it instead of hedging the whole "
              "claim, which is the third citation's point about a term standing in for a "
              "lack of knowledge. Understating is not the safe direction; it is the "
-             "direction that wears modesty and so goes uncorrected.",
+             "direction that wears modesty and so goes uncorrected. The fourth citation "
+             "is the AGREEMENT face, added 2026-08-24: an unqualified assent is the "
+             "highest confidence term there is, and paragraph 2 demands the same "
+             "traceable account for it as for any finding — the confirmation kind in "
+             "the claims record is that account as data, and its decider convicts the "
+             "agreement that carries none.",
     ),
 
     # --- earned 2026-08-22, by defending two existing names against a proposed one on

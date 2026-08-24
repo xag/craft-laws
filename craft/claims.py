@@ -344,6 +344,48 @@ def check_prespecification_has_its_artifact(name: str, claims: list[dict]
     return out
 
 
+def check_figures_break_down_by_declared_factors(name: str, claims: list[dict]
+                                                 ) -> list[ClaimFinding]:
+    """a-figure-is-broken-down-by-its-declared-factors, on the protocol route.
+
+    A protocol MAY declare `factors`: the dimensions its corpus varies over
+    (language, repo, surface...). A measurement referencing a factor-declaring
+    protocol carries `factors` rows — [{"factor": "lang=en", "caught": ..., ...},
+    ...] — or convicts: the breakdown was promised by its own declaration. Rows
+    themselves are well-formed (a `factor` key and at least one count) or convict.
+    Aggregates are NOT summed against rows in code: factor groups may legitimately
+    overlap (intersectional cells), and a sum rule would forbid the honest case.
+    External protocols cannot be read here, so their factor demand stays with a
+    reader — the same boundary as their dates, and stated rather than glossed."""
+    law = "a-figure-is-broken-down-by-its-declared-factors"
+    out = []
+    declared: dict[str, list] = {}
+    for i, c in enumerate(claims):
+        where, quote = f"{name}#{i + 1}", str(c.get("text", ""))[:120]
+        if c.get("kind") == "protocol":
+            nm = str(c.get("name") or "").strip()
+            if nm:
+                declared[nm] = c.get("factors") or []
+            continue
+        rows = c.get("factors")
+        if rows is not None:
+            for r in rows if isinstance(rows, list) else []:
+                if not isinstance(r, dict) or not str(r.get("factor") or "").strip() \
+                        or not any(k in r for k in ("caught", "false_alarms",
+                                                    "misses", "count")):
+                    out.append(ClaimFinding(_law(law), where, quote,
+                                            "a factors row with no factor name or "
+                                            "no count — a breakdown in shape only"))
+        ref = str(c.get("protocol") or "").strip()
+        if ref and ref in declared and declared[ref] and rows is None:
+            out.append(ClaimFinding(_law(law), where, quote,
+                                    f"protocol {ref!r} declares factors "
+                                    f"{declared[ref]} and this figure reports only "
+                                    "the aggregate — an average over declared "
+                                    "variation is a number about a mixture"))
+    return out
+
+
 def check_grades_are_calibrated(name: str, claims: list[dict]) -> list[ClaimFinding]:
     """Three graded laws in one pass over the agreed scales: a term outside them, one
     dimension without the other, and a low end without its reason."""
@@ -384,7 +426,8 @@ CHECKS = (check_done_is_observed, check_fixed_reproduced_first,
           check_one_candidate_per_fix, check_theories_carry_observations,
           check_detours_say_so, check_confirmations_carry_their_account,
           check_measurements_state_their_protocol, check_grades_are_calibrated,
-          check_prespecification_has_its_artifact)
+          check_prespecification_has_its_artifact,
+          check_figures_break_down_by_declared_factors)
 
 
 def check_file(path: Path) -> list[ClaimFinding]:
@@ -426,6 +469,14 @@ def _alarm() -> int:
          "reference_standard": "r", "author_knew_answers": True,
          "judge_saw_verdict": True, "caught": 0, "misses": "none"},
         {"kind": "protocol", "text": "a name wearing the kind", "name": "bare"},
+        {"kind": "protocol", "name": "split-run", "text": "a run declaring factors",
+         "corpus": "c", "expectations": "e", "stopping": "none",
+         "factors": ["language"]},
+        {"kind": "measurement", "text": "aggregate over a declared split",
+         "protocol": "split-run", "corpus": "c", "size_declared_before": True,
+         "prespecified": True, "reference_standard": "r",
+         "author_knew_answers": True, "judge_saw_verdict": True,
+         "caught": 3, "misses": "none"},
     ]
     clean = [
         {"kind": "done", "text": "the sheet renders on the phone",
@@ -448,9 +499,13 @@ def _alarm() -> int:
          "text": "the word-list sweep, declared before running it",
          "corpus": "every markdown file under the estate's checkouts, exhaustive glob",
          "expectations": "hits read in context by a person; the lists convict nothing",
-         "stopping": "none — the glob is finite and read to its end"},
+         "stopping": "none — the glob is finite and read to its end",
+         "factors": ["repository"]},
         {"kind": "measurement", "text": "the three word lists over the estate's docs",
          "protocol": "wordlist-sweep",
+         "factors": [{"factor": "repository=craft-laws", "caught": 2,
+                      "false_alarms": 2},
+                     {"factor": "repository=epure", "caught": 1, "false_alarms": 0}],
          "corpus": "87 markdown files across the estate, exhaustive glob",
          "size_declared_before": True, "prespecified": True,
          "reference_standard": "a person reading every hit in its paragraph",

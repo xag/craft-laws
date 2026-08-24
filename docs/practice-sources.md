@@ -222,7 +222,7 @@ The reinvention question's answer, now from the read papers instead of a flag. M
 | section | status |
 |---|---|
 | MC 4.1 Model Details / 4.2 Intended Use | covered — the trigger states where a law applies; `a-check-is-stated-to-replication` |
-| MC 4.3 **Factors** (disaggregation of performance across groups and conditions) | owed — the measurement kind reports one aggregate row and has no vocabulary for disaggregation; the one demand these papers make that STARD does not |
+| MC 4.3 **Factors** (disaggregation of performance across groups and conditions) | covered — roots `a-figure-is-broken-down-by-its-declared-factors` (2026-08-25): the protocol declares its factors before the run, the measurement reports per-factor rows after it, and the aggregate-only report of a factor-declaring protocol convicts in code |
 | MC 4.4 Metrics / 4.5 Evaluation Data | covered — measurement kind fields (`reference_standard`, `corpus`) |
 | MC 4.6 Training Data | set aside — no counterpart (the checks are not trained) |
 | MC 4.7 Quantitative Analyses | covered — `a-check-reports-its-misses` |
@@ -232,7 +232,7 @@ The reinvention question's answer, now from the read papers instead of a flag. M
 | DS **Composition** and **Collection Process** | covered — `a-corpus-names-its-assembly` in another field's words, exactly as flagged; the corroboration that answers the reinvention question |
 | DS Preprocessing/cleaning/labelling | covered — `missing-input-is-reported-with-its-handling`'s ground |
 
-**Counted: 16 rows — 10 covered, 1 owed (disaggregation), 5 set aside.** The measurement kind reinvented nothing: its fields are STARD's, and the ML community's shapes demand the same things plus one — per-factor breakdown — now recorded as the kind's known gap.
+**Counted: 16 rows — 11 covered, 0 owed, 5 set aside** (the disaggregation row moved owed → covered on 2026-08-25, when the gap it recorded was closed by law and decider). The measurement kind reinvented nothing: its fields are STARD's, and the one demand the ML community's shapes added is now carried.
 
 # Census: GOV.UK Service Standard, read whole (2026-08-24)
 

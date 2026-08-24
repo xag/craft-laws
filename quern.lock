@@ -17,8 +17,8 @@
     },
     {
       "name": "claims",
-      "version": "0.2.0",
-      "sha256": "34a0b0cf5a6988b9a820ea21e8bfd8eb59e26335defa847b967fcd74ddd6da14"
+      "version": "0.3.0",
+      "sha256": "09e845d18a109fdb4b7c4b75707015f274c6da9073a89000cc72f4149a846952"
     }
   ]
 }

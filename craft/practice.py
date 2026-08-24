@@ -76,6 +76,10 @@ VIM = ("JCGM 200:2012, International vocabulary of metrology (VIM, 3rd edition, 
        "BIPM)")
 VIM_URL = "https://www.bipm.org/documents/20126/2071204/JCGM_200_2012.pdf"
 
+MODELCARDS = ("Mitchell et al., Model Cards for Model Reporting, Proceedings of "
+              "FAT* 2019")
+MODELCARDS_URL = "https://doi.org/10.1145/3287560.3287596"
+
 
 def _agans(rule: str) -> Quantity:
     return Quantity(value=1, unit="law", provenance="cited", grounded=True,
@@ -1171,6 +1175,44 @@ PRACTICE = [
              "clause: a referenced procedure stays consistent with the procedure "
              "actually in use, which is the witness-and-walk doctrine stated by "
              "metrology in 2008.",
+    ),
+    # --- the measurement kind's recorded gap, closed 2026-08-25: per-factor
+    # --- disaggregation, from the papers that flagged it during the reinvention audit.
+    _law(
+        "a-figure-is-broken-down-by-its-declared-factors",
+        "A figure over a corpus that varies along declared factors — language, "
+        "surface, source, population — is reported per factor, not only in aggregate; "
+        "an average over known variation is a number about a mixture",
+        _cited("Model Cards for Model Reporting, sections 4.3 and 4.7"),
+        falsifier="An aggregate-only figure whose own declaration names the factors "
+                  "the corpus varies over — the breakdown was promised by the "
+                  "declaration and absent from the report.",
+        triggers=["a figure is reported over a corpus whose declaration names "
+                  "factors it varies over"],
+        citations=[(MODELCARDS + ", section 4.7", MODELCARDS_URL,
+                    "Quantitative analyses should be disaggregated, that is, broken "
+                    "down by the chosen factors. Quantitative analyses should provide "
+                    "the results of evaluating the model according to the chosen "
+                    "metrics, providing confidence interval values when possible."),
+                   (MODELCARDS + ", section 4.3", MODELCARDS_URL,
+                    "Model cards ideally provide a summary of model performance "
+                    "across a variety of relevant factors including groups, "
+                    "instrumentation, and environments.")],
+        sightings=[
+            ("the prose lane's language split, 2026-08-23",
+             "The doc lane's rules ran identically over English and French text and "
+             "reported one aggregate silence: three deciders had no French rules at "
+             "all, and 'no findings' over the mixture read as clean. The fix — "
+             "unruled(), per language — was this law obeyed before it was found "
+             "stated: the factor was language, declared nowhere, and the aggregate "
+             "hid the empty cell.")],
+        note="The chosen-factors clause is what makes it mechanizable rather than "
+             "boundless: the factors are DECLARED in the protocol before the run, so "
+             "which breakdown is owed is data, not judgment. Flagged as the "
+             "measurement kind's known gap when Model Cards and Datasheets were "
+             "censused; closed by the protocol's `factors` field and the "
+             "measurement's per-factor rows, with the decider convicting the "
+             "aggregate-only report of a factor-declaring protocol.",
     ),
 ]
 

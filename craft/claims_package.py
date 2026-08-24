@@ -83,9 +83,11 @@ VOCABULARY = [
         "`false_alarms`, and `misses` (the cross-tabulation's other row; 'unmeasured: "
         "why' is an honest value and absence is the breach). Corroborated blind by "
         "CONSORT 2025, STROBE and ARRIVE, and by Model Cards and Datasheets for "
-        "Datasets, all censused 2026-08-24; the one demand those add that this kind "
-        "cannot yet say — per-factor disaggregation of results — is the kind's "
-        "recorded gap, not a silent one.",
+        "Datasets. The per-factor gap those flagged is closed as of 0.3.0: "
+        "optional `factors` rows — [{factor, caught, false_alarms, ...}] — and a "
+        "measurement whose protocol declares factors reports them or convicts "
+        "under a-figure-is-broken-down-by-its-declared-factors. An average over "
+        "declared variation is a number about a mixture.",
     ),
     KindDef(
         kind="protocol",
@@ -100,7 +102,10 @@ VOCABULARY = [
         "standing example. The root is a-protocol-is-an-artifact-before-the-run "
         "(SPIRIT item 5, TOP's Study Protocol practice, ARRIVE item 19): saying "
         "thresholds were set in advance is a memory, and the artifact is checkable "
-        "against the file's order and git's dates.",
+        "against the file's order and git's dates. Optional `factors`: the "
+        "dimensions the corpus varies over (language, repository, surface), "
+        "declared here so the breakdown a measurement owes is data, not "
+        "judgment.",
     ),
     KindDef(
         kind="evidence",
@@ -201,7 +206,7 @@ COUNTER_EXAMPLES = [
 
 CLAIMS_PACKAGE = Package(
     name="claims",
-    version="0.2.0",
+    version="0.3.0",
     description="A session's assertions as data: seven claim kinds, graded evidence, "
                 "the measurement protocol and the agreed calibration scales — the "
                 "record the practice laws fire on, published so the vocabulary is "

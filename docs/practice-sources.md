@@ -36,16 +36,16 @@ The Guidance Note states 11 numbered paragraphs, 6 lettered criteria (A–F) und
 
 | # | What it states | Status |
 |---|---|---|
-| 1 | Consider, at an early stage, how to communicate the degree of certainty; agree the process in advance of the specific case | owed — the estate has no agreed calibration vocabulary, which is why each turn improvises one |
+| 1 | Consider, at an early stage, how to communicate the degree of certainty; agree the process in advance of the specific case | covered — `calibration-is-agreed-before-the-case` (2026-08-24) |
 | 2 | Provide a *traceable account*: a description of the evaluation of type, amount, quality and consistency of evidence, and the degree of agreement, which together form the basis for the finding | covered — `done-is-observed-where-the-user-stands` demands the evidence beside the claim, and the claims ledger's `evidence.where` is the traceable account in data. Since 2026-08-24 also the root of the `confirmation` kind's decider: an agreement is a finding, and one filed with nothing in `checked` has no account, convicting under `a-qualifier-is-licensed-by-the-evidence` |
-| 3 | Beware group convergence and overconfidence; beware anchoring on previous versions to a greater extent than is justified | owed — directly applicable to an agent that anchors on its own earlier turn, and nothing here carries it |
+| 3 | Beware group convergence and overconfidence; beware anchoring on previous versions to a greater extent than is justified | covered — `a-view-moves-on-observation-not-on-company` (2026-08-24), both directions: folding is convergence, stonewalling is anchoring |
 | 4 | Framing changes interpretation (10% chance of dying vs 90% of surviving); consider reciprocal statements | set aside — about presenting risk to a public, not about reporting work |
 | 5 | **"Consider that, in some cases, it may be appropriate to describe findings for which evidence and understanding are overwhelming as statements of fact without using uncertainty qualifiers."** | **covered — `a-qualifier-is-licensed-by-the-evidence`** |
-| 6 | Consider all plausible sources of uncertainty; experts tend to underestimate structural uncertainty from incomplete understanding | owed — the mirror of item 5 and the reason the law must cut both ways |
+| 6 | Consider all plausible sources of uncertainty; experts tend to underestimate structural uncertainty from incomplete understanding | covered — `structural-unknowns-are-considered` (2026-08-24) |
 | 7 | Assess uncertainty and risk to the extent possible; attend to high-consequence outcomes | set aside — a risk-management instruction about the subject matter |
-| 8 | Evaluate validity on two dimensions — evidence (limited/medium/robust) and agreement (low/medium/high) — and provide a traceable account of both | owed — the estate has one dimension (was it observed) and no vocabulary for agreement |
-| 9 | Confidence is five qualifiers (very low → very high); low and very low confidence should be reserved for areas of major concern and the reasons explained; confidence is not probabilistic | owed — the scale itself does not transfer, but "reserve the low end and explain it" does |
-| 10 | Likelihood is calibrated language for quantified uncertainty; where there is sufficient information it is preferable to give the probability directly rather than the term; "about as likely as not" must not stand in for a lack of knowledge | owed — the last clause transfers exactly: a hedge must not stand in for not having looked |
+| 8 | Evaluate validity on two dimensions — evidence (limited/medium/robust) and agreement (low/medium/high) — and provide a traceable account of both | covered — `validity-is-evidence-and-agreement` (2026-08-24) |
+| 9 | Confidence is five qualifiers (very low → very high); low and very low confidence should be reserved for areas of major concern and the reasons explained; confidence is not probabilistic | covered — `low-confidence-is-reserved-and-explained` (2026-08-24); the five-term scale itself stays set aside |
+| 10 | Likelihood is calibrated language for quantified uncertainty; where there is sufficient information it is preferable to give the probability directly rather than the term; "about as likely as not" must not stand in for a lack of knowledge | covered — `sufficient-information-gives-the-number` (2026-08-24) |
 | 11 | Characterize findings using the language that conveys the most information, per criteria A–F | covered in part by item 5's law; the criteria are set aside individually below |
 | 11-A | Ambiguous or unmeasurable variable: assign no confidence; give evidence and agreement terms | set aside |
 | 11-B | Sign known, magnitude poorly known: assign confidence when possible | set aside |
@@ -55,11 +55,11 @@ The Guidance Note states 11 numbered paragraphs, 6 lettered criteria (A–F) und
 | 11-F | A probability distribution or set of distributions can be determined | set aside |
 | S1 | Confidence scale: very low, low, medium, high, very high | set aside — the estate's finding is observed or not; a five-term scale would invite invented middles |
 | S2 | Likelihood scale: virtually certain (99–100%) … exceptionally unlikely (0–1%) | set aside — quantified probability has no meaning for a claim about whether work was done |
-| S3 | Evidence summary terms: limited, medium, robust | owed — with item 8 |
-| S4 | Agreement summary terms: low, medium, high | owed — with item 8 |
-| S5 | Findings conditional on other findings are evaluated and reported separately | owed — an estate whose checks are chains of pins has exactly this problem and no rule for it |
+| S3 | Evidence summary terms: limited, medium, robust | covered — with item 8, `validity-is-evidence-and-agreement` |
+| S4 | Agreement summary terms: low, medium, high | covered — with item 8, `validity-is-evidence-and-agreement` |
+| S5 | Findings conditional on other findings are evaluated and reported separately | covered — `a-conditional-finding-grades-its-condition` (2026-08-24) |
 
-**Counted:** 21 items — 3 covered, 8 owed, 10 set aside. The count is read from the source, not from the laws built.
+**Counted:** 21 items — 11 covered, 0 owed, 10 set aside (as of 2026-08-24; the owed queue was drained in one tranche). The count is read from the source, not from the laws built.
 
 
 ---
@@ -72,7 +72,7 @@ The full text is paywalled. The abstract enumerates the paper's whole structure 
 |---|---|---|
 | 1 | Study 1: an existing state is evaluated more favorably than an alternative | covered — `what-exists-is-not-thereby-chosen` |
 | 2 | Study 2: the same, replicated | covered — same law |
-| 3 | Study 3: imagining an event increases estimates of its likelihood, which in turn leads to favorable evaluation; the more likely something will be, the more positively it is evaluated | owed — the mechanism by which a plan already sketched starts to look right, which is a distinct defect from defending what exists |
+| 3 | Study 3: imagining an event increases estimates of its likelihood, which in turn leads to favorable evaluation; the more likely something will be, the more positively it is evaluated | covered — `an-imagined-plan-is-not-thereby-likely` (2026-08-24) |
 | 4 | Study 4: the more a form is described as prevalent, the more aesthetically attractive that form is — a causal relationship between aesthetic judgment and existence *in a domain lacking choice among alternatives* | covered — the naming sighting is exactly this case |
 | 5 | Study 5: the bias extends to gustatory evaluation and is not moderated by valence | set aside — establishes generality, prescribes nothing |
 | 6 | Conclusion: mere existence leads to assumptions of goodness; the status quo is seen as good, right, attractive, tasty, and desirable | covered — the law's statement |
@@ -91,9 +91,9 @@ Six pages, and the paper's structure is a worked comparison of two decomposition
 | 1 | Modularization is a mechanical decomposition into work assignments, and the criteria used to divide are the subject | set aside — framing |
 | 2 | Decomposition 1: modules follow the steps of processing (a flowchart) | set aside — the example |
 | 3 | Decomposition 2: each module is characterized by a design decision it hides from all others; its interface reveals as little as possible about its inner workings | covered — `a-thing-is-built-where-its-subject-lives` |
-| 4 | Changeability: a change to a hidden decision touches one module in the second decomposition and many in the first | owed — no law states that the cost of misplacement is measured in what a change touches |
-| 5 | Independent development: interfaces between modules must be defined so work can proceed separately | owed |
-| 6 | Comprehensibility: a module can be understood without understanding the others | owed |
+| 4 | Changeability: a change to a hidden decision touches one module in the second decomposition and many in the first | covered — `a-boundary-is-judged-by-what-a-change-touches` (2026-08-24) |
+| 5 | Independent development: interfaces between modules must be defined so work can proceed separately | covered — same law |
+| 6 | Comprehensibility: a module can be understood without understanding the others | covered — same law |
 | 7 | Data representations, character codes and orderings should be hidden in a module | set aside — a programming instruction, not a practice one |
 | 8 | The sequence in which items are processed should as far as practical be hidden within a single module | set aside |
 | 9 | Conclusion: it is almost always incorrect to begin decomposition on the basis of a flowchart; begin with a list of difficult decisions or ones likely to change | covered — the second citation on the same law |

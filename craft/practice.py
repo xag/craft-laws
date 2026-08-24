@@ -511,6 +511,356 @@ PRACTICE = [
              "skips whatever the vocabulary has not caught up with. The frequency is the "
              "cheap half and the REASON is the half worth having.",
     ),
+    # =========================================================================
+    # THE OWED-ROWS TRANCHE, 2026-08-24. Four sources were censused whole and
+    # their owed rows sat as a queue; this drains it: 24 rows, 17 laws, each
+    # quoting the source text fetched this day. None of these carries a decider
+    # yet — they enter as readings, which is the honest state of a law on
+    # arrival, and the ones whose data shape already exists say so in a note.
+    # =========================================================================
+
+    # --- IPCC guidance note: the seven remaining owed rows -----------------------
+    _law(
+        "calibration-is-agreed-before-the-case",
+        "The vocabulary that grades certainty is agreed in advance, never improvised "
+        "in the middle of the case it grades",
+        _cited("IPCC AR5 uncertainty guidance, paragraph 1"),
+        falsifier="Two reports within one practice grading certainty in incompatible "
+                  "improvised vocabularies, or a graded term that no agreed scale "
+                  "defines.",
+        triggers=["a result is reported with a graded qualifier"],
+        citations=[(IPCC + ", paragraph 1", IPCC_URL,
+                    "At an early stage, consider approaches to communicating the degree "
+                    "of certainty in key findings in your chapter using the calibrated "
+                    "language described below. ... Agree on a moderated and balanced "
+                    "process for doing this in advance of confronting these issues in a "
+                    "specific context.")],
+        note="The census said it plainly: the estate has no agreed calibration "
+             "vocabulary, which is why each turn improvises one.",
+    ),
+    _law(
+        "a-view-moves-on-observation-not-on-company",
+        "A stated assessment changes on a named observation — never merely to converge "
+        "with a view somebody expressed, and never held to a prior version beyond what "
+        "the evidence justifies",
+        _cited("IPCC AR5 uncertainty guidance, paragraph 3"),
+        falsifier="An assessment revised toward an interlocutor's expressed view, or "
+                  "held against new evidence, with no observation named between the "
+                  "two versions. Both directions are the breach: folding is convergence "
+                  "and stonewalling is anchoring.",
+        triggers=["an assessment is restated after another party has expressed a view",
+                  "a position is revised or defended"],
+        citations=[(IPCC + ", paragraph 3", IPCC_URL,
+                    "Be aware of a tendency for a group to converge on an expressed "
+                    "view and become overconfident in it. Views and estimates can also "
+                    "become anchored on previous versions or values to a greater extent "
+                    "than is justified. ... Recognize when individual views are "
+                    "adjusting as a result of group interactions and allow adequate "
+                    "time for such changes in viewpoint to be reviewed.")],
+        sightings=[
+            ("a session reviewed, 2026-08-24",
+             "A built and tested proposal was withdrawn entirely on one clarifying "
+             "question, before any counter-argument arrived; the owner named the cost — "
+             "agreement that folds on being asked carries no information when it "
+             "holds — and the position had to be restored. The same week's opposite "
+             "edge: a law re-scoped toward the argument of the moment against a "
+             "standing ruling."),
+        ],
+        note="This roots the conversational half of what a-ruling-has-no-stated-"
+             "lifetime recorded as rootless: the note's own remedy — write the view "
+             "down before the group discussion — is the claims record's shape, and "
+             "'recognize when views are adjusting as a result of group interactions' "
+             "is the reversal face stated by a standing authority. The AUTHORITY half "
+             "of that debt (when a person's ruling binds) stays unrooted; this law is "
+             "about evidence, not command.",
+    ),
+    _law(
+        "structural-unknowns-are-considered",
+        "An evaluation of uncertainty names the structural unknowns — incomplete "
+        "understanding, competing framings — and not only the measurable ones",
+        _cited("IPCC AR5 uncertainty guidance, paragraph 6"),
+        falsifier="A graded finding whose named unknowns are all parameter-level while "
+                  "a competing framing of the mechanism stands on the record "
+                  "unaddressed.",
+        triggers=["a finding is graded while an alternative framing is on record"],
+        citations=[(IPCC + ", paragraph 6", IPCC_URL,
+                    "Consider all plausible sources of uncertainty. Experts tend to "
+                    "underestimate structural uncertainty arising from incomplete "
+                    "understanding of or competing conceptual frameworks for relevant "
+                    "systems and processes.")],
+        note="The mirror of the fact-when-settled clause on "
+             "a-qualifier-is-licensed-by-the-evidence, now carrying its own falsifier "
+             "instead of riding as that law's second citation only.",
+    ),
+    _law(
+        "validity-is-evidence-and-agreement",
+        "A graded finding states both dimensions of its validity — the evidence and "
+        "the degree of agreement — each with its account",
+        _cited("IPCC AR5 uncertainty guidance, paragraph 8 and its summary terms"),
+        falsifier="A graded finding stating one dimension only: evidence with no word "
+                  "on agreement, or consensus with no word on evidence.",
+        triggers=["a finding is graded on the strength of more than one source or "
+                  "more than one judge"],
+        citations=[(IPCC + ", paragraph 8", IPCC_URL,
+                    "Use the following dimensions to evaluate the validity of a "
+                    "finding: the type, amount, quality, and consistency of evidence "
+                    "(summary terms: “limited,” “medium,” or "
+                    "“robust”), and the degree of agreement (summary terms: "
+                    "“low,” “medium,” or “high”). "
+                    "... Provide a traceable account describing your evaluation of "
+                    "evidence and agreement in the text of your chapter.")],
+        note="Covers the census's rows 8, S3 and S4 in one law: the two summary-term "
+             "scales are the dimensions' vocabulary, not separate demands. The claims "
+             "record has one dimension today (where the evidence stands) and no "
+             "vocabulary for agreement.",
+    ),
+    _law(
+        "low-confidence-is-reserved-and-explained",
+        "The low end of a confidence scale is presented only for areas of major "
+        "concern, and the reasons for presenting it are explained",
+        _cited("IPCC AR5 uncertainty guidance, paragraph 9"),
+        falsifier="A low-confidence grade carrying no stated reason, or low grades "
+                  "spent routinely where nothing major is at stake.",
+        triggers=["a finding is presented at the low end of a graded scale"],
+        citations=[(IPCC + ", paragraph 9", IPCC_URL,
+                    "Presentation of findings with “low” and “very "
+                    "low” confidence should be reserved for areas of major "
+                    "concern, and the reasons for their presentation should be "
+                    "carefully explained.")],
+        note="Anti-modesty, from the same note that is anti-bravado: routine "
+             "lowballing devalues the signal exactly as routine overclaiming does, "
+             "and it is the direction that goes uncorrected because it wears "
+             "caution.",
+    ),
+    _law(
+        "sufficient-information-gives-the-number",
+        "Where the information suffices, the value is given directly; a calibrated "
+        "term never stands in for a measurement that exists, or for one that was "
+        "never made",
+        _cited("IPCC AR5 uncertainty guidance, paragraph 10"),
+        falsifier="A mid-scale term where the direct figure was available and not "
+                  "given, or a mid-scale term under which no assessment exists at "
+                  "all.",
+        triggers=["a quantified result is reported in calibrated words"],
+        citations=[(IPCC + ", paragraph 10", IPCC_URL,
+                    "When there is sufficient information, it is preferable to specify "
+                    "the full probability distribution or a probability range (e.g., "
+                    "90-95%) without using the terms in Table 1. “About as likely "
+                    "as not” should not be used to express a lack of "
+                    "knowledge.")],
+    ),
+    _law(
+        "a-conditional-finding-grades-its-condition",
+        "A finding that rests on another finding is evaluated separately, and the "
+        "certainty of what it rests on is stated beside its own",
+        _cited("IPCC AR5 uncertainty guidance, the conditional-findings instruction"),
+        falsifier="A finding reported unconditionally that holds only under another "
+                  "finding whose certainty is lower and unstated.",
+        triggers=["a finding rests on another finding",
+                  "a green check rests on another check"],
+        citations=[(IPCC + ", conditional findings", IPCC_URL,
+                    "For findings (effects) that are conditional on other findings "
+                    "(causes), consider independently evaluating the degrees of "
+                    "certainty in both causes and effects, with the understanding that "
+                    "the degree of certainty in the causes may be low.")],
+        note="The census's row S5, and the row aimed most squarely at this estate: a "
+             "practice whose checks are chains of pins reports leaf-greens whose "
+             "certainty is the chain's weakest link, unstated.",
+    ),
+
+    # --- STARD 2015: the twelve remaining owed rows, as eight laws ---------------
+    _law(
+        "prespecified-is-distinguished-from-exploratory",
+        "A report says whether its expectations and thresholds were set before the "
+        "results were seen or after",
+        _cited("STARD 2015, items 5 and 12a"),
+        falsifier="A threshold or expectation presented without saying which, or "
+                  "presented as set in advance when the record shows it was tuned to "
+                  "what turned up.",
+        triggers=["a check's threshold or expectation is reported"],
+        citations=[(STARD + ", item 5", STARD_URL,
+                    "Whether data collection was planned before the index test and "
+                    "reference standard were performed (prospective study) or after "
+                    "(retrospective study)"),
+                   (STARD + ", item 12a", STARD_URL,
+                    "Definition of and rationale for test positivity cut-offs or "
+                    "result categories of the index test, distinguishing pre-specified "
+                    "from exploratory")],
+        sightings=[
+            ("the run-in heading bound, 2026-08-23",
+             "A six-word ceiling separating a heading from an emphasised sentence was "
+             "set after seeing what it caught, and nothing in the record says so — a "
+             "reader meets it as if it had been derived.")],
+    ),
+    _law(
+        "a-corpus-names-its-assembly",
+        "Findings over a corpus name how the corpus was assembled — and whether the "
+        "series was exhaustive, random, or convenient",
+        _cited("STARD 2015, items 7 and 9"),
+        falsifier="Findings reported over a corpus whose selection is unstated, or a "
+                  "convenience sample reported as if it were the population.",
+        triggers=["findings are reported over a corpus somebody assembled"],
+        citations=[(STARD + ", item 7", STARD_URL,
+                    "On what basis potentially eligible participants were identified "
+                    "(such as symptoms, results from previous tests, inclusion in "
+                    "registry)"),
+                   (STARD + ", item 9", STARD_URL,
+                    "Whether participants formed a consecutive, random or convenience "
+                    "series")],
+        sightings=[
+            ("the convergence series impeached, 2026-08-17",
+             "A series of near-zero vocabulary costs was reported as evidence of "
+             "convergence until its own author impeached it: the miner picked laws it "
+             "could see the compile route for, so the line measured the mining hand. "
+             "The remedy — the cost-blind census — then lived as a habit with no "
+             "falsifier until this law.")],
+        note="The cost-blind-census doctrine, which this repository practises and had "
+             "never stated as a rule anything could break.",
+    ),
+    _law(
+        "a-check-is-stated-to-replication",
+        "A verdict's check is stated in enough detail that another hand re-runs it "
+        "and reaches the same verdict",
+        _cited("STARD 2015, item 10a"),
+        falsifier="A reported verdict whose check cannot be re-run from what the "
+                  "record states.",
+        triggers=["a verdict is reported beyond the session that produced it"],
+        citations=[(STARD + ", item 10a", STARD_URL,
+                    "Index test, in sufficient detail to allow replication")],
+    ),
+    _law(
+        "the-reference-standard-is-named-with-its-rationale",
+        "What a check is judged against is stated, and where alternatives exist, why "
+        "that standard was chosen",
+        _cited("STARD 2015, items 10b and 11"),
+        falsifier="An accuracy claim that names no reference standard, or names one "
+                  "without a word on why it and not the alternative.",
+        triggers=["a check's accuracy is claimed against some ground truth"],
+        citations=[(STARD + ", item 10b", STARD_URL,
+                    "Reference standard, in sufficient detail to allow replication"),
+                   (STARD + ", item 11", STARD_URL,
+                    "Rationale for choosing the reference standard (if alternatives "
+                    "exist)")],
+    ),
+    _law(
+        "blindness-is-disclosed",
+        "Whether the check's author knew the answers while writing it, and whether "
+        "the judge saw the check's verdict before deciding, is stated",
+        _cited("STARD 2015, items 13a and 13b"),
+        falsifier="An accuracy claim silent on either direction of blinding.",
+        triggers=["a check's accuracy is claimed against a judged standard"],
+        citations=[(STARD + ", item 13a", STARD_URL,
+                    "Whether clinical information and reference standard results were "
+                    "available to the performers/readers of the index test"),
+                   (STARD + ", item 13b", STARD_URL,
+                    "Whether clinical information and index test results were "
+                    "available to the assessors of the reference standard")],
+        sightings=[
+            ("this repository's own alarms and rulings, 2026-08-24",
+             "Every alarm corpus is written by the same hand as the checks it "
+             "exercises, and the adjudicator reads the finding before ruling on it, "
+             "always — neither fact recorded anywhere as a limitation until this "
+             "law's census row said it aloud.")],
+    ),
+    _law(
+        "missing-input-is-reported-with-its-handling",
+        "How absent or unreadable input was handled is reported beside the findings",
+        _cited("STARD 2015, item 16"),
+        falsifier="A report over a corpus with unreadable members that does not say "
+                  "how they were counted.",
+        triggers=["findings are reported over a corpus any part of which could not "
+                  "be read"],
+        citations=[(STARD + ", item 16", STARD_URL,
+                    "How missing data on the index test and reference standard were "
+                    "handled")],
+        note="The sibling of a-check-reports-what-it-could-not-judge one step "
+             "earlier: item 15 is output the check could not call, this is input it "
+             "never received. The estate's pointer check already obeys it — an "
+             "unreadable ledger reports UNKNOWN, never gone — as one module's "
+             "decision, which this law makes portable.",
+    ),
+    _law(
+        "calibration-size-is-declared-before-the-run",
+        "How much corpus a check is calibrated on is decided and stated before the "
+        "run, with how that size was determined",
+        _cited("STARD 2015, item 18"),
+        falsifier="An accuracy or false-positive figure from a calibration whose "
+                  "size was settled after the results were in.",
+        triggers=["a check's accuracy is calibrated or claimed"],
+        citations=[(STARD + ", item 18", STARD_URL,
+                    "Intended sample size and how it was determined")],
+        sightings=[
+            ("the first turn checker, 2026-08-22",
+             "Calibrated on one session with one hit and reported as zero false "
+             "positives; measured properly across twenty transcripts it was wrong "
+             "roughly seven times in eight.")],
+    ),
+    _law(
+        "a-check-reports-its-misses",
+        "A check's accuracy is a cross tabulation: what it caught, what it missed, "
+        "and what it wrongly flagged, against the reference standard",
+        _cited("STARD 2015, item 23"),
+        falsifier="An accuracy claim reporting only what was caught — hits with no "
+                  "row for misses or false alarms.",
+        triggers=["a check's accuracy is claimed",
+                  "a clean bill is reported from a check"],
+        citations=[(STARD + ", item 23", STARD_URL,
+                    "Cross tabulation of the index test results (or their "
+                    "distribution) by the results of the reference standard")],
+        sightings=[
+            ("the turn checker's own report, 2026-08-22",
+             "Eighteen candidates over 158 turns, all cleared — with the "
+             "false-negative rate admitted unmeasured in the same breath: the "
+             "cross tabulation's missing row, named and then not built.")],
+    ),
+
+    # --- Parnas 1972: the three owed rows, as one law ----------------------------
+    _law(
+        "a-boundary-is-judged-by-what-a-change-touches",
+        "A module boundary is judged by its three observable benefits: a changed "
+        "decision touches one module, modules are worked on separately, and each is "
+        "understood without the others",
+        _cited("Parnas 1972, the expected benefits of modular programming"),
+        falsifier="A change to one hidden decision that touches many modules; a "
+                  "module that cannot be understood without understanding its "
+                  "neighbours; work on one module that must wait on the internals of "
+                  "another.",
+        triggers=["a boundary between modules is drawn or defended"],
+        citations=[(PARNAS, PARNAS_URL,
+                    "The benefits expected of modular programming are: (1) "
+                    "managerial - development time should be shortened because "
+                    "separate groups would work on each module with little need for "
+                    "communication; (2) product flexibility - it should be possible "
+                    "to make drastic changes to one module without a need to change "
+                    "others; (3) comprehensibility - it should be possible to study "
+                    "the system one module at a time.")],
+        note="Covers the census's rows 4, 5 and 6 in one law, because the source "
+             "states them as one list: the benefits are the test. "
+             "a-thing-is-built-where-its-subject-lives says where a thing goes; this "
+             "is how to tell, after the fact, that it went to the wrong place — the "
+             "price is measured in what a change touches.",
+    ),
+
+    # --- Eidelman et al. 2009: the one owed row ----------------------------------
+    _law(
+        "an-imagined-plan-is-not-thereby-likely",
+        "Imagining a course in detail raises its felt likelihood and thence its felt "
+        "goodness; a plan's likelihood is graded by evidence, never by how vividly "
+        "it has been sketched",
+        _cited("Eidelman, Crandall & Pattershall 2009, study 3 (read from the "
+               "abstract; the full text is paywalled and the census says so)"),
+        falsifier="A plan preferred over its alternatives with no stated evidence "
+                  "beyond its own elaboration — the sketch standing where the grounds "
+                  "should be.",
+        triggers=["a plan is chosen among alternatives after one was sketched in "
+                  "detail"],
+        citations=[(EXISTENCE_BIAS + ", study 3", EXISTENCE_URL,
+                    "Imagining an event increases estimates of its likelihood, which "
+                    "in turn leads to favorable evaluation (Study 3).")],
+        note="The sibling of what-exists-is-not-thereby-chosen, one step earlier in "
+             "time: that law guards the standing thing, this guards the thing that "
+             "does not exist yet and already looks right because somebody drew it.",
+    ),
 ]
 
 

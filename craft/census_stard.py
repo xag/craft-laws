@@ -12,7 +12,9 @@ identifies a defect, against a person's ruling, over a corpus. Every STARD item 
 as a demand on a check's report, and where the analogy does not carry, the item is SET
 ASIDE and says so -- an item ruled out is a number too.
 
-  covered      an existing law or existing machinery already demands it
+  covered      an existing law or existing machinery already demands it (the owed
+               queue was drained into laws on 2026-08-24; each row's meaning text
+               still records what the gap was, and the laws are in practice.py)
   owed         the demand carries and nothing here makes it; a law candidate
   set aside    clinical or publishing machinery with no counterpart in a check
 
@@ -43,7 +45,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
           "the falsifier, stated before the evidence arrives; the hypothesis and "
           "kill-criterion kinds carry it and a-hypothesis-is-falsifiable enforces it"),
     # --- methods: study design -------------------------------------------------------
-    "5": ("owed", "Whether data collection was planned before the index test and "
+    "5": ("covered", "Whether data collection was planned before the index test and "
           "reference standard were performed (prospective study) or after (retrospective)",
           "whether the check's expectation was formed before its output was seen. An "
           "expectation written after the answer agrees with whatever happened; nothing "
@@ -52,31 +54,31 @@ CENSUS: dict[str, tuple[str, str, str]] = {
     "6": ("covered", "Eligibility criteria",
           "which items the check can convict — a-rate-names-the-population-it-was-"
           "computed-over, the law this source rooted"),
-    "7": ("owed", "On what basis potentially eligible participants were identified",
+    "7": ("covered", "On what basis potentially eligible participants were identified",
           "how the corpus a check ran over was assembled. A check reporting findings "
           "over a corpus somebody chose reports the choosing as much as the corpus"),
     "8": ("covered", "Where and when potentially eligible participants were identified "
           "(setting, location and dates)",
           "sightings-name-the-app: the app's name and the date stay on the evidence, "
           "because evidence anonymised cannot be asked 'did this really happen'"),
-    "9": ("owed", "Whether participants formed a consecutive, random or convenience "
+    "9": ("covered", "Whether participants formed a consecutive, random or convenience "
           "series",
           "THE COST-BLIND CENSUS DOCTRINE, unstated as a law. This package learned it "
           "the hard way — the convergence series was impeached because 'the miner picked "
           "laws it could see the compile route for' — and the remedy became a habit "
           "rather than a rule. The habit has no falsifier"),
     # --- methods: test methods -------------------------------------------------------
-    "10a": ("owed", "Index test, in sufficient detail to allow replication",
+    "10a": ("covered", "Index test, in sufficient detail to allow replication",
             "a check's own predicate, published well enough that somebody else could "
             "run it and get the same verdict"),
-    "10b": ("owed", "Reference standard, in sufficient detail to allow replication",
+    "10b": ("covered", "Reference standard, in sufficient detail to allow replication",
             "what the check is measured AGAINST — the ruling that says a finding was "
             "real. rulings.py records verdicts; nothing requires the standard be stated "
             "before a check claims accuracy against it"),
-    "11": ("owed", "Rationale for choosing the reference standard (if alternatives "
+    "11": ("covered", "Rationale for choosing the reference standard (if alternatives "
            "exist)",
            "why a person's ruling is the ground truth rather than some other test"),
-    "12a": ("owed", "Definition of and rationale for test positivity cut-offs or result "
+    "12a": ("covered", "Definition of and rationale for test positivity cut-offs or result "
             "categories of the index test, distinguishing pre-specified from exploratory",
             "every threshold a decider carries — 25 words, five sentences, six words for "
             "a run-in label — and whether it was set before or after seeing what it "
@@ -84,12 +86,12 @@ CENSUS: dict[str, tuple[str, str, str]] = {
     "12b": ("set aside", "Definition of and rationale for test positivity cut-offs or "
             "result categories of the reference standard",
             "a person's ruling has no cut-off; it is the standard"),
-    "13a": ("owed", "Whether clinical information and reference standard results were "
+    "13a": ("covered", "Whether clinical information and reference standard results were "
             "available to the performers/readers of the index test",
             "blinding. Whether the decider's author knew the answer while writing it — "
             "and the alarm corpora in this package were written by the same hand as the "
             "deciders they exercise"),
-    "13b": ("owed", "Whether clinical information and index test results were available "
+    "13b": ("covered", "Whether clinical information and index test results were available "
             "to the assessors of the reference standard",
             "whether the person ruling saw the check's verdict first. The adjudicator "
             "reads the finding before ruling on it, always, and that is not recorded "
@@ -104,7 +106,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
            "item. The convention here was convict with certainty or stay silent, "
            "and silence is indistinguishable from a clean corpus until the report "
            "says how much went untested and why"),
-    "16": ("owed", "How missing data on the index test and reference standard were "
+    "16": ("covered", "How missing data on the index test and reference standard were "
            "handled",
            "harness.check reports an unreadable ledger as UNKNOWN rather than gone, "
            "which is exactly this item obeyed — as a decision in one module, not as a "
@@ -112,7 +114,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
     "17": ("set aside", "Any analyses of variability in diagnostic accuracy, "
            "distinguishing pre-specified from exploratory",
            "subgroup analysis; no counterpart"),
-    "18": ("owed", "Intended sample size and how it was determined",
+    "18": ("covered", "Intended sample size and how it was determined",
            "how much corpus a check was calibrated on, decided before running it. The "
            "first version of the turn checker calibrated on one session with one hit and "
            "reported zero false positives"),
@@ -133,7 +135,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
            "and reference standard",
            "clinical timing; no counterpart"),
     # --- results: test results -------------------------------------------------------
-    "23": ("owed", "Cross tabulation of the index test results by the results of the "
+    "23": ("covered", "Cross tabulation of the index test results by the results of the "
            "reference standard",
            "THE CONFUSION MATRIX. A check reports what it caught and never what it "
            "missed or wrongly convicted. The turn checker recorded '18 candidates over "
@@ -192,10 +194,13 @@ def main(argv: list[str] | None = None) -> int:
     print(f"STARD 2015, every row of the checklist: {len(CENSUS)} classified\n")
     for route in ROUTES:
         print(f"  {route:<10} {tally.get(route, 0)}")
-    print(f"\n  One item rooted a law. {tally['owed']} more carry to a check and are "
-          f"unmet;\n  {tally['set aside']} are clinical or publishing machinery with no "
-          f"counterpart.\n  Run --owed for the list, which is the law queue this source "
-          f"actually offers.")
+    print()
+    print(f"  {tally['covered']} carry to a check and a law covers each; "
+          f"{tally['owed']} are owed;")
+    print(f"  {tally['set aside']} are clinical or publishing machinery with no "
+          f"counterpart.")
+    print("  Run --owed for whatever queue remains — an empty answer is the drained "
+          "state, not a silent one.")
     return 0
 
 

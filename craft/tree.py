@@ -985,4 +985,71 @@ DEBTS = [
                           "declared units have to get right."}),
         ],
     ),
+    Node(
+        id="the-prose-lane-contradicts-the-word-list-decision",
+        kind="debt",
+        links={"rests_on": ["a-word-list-is-a-reading-not-a-mechanization"]},
+        name="This repository decided that a law checked by matching words gets no "
+             "decider and never holds a handback, and the documentation lane gives three "
+             "such laws deciders and gates the build on them",
+        payload={
+            "what_it_costs":
+                "The decision above says it in one line - a law checked by matching words "
+                "in prose is unmechanized, it does not get a decider, and it never holds "
+                "a handback - and it says it with a measurement behind it: a word list "
+                "over a turn's prose was wrong about seven times in eight and twice "
+                "convicted the law being OBEYED, because the difference between a hedge "
+                "that is a defect and a hedge naming its own unknown is meaning.\n\n"
+                ""
+                "craft/prose.py holds seven checks. Four are structural and not in "
+                "scope: counting sentences in a paragraph, an exact repeat of a "
+                "substantial sentence, an acronym this document itself expands later, an "
+                "anchor that resolves to a heading. THREE ARE THE SHAPE THE DECISION "
+                "NAMES. Time anchors are a list of six words. Positional references are "
+                "four regular expressions over prose. Trailing conditions are two. Each "
+                "chooses which sentences are subject to its law by reading them, which "
+                "is the reading whatever decides afterwards. And CI runs "
+                "`craft.prose README.md`, so all three hold a handback.\n\n"
+                ""
+                "What is NOT known is how wrong they are. The seven-in-eight number "
+                "belongs to a different word list on a different corpus; these three have "
+                "never been measured. So the cost recorded here is the contradiction and "
+                "not its size, and finding the size is the first thing the discharge "
+                "asks for.",
+            "why_it_is_not_paid":
+                "Deleting them is cheap and leaves three documentation laws with no check "
+                "at all, on a lane whose other four checks cannot reach what they cover. "
+                "The two honest routes both cost more than an afternoon. Mechanizing them "
+                "wants a declared document model, which is "
+                "[[the-prose-lane-has-no-drawing]] and a vocabulary publish. Demoting "
+                "them wants a route this package has used once - the string-id skew radar "
+                "- and no second instance, so the shape is not yet a pattern.",
+        },
+        children=[
+            Node(id="three-of-seven-read-meaning-from-words", kind="grounds",
+                 name="Three of the lane's seven checks decide subjecthood by reading "
+                      "prose, and the build gates on all three",
+                 payload={"what": "check_time_anchors is a six-word list. "
+                                  "check_positional_references is four regular "
+                                  "expressions. check_trailing_conditions is two. The "
+                                  "workflow runs craft.prose over the README, so a hit "
+                                  "fails the build.",
+                          "where": "producer",
+                          "gap": "A reading of the module as it stands. It establishes "
+                                 "the contradiction and measures nothing about how often "
+                                 "these three are wrong."}),
+            Node(id="discharge-measure-then-demote-or-mechanize", kind="discharge",
+                 name="Measure the three against a corpus, then demote them to a radar or "
+                      "mechanize them against a declared model",
+                 payload={"route":
+                          "The decision was made on a number and these three have none, "
+                          "so the first step is the number: run them over the "
+                          "documentation this estate already has and read every hit. If "
+                          "they are wrong at anything like seven in eight they come out "
+                          "of the build that day. If they are not, the contradiction is "
+                          "still real and the route is the radar - report candidates, "
+                          "hold nothing - until [[the-prose-lane-has-no-drawing]] is paid "
+                          "and they can be mechanized properly."}),
+        ],
+    ),
 ]

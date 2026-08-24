@@ -861,6 +861,93 @@ PRACTICE = [
              "time: that law guards the standing thing, this guards the thing that "
              "does not exist yet and already looks right because somebody drew it.",
     ),
+    # --- the Agans census, 2026-08-24: the five rules the founding day left unread.
+    # --- The rule names are quoted from the author's own chapter PDF; where a law
+    # --- transfers a rule from debugging machines to judging work, the note says the
+    # --- transfer is ours.
+    _law(
+        "the-systems-own-record-is-read-first",
+        "A chase begins by reading what the system says about itself — the manual, "
+        "the design record, the declared behavior — before the first theory",
+        _agans("Understand the system"),
+        falsifier="A chase resolved by a fact the system's own record had stated all "
+                  "along, where that record was never opened — discoverable whenever "
+                  "the fix quotes the record it did not read.",
+        triggers=["a failure is being chased in a system that carries its own record"],
+        citations=[(f"{AGANS} — rule 1", AGANS_URL, "Understand the system")],
+        sightings=[
+            ("craft-laws, 2026-08-23",
+             "A sentence-length law was run over documentation for a week. Its own "
+             "trigger, in the file, said the app's voice — dry, terse, no explaining "
+             "text — and reading the law's record was the entire fix: the decider came "
+             "out of the lane the same hour the trigger was finally read.")],
+    ),
+    _law(
+        "a-hunt-narrows-the-space",
+        "Each observation in a hunt for a cause is chosen to rule out a region of "
+        "candidates, not to audition one candidate at a time",
+        _agans("Divide and conquer"),
+        falsifier="A chase whose successive observations each addressed a single "
+                  "candidate while the space stayed unordered — countable in an audit "
+                  "trail as steps that eliminated nothing beyond themselves.",
+        triggers=["a failure has more than a handful of candidate causes"],
+        citations=[(f"{AGANS} — rule 4", AGANS_URL, "Divide and conquer")],
+        note="The falsifier is honestly the weakest of the family: whether a step "
+             "narrowed the space is often a reading of the trail rather than a count "
+             "over it. It stays a reading until trails are data — which "
+             "the-trail-is-written-as-it-happens, minted beside it, is the "
+             "precondition for.",
+    ),
+    _law(
+        "the-trail-is-written-as-it-happens",
+        "Each act on a failure is recorded when it happens — what was done, in what "
+        "order, what was observed — never reconstructed afterwards",
+        _agans("Keep an audit trail"),
+        falsifier="An account of a chase written after the fact that cannot say which "
+                  "change preceded which observation; a fix whose trail begins at the "
+                  "commit that closed it.",
+        triggers=["a failure is chased across more than one attempt"],
+        citations=[(f"{AGANS} — rule 6", AGANS_URL, "Keep an audit trail")],
+        note="This estate practises it as substrate — claims filed at the moment of "
+             "claiming, flight tapes recorded from the first commit — and had no law "
+             "making the skipped trail a breach. The claims record is this rule as "
+             "data; the law is what makes not filing one visible.",
+    ),
+    _law(
+        "the-baseline-assumption-is-verified",
+        "The obvious precondition is verified before the clever cause is chased — the "
+        "power, the environment, the version actually running",
+        _agans("Check the plug"),
+        falsifier="A chase that ends at a false baseline assumption nobody had "
+                  "checked: the credential that was never loaded, the stale build, "
+                  "the wrong branch — while theories were built above it.",
+        triggers=["a failure is being chased", "a system stops working that worked"],
+        citations=[(f"{AGANS} — rule 7", AGANS_URL, "Check the plug")],
+        sightings=[
+            ("health, 2026-08-24",
+             "An app crash chased while the actual state was a clobbered .env.local — "
+             "the Vercel CLI had overwritten the credentials file, and the declared "
+             "diagnosis on the work map read: restoring creds and hardening the "
+             "missing-credential path. The plug, checked late.")],
+    ),
+    _law(
+        "a-resisting-failure-gets-fresh-eyes",
+        "A failure that resists is shown to a reader who has not been staring at it, "
+        "and explaining it to them counts as looking",
+        _agans("Get a fresh view"),
+        falsifier="Rounds of theories about one failure from one head, with no second "
+                  "reader brought in — countable in the record as authors per "
+                  "resisting failure.",
+        triggers=["a failure survives repeated attempts by the same author"],
+        citations=[(f"{AGANS} — rule 8", AGANS_URL, "Get a fresh view")],
+        sightings=[
+            ("this estate, 2026-08-24",
+             "A session's own summary of its thirteen failures misclassified the one "
+             "that mattered — verified work withdrawn as unnecessary, reported as "
+             "asserted work withdrawn as wrong. The owner brought in a fresh reader "
+             "for the review, and the misclassification was the first thing the "
+             "fresh reading found.")],
+    ),
 ]
 
 

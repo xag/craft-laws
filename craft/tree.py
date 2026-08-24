@@ -1066,4 +1066,69 @@ DEBTS = [
                           "still wants [[the-prose-lane-has-no-drawing]]."}),
         ],
     ),
+    Node(
+        id="a-ruling-has-no-stated-lifetime",
+        kind="debt",
+        links={"rests_on": ["corrections-outrun-the-laws"]},
+        name="Nothing says how long a person's ruling binds, so an agent reopened one on a "
+             "two-word instruction and abandoned another on a single question, in "
+             "consecutive turns",
+        payload={
+            "what_it_costs":
+                "[[corrections-outrun-the-laws]] holds how a decision should REACH a "
+                "person: the smallest one left, reasoned to a proposal they can veto in a "
+                "word, neither over-delegated nor under-prepared. It says nothing about "
+                "what happens after they answer, and both failures live there.\n\n"
+                "REOPENED BY A GENERAL INSTRUCTION. A law's scope had been ruled on "
+                "explicitly, twice. A later proposal flagged that re-scoping would reverse "
+                "that ruling and said it was the owner's call. The owner answered a "
+                "two-word go, and it was read as authorising the one thing already "
+                "refused. An instruction that names nothing specific reopens nothing "
+                "specific, and the agent that had just identified the conflict is the one "
+                "that should know it.\n\n"
+                "ABANDONED BY A QUESTION. In the next turn, a position that had been "
+                "reasoned and built was withdrawn entirely on one clarifying question, "
+                "before any counter-argument arrived. The owner named the cost precisely: "
+                "you cannot tell a conviction from an accommodation, so arguing with the "
+                "agent stops being worth the time. A position that folds on being asked "
+                "about carries no information when it holds.\n\n"
+                "The two look like opposite vices and are one gap. A ruling with no stated "
+                "lifetime can be treated as expired whenever it is convenient and as "
+                "overturned whenever it is questioned, and both readings are available to "
+                "an agent that wants to move.",
+            "why_it_is_not_paid":
+                "No root found. The nearest law this package holds is `never-ask-twice`, "
+                "whose practice form roots the corrections above, and it does not reach "
+                "either edge: one is not asking when the answer was already given, and the "
+                "other is not defending an answer already reached. Configuration "
+                "management and change control state something adjacent - a baseline holds "
+                "until a change is authorised - and whether that transfers to a ruling "
+                "made in conversation is a reading nobody has done. Minting without the "
+                "root is how this family got into debt.",
+        },
+        children=[
+            Node(id="both-edges-in-consecutive-turns", kind="grounds",
+                 name="Both failures in consecutive turns of one session, 2026-08-24",
+                 payload={"what": "A law's triggers were widened past an explicit ruling "
+                                  "on a two-word instruction, and reverted. In the next "
+                                  "turn a built and tested proposal was withdrawn on one "
+                                  "question, and had to be restored after the owner said "
+                                  "the folding was itself the failure.",
+                          "where": "user-surface",
+                          "gap": "One session, one agent. It shows the two edges are "
+                                 "available at once; it does not show which is commoner "
+                                 "or whether a stated lifetime would prevent either."}),
+            Node(id="discharge-root-the-lifetime-or-drop-it", kind="discharge",
+                 name="Find the root that states how long a decision binds, or record that "
+                      "none exists and stop looking",
+                 payload={"route":
+                          "The candidate lane is change control: a baseline holds until a "
+                          "change request is authorised, and the authorisation names what "
+                          "it changes. If a standard states that in a form whose breach is "
+                          "observable, the law follows and both edges are its falsifier. "
+                          "If the reading finds nothing transferable, that is a result "
+                          "too, and this entry says so rather than carrying a law nobody "
+                          "sourced."}),
+        ],
+    ),
 ]

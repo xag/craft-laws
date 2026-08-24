@@ -360,6 +360,10 @@ PRACTICE = [
                    (IPCC + ", paragraph 10", IPCC_URL,
                     "“About as likely as not” should not be used to express a lack of "
                     "knowledge."),
+                   (TK1974 + ", insensitivity to predictability", TK1974_URL,
+                    "The degree to which the description is favorable is "
+                    "unaffected by the reliability of that description or by the "
+                    "degree to which it permits accurate prediction."),
                    (IPCC + ", paragraph 2", IPCC_URL,
                     "Be prepared to make expert judgments in developing key findings, and "
                     "to explain those judgments by providing a traceable account: a "
@@ -762,7 +766,13 @@ PRACTICE = [
                     "registry)"),
                    (STARD + ", item 9", STARD_URL,
                     "Whether participants formed a consecutive, random or convenience "
-                    "series")],
+                    "series"),
+                   (TK1974 + ", the effectiveness of a search set", TK1974_URL,
+                    "assess the relative frequency by the ease with which words of "
+                    "the two types come to mind. Because it is much easier to "
+                    "search for words by their first letter than by their third "
+                    "letter, most people judge words that begin with a given "
+                    "consonant to be more numerous")],
         sightings=[
             ("the convergence series impeached, 2026-08-17",
              "A series of near-zero vocabulary costs was reported as evidence of "
@@ -1213,6 +1223,33 @@ PRACTICE = [
              "censused; closed by the protocol's `factors` field and the "
              "measurement's per-factor rows, with the decider convicting the "
              "aggregate-only report of a factor-declaring protocol.",
+    ),
+    # --- the last Kahneman root waiting, mechanized 2026-08-25. R4 and A2 landed as
+    # --- empirical roots on standing laws the same day; this one had no law to land on.
+    _law(
+        "a-cause-is-weighed-by-how-often-not-only-how-alike",
+        "A cause chosen because the symptom resembles it states the base rate beside "
+        "the resemblance — how often that cause family actually occurs here — or "
+        "states the rate unknown",
+        _cited("Tversky & Kahneman 1974, insensitivity to prior probability of "
+               "outcomes"),
+        falsifier="A diagnosis argued from resemblance alone — this failure looks "
+                  "like X — where occurrence data for the candidate causes existed "
+                  "and entered nowhere: the striking match preferred over the common "
+                  "cause.",
+        triggers=["a cause is identified from what the failure resembles"],
+        citations=[(TK1974 + ", insensitivity to prior probability", TK1974_URL,
+                    "the prior probability, or base-rate frequency, of the outcomes "
+                    "... should enter into any reasonable estimate ... If people "
+                    "evaluate probability by representativeness, therefore, prior "
+                    "probabilities will be neglected.")],
+        note="The practice face: the exotic cause that matches the symptom "
+             "beautifully loses to the boring cause that happens weekly, and the "
+             "record of past diagnoses IS the base rate — this estate files every "
+             "diagnosis, so how often each cause family occurs is a computable "
+             "number, which is what makes the law mechanizable: a diagnosis carrying "
+             "`resembles` carries `base_rate`, and 'unknown: why' is an honest value "
+             "where the record is too thin to count.",
     ),
 ]
 

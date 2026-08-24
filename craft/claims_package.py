@@ -54,8 +54,15 @@ VOCABULARY = [
         "(how many explanations preceded this one) and `new_observation` (the signal "
         "separating this theory from the last — required whenever prior_theories is "
         "nonzero, because two explanations with no new observation between them is "
-        "guessing). A diagnosis of a law going red also carries the `red` record: "
-        "check, culprit, tool_named, session.",
+        "guessing). A diagnosis MAY say `resembles` — the known failure shape the "
+        "symptom matched, an honest disclosure that the reasoning ran on "
+        "similarity — and saying it obliges `base_rate`: how often that cause "
+        "family actually occurs here, computable from the filed diagnoses "
+        "themselves, with 'unknown: why' the honest value where the record is "
+        "thin. The striking match is weighed against the common cause, per "
+        "a-cause-is-weighed-by-how-often-not-only-how-alike. A diagnosis of a "
+        "law going red also carries the `red` record: check, culprit, "
+        "tool_named, session.",
     ),
     KindDef(
         kind="detour",
@@ -206,7 +213,7 @@ COUNTER_EXAMPLES = [
 
 CLAIMS_PACKAGE = Package(
     name="claims",
-    version="0.3.0",
+    version="0.4.0",
     description="A session's assertions as data: seven claim kinds, graded evidence, "
                 "the measurement protocol and the agreed calibration scales — the "
                 "record the practice laws fire on, published so the vocabulary is "

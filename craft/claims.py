@@ -344,6 +344,34 @@ def check_prespecification_has_its_artifact(name: str, claims: list[dict]
     return out
 
 
+def check_resemblance_carries_the_base_rate(name: str, claims: list[dict]
+                                            ) -> list[ClaimFinding]:
+    """a-cause-is-weighed-by-how-often-not-only-how-alike, on the diagnosis kind.
+
+    A diagnosis MAY say `resembles`: the known failure shape the symptom matched,
+    which is an honest disclosure that the reasoning ran on similarity. Saying it
+    obliges `base_rate`: how often that cause family actually occurs here — and the
+    filed diagnoses ARE the occurrence record, so the number is computable, with
+    "unknown: <why>" the honest value where the record is too thin. Resemblance
+    disclosed without the rate is the paper's finding restated as a record: the
+    striking match, with how often it actually happens entered nowhere."""
+    law = "a-cause-is-weighed-by-how-often-not-only-how-alike"
+    out = []
+    for i, c in enumerate(claims):
+        if c.get("kind") != "diagnosis":
+            continue
+        if not str(c.get("resembles") or "").strip():
+            continue
+        if str(c.get("base_rate") or "").strip():
+            continue
+        out.append(ClaimFinding(_law(law), f"{name}#{i + 1}",
+                                str(c.get("text", ""))[:120],
+                                "a cause chosen by resemblance with no base rate "
+                                "beside it — how alike entered the record and how "
+                                "often entered nowhere"))
+    return out
+
+
 def check_figures_break_down_by_declared_factors(name: str, claims: list[dict]
                                                  ) -> list[ClaimFinding]:
     """a-figure-is-broken-down-by-its-declared-factors, on the protocol route.
@@ -427,7 +455,8 @@ CHECKS = (check_done_is_observed, check_fixed_reproduced_first,
           check_detours_say_so, check_confirmations_carry_their_account,
           check_measurements_state_their_protocol, check_grades_are_calibrated,
           check_prespecification_has_its_artifact,
-          check_figures_break_down_by_declared_factors)
+          check_figures_break_down_by_declared_factors,
+          check_resemblance_carries_the_base_rate)
 
 
 def check_file(path: Path) -> list[ClaimFinding]:
@@ -469,6 +498,8 @@ def _alarm() -> int:
          "reference_standard": "r", "author_knew_answers": True,
          "judge_saw_verdict": True, "caught": 0, "misses": "none"},
         {"kind": "protocol", "text": "a name wearing the kind", "name": "bare"},
+        {"kind": "diagnosis", "text": "looks exactly like the cache bug",
+         "prior_theories": 0, "resembles": "the stale-widget cache failure"},
         {"kind": "protocol", "name": "split-run", "text": "a run declaring factors",
          "corpus": "c", "expectations": "e", "stopping": "none",
          "factors": ["language"]},
@@ -492,6 +523,10 @@ def _alarm() -> int:
          "still_broken": "the MCP card until the host refreshes"},
         {"kind": "confirmation", "text": "the suite already gates itself correctly",
          "checked": "ran npm test with credentials stripped: 87 tests, 6.4s, 2 skipped"},
+        {"kind": "diagnosis", "text": "the crash is a missing credential",
+         "prior_theories": 0, "resembles": "the clobbered .env.local of 2026-08-24",
+         "base_rate": "3 of the last 4 startup crashes in this estate were "
+                      "environment, not code"},
         {"kind": "diagnosis", "text": "a finding graded on the agreed scales",
          "evidence_strength": "limited", "agreement": "high",
          "why_low": "one run only; the suite has not been re-run on another machine"},

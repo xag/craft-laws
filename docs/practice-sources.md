@@ -199,21 +199,21 @@ The author consortium's own PDF. The Essential 10 is the set the guidelines name
 
 | # | bias | status |
 |---|---|---|
-| R1 | insensitivity to prior probability of outcomes | root waiting — base rates; nearest law is the rate law's denominator, not the same thing |
+| R1 | insensitivity to prior probability of outcomes | roots `a-cause-is-weighed-by-how-often-not-only-how-alike` (2026-08-25), with a decider: a diagnosis saying `resembles` carries `base_rate`, computable from the filed diagnoses themselves |
 | R2 | **insensitivity to sample size** | roots `calibration-size-is-declared-before-the-run` (second, empirical root beside STARD 18) |
 | R3 | misconceptions of chance (gambler's fallacy) | recorded in the argument census (Greenwell row) — vocab lane |
-| R4 | insensitivity to predictability | root waiting |
+| R4 | insensitivity to predictability | roots `a-qualifier-is-licensed-by-the-evidence` (cited 2026-08-25): confidence unaffected by the reliability of its inputs is the unlicensed qualifier's empirical mechanism |
 | R5 | the illusion of validity | roots `blindness-is-disclosed`'s worry: consistency of inputs breeds confidence regardless of accuracy |
 | R6 | **misconceptions of regression** | roots `regression-is-the-null-after-an-extreme`, minted 2026-08-24 from this row |
 | A1 | biases due to the retrievability of instances | roots `an-imagined-plan-is-not-thereby-likely`'s family (availability) |
-| A2 | biases due to the effectiveness of a search set | root waiting |
+| A2 | biases due to the effectiveness of a search set | roots `a-corpus-names-its-assembly` (cited 2026-08-25): the search set organizes what is found, which is why a corpus states whether it was exhaustive, random or convenient |
 | A3 | biases of **imaginability** | roots `an-imagined-plan-is-not-thereby-likely` (second, older root beside Eidelman study 3) |
 | A4 | illusory correlation | argument-lane (Greenwell: correlation family) — vocab lane |
 | An1 | **insufficient adjustment** from an anchor | roots `a-view-moves-on-observation-not-on-company`'s anchoring half (the empirical root beneath IPCC ¶3, exactly as the shortlist predicted) |
 | An2 | biases in the evaluation of **conjunctive and disjunctive events** | roots `a-conditional-finding-grades-its-condition` — chained pins are a conjunctive event, overestimated exactly as the paper says |
 | An3 | anchoring in the assessment of subjective probability distributions | with An1 |
 
-**Counted: 3 heuristics, 13 biases — 8 rooting existing or same-day laws, 2 recorded in the argument lane, 3 roots waiting (R1, R4, A2).** Roots waiting are not owed laws: a bias grounds a rule only when a work-shaped rule can carry a falsifier, and none has been stated for these three.
+**Counted: 3 heuristics, 13 biases — 11 rooting laws, 2 recorded in the argument lane, 0 roots waiting** (R1, R4 and A2 landed 2026-08-25: one as a new law with a decider, two as the empirical roots beneath standing laws).
 
 # Census: Model Cards and Datasheets, read whole (2026-08-24)
 

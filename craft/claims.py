@@ -29,6 +29,20 @@ between what was done and what was said about it):
     {"kind": "confirmation", "text": "the user is right that the suite gates itself",
      "checked": "ran npm test with credentials stripped: 87 tests, 6.4s, 2 skipped"}
 
+    {"kind": "measurement", "text": "the turn checker's accuracy",
+     "corpus": "every transcript in ~/.claude/projects, exhaustive",
+     "size_declared_before": true, "prespecified": true,
+     "reference_standard": "a person's reading of each candidate",
+     "author_knew_answers": false, "judge_saw_verdict": true,
+     "caught": 1, "false_alarms": 17, "misses": "unmeasured: no sampling of the cleared"}
+
+A MEASUREMENT is an accuracy, coverage or calibration figure filed as a claim, and its
+fields are STARD 2015's items as data — the protocol a diagnostic-accuracy report must
+state, imposed on a check's report the day the laws arrived, so the laws are checked by
+code and not by a reader. Absent fields convict; an honest "unmeasured: why" in
+`misses` passes the code check and stays visible, because reporting the missing row as
+missing is the minimum item 23 demands and hiding it is the breach.
+
 A CONFIRMATION is an agreement filed as a claim: "you are right", "yes, that is the
 cause", "the premise holds". It is the easiest claim to make and the least likely to
 rest on anything — agreeing reads as deference, which is what makes an unchecked one
@@ -213,9 +227,56 @@ def check_confirmations_carry_their_account(name: str, claims: list[dict]
     return out
 
 
+# A measurement claim's protocol, field by field, each field one law. Table-driven
+# because the deciders are field-presence checks and a table keeps the law-to-field
+# mapping readable in one place; the VERDICT stays structural (the field is there or it
+# is not), which is what keeps this a check in code rather than a reading.
+_MEASUREMENT_PROTOCOL = (
+    ("corpus", "a-corpus-names-its-assembly",
+     "the corpus is unstated — findings over a corpus name how it was assembled, "
+     "and whether the series was exhaustive, random, or convenient"),
+    ("size_declared_before", "calibration-size-is-declared-before-the-run",
+     "nothing says the calibration size was settled before the run — a figure whose "
+     "corpus was sized after the results is tuned, not measured"),
+    ("prespecified", "prespecified-is-distinguished-from-exploratory",
+     "nothing says whether the thresholds were set before or after the results were "
+     "seen"),
+    ("reference_standard", "the-reference-standard-is-named-with-its-rationale",
+     "no reference standard is named — accuracy against nothing is a number about "
+     "nothing"),
+    ("author_knew_answers", "blindness-is-disclosed",
+     "blinding is undisclosed: did the check's author know the answers while writing "
+     "it?"),
+    ("judge_saw_verdict", "blindness-is-disclosed",
+     "blinding is undisclosed: did the judge see the check's verdict before "
+     "deciding?"),
+    ("misses", "a-check-reports-its-misses",
+     "only what was caught is reported — the cross tabulation has no row for misses; "
+     "'unmeasured: <why>' is an honest value and absence is not"),
+)
+
+
+def check_measurements_state_their_protocol(name: str, claims: list[dict]
+                                            ) -> list[ClaimFinding]:
+    """An accuracy, coverage or calibration figure states its protocol: STARD's items
+    as fields, each convicting by absence. The one field with graded honesty is
+    `misses` — an explicit "unmeasured: why" passes, silence does not."""
+    out = []
+    for i, c in enumerate(claims):
+        if c.get("kind") != "measurement":
+            continue
+        for field, law, why in _MEASUREMENT_PROTOCOL:
+            if field in c and (c[field] is not None and str(c[field]).strip() != ""):
+                continue
+            out.append(ClaimFinding(_law(law), f"{name}#{i + 1}",
+                                    str(c.get("text", ""))[:120], why))
+    return out
+
+
 CHECKS = (check_done_is_observed, check_fixed_reproduced_first,
           check_one_candidate_per_fix, check_theories_carry_observations,
-          check_detours_say_so, check_confirmations_carry_their_account)
+          check_detours_say_so, check_confirmations_carry_their_account,
+          check_measurements_state_their_protocol)
 
 
 def check_file(path: Path) -> list[ClaimFinding]:
@@ -244,6 +305,8 @@ def _alarm() -> int:
         {"kind": "done", "text": "it renders",
          "evidence": [{"where": "stand-in", "what": "jsdom run"}]},
         {"kind": "confirmation", "text": "you are right, the tests are irrelevant"},
+        {"kind": "measurement", "text": "the checker is accurate",
+         "corpus": "twenty transcripts", "caught": 18},
     ]
     clean = [
         {"kind": "done", "text": "the sheet renders on the phone",
@@ -259,6 +322,13 @@ def _alarm() -> int:
          "still_broken": "the MCP card until the host refreshes"},
         {"kind": "confirmation", "text": "the suite already gates itself correctly",
          "checked": "ran npm test with credentials stripped: 87 tests, 6.4s, 2 skipped"},
+        {"kind": "measurement", "text": "the three word lists over the estate's docs",
+         "corpus": "87 markdown files across the estate, exhaustive glob",
+         "size_declared_before": True, "prespecified": True,
+         "reference_standard": "a person reading every hit in its paragraph",
+         "author_knew_answers": True, "judge_saw_verdict": True,
+         "caught": 3, "false_alarms": 2,
+         "misses": "unmeasured: no sampling of the files with no hits"},
     ]
     dead = []
     for check in CHECKS:

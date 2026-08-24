@@ -14,6 +14,11 @@
       "name": "grounding",
       "version": "1.2.0",
       "sha256": "7a33466761cf675d4282830b973cc2a85a3ad11858f99398efba6c8580b42099"
+    },
+    {
+      "name": "claims",
+      "version": "0.1.0",
+      "sha256": "61dc9271912ab8ebbf769e394b251a8ba46ae3428c2306d767aeff4cc46511cb"
     }
   ]
 }

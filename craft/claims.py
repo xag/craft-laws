@@ -97,6 +97,12 @@ def _law(law_id: str) -> str:
 
 _WHERES = ("user-surface", "stand-in", "producer")
 
+# The record's kinds, one authoritative tuple. claims@0.1.0 publishes their MEANING;
+# this is the checking side's list, and tests/test_claims_package.py holds the two
+# equal so the published meaning and the running deciders cannot drift apart silently
+# — the LAWS.md discipline, applied to a vocabulary that first grew invisibly in code.
+CLAIM_KINDS = ("done", "fixed", "diagnosis", "detour", "confirmation", "measurement")
+
 
 def check_done_is_observed(name: str, claims: list[dict]) -> list[ClaimFinding]:
     """A done/fixed claim carries user-surface evidence, or a stand-in that names its

@@ -1,0 +1,18 @@
+{
+  "source": "README.md",
+  "sha256": "5096496a5e58fadca96e1ea7ac36bc8c4f4541ca44100a5353738b05c37bb70d",
+  "derived_by": "session b140da27-6325-4548-b0fe-091ed49dca92, 2026-08-25",
+  "coverage_note": "claim-kind assertions only; the deriver chose the nodes, and under-derivation is measured by a later audit of the same source, never guessed by code",
+  "nodes": [
+    {
+      "kind": "diagnosis",
+      "quote": "So the rules are enforced by whoever remembers them, on whatever screens somebody looks at — which is how that sentence reached production.",
+      "claim": 46
+    },
+    {
+      "kind": "diagnosis",
+      "quote": "`counts-are-computed` earned its place when this very README said \"twelve\" long after the answer had changed.",
+      "claim": 47
+    }
+  ]
+}

@@ -911,9 +911,9 @@ DEBTS = [
         id="the-deciders-run-by-hand",
         kind="debt",
         links={"rests_on": ["the-process-is-ruled-too"]},
-        name="PAID IN ITS DIFF HALF 2026-08-25 - the hook now sees the turn whose work "
-             "reached no record, and the intake rate is measured; the RESPONSE half is "
-             "CLOSED 2026-08-25: prose is not a checked channel, three attempts dead",
+        name="PAID 2026-08-25 - the hook sees the turn whose work reached no record, "
+             "the intake rate is measured, and prose is checked through its derived "
+             "drawing: structure as data, every validation in code",
         payload={
             "what_it_costs":
                 "craft.claims is real and it works, and it can only convict what was chosen "
@@ -931,25 +931,30 @@ DEBTS = [
                 "commits filing a claim in the same commit runs from zero to about a "
                 "quarter, with most repos near three percent - a floor, since same-turn "
                 "separate-commit filings count as silence, and the first number the "
-                "reporting-bias law ever had. The RESPONSE half is CLOSED, not built: "
-                "three attempts are dead. (1) A word list that judged prose against a "
-                "law: wrong seven times in eight. (2) A model sampled per turn: 33-47 "
-                "seconds, non-deterministic. (3) A word list that only proposed, gated "
-                "behind an already-silent record: 70 false alarms in 176 hits on its "
-                "own calibration session, removed the same day it was built, under the "
-                "owner's standard of 2026-08-25 that a mechanism with false positives "
-                "is not accepted and word lists over prose are not accepted. The three "
-                "cover the design space: deterministic code cannot read meaning, and a "
-                "model is not deterministic.",
+                "reporting-bias law ever had. THE RESPONSE HALF: prose is checked "
+                "through its DRAWING (craft/drawing.py). The author derives, as data, "
+                "which sentences assert a claim and of which kind; code then validates "
+                "with zero false positives - the drawing is pinned to the source text "
+                "by hash so an edit without re-derivation is stale, every node quotes "
+                "its sentence verbatim so an invented reading is unanchored, and every "
+                "node either references the filed claim (kind checked against the "
+                "record) or is convicted as unfiled. Three earlier attempts stand "
+                "recorded as what NOT to build: a word list that judged (wrong seven "
+                "in eight), a per-turn model (33-47 seconds, non-deterministic), a "
+                "word list that proposed (70 false alarms in 176, removed the day it "
+                "was built - the owner's standard: no word lists over prose, no "
+                "mechanisms with false positives). The owner's direction of "
+                "2026-08-25 set the design: the ambition to check prose stands; "
+                "constraints specify the solution, they do not cancel the goal.",
             "why_it_is_not_paid":
-                "The closure is the answer to this field, not a failure against it: "
-                "prose is not a checked channel. A sentence about work is credible "
-                "only through the record; the record is data the deciders check with "
-                "zero false positives; and the diff-side informant establishes, from "
-                "tool-call data alone, the one fact needed - work happened in a "
-                "repository whose record this turn did not touch. Anything the "
-                "response asserts beyond the record is unverified by definition, and "
-                "no code will pretend to verify it.",
+                "PAID, with the fallible layer named rather than hidden: the "
+                "derivation is authored, not computed, so it can under-report - the "
+                "same direction as the diff-side informant, and measured the same "
+                "way, by a later audit of the same source against its drawing. What "
+                "the checks themselves assert is exact: staleness, anchoring, and "
+                "the join to the record are decided from data, and a wrong drawing "
+                "is a committed, quotable artifact anyone can refute and correct on "
+                "the record.",
         },
         children=[
             Node(id="discharge-check-the-turn", kind="discharge",

@@ -22,6 +22,18 @@ instance stops counting, and every check that hides it must SAY it hid it, with 
 ruling's id), **fix** (the red stays until the code moves; the verdict is the instruction).
 A ruling never sharpens or blunts the law itself — laws move in this package, through the loop.
 
+WHO MAY RULE WHAT (only-the-owner-exempts, routed 2026-08-25): an adjudicator may rule
+`fix` and `stand` — both leave the red standing, so a wrong one is corrected by the next
+run — and only the owner exempts, because `exempt` is the one verdict that removes
+evidence and a wrong one is invisible afterwards. A ruling carries `by` (who settled it;
+absent means the owner's own hand, from before delegation existed) and, when delegated,
+`rested_on` (the finding, the drawing, the law it was judged against — a delegated
+ruling that names nothing it rested on is refused). `settle` enforces both: a delegated
+exempt, or a delegated ruling resting on nothing, is not consulted as settled — the card
+returns to the deck carrying `escalate`, the reason in words, for the consumer to deal
+to its owner's queue. The escalation is DATA on the deck; which queue it reaches is each
+consumer's wiring, not this module's.
+
     python -m craft.rulings --alarm    every transformer against a guilty and a clean case
 """
 
@@ -398,7 +410,8 @@ def finish(cards: dict, names: dict[str, str], index: dict,
             c["text"] = ask(c, names, questions)
 
 
-def settle(cards: list[dict], recorded: dict[str, dict]
+def settle(cards: list[dict], recorded: dict[str, dict], *,
+           owner: str | None = None
            ) -> tuple[list[dict], list[dict], list[str]]:
     """The consultation that makes a ruling a decision rather than a display mark.
 
@@ -421,8 +434,27 @@ def settle(cards: list[dict], recorded: dict[str, dict]
     for c in cards:
         r = recorded.get(c["id"]) or {}
         v = r.get("verdict")
-        entry = ({**c, "ruling": {k: r.get(k) for k in ("verdict", "note", "by", "at")}}
+        by = r.get("by")
+        # Routing is OPT-IN by the owner declaration - the owner's name is a thing
+        # only the app knows, and a pipeline that guessed it would escalate the
+        # owner's own hand (the first alarm run of this change did exactly that,
+        # against a real consumer's rulings). With no owner declared the historical
+        # behavior stands; with one declared, absent `by` is the owner's own hand,
+        # because every ruling predating delegation was the owner's
+        delegated = owner is not None and by is not None and by != owner
+        entry = ({**c, "ruling": {k: r.get(k)
+                                  for k in ("verdict", "note", "by", "at", "rested_on")}}
                  if v in ("stand", "exempt", "fix") else c)
+        if delegated and v == "exempt":
+            deck.append({**entry, "escalate":
+                         f"only the owner exempts: {by!r} ruled exempt, and exempt "
+                         "removes evidence — escalated, dealt on to the owner"})
+            continue
+        if delegated and v in ("stand", "fix") and not r.get("rested_on"):
+            deck.append({**entry, "escalate":
+                         f"a delegated ruling names what it rested on, and {by!r}'s "
+                         f"{v} names nothing — refused, dealt on"})
+            continue
         (ruled if v in ("stand", "exempt") else deck).append(entry)
     fresh = {c["id"] for c in cards}
     orphans = [
@@ -603,6 +635,26 @@ def _alarm() -> int:
           and any("the fix landed" in o for o in orphans if o.startswith("ruling:gone-fix"))
           and any("drifted" in o for o in orphans if o.startswith("ruling:gone-stand")),
           settle([mk("ruling:a")], {})[0] == [mk("ruling:a")])
+
+    # the routing (only-the-owner-exempts): a delegated exempt is dealt on, a
+    # delegated stand resting on nothing is refused, and the owner's own hand -
+    # named or historical - settles as ever
+    D = {"verdict": "exempt", "by": "adjudicator", "at": "t", "note": ""}
+    deck2, ruled2, _ = settle(
+        [mk("ruling:x"), mk("ruling:y"), mk("ruling:z"), mk("ruling:w")],
+        {"ruling:x": D,
+         "ruling:y": {**D, "verdict": "stand"},
+         "ruling:z": {**D, "verdict": "stand",
+                      "rested_on": {"finding": "f", "law": "l"}},
+         "ruling:w": {**D, "by": "o"}},
+        owner="o")
+    alarm("settle routes the delegated verdicts",
+          [c["id"] for c in deck2] == ["ruling:x", "ruling:y"]
+          and "only the owner exempts" in deck2[0]["escalate"]
+          and "names nothing" in deck2[1]["escalate"]
+          and [c["id"] for c in ruled2] == ["ruling:z", "ruling:w"],
+          # no owner declared: the historical behavior, nothing escalates
+          settle([mk("ruling:x")], {"ruling:x": D})[1][0]["id"] == "ruling:x")
 
     # verdict_for: the check and the card land on the same identity
     alarm("verdict_for",

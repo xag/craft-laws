@@ -894,8 +894,9 @@ DEBTS = [
         kind="debt",
         links={"rests_on": ["only-the-owner-exempts"],
                "blocked_by": ["epure:no-kind-records-an-adjudication"]},
-        name="only-the-owner-exempts says an adjudicator rules `fix` and `stand` and only "
-             "`exempt` escalates - and craft/rulings.py still deals every card to the owner",
+        name="DISCHARGED 2026-08-25 - settle routes by the decision: a delegated fix or "
+             "stand settles with what it rested on, a delegated exempt is refused and "
+             "dealt on as data, and the orphan check keeps a delegated ruling honest",
         payload={
             "what_it_costs":
                 "The decision is recorded and nothing routes by it, so the queue still fills "
@@ -904,10 +905,17 @@ DEBTS = [
                 "readings a tool settles - which is the way a review track dies, and the "
                 "reason the decision was made.",
             "why_it_is_not_paid":
-                "It needs a second surface as well as this one: the adjudicator's verdict has "
-                "to be recorded with what it rested on (the finding, the drawing, the law), "
-                "and an escalation has to reach the docket rather than a printed line. The "
-                "pipeline half is here; the queue half is not.",
+                "PAID in the pipeline, with the queue half's boundary stated rather than "
+                "crossed. A ruling carries `by` and, when delegated, `rested_on`; settle "
+                "takes the owner's name (opt-in - the first alarm run of the change "
+                "escalated the owner's own hand against a real consumer's rulings, and "
+                "the owner declaration is exactly the thing only the app knows) and "
+                "routes: delegated fix and stand settle with what they rested on, a "
+                "delegated ruling resting on nothing is refused, and a delegated exempt "
+                "returns to the deck carrying `escalate` with the reason in words. The "
+                "escalation is DATA on the deck; which queue it reaches - the docket, an "
+                "app's own deck - is each consumer's wiring, which is where the queue "
+                "half always belonged: this module knows no app.",
         },
         children=[
             Node(id="discharge-route-the-cards", kind="discharge",

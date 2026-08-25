@@ -13,3 +13,4 @@ uv.lock
 
 # Findings and the once-per-report marker: evidence about a run, not source.
 .craft/seen.json
+.craft/answers.jsonl

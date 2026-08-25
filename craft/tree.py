@@ -800,7 +800,8 @@ DEBTS = [
     Node(
         id="corrections-outrun-the-laws",
         kind="debt",
-        links={"rests_on": ["a-human-found-defect-enters-as-a-law"]},
+        links={"rests_on": ["a-human-found-defect-enters-as-a-law"],
+               "blocked_by": ["the-practice-family-cites-nothing"]},
         name="Defects a person found in one session, none of which any law forbids: a claim "
              "hedged past its own evidence, reasoning from one context written into "
              "another's record, two ways of spending a person's attention badly, and "
@@ -893,7 +894,8 @@ DEBTS = [
     Node(
         id="the-ruling-track-is-decided-and-unbuilt",
         kind="debt",
-        links={"rests_on": ["only-the-owner-exempts"]},
+        links={"rests_on": ["only-the-owner-exempts"],
+               "blocked_by": ["epure:no-kind-records-an-adjudication"]},
         name="only-the-owner-exempts says an adjudicator rules `fix` and `stand` and only "
              "`exempt` escalates - and craft/rulings.py still deals every card to the owner",
         payload={

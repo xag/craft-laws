@@ -911,9 +911,9 @@ DEBTS = [
         id="the-deciders-run-by-hand",
         kind="debt",
         links={"rests_on": ["the-process-is-ruled-too"]},
-        name="PAID 2026-08-25, both halves - the hook sees the turn whose work reached "
-             "no record, reads the handback for claim shapes, and the intake rate is "
-             "measured; conviction stays in code over the filed record",
+        name="PAID IN ITS DIFF HALF 2026-08-25 - the hook now sees the turn whose work "
+             "reached no record, and the intake rate is measured; the RESPONSE half is "
+             "CLOSED 2026-08-25: prose is not a checked channel, three attempts dead",
         payload={
             "what_it_costs":
                 "craft.claims is real and it works, and it can only convict what was chosen "
@@ -931,30 +931,25 @@ DEBTS = [
                 "commits filing a claim in the same commit runs from zero to about a "
                 "quarter, with most repos near three percent - a floor, since same-turn "
                 "separate-commit filings count as silence, and the first number the "
-                "reporting-bias law ever had. "
-                "THE RESPONSE HALF, paid the same day as the third shape the two dead "
-                "attempts left open: a claim-shape radar over the handback that "
-                "PROPOSES and never judges. The word list that judged prose against a "
-                "law was wrong seven times in eight because word-shapes do not carry "
-                "meaning; the model per turn cost 33-47 seconds on the wrong "
-                "substrate. The radar keeps the words and drops the judging - it fires "
-                "only when the record is already silent where the turn worked, names "
-                "the sentence that wears a claim kind's shape, and asks for the claim "
-                "or a reword; every conviction still happens in code over the filed "
-                "record. Its first calibration, protocoled before the run and filed "
-                "with per-kind rows: 106 caught, 70 false alarms over one session's "
-                "297 handbacks - precise where the shape is a verdict (confirmation, "
-                "measurement), noisy where a verb doubles as a proposal (fixed) - and "
-                "a false positive costs one line of information behind an "
-                "already-earned note, which is the price the design set.",
+                "reporting-bias law ever had. The RESPONSE half is CLOSED, not built: "
+                "three attempts are dead. (1) A word list that judged prose against a "
+                "law: wrong seven times in eight. (2) A model sampled per turn: 33-47 "
+                "seconds, non-deterministic. (3) A word list that only proposed, gated "
+                "behind an already-silent record: 70 false alarms in 176 hits on its "
+                "own calibration session, removed the same day it was built, under the "
+                "owner's standard of 2026-08-25 that a mechanism with false positives "
+                "is not accepted and word lists over prose are not accepted. The three "
+                "cover the design space: deterministic code cannot read meaning, and a "
+                "model is not deterministic.",
             "why_it_is_not_paid":
-                "PAID, and the boundary that made it hard is kept, not crossed: only a "
-                "mechanized law holds a handback, and a reading law can only be "
-                "reported. Both halves of the payment are information - the silence "
-                "note and the shape note inform the author while the sentence can "
-                "still be fixed, and nothing blocks on a reading. The check reads "
-                "what the turn actually produced, diff and response both, which is "
-                "what this field always demanded.",
+                "The closure is the answer to this field, not a failure against it: "
+                "prose is not a checked channel. A sentence about work is credible "
+                "only through the record; the record is data the deciders check with "
+                "zero false positives; and the diff-side informant establishes, from "
+                "tool-call data alone, the one fact needed - work happened in a "
+                "repository whose record this turn did not touch. Anything the "
+                "response asserts beyond the record is unverified by definition, and "
+                "no code will pretend to verify it.",
         },
         children=[
             Node(id="discharge-check-the-turn", kind="discharge",

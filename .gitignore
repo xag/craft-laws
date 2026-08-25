@@ -12,4 +12,4 @@ uv.lock
 .quern/flight/
 
 # Findings and the once-per-report marker: evidence about a run, not source.
-.craft/
+.craft/seen.json

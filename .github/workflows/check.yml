@@ -90,6 +90,10 @@ jobs:
         run: uv run python -m craft.genericity
       - name: This repo's own claims hold
         run: uv run python -m craft.claims claims.jsonl
+      - name: Work claims name the decisions consulted, and the names resolve
+        run: uv run python -m craft.consulted claims.jsonl
+      - name: The consult gate convicts what it must
+        run: uv run python -m craft.consulted --alarm
       - name: The README passes its own laws
         run: uv run python -m craft.prose README.md
       - name: The README's drawing is fresh, anchored, and joined to the record

@@ -355,6 +355,19 @@ DECISIONS = [
                           "real, which is the whole argument for a law. Deleting them "
                           "would lose the finding to keep the tooling tidy, and would "
                           "leave the habit they name unnamed."}),
+            Node(id="the-rejected-alternative-was-rebuilt", kind="grounds",
+                 name="2026-08-25: the rejected alternative was rebuilt, and no "
+                      "check fired",
+                 payload={"what":
+                          "A pattern set over the turn's final text shipped under "
+                          "alt-keep-them's own defence, reworded. 70 false alarms "
+                          "in 176 hits; removed the same day by the owner reading "
+                          "the summary - every gate passed, since each reads "
+                          "records, laws or the thing itself, and none compares "
+                          "new work against this file's decisions.",
+                          "where": "user-surface",
+                          "gap": "one rebuild observed; the estate-wide rebuild "
+                                 "rate is unmeasured"}),
         ],
     ),
 ]

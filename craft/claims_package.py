@@ -20,6 +20,13 @@ counted zero, and the owner asked the right question — how did the vocabulary 
 grow — before this publish made the growth visible. That history is the package's own
 first lesson: vocabulary that lives only in code is vocabulary the estate's instruments
 cannot see.
+
+0.5.0 is that lesson failing to hold on its own, and the repair: the drawing shape
+(craft/drawing.py, the prose lane's derived model) shipped 2026-08-25 defined only in
+a module docstring — the same flaw, caught the same way, by the owner asking whether
+the vocabulary grew. The two kinds are published here, and a test now binds the fields
+the checking code reads to the fields these descriptions name, so the next shape
+cannot drift silently in either direction.
 """
 
 from __future__ import annotations
@@ -115,6 +122,37 @@ VOCABULARY = [
         "judgment.",
     ),
     KindDef(
+        kind="drawing",
+        description="The derived model of one prose file: which of its sentences "
+        "assert claims, held as data so code can validate what no code could read "
+        "from the prose itself. Carries `source` (the prose file it models), "
+        "`sha256` (the source_hash of the text at derivation time, line endings "
+        "normalized — an edit without re-derivation is convicted as stale), and its "
+        "annotation children (wire format: F + '.drawing.json' beside the source, "
+        "with the annotations as its `nodes` list). The derivation is authored by an "
+        "agent and can under-report; every check on it is code in craft/drawing.py "
+        "and exact: staleness by hash, anchoring by verbatim containment, the join "
+        "by reference into claims.jsonl. Root decision: prose is checked through "
+        "its drawing (owner, 2026-08-25) — the ambition to check prose stands, and "
+        "word lists and pattern matching over the prose are excluded; the deriver "
+        "chooses the nodes, code holds the drawing to the source, the record, and "
+        "itself.",
+    ),
+    KindDef(
+        kind="annotation",
+        description="One sentence of a drawing's source, annotated as asserting a "
+        "claim. Carries `kind` (which claim kind the sentence asserts — one of this "
+        "package's claim kinds, checked against the deciders' list), `quote` (the "
+        "sentence VERBATIM — whitespace runs collapse to one canonical form, "
+        "nothing else; a quote the source does not contain convicts as unanchored, "
+        "which is what makes a wrong derivation refutable by code), and exactly one "
+        "of `claim` (1-based line of the filed claim in the repo's claims.jsonl, "
+        "whose kind must match) or `unfiled` (why no claim is filed — convicted, "
+        "with the remedy stated: file the claim, reword the prose, or correct the "
+        "drawing). An annotation with neither is unjoined and convicts: a drawing "
+        "states the join explicitly either way.",
+    ),
+    KindDef(
         kind="evidence",
         description="One observation offered for a claim. Carries `where` — "
         "user-surface (the thing the user touches was observed), stand-in (a faithful "
@@ -183,6 +221,16 @@ EXAMPLES = [
                   "corpus": "every markdown file under the estate, exhaustive glob",
                   "expectations": "hits read in context by a person",
                   "stopping": "none — the glob is finite and read to its end"}),
+    Node(id="an-example-drawing", kind="drawing",
+         name="An example: a prose file's derived model, pinned and joined",
+         payload={"source": "README.md",
+                  "sha256": "0f2a…(source_hash of the text at derivation)"},
+         children=[
+             Node(id="an-example-annotation", kind="annotation",
+                  payload={"kind": "diagnosis",
+                           "quote": "which is how that sentence reached production.",
+                           "claim": 46}),
+         ]),
     Node(id="an-example-measurement", kind="measurement",
          name="An example: a figure with its whole protocol",
          payload={"text": "the three word lists over the estate's docs",
@@ -213,8 +261,9 @@ COUNTER_EXAMPLES = [
 
 CLAIMS_PACKAGE = Package(
     name="claims",
-    version="0.4.0",
+    version="0.5.0",
     description="A session's assertions as data: seven claim kinds, graded evidence, "
+                "the drawing shape for prose, "
                 "the measurement protocol and the agreed calibration scales — the "
                 "record the practice laws fire on, published so the vocabulary is "
                 "versioned and visible instead of accumulating silently in code. "

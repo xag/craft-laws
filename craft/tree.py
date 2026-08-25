@@ -747,8 +747,9 @@ DEBTS = [
         id="the-practice-family-cites-nothing",
         kind="debt",
         links={"rests_on": ["the-process-is-ruled-too"]},
-        name="PARTLY DISCHARGED 2026-08-22 - the catalogue exists (docs/practice-sources.md) "
-             "and its first source is censused whole; thirteen laws still cite nothing",
+        name="PARTLY DISCHARGED 2026-08-25 - fifteen sources censused, and nine of the "
+             "thirteen red laws were rooted 2026-08-25 in sources captured verbatim; "
+             "three stay red, each with its reason in its own authority note",
         payload={
             "what_it_costs":
                 "the-laws-grew-by-mining-not-by-bleeding is true of the interface family and "
@@ -762,26 +763,23 @@ DEBTS = [
                 "that moved, and gives an adjudicator nothing to reason from when a card asks "
                 "whether the law was really broken.",
             "why_it_is_not_paid":
-                "The survey is done and the mining is not. docs/practice-sources.md ranks "
-                "nine sources by authority and falsifiability, records the three gaps found "
-                "(delegating a decision; context leaking between records; the longevity "
-                "companion paper, paywalled and unread), and censuses TWO sources - the IPCC "
-                "guidance note whole (21 items: 3 covered, 8 owed, 10 set aside) and the "
-                "existence-bias paper from its abstract, which enumerates its own studies (6 "
-                "items: 4 covered). Two laws are cited from them, and what the sources do "
-                "not cover is a number rather than a silence. Seven sources are unread and "
-                "the five laws that were red are still red: none is about uncertainty or the "
-                "status quo.",
+                "What remains is capture, not survey: a-detour-is-announced-as-a-detour "
+                "waits on the official ITIL 4 glossary text (paywalled, not in hand - "
+                "secondary glossaries agree on the wording and are not the authority), "
+                "type-stays-legible waits on the Apple HIG sentence its note describes, "
+                "and a-view-arrives-whole has had no authority found that STATES the "
+                "norm - its own note rules adjacent citations decoration. Deleting any "
+                "of the three would lose a law that caught real defects to tidy a "
+                "gate.",
         },
         params={
             "laws_without_authority": Quantity(
-                value=13, unit="law", provenance="verified", grounded=True,
-                source="quern brief, 2026-08-22: 13 laws RED on a-law-cites-a-source - 5 in "
-                       "the practice family (the-users-attention-is-not-a-test-harness, "
-                       "a-detour-is-announced-as-a-detour, deliberate-names-its-decision, "
-                       "a-remainder-names-its-debt, a-census-is-read-from-its-source) and 8 "
-                       "in the interface family, whose catalogue exists and simply has not "
-                       "been read down to them"),
+                value=3, unit="law", provenance="verified", grounded=True,
+                source="run_rules over the tree, 2026-08-25: 3 laws RED on "
+                       "a-law-cites-a-source - a-detour-is-announced-as-a-detour "
+                       "(practice; ITIL 4 text not in hand), type-stays-legible "
+                       "(Apple HIG text not in hand), a-view-arrives-whole (no "
+                       "authority found stating the norm)"),
         },
         children=[
             Node(id="discharge-survey-the-practice-field", kind="discharge",

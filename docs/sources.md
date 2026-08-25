@@ -91,3 +91,15 @@ Sweden and Spain lack national design systems with stated rules (Sweden has Klar
 ## The overlap map: always cite the strongest root
 
 Accessibility → WCAG (rule), RGAA (test procedure), EN 301 549 (non-web clauses only). Touch targets → WCAG 2.5.5/2.5.8 + Apple 44pt / Material 48dp as platform roots. Forms → ISO 9241-143 (formal), GOV.UK + Baymard (empirical); NN/g, Polaris, Silver restate. Plain language → ISO 24495-1 (international), plainlanguage.gov (operational, public domain). Plurals/l10n → Unicode CLDR; Mozilla/Apple/Android/Microsoft operationalize. Keyboard → ARIA APG; HIGs copy its tables. Government systems → GOV.UK is the ancestor of NL, GOLD, NHS, Home Office, and influenced DSFR/DADS/KRDS: when two state the same rule, GOV.UK usually stated it first, with research. Heuristics → NN/g ≈ ISO 9241-110; ISO is the citable standard, NN/g the readable version.
+
+## Roots captured 2026-08-25, closing six of the catalogue's own red laws
+
+Each quote was fetched from the named source in the same sitting it was minted; none is secondhand.
+
+- **NN/g, “Designing Empty States in Complex Applications”** — concrete guidance, so it clears the shortlist's NN/g bar (articles only where they state a concrete finding); roots `empty-state-never-contradicts`. https://www.nngroup.com/articles/empty-state-interface-design/
+- **Hunt & Thomas, The Pragmatic Programmer, Tip 15 (DRY)** — the single-representation sentence, from the publisher's own tips page; roots `counts-are-computed`. https://pragprog.com/tips/
+- **W3C, “Cool URIs don't change” (Berners-Lee, 1998)** — roots `internal-references-resolve`. https://www.w3.org/Provider/Style/URI
+- **WCAG 2.2 SC 2.4.11 Focus Not Obscured (Minimum)** — the normative sentence, from the TR; roots `no-element-covers-another`, whose broader any-element scope stays the estate's own, carried by its sighting. https://www.w3.org/TR/WCAG22/#focus-not-obscured-minimum
+- **Microsoft Writing Style Guide, global communications writing tips** — roots `no-calque`. https://learn.microsoft.com/en-us/style-guide/global-communications/writing-tips
+- **Microsoft Manual of Style, 4th edition (2012), ch. 1** — “Don't try to be funny” captured from the book's own text; roots `untranslatable-tone`.
+- **Apple HIG (Typography)** — still excluded as a source and still the known authority for `type-stays-legible`: the page renders through script and the floor sentence remains uncaptured; the law stays red, per its own note.

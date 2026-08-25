@@ -32,6 +32,12 @@ Excluded despite fame, with reasons: **Clean Code / SOLID / most engineering-pra
 - **Nothing was found on context leaking between records.** The interface family states it for strings (`no-cross-context-string-reuse`); the practice analogue — reasoning from one context written into another's record — is asserted from the estate's own rule that a library never names a client. Owed.
 
 ---
+17. **Nygard, “Documenting Architecture Decisions”** (Cognitect blog, 2011-11-15) — the canonical statement that significant decisions are kept as records with their rationale; captured verbatim 2026-08-25, roots `deliberate-names-its-decision`. https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
+18. **Cunningham, OOPSLA 1992 experience report** (c2.com) — the debt metaphor at its origin: unpaid remainder accrues interest; captured verbatim 2026-08-25, roots `a-remainder-names-its-debt`. http://c2.com/doc/oopsla92.html
+19. **ITIL 4 glossary (Axelos)** — defines a workaround as a solution for which a full resolution is not yet available: definitionally not a fix, which is `a-detour-is-announced-as-a-detour` stated by a standard. **Capture blocked, per the ISO precedent:** the official glossary is paywalled and the text is not in hand; secondary glossaries agree on the wording and are not the authority. The law stays red until the sentence is captured.
+
+*(2026-08-25, same sitting: Agans rule 3 — already censused whole at row 4 — gained a second law: `the-users-attention-is-not-a-test-harness` is the delegation face of the observing duty, and cites the rule the way the census's other laws do.)*
+
 
 # Census: IPCC AR5 Guidance Note, read whole
 

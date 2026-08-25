@@ -211,7 +211,8 @@ PRACTICE = [
         "the-users-attention-is-not-a-test-harness",
         "A check the author can run is never delegated to the person waiting for the "
         "work",
-        _uncited(),
+        _agans("Quit thinking and look"),
+        citations=[(f"{AGANS} — rule 3", AGANS_URL, "Quit thinking and look")],
         falsifier="An exchange whose ask is 'try it and tell me what you see' for "
                   "something the author had the means to observe — a request that "
                   "spends the user's turn to learn what a script would have said.",
@@ -232,7 +233,8 @@ PRACTICE = [
     _law(
         "a-detour-is-announced-as-a-detour",
         "Routing around a broken thing is never reported as fixing it",
-        _uncited(),
+        Quantity(value=1, unit="law", provenance="asserted; authority known, text not yet captured", grounded=False,
+                 source="ITIL 4 defines a workaround as a solution for which a full resolution is not yet available - definitionally not a fix. The official Axelos glossary is paywalled and the sentence is not in hand; secondary glossaries agree on the wording and are not the authority. Capture the text and promote, per the ISO precedent in docs/practice-sources.md."),
         falsifier="The thing the user reported is still broken, and the reply offers "
                   "a different route — a second endpoint, another surface, a manual "
                   "step — as the resolution.",
@@ -255,7 +257,12 @@ PRACTICE = [
         "deliberate-names-its-decision",
         "A state called deliberate, by design or on purpose names where the decision "
         "was made",
-        _uncited(),
+        _cited("Nygard 2011, Documenting Architecture Decisions"),
+        citations=[("Michael Nygard — Documenting Architecture Decisions (2011)",
+                    "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
+                    "We will keep a collection of records for 'architecturally significant'  "
+                    "decisions… Without understanding the rationale or consequences, this person  "
+                    "has only two choices: Blindly accept the decision… or Blindly change it.")],
         falsifier="A report or claim that calls some state deliberate, intentional, by "
                   "design or on purpose, with no pointer to the ledger entry, issue or "
                   "commit in which anyone decided it.",
@@ -276,7 +283,12 @@ PRACTICE = [
         "a-remainder-names-its-debt",
         "What a done-claim leaves undone is carried by a debt it names, never by a "
         "sentence",
-        _uncited(),
+        _cited("Cunningham 1992, the debt metaphor (OOPSLA experience report)"),
+        citations=[("Ward Cunningham — The WyCash Portfolio Management System (OOPSLA 1992)",
+                    "http://c2.com/doc/oopsla92.html",
+                    "Shipping first time code is like going into debt. A little debt speeds  "
+                    "development so long as it is paid back promptly with a rewrite. … The  "
+                    "danger occurs when the debt is not repaid.")],
         falsifier="A done-claim whose evidence gap, or whose report, says that some part "
                   "is later, next, not yet, deferred, owed or blocked, with no debt entry "
                   "that carries it — so the remainder lives only in the scrollback and is "

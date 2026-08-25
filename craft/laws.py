@@ -214,7 +214,12 @@ LAWS = [
     _law(
         "no-calque",
         "A metaphor is re-chosen in the target language, not carried across it",
-        _uncited(),
+        _cited("Microsoft Writing Style Guide — global communications"),
+        citations=[("Microsoft Writing Style Guide — Writing tips for global communications",
+                    "https://learn.microsoft.com/en-us/style-guide/global-communications/writing-tips",
+                    "Avoid idioms, colloquial expressions, and culture-specific references. …  "
+                    "Customers in other locales may not know much about the history and culture  "
+                    "of your country.")],
         falsifier="A vivid source-language image that lands as jargon in the target language.",
         triggers=["the app is translated into any second language",
                   "the app coins domain concepts of its own"],
@@ -233,7 +238,13 @@ LAWS = [
         "untranslatable-tone",
         "A line whose only content is TONE may be dropped in a language with no equivalent "
         "register — not rendered",
-        _uncited(),
+        _cited("Microsoft Manual of Style, 4th ed. — Don't try to be funny"),
+        citations=[("Microsoft Manual of Style, 4th edition (2012), ch. 1",
+                    "https://www.microsoftpressstore.com/store/microsoft-manual-of-style-9780735648715",
+                    "Don't try to be funny. Jokes, slang, and sarcasm are context-specific and  "
+                    "hard to translate and localize. What's funny to you might offend or  "
+                    "alienate some portion of your audience, so it's best to avoid these  "
+                    "rhetorical approaches.")],
         falsifier="A translated line that carries no information.",
         triggers=["the app is translated into any second language",
                   "the app's voice does work of its own (dry, warm, terse)"],
@@ -320,7 +331,12 @@ LAWS = [
     _law(
         "empty-state-never-contradicts",
         "No empty state asserts something the surrounding controls deny",
-        _uncited(),
+        _cited("NN/g, Designing Empty States in Complex Applications"),
+        citations=[("NN/g — Designing Empty States in Complex Applications",
+                    "https://www.nngroup.com/articles/empty-state-interface-design/",
+                    "Do not default to totally empty states. This approach creates confusion for  "
+                    "users, who may be left wondering if the system is still loading information  "
+                    "or if errors have occurred.")],
         falsifier="The zero state and a visible control disagreeing with each other.",
         triggers=["any surface has a zero state (a new user; a day with nothing due)"],
         sightings=[
@@ -372,7 +388,11 @@ LAWS = [
         "counts-are-computed",
         "Documentation never carries a number a tool can compute — prose states the "
         "command, the tool states the count",
-        _uncited(),
+        _cited("Hunt & Thomas, The Pragmatic Programmer — Tip 15, DRY"),
+        citations=[("The Pragmatic Programmer — Tip 15, DRY",
+                    "https://pragprog.com/tips/",
+                    "Every piece of knowledge must have a single, unambiguous, authoritative  "
+                    "representation within a system.")],
         falsifier="A number in documentation or docstrings describing an enumerable "
                   "the repo can compute (how many laws, surfaces, rules, entries) — "
                   "observable by comparing the prose against the computing command's "
@@ -583,7 +603,11 @@ LAWS = [
         "internal-references-resolve",
         "Every reference a document makes to its own parts — an anchor, a section "
         "name, a relative link — points at something that exists",
-        _uncited(),
+        _cited("W3C Style — Cool URIs don't change (Berners-Lee, 1998)"),
+        citations=[("W3C — Cool URIs don't change",
+                    "https://www.w3.org/Provider/Style/URI",
+                    "A cool URI is one which does not change. … When someone follows a link and  "
+                    "it breaks, they generally lose confidence in the owner of the server.")],
         falsifier="A markdown anchor with no matching heading, a relative link to "
                   "a file that is not there, a named section nobody can find. "
                   "Fully mechanical, and the documentation counterpart of drift: a "
@@ -1695,7 +1719,11 @@ LAWS = [
         "no-element-covers-another",
         "No element a person must read or press is covered by another — two rendered "
         "rectangles intersect only where one is declared the other's ground",
-        _uncited(),
+        _cited("WCAG 2.2 SC 2.4.11, Focus Not Obscured (Minimum)"),
+        citations=[("WCAG 2.2 — SC 2.4.11 Focus Not Obscured (Minimum)",
+                    "https://www.w3.org/TR/WCAG22/#focus-not-obscured-minimum",
+                    "When a user interface component receives keyboard focus, the component is  "
+                    "not entirely hidden due to author-created content.")],
         falsifier="A close control rendered on top of a title: the title unreadable, "
                   "part of what lies under both unreachable. Measurable: two "
                   "elements' rects intersect and neither declares the other its "

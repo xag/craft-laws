@@ -36,29 +36,16 @@ jobs:
           from quern import run_rules
           from craft.tree import build
           red = {r.node for r in run_rules(build()) if not r.ok}
-          declared = {"no-calque", "untranslatable-tone",
-                      "empty-state-never-contradicts", "counts-are-computed",
-                      "internal-references-resolve", "type-stays-legible",
-                      # honest red since the audit: CSP3 documents the mechanism that
-                      # punishes the stub, not the norm — a citation that says
-                      # something adjacent is decoration, so it came off
-                      "a-view-arrives-whole", "publish",
-                      # the #9 candidate: caught a real defect, no authority
-                      # found stating it — carried red in the house tradition
-                      # (its #11 sibling, commit-is-a-bare-verb, found its root
-                      # 2026-08-19: the Parliament Design System states the verb
-                      # half verbatim, and the pronoun refinement stays ours)
-                      "no-element-covers-another",
-                      # the practice: laws about the work, red on the same terms
-                      "the-users-attention-is-not-a-test-harness",
-                      "a-detour-is-announced-as-a-detour", "publish-practice",
-                      # 2026-08-20: a half-done job reported as a choice, three faces
-                      # of it, each with a decider; no authority found stating any
-                      # a-census-is-read-from-its-source left this set 2026-08-24:
-                      # censusing PRISMA found the systematic-review community
-                      # stating the census discipline item by item, and the law
-                      # that drove every census was rooted by one
-                      "deliberate-names-its-decision", "a-remainder-names-its-debt"}
+          declared = {
+                      # the three that stay red carry their reasons in their
+                      # own authority notes: two with the authority known and
+                      # its text not in hand (Apple HIG floor, ITIL 4 glossary),
+                      # one with no source found stating the norm (a-view).
+                      # Nine laws left this set 2026-08-25, each rooted in a
+                      # source captured verbatim the same day.
+                      "type-stays-legible", "a-view-arrives-whole",
+                      "a-detour-is-announced-as-a-detour",
+                      "publish", "publish-practice"}
           assert red == declared, (
               f"the red set changed: {sorted(red)} != {sorted(declared)} - a law lost or "
               "gained a citation without the record moving. Update laws.py AND this list "

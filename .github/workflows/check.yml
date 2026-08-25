@@ -94,6 +94,10 @@ jobs:
         run: uv run python -m craft.consulted claims.jsonl
       - name: The consult gate convicts what it must
         run: uv run python -m craft.consulted --alarm
+      - name: Every kind in every committed record resolves to a pinned KindDef
+        run: uv run python -m craft.formats .
+      - name: The format gate convicts what it must
+        run: uv run python -m craft.formats --alarm
       - name: The README passes its own laws
         run: uv run python -m craft.prose README.md
       - name: The README's drawing is fresh, anchored, and joined to the record

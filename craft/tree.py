@@ -926,9 +926,9 @@ DEBTS = [
         id="the-deciders-run-by-hand",
         kind="debt",
         links={"rests_on": ["the-process-is-ruled-too"]},
-        name="PAID 2026-08-25 - the hook sees the turn whose work reached no record, "
-             "the intake rate is measured, and prose is checked through its derived "
-             "drawing: structure as data, every validation in code",
+        name="DISCHARGED 2026-08-25 - the hook sees the turn whose work reached no "
+             "record, the intake rate is measured, and prose is checked through its "
+             "derived drawing: structure as data, every validation in code",
         payload={
             "what_it_costs":
                 "craft.claims is real and it works, and it can only convict what was chosen "

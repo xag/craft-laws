@@ -84,3 +84,23 @@ def test_line_ending_materialization_is_not_drift(tmp_path):
     src = _repo(tmp_path, "Line one.\nLine two.\n", [])
     src.write_bytes(b"Line one.\r\nLine two.\r\n")
     assert check_drawing(src) == []
+
+def test_a_quoted_measurement_carries_both_cells_of_its_cross_tab(tmp_path):
+    # the register's computable core: the favourable cell alone does not travel
+    src = _repo(tmp_path, "The radar caught 106 across the corpus.",
+                [{"kind": "measurement",
+                  "quote": "The radar caught 106 across the corpus.", "claim": 1}],
+                [{"kind": "measurement", "text": "t",
+                  "caught": 106, "false_alarms": 70}])
+    found = check_drawing(src)
+    assert [f.check for f in found] == ["half-the-cross-tab"]
+    assert "false_alarms=70" in found[0].why
+
+
+def test_a_quote_with_both_cells_passes(tmp_path):
+    src = _repo(tmp_path, "106 caught against 70 false alarms.",
+                [{"kind": "measurement",
+                  "quote": "106 caught against 70 false alarms.", "claim": 1}],
+                [{"kind": "measurement", "text": "t",
+                  "caught": 106, "false_alarms": 70}])
+    assert check_drawing(src) == []

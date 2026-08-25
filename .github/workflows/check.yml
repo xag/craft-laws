@@ -27,6 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2   # craft.report diffs HEAD against its parent
       - uses: astral-sh/setup-uv@v5
       - name: The red is exactly the declared red
         run: |
@@ -98,6 +100,10 @@ jobs:
         run: uv run python -m craft.formats .
       - name: The format gate convicts what it must
         run: uv run python -m craft.formats --alarm
+      - name: A filed measurement travels whole in the commit message
+        run: uv run python -m craft.report HEAD
+      - name: The report gate convicts what it must
+        run: uv run python -m craft.report --alarm
       - name: The README passes its own laws
         run: uv run python -m craft.prose README.md
       - name: The README's drawing is fresh, anchored, and joined to the record

@@ -132,6 +132,20 @@ def check_drawing(prose: Path, drawing: Path | None = None) -> list[DrawingFindi
                     "kind-mismatch", where,
                     f"the drawing says {kind}, line {ref} of {claims_file.name} "
                     f"says {filed.get('kind')}"))
+            elif kind == "measurement":
+                # the register's computable core (quality-harness:
+                # the-reports-register-is-unchecked): a sentence presenting a
+                # measured figure presents the whole cross-tab, not the
+                # favourable cell - checked as a data join against the record,
+                # never by reading the prose for numbers
+                for cell in ("caught", "false_alarms"):
+                    value = filed.get(cell)
+                    if isinstance(value, (int, float)) and str(value) not in quote:
+                        findings.append(DrawingFinding(
+                            "half-the-cross-tab", where,
+                            f"the quoted sentence omits {cell}={value} from the "
+                            f"measurement it presents (line {ref}); a figure "
+                            "travels with its unfavourable cell or not at all"))
         elif "unfiled" in node:
             findings.append(DrawingFinding(
                 "unfiled", where,

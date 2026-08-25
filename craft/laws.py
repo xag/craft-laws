@@ -1598,12 +1598,16 @@ LAWS = [
     _law(
         "type-stays-legible",
         "No text ships below the platform's legibility floor",
-        Quantity(value=1, unit="law", provenance="asserted; authority known, text not "
-                 "yet captured", grounded=False,
-                 source="Apple's Human Interface Guidelines (Typography) state a "
-                        "minimum around 11 points for phone text; the HIG renders "
-                        "through script and the verbatim sentence has not been "
-                        "captured. Capture it and promote, or find a quotable floor."),
+        _cited("Apple HIG, Typography — the per-platform minimum text sizes"),
+        citations=[("Apple Human Interface Guidelines — Typography",
+                    "https://developer.apple.com/design/human-interface-guidelines/typography",
+                    "Follow the recommended default and minimum text sizes for each "
+                    "platform — for both custom and system fonts — to ensure your "
+                    "text is legible on all devices. [The page's own table: iOS, "
+                    "iPadOS — default 17 pt, minimum 11 pt; macOS 10 pt; visionOS "
+                    "12 pt; watchOS 16 pt; tvOS 23 pt. Captured 2026-08-25 from the "
+                    "site's own data endpoint, tutorials/data/design/"
+                    "human-interface-guidelines/typography.json]")],
         falsifier="Measure the smallest computed font size on a phone screen: a "
                   "rendered string below about 11px/11pt. A measurement, not a "
                   "judgement — the chip that fails is found by a style audit, not by "

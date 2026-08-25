@@ -37,13 +37,15 @@ jobs:
           from craft.tree import build
           red = {r.node for r in run_rules(build()) if not r.ok}
           declared = {
-                      # the three that stay red carry their reasons in their
-                      # own authority notes: two with the authority known and
-                      # its text not in hand (Apple HIG floor, ITIL 4 glossary),
-                      # one with no source found stating the norm (a-view).
-                      # Nine laws left this set 2026-08-25, each rooted in a
-                      # source captured verbatim the same day.
-                      "type-stays-legible", "a-view-arrives-whole",
+                      # the two that stay red carry their reasons in their own
+                      # authority notes: ITIL 4's glossary text is not in hand
+                      # (a-detour), and no source has been found that STATES the
+                      # whole-view norm (a-view). Ten laws left this set
+                      # 2026-08-25, each rooted in a source captured verbatim -
+                      # the last of them the Apple HIG typography floor, from
+                      # the site's own data endpoint after the rendered page
+                      # resisted capture for a day.
+                      "a-view-arrives-whole",
                       "a-detour-is-announced-as-a-detour",
                       "publish", "publish-practice"}
           assert red == declared, (

@@ -1089,52 +1089,38 @@ DEBTS = [
         id="the-prose-lane-contradicts-the-word-list-decision",
         kind="debt",
         links={"rests_on": ["a-word-list-is-a-reading-not-a-mechanization"]},
-        name="PAID 2026-08-24 - this repository decided that a law checked by matching "
-             "words never holds a handback, the documentation lane gated the build on "
-             "three such laws for a week, and they now report without holding it",
+        name="PAID IN FULL 2026-08-27 - this repository decided that a law checked by "
+             "matching words never holds a handback, the documentation lane gated the "
+             "build on three such laws for a week, they were demoted to reporting on "
+             "2026-08-24, and the checks were deleted outright on 2026-08-27",
         payload={
             "what_it_costs":
-                "The decision above says it in one line - a law checked by matching words "
-                "in prose is unmechanized, it does not get a decider, and it never holds "
-                "a handback - and it says it with a measurement behind it: a word list "
-                "over a turn's prose was wrong about seven times in eight and twice "
-                "convicted the law being OBEYED, because the difference between a hedge "
-                "that is a defect and a hedge naming its own unknown is meaning.\n\n"
-                ""
-                "craft/prose.py holds seven checks. Four are structural and not in "
-                "scope: counting sentences in a paragraph, an exact repeat of a "
-                "substantial sentence, an acronym this document itself expands later, an "
-                "anchor that resolves to a heading. THREE ARE THE SHAPE THE DECISION "
-                "NAMES. Time anchors are a list of six words. Positional references are "
-                "four regular expressions over prose. Trailing conditions are two. Each "
-                "chooses which sentences are subject to its law by reading them, which "
-                "is the reading whatever decides afterwards. And CI runs "
-                "`craft.prose README.md`, so all three hold a handback.\n\n"
-                ""
-                "The size is in the grounds below; the contradiction is what this entry "
-                "is for.",
+                "The decision this rests on says it in one line, with its own measurement "
+                "behind it: a law checked by matching words in prose is unmechanized, does not "
+                "get a decider, and never holds a handback.\n\ncraft/prose.py held seven "
+                "checks. Four are structural and not in scope. THREE WERE THE SHAPE THE "
+                "DECISION NAMES: time anchors (six words), positional references (four "
+                "patterns), trailing conditions (two). Each chose which sentences its law "
+                "covered by reading them, and CI ran the lane, so all three held a "
+                "handback.\n\nThe size is in the grounds below; the contradiction is what this "
+                "entry is for.",
             "why_it_is_not_paid":
-                "The contradiction is paid and the deeper half is not. Deleting the three "
-                "would leave three documentation laws with no check at all, and the other "
-                "four cannot reach what they cover. Mechanizing them properly wants a "
-                "declared document model - [[the-prose-lane-has-no-drawing]], a "
-                "vocabulary publish - so until that is paid they stay word lists that "
-                "report. This is the radar route's second instance after the string-id "
-                "skew, which makes it a shape rather than an exception.",
+                "PAID IN FULL 2026-08-27. The 2026-08-24 route kept them reporting "
+                "because deleting them leaves three documentation laws with no check; "
+                "the owner ruled that an inert check is worth removing and that a law "
+                "without a mechanism is the accurate position, not a gap. Mechanizing "
+                "them still wants [[the-prose-lane-has-no-drawing]].",
         },
         children=[
             Node(id="three-of-seven-read-meaning-from-words", kind="grounds",
                  name="Three of the lane's seven checks decide subjecthood by reading "
                       "prose, and the build gates on all three",
-                 payload={"what": "check_time_anchors is a six-word list. "
-                                  "check_positional_references is four regular "
-                                  "expressions. check_trailing_conditions is two. The "
-                                  "workflow runs craft.prose over the README, so a hit "
-                                  "fails the build.",
+                 payload={"what": "The three checks and their patterns are named in "
+                                  "the entry above; CI ran the lane, so a hit failed "
+                                  "the build.",
                           "where": "producer",
-                          "gap": "A reading of the module as it stands. It establishes "
-                                 "the contradiction and measures nothing about how often "
-                                 "these three are wrong."}),
+                          "gap": "A reading of the module as it stood. It establishes "
+                                 "the contradiction and measures nothing."}),
             Node(id="the-three-fire-three-times-in-eighty-seven-files", kind="grounds",
                  name="Measured over the estate before demoting: three hits in 87 files, "
                       "and two of the three are the laws quoting the words they forbid",
@@ -1143,21 +1129,30 @@ DEBTS = [
                                   "above, below, or as mentioned earlier'. On the 31 "
                                   "READMEs the build gates, one hit, arguably true.",
                           "where": "producer",
-                          "gap": "The false positives are STRUCTURAL and no tuning "
-                                 "removes them: a rule forbidding a word cannot be "
-                                 "written without using it, so any word list convicts "
-                                 "its own statement and every document discussing it. "
-                                 "The measurement says the size and not whether a word "
+                          "gap": "The measurement gives the size, not whether a word "
                                  "list can ever be a mechanization."}),
+            Node(id="discharge-remove-them-outright", kind="discharge",
+                 name="PAID FURTHER 2026-08-27: the three word lists are deleted, not "
+                      "demoted, at the owner's direction",
+                 payload={"route":
+                          "The owner ruled deletion: inert is a reason to remove, not "
+                          "to keep. The three checks are gone with their word tables, "
+                          "the READINGS split and holds_the_build(). unruled() and LANGS "
+                          "went too - they existed because a word list goes SILENT in an "
+                          "unruled language, and every remaining decider fails the other "
+                          "way, convicting more rather than less. Four structural "
+                          "deciders remain; the three LAWS stay, unmechanized. The lane's "
+                          "one true positive in 87 files was a clause reading 'thin as "
+                          "it currently is'; reworded for the word list it became "
+                          "'thin as it is', which means nothing, and was deleted."}),
             Node(id="discharge-measure-then-demote-or-mechanize", kind="discharge",
                  name="PAID: measured, then demoted to a radar - they report and the "
                       "exit status ignores them",
                  payload={"route":
-                          "The number came first, as the decision's own did. It said "
-                          "nearly inert rather than dangerous, so the route was the "
-                          "radar and not deletion. "
                           "DONE 2026-08-24. The number came first, as the decision's "
-                          "own did. craft/prose.py now splits its checks into those "
+                          "own did, and said nearly inert rather than dangerous, so the "
+                          "route was the radar and not deletion. "
+                          "craft/prose.py now splits its checks into those "
                           "that may hold a handback and those that may only report; "
                           "the three word lists are in the second set, print under a "
                           "reading heading that says they hold nothing, and no longer "

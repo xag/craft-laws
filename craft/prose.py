@@ -32,24 +32,18 @@ _LAW_IDS = {law.id for law in LAWS}
 
 # --- language is a parameter of the DATA, never of the machinery ---------------------
 #
-# The shape craft/lexicon.py already uses for terms and voices, brought here because this
-# lane did not have it: every rule table below is keyed by language, and a decider whose
-# table has no entry for the document's language DOES NOT RUN and is reported by
-# unruled(). That report is the whole point. A word list that speaks only English,
-# pointed at a French README, finds nothing -- and "found nothing" is byte-identical to
-# "this document is clean". This repository's founding defect was a French screen that
-# every green check had missed, so a lane that goes quiet in French is the same failure
-# wearing the same green.
+# The shape craft/lexicon.py already uses for terms and voices. Two rule tables are keyed
+# by language: _ABBREV (dots that end no sentence) and _ACRONYM_PROSE (words this language
+# writes in capitals). The language is DECLARED (--lang, default "en"), never sniffed:
+# guessing a document's language from its bytes is a prediction, and a wrong prediction
+# reports the wrong rules as authoritative.
 #
-# The language is DECLARED (--lang, default "en"), never sniffed. Guessing a document's
-# language from its bytes is a prediction, and a prediction that is wrong reports the
-# wrong rules as authoritative rather than reporting that it has none.
-#
-# Three deciders need no language at all and always run: check_anchors (markdown
-# structure), check_repetition (two spans of text are equal or they are not), and
-# check_paragraph_length (counting stops between .!?). The last is Latin-script rather
-# than universal, and its abbreviation guard is per-language: without one it over-counts
-# sentences, which is a false positive a reader can see, not a silence they cannot.
+# A missing table for a language makes a decider convict MORE, never fall silent: without
+# an abbreviation guard the splitter counts "e.g." as a sentence end and over-counts, and
+# without an acronym list more capitalised words are flagged. Both are false positives a
+# reader can see. There is no decider left here that goes quiet in an unruled language,
+# which is why nothing reports "did not run" any more - the word lists that had that
+# failure mode were removed on 2026-08-27.
 
 @dataclass
 class DocFinding:
@@ -183,60 +177,12 @@ def check_paragraph_length(name: str, text: str, root: Path | None = None,
 # as an unconditional counter with no judge, twice.
 
 
-_TIME_ANCHORS = {
-    "en": ("currently", "at the time of writing", "coming soon",
-           "will soon", "recently added", "as of today"),
-}
 
 
-def check_time_anchors(name: str, text: str, root: Path | None = None,
-                       lang: str = "en") -> list[DocFinding]:
-    """docs-do-not-date-themselves: the words that anchor a document to the day it
-    was written."""
-    law = _law("docs-do-not-date-themselves")
-    anchors = _TIME_ANCHORS.get(lang)
-    if anchors is None:
-        return []                    # no rules for this language; unruled() says so
-    out = []
-    for n, prose in paragraphs(text):
-        low = _plain(prose).lower()
-        for word in anchors:
-            if re.search(rf"\b{re.escape(word)}\b", low):
-                out.append(DocFinding(
-                    law=law, where=f"{name} ¶{n}", quote=word,
-                    why="a sentence pre-written to go stale — describe what the "
-                        "product is, not how it just changed."))
-    return out
 
 
-_POSITIONAL = {
-    "en": (r"\bas (mentioned|described|noted|shown|discussed) "
-           r"(above|earlier|previously)\b",
-           r"\bsee (above|below)\b",
-           r"\b(the|this) section (above|below)\b",
-           r"\bmentioned (above|below)\b"),
-}
 
 
-def check_positional_references(name: str, text: str, root: Path | None = None,
-                               lang: str = "en") -> list[DocFinding]:
-    """references-name-their-target-not-its-position: 'above' breaks the day a
-    paragraph moves, which is every day a machine edits."""
-    law = _law("references-name-their-target-not-its-position")
-    patterns = _POSITIONAL.get(lang)
-    if patterns is None:
-        return []                    # no rules for this language; unruled() says so
-    out = []
-    for n, prose in paragraphs(text):
-        low = _plain(prose).lower()
-        for pat in patterns:
-            m = re.search(pat, low)
-            if m:
-                out.append(DocFinding(
-                    law=law, where=f"{name} ¶{n}", quote=m.group(0),
-                    why="a positional reference — name the section instead, so the "
-                        "reference survives the next edit that moves things."))
-    return out
 
 
 def check_repetition(name: str, text: str, root: Path | None = None,
@@ -311,32 +257,8 @@ def check_acronyms(name: str, text: str, root: Path | None = None,
     return out
 
 
-_TRAILING = {
-    "en": (r"^see .{3,80} for more information\.?$",
-           r"^(click|run|use|call|open|press|select)\b[^.]*\bif you want\b"),
-}
 
 
-def check_trailing_conditions(name: str, text: str, root: Path | None = None,
-                              lang: str = "en") -> list[DocFinding]:
-    """conditions-come-before-instructions: the source's own not-recommended
-    shapes, matched as patterns."""
-    law = _law("conditions-come-before-instructions")
-    patterns = _TRAILING.get(lang)
-    if patterns is None:
-        return []                    # no rules for this language; unruled() says so
-    out = []
-    for n, prose in paragraphs(text):
-        for s in sentences(prose, lang):
-            low = _plain(s).lower().strip()
-            for pat in patterns:
-                if re.match(pat, low):
-                    out.append(DocFinding(
-                        law=law, where=f"{name} ¶{n}", quote=_plain(s)[:100],
-                        why="the condition trails the instruction — lead with "
-                            "the goal, so a reader it does not concern can "
-                            "skip."))
-    return out
 
 
 def _slug(heading: str) -> str:
@@ -396,57 +318,35 @@ def check_anchors(name: str, text: str, root: Path | None = None,
 # Every decider takes (name, text, root) so the loop needs no special case for the one
 # that reads the filesystem.
 
-CHECKS = (check_paragraph_length, check_time_anchors, check_positional_references,
-          check_repetition, check_acronyms, check_trailing_conditions, check_anchors)
+CHECKS = (check_paragraph_length, check_repetition, check_acronyms, check_anchors)
 
-# --- what may hold a handback, and what may only report -------------------------------
+# --- why there is no word list here ---------------------------------------------------
 #
 # a-word-list-is-a-reading-not-a-mechanization: "A law checked by matching words in prose
-# is unmechanized, and says so - it does not get a decider, and it never holds a
-# handback." Three of the checks above are exactly that shape, and for a week they gated
-# this repository's build in contradiction of its own decision.
+# is unmechanized, and says so - it does not get a decider." Three checks here were
+# exactly that shape (time anchors, positional references, trailing conditions). They
+# gated the build for a week, were demoted to reporting-only on 2026-08-24, and were
+# REMOVED on 2026-08-27 at the owner's direction.
 #
-# MEASURED BEFORE DEMOTING, because the decision was made on a number and these three had
-# none (2026-08-24, 87 markdown files across the estate):
+# What the demotion measured, over 87 markdown files across the estate: time-anchors 2
+# hits, positional 1, trailing 0 - and two of those three were LAWS.md convicting the
+# law's own statement. That is the structural defect, not a tunable one: a rule that
+# forbids a word cannot be written down without using it, so any word list convicts its
+# own statement and every document discussing it.
 #
-#   time-anchors 2 hits, positional 1, trailing 0 - three in eighty-seven files
-#   two of the three are LAWS.md convicting the law's own statement: "never 'now', no
-#   'new', no 'currently'" and "never 'above', 'below', or 'as mentioned earlier'"
-#   on the 31 READMEs the build actually gates: one hit, arguably true
+# The one true positive they ever produced was a README clause that said "thin as it
+# currently is". Rewriting it to keep the word list happy produced "thin as it is", which
+# means nothing; the clause was carrying no information and the fix was to delete it.
+# Three word lists, 87 files, one hit, and the hit's remedy was a deletion.
 #
-# So they are not wrong seven times in eight. They are nearly inert, and wrong two times
-# in three when they fire - and the false positives are STRUCTURAL rather than tunable: a
-# rule that forbids a word cannot be written down without using it, so any wordlist law
-# convicts its own statement and every document that discusses it. No word list escapes
-# that, which is the decision's point restated by measurement.
-#
-# The remedy is the decision's own: they keep running and reporting, and they stop holding
-# the build. A reading that fires once in eighty-seven files is worth a reader's glance and
-# is not worth a red build, and the exit status is the difference between the two.
-READINGS = frozenset({check_time_anchors, check_positional_references,
-                      check_trailing_conditions})
+# The three LAWS stay in the package. What they no longer have is a decider, which is
+# the accurate position rather than a gap: unmechanized, not faked.
 
 
-def holds_the_build(check) -> bool:
-    """Structural checks convict; readings report. The split is the decision above."""
-    return check not in READINGS
-
-# Which decider is nothing without its language, and where its rules live. A decider
-# absent from this map runs in every language.
-_NEEDS_RULES = {
-    check_time_anchors: _TIME_ANCHORS,
-    check_positional_references: _POSITIONAL,
-    check_trailing_conditions: _TRAILING,
-}
-
-LANGS = sorted({lang for table in _NEEDS_RULES.values() for lang in table})
 
 
-def unruled(lang: str) -> list[str]:
-    """The deciders that have no rules for this language, and so said nothing without
-    having looked. Their silence is not a clean document, and a report that does not
-    print this is claiming a check it never ran."""
-    return sorted(c.__name__ for c, table in _NEEDS_RULES.items() if lang not in table)
+
+
 
 
 def check_file(path: Path, lang: str = "en") -> list[DocFinding]:
@@ -512,20 +412,6 @@ def _alarm() -> int:
             bad.append(f"{check.__name__} convicted the clean document")
         dead += bad
         print(f"  {'DEAD' if bad else 'ok  '} {check.__name__}")
-    # A language with no rules must produce no findings AND be named by unruled(). The
-    # pair is the point: silence alone is what a clean document looks like.
-    lang_bad = []
-    want_named = sorted(c.__name__ for c in _NEEDS_RULES)
-    convicted = [c.__name__ for c in _NEEDS_RULES
-                 if c("guilty.md", GUILTY, None, "zz")]
-    if convicted:
-        lang_bad.append(f"convicted in a language it has no rules for: {convicted}")
-    named = unruled("zz")
-    if named != want_named:
-        lang_bad.append(f"unruled('zz') said {named}, expected {want_named}")
-    dead += lang_bad
-    print(f"  {'DEAD' if lang_bad else 'ok  '} language: an unruled language "
-          "convicts nothing and is named")
 
     for what, text, want in _MODEL:
         got = len(check_paragraph_length("t", text))
@@ -540,8 +426,7 @@ def _alarm() -> int:
         return 1
     print()
     print(f"every alarm rings: {len(CHECKS)} decider(s) over one guilty document "
-          f"and one clean one, {len(_MODEL)} pin(s) on the paragraph model, and "
-          f"one on language. Rules exist for: {', '.join(LANGS)}.")
+          f"and one clean one, and {len(_MODEL)} pin(s) on the paragraph model.")
     return 0
 
 
@@ -554,37 +439,22 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--alarm", action="store_true",
                     help="prove every decider can convict, then exit")
     ap.add_argument("--lang", default="en",
-                    help=f"the language the documents are written in (default en; "
-                         f"rules exist for: {', '.join(LANGS)})")
+                    help="the language the documents are written in (default en); it "
+                         "selects the abbreviation and acronym tables, and an absent "
+                         "table makes a decider convict more, never fall silent")
     args = ap.parse_args(argv)
     if args.alarm:
         return _alarm()
     if not args.files:
         ap.error("give at least one file, or --alarm")
     findings: list[DocFinding] = []
-    readings: list[DocFinding] = []
     for f in args.files:
         path = Path(f)
         text = path.read_text(encoding="utf-8", errors="replace")
         for check in CHECKS:
-            got = check(path.name, text, path.parent, args.lang)
-            (findings if holds_the_build(check) else readings).extend(got)
-    silent = unruled(args.lang)
-    if silent:
-        print(f"  NO RULES for {args.lang!r}, so these did not run: "
-              f"{', '.join(silent)}")
-        print("  Their silence is not a verdict. Rules exist for: "
-              f"{', '.join(LANGS)}.")
+            findings.extend(check(path.name, text, path.parent, args.lang))
     for fd in findings:
         print(f"  RED {fd.law} [{fd.where}] «{fd.quote}»\n      {fd.why}")
-    for fd in readings:
-        print(f"  reading {fd.law} [{fd.where}] «{fd.quote}»\n      {fd.why}")
-    if readings:
-        print(f"\n  {len(readings)} reading(s) above hold nothing. They are word lists "
-              f"over prose, and\n  a-word-list-is-a-reading-not-a-mechanization says such "
-              f"a law never holds a handback.\n  Measured 2026-08-24: three hits in "
-              f"eighty-seven files, two of them the laws quoting\n  the words they "
-              f"forbid. Worth a glance, not worth a red build.")
     if not findings:
         print(f"{len(args.files)} file(s): no prose decider convicts.")
     else:

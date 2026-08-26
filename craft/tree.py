@@ -111,11 +111,11 @@ DECISIONS = [
     Node(
         id="a-human-found-defect-enters-as-a-law",
         kind="decision",
-        name="Every defect a person finds — feedback, an issue, a ruling on a "
-             "proposed conviction — passes through one question before it is fixed: "
-             "what valid generic rule did it break? The answer lands here, as a law "
-             "or a refinement, so the fix ships with a regression test for every "
-             "app that adopts the package, not just the one that bled",
+        name="Every defect a person finds — feedback, an issue, a ruling on a proposed "
+             "conviction — passes through one question before it is fixed: what valid generic "
+             "rule did it break? The answer lands here, as a law or a refinement, so the fix "
+             "ships with a regression test for every app that adopts the package, not only the "
+             "app where it was found",
         payload={
             "rationale":
                 "A fix without a law repairs one screen once; a law repairs a class "
@@ -161,20 +161,18 @@ DECISIONS = [
              "happened to hurt us first",
         payload={
             "rationale":
-                "Every law before this entered through a wound: a defect shipped, "
-                "taught its law, and the law joined. Honest, but biased — a package "
-                "grown only from one estate's scars covers that estate's habits. "
-                "Four mining passes (accessibility, government/forms/copy, "
-                "localization, empirical/content) worked a catalogue built to be "
-                "category-exhaustive, with the gaps recorded as gaps and an overlap "
-                "map so each law cites its strongest root: WCAG for the rule, "
-                "GOV.UK for the operational wording, Baymard for the tested "
-                "statistic, CLDR under everything plural. Every citation quote was "
-                "fetched and verified verbatim — one pass caught the fetch tool "
-                "FABRICATING a spec sentence and re-verified against raw source, "
-                "which is the whole argument for quotes over paraphrases. Where "
-                "clusters collided (error messaging arrived from three roots), the "
-                "collision is merged and recorded in the law's note.",
+                "Every law before this entered after a defect shipped: it taught its law, and "
+                "the law joined. Honest, but biased — a package grown only from one estate's "
+                "own defects covers that estate's habits. Four mining passes (accessibility, "
+                "government/forms/copy, localization, empirical/content) worked a catalogue "
+                "built to be category-exhaustive, with the gaps recorded as gaps and an overlap "
+                "map so each law cites its strongest root: WCAG for the rule, GOV.UK for the "
+                "operational wording, Baymard for the tested statistic, CLDR under everything "
+                "plural. Every citation quote was fetched and verified verbatim — one pass "
+                "caught the fetch tool FABRICATING a spec sentence and re-verified against raw "
+                "source, which is the whole argument for quotes over paraphrases. Where "
+                "clusters collided (error messaging arrived from three roots), the collision is "
+                "merged and recorded in the law's note.",
             "consequence":
                 "42 new laws, all cited, all with observable falsifiers; the "
                 "standing red stays exactly the three uncited originals. The known "
@@ -397,18 +395,16 @@ DECISIONS.append(Node(
          "checkable as a claim about a screen, and exactly as prone to drift",
     payload={
         "rationale":
-            "Fifteen done-claims cited green suites, deploy ids and log lines "
-            "— producer-side every one, and none an observation of the surface "
-            "a person touches. The estate already had the doctrine that "
-            "would have caught it (instrument the boundary; replay the tape rather "
-            "than re-derive what must have happened) and applied it to storage and "
-            "HTTP while leaving the one boundary that mattered — the widget's — dark. "
-            "A doctrine held in prose is a doctrine that binds where somebody "
-            "remembers it. The remedy is the same one this repo already made for "
-            "interfaces: state it as data with a falsifier, so the claim can be "
-            "checked instead of trusted. Agans wrote four of the six in 2002; they "
-            "are cited, because doing a known-catastrophic thing is worse than "
-            "inventing a new one.",
+            "Fifteen done-claims cited green suites, deploy ids and log lines — producer-side "
+            "every one, and none an observation of the surface a person touches. The estate "
+            "already had the doctrine that would have caught it (instrument the boundary; "
+            "replay the tape rather than re-derive what must have happened) and applied it to "
+            "storage and HTTP while leaving the one boundary that mattered — the widget's — "
+            "dark. A doctrine held in prose binds only where somebody remembers it. The remedy "
+            "is the same one this repo already made for interfaces: state it as data with a "
+            "falsifier, so the claim can be checked instead of trusted. Agans wrote four of the "
+            "six in 2002; they are cited, because doing a known-catastrophic thing is worse "
+            "than inventing a new one.",
         "consequence":
             "Two families in one package and one rendered file. The practice gate is "
             "red on the same terms as the interface gate — two of the six cite nobody "
@@ -809,28 +805,26 @@ DEBTS = [
         payload={
             "what_it_costs":
                 "a-human-found-defect-enters-as-a-law says every defect a person finds passes "
-                "through one question before it is fixed: what valid generic rule did it "
-                "break. These two were found, the question was asked, and the answer has "
-                "nowhere to go. Both are recurring rather than incidental. HEDGING PAST "
-                "VERIFICATION: a fact established by running something, then reported with a "
-                "qualifier the evidence does not license - understating confidence is as much "
-                "an error as overstating it, and it is the harder one to notice because it "
-                "wears modesty. CONTEXT LEAKING INTO A RECORD: reasoning that belongs to the "
-                "conversation written into a ledger entry, a code comment or a CI config, "
-                "where it is inert for that reader at best and doctrine at worst. It has the "
-                "same shape as the estate's standing rule that a library never names a "
-                "client: the dependency points one way. A DECISION THE EVIDENCE SETTLED, "
-                "ASKED ANYWAY: a question put to the person whose answer the same turn had "
-                "just argued for. It is the exact sibling of "
-                "[[the-users-attention-is-not-a-test-harness]] - that law refuses to delegate "
-                "a CHECK the author can run, and this refuses to delegate a DECISION the "
-                "author's own evidence makes; asking reads as deference, which is what makes "
-                "it insidious. The same law's other edge: a question that IS the "
-                "person's, put with no recommendation. One over-delegates the decision, "
-                "the other under-prepares it. What reaches a person should be the "
-                "smallest decision left, already reasoned to a proposal they can veto "
-                "in one word - and once vetoed or agreed, acted on without asking "
-                "again.",
+                "through one question before it is fixed: what valid generic rule did it break. "
+                "These two were found, the question was asked, and the answer has nowhere to "
+                "go. Both are recurring rather than incidental. HEDGING PAST VERIFICATION: a "
+                "fact established by running something, then reported with a qualifier the "
+                "evidence does not license - understating confidence is as much an error as "
+                "overstating it, and it is the harder one to notice because it looks like "
+                "caution. CONTEXT LEAKING INTO A RECORD: reasoning that belongs to the "
+                "conversation written into a ledger entry, a code comment or a CI config, where "
+                "it is inert for that reader at best and doctrine at worst. It has the same "
+                "shape as the estate's standing rule that a library never names a client: the "
+                "dependency points one way. A DECISION THE EVIDENCE SETTLED, ASKED ANYWAY: a "
+                "question put to the person whose answer the same turn had just argued for. It "
+                "is the exact sibling of [[the-users-attention-is-not-a-test-harness]] - that "
+                "law refuses to delegate a CHECK the author can run, and this refuses to "
+                "delegate a DECISION the author's own evidence makes; asking reads as "
+                "deference, which is what makes it insidious. The same law's other edge: a "
+                "question that IS the person's, put with no recommendation. One over-delegates "
+                "the decision, the other under-prepares it. What reaches a person should be the "
+                "smallest decision left, already reasoned to a proposal they can veto in one "
+                "word - and once vetoed or agreed, acted on without asking again.",
             "why_it_is_not_paid":
                 "All three want [[the-practice-family-cites-nothing]] paid first, or they "
                 "enter as more house rules - and the third has a root already in this "
@@ -902,8 +896,8 @@ DEBTS = [
                 "The decision is recorded and nothing routes by it, so the queue still fills "
                 "with the cards that need no person and the exempts still wait behind them. "
                 "Every day it stays unbuilt is a day the reviewer's attention is spent on "
-                "readings a tool settles - which is the way a review track dies, and the "
-                "reason the decision was made.",
+                "readings a tool settles - which is how a review track stops being used, and "
+                "the reason the decision was made.",
             "why_it_is_not_paid":
                 "PAID in the pipeline, with the queue half's boundary stated rather than "
                 "crossed. A ruling carries `by` and, when delegated, `rested_on`; settle "

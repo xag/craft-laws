@@ -52,9 +52,9 @@ def test_a_fabricated_quote_convicts_and_a_missing_record_is_not_a_pass():
     got = {f.where: f for f in account.check_grounds_are_anchored(a, corpus)}
     assert set(got) == {"p1", "p3"}
     assert "does not hold" in got["p1"].why and "no quote" in got["p3"].why
-    unverified = account.check_grounds_are_anchored(a, None)
-    assert len(unverified) == 3 or len(unverified) == 2
-    assert all(f.law == "a-ground-is-a-quotation-from-the-record" for f in unverified)
+    import pytest
+    with pytest.raises(LookupError, match="unverifiable is not judged"):
+        account.check_grounds_are_anchored(a, None)
 
 
 def test_relabelling_a_counted_premise_as_given_no_longer_launders():

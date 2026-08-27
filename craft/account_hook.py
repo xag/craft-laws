@@ -69,12 +69,13 @@ craft.account is ON. If this turn ARGUES for a conclusion, file the argument as 
 
 EVERY GROUNDED PREMISE MUST QUOTE THE RECORD, and the Stop hook checks the quote
 against the transcript: producer/stand-in quote tool results, given/user-surface quote
-the user's messages. A quote the record does not hold convicts. A strength above
-limited carries `basis` -- your stated evaluation of the evidence, the note's
-traceable account -- unless the conclusion is a verified entailment from given
-premises, where the proof is the basis. An absence warrant
-convicts unless a grounded premise documents the search. A turn that argues nothing
-files nothing, and that is the honest state, not a gap."""
+the user's messages. A quote the record does not hold convicts. The deciders catch
+reasoning flaws, never missing paperwork: a fabricated ground, a circular argument, a
+claimed deduction that fails or exhibits nothing, an unanswered attack on support you
+still rely on, an absence warrant with no documented search, support that is only
+attacks on alternatives. Strength words come from the agreed scale and are otherwise
+your judgment. A turn that argues nothing files nothing, and that is the honest
+state, not a gap."""
 
 
 def accounts_for(session: str, roots: list[Path]) -> list[Path]:

@@ -11,35 +11,6 @@ def _acc(nodes):
     return account.Account(path="t.json", nodes={n["id"]: n for n in nodes})
 
 
-def test_a_sign_does_not_license_a_proof():
-    """The failure this module was built for: a count of occurrences stated as robust."""
-    a = _acc([
-        {"id": "p1", "type": "I", "ground": "producer", "text": "eleven occurrences"},
-        {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
-         "text": "the proof is in one fact"},
-        {"id": "r1", "type": "RA", "scheme": "sign", "premises": ["p1"],
-         "conclusion": "c1"},
-    ])
-    found = account.check_strength_is_licensed(a)
-    assert [f.law for f in found] == ["a-qualifier-is-licensed-by-the-evidence"]
-    assert "no basis" in found[0].why
-
-
-def test_calling_it_a_deduction_does_not_launder_a_counted_premise():
-    """This test used to assert the opposite, and the assertion was the defect: a
-    deduction over a `producer` premise was let through at robust. A valid form does
-    not make an empirical premise necessary."""
-    a = _acc([
-        {"id": "p1", "type": "I", "ground": "producer", "text": "eleven occurrences"},
-        {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
-         "text": "the proof is in one fact"},
-        {"id": "r1", "type": "RA", "scheme": "deduction", "premises": ["p1"],
-         "conclusion": "c1"},
-    ])
-    found = account.check_strength_is_licensed(a)
-    assert found and "no basis" in found[0].why
-
-
 def test_absence_licenses_nothing():
     a = _acc([
         {"id": "p1", "type": "I", "text": "no counter-example was found"},
@@ -66,9 +37,11 @@ def test_a_conclusion_with_no_inference_is_an_assertion():
         "a-conclusion-names-its-warrant"]
 
 
-def test_counter_evidence_attached_to_nothing_convicts():
+def test_a_dangling_conflict_node_is_a_format_defect():
     a = _acc([{"id": "x1", "type": "CA", "text": "the tape says otherwise"}])
-    assert account.check_counter_evidence_is_consumed(a)
+    assert account.check_counter_evidence_is_consumed(a) == []
+    found = account.check_shape(a)
+    assert any("an end missing" in f.why for f in found)
 
 
 def test_attacking_every_alternative_is_not_support():
@@ -149,10 +122,12 @@ def test_the_toggle_reports_three_states(monkeypatch):
 
 # --- validity is not soundness --------------------------------------------------------
 
-def test_a_valid_deduction_over_a_counted_premise_is_not_robust():
-    """The founding case, and it survived every earlier layer. 'The proof is in one
-    fact' formalises as Celarent and Z3 confirms the entailment -- but its universal
-    premise was established by counting eleven occurrences in one file."""
+def test_a_grade_is_a_judgment_the_machine_does_not_police():
+    """The Celarent-over-a-counted-premise case, kept as the boundary marker: the
+    entailment holds, the grade is the author's judgment, and under the owner's
+    criterion (rules catch reasoning flaws, not missing justifications) nothing
+    mechanical convicts it. Whether robust honestly grades one file-read is the
+    reader's question, with the anchored quote beside it."""
     a = account.Account(path="t", nodes={n["id"]: n for n in [
         {"id": "p1", "type": "I", "ground": "producer",
          "text": "text appears eleven times, each time only to quote",
@@ -160,15 +135,13 @@ def test_a_valid_deduction_over_a_counted_premise_is_not_robust():
         {"id": "p2", "type": "I", "ground": "given",
          "prop": "no a-quoting-use is a-rule-reading"},
         {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
-         "text": "The proof is in one fact: no rule reads the claim's sentence",
+         "text": "no rule reads the claim's sentence",
          "prop": "no use-of-text is a-rule-reading"},
         {"id": "r1", "type": "RA", "scheme": "deduction", "form": "syllogism",
          "premises": ["p2", "p1"], "conclusion": "c1"},
     ]})
-    assert account.check_declared_deductions_are_valid(a) == []   # the form holds
-    found = account.check_strength_is_licensed(a)                 # the grounds do not
-    assert [f.law for f in found] == ["a-qualifier-is-licensed-by-the-evidence"]
-    assert "no basis" in found[0].why
+    assert account.check_declared_deductions_are_valid(a) == []
+    assert account.check_strength_is_licensed(a) == []
 
 
 def test_the_same_syllogism_over_stipulated_premises_earns_robust():
@@ -185,35 +158,11 @@ def test_the_same_syllogism_over_stipulated_premises_earns_robust():
     assert account.check_strength_is_licensed(a) == []
 
 
-def test_a_stand_in_premise_caps_lower_still():
-    a = account.Account(path="t", nodes={n["id"]: n for n in [
-        {"id": "p1", "type": "I", "ground": "stand-in", "prop": "every B is A"},
-        {"id": "c1", "type": "I", "role": "conclusion", "strength": "medium",
-         "prop": "every C is A"},
-        {"id": "r1", "type": "RA", "scheme": "verified-source", "premises": ["p1"],
-         "conclusion": "c1"},
-    ]})
-    found = account.check_strength_is_licensed(a)
-    assert found and "no basis" in found[0].why
-
-
-def test_a_stated_basis_passes_because_the_machine_never_grades():
-    """The count-based cap was refuted by the owner: premise-node counts are not
-    evidence counts. The note's demand is the traceable account, so a graded finding
-    that states its evaluation passes -- honesty of the basis stays with a reader."""
-    a = _acc([
-        {"id": "p1", "type": "I", "ground": "producer", "quote": "254 passed"},
-        {"id": "c1", "type": "I", "role": "conclusion", "strength": "medium",
-         "basis": "one suite run of 254 tests: repeated runs of the behavior under "
-                  "test, all consistent",
-         "text": "the suite holds"},
-        {"id": "r1", "type": "RA", "scheme": "verified-source", "premises": ["p1"],
-         "conclusion": "c1"},
-    ])
-    assert account.check_strength_is_licensed(a) == []
-
-
-def test_a_grade_above_limited_without_its_account_convicts():
+def test_the_machine_polices_no_judgment_only_the_scale():
+    """Two grading rules died in one day: a premise-count cap, then a demanded basis
+    field. The owner's criterion killed both: a rule ensures no reasoning flaw
+    remains, not that everything said is justified. A grade the author chose stands,
+    whatever the support; only a word off the agreed scale convicts."""
     a = _acc([
         {"id": "p1", "type": "I", "ground": "producer", "quote": "eleven occurrences"},
         {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
@@ -221,6 +170,48 @@ def test_a_grade_above_limited_without_its_account_convicts():
         {"id": "r1", "type": "RA", "scheme": "sign", "premises": ["p1"],
          "conclusion": "c1"},
     ])
-    found = account.check_strength_is_licensed(a)
-    assert [f.law for f in found] == ["a-qualifier-is-licensed-by-the-evidence"]
-    assert "traceable account" in found[0].why
+    assert account.check_strength_is_licensed(a) == []
+    a2 = _acc([{"id": "c1", "type": "I", "role": "conclusion",
+                "strength": "overwhelming", "text": "off the scale"}])
+    found = account.check_strength_is_licensed(a2)
+    assert found and "no term of" in found[0].why
+
+
+def test_a_claimed_deduction_that_exhibits_nothing_convicts():
+    """The founding sentence claimed PROOF. Filed as the deduction it claims to be,
+    with nothing checkable exhibited, the claim of necessity is the flaw."""
+    a = _acc([
+        {"id": "p1", "type": "I", "ground": "producer", "quote": "eleven occurrences"},
+        {"id": "c1", "type": "I", "role": "conclusion", "text": "the proof is in one fact"},
+        {"id": "r1", "type": "RA", "scheme": "deduction", "premises": ["p1"],
+         "conclusion": "c1"},
+    ])
+    found = account.check_declared_deductions_are_valid(a)
+    assert [f.law for f in found] == [
+        "the-premises-entail-the-conclusion-or-they-do-not"]
+    assert "asserted, not shown" in found[0].why
+
+
+def test_an_unanswered_attack_on_live_support_convicts():
+    a = _acc([
+        {"id": "p1", "type": "I", "ground": "producer", "quote": "the observation"},
+        {"id": "c1", "type": "I", "role": "conclusion", "text": "so it holds"},
+        {"id": "r1", "type": "RA", "scheme": "verified-source", "premises": ["p1"],
+         "conclusion": "c1"},
+        {"id": "e1", "type": "I", "text": "the refuting observation"},
+        {"id": "x1", "type": "CA", "premises": ["e1"], "conclusion": "p1",
+         "text": "this contradicts p1"},
+    ])
+    found = account.check_counter_evidence_is_consumed(a)
+    assert found and "nothing answers it" in found[0].why
+    # answering the attack clears it
+    a.nodes["x2"] = {"id": "x2", "type": "CA", "premises": ["p1"],
+                     "conclusion": "x1", "text": "the refutation is itself refuted"}
+    assert account.check_counter_evidence_is_consumed(a) == []
+
+
+def test_grounded_nodes_with_no_record_refuse_rather_than_judge():
+    import pytest as _pytest
+    a = _acc([{"id": "p1", "type": "I", "ground": "producer", "quote": "43 passed"}])
+    with _pytest.raises(LookupError, match="unverifiable is not judged"):
+        account.check_grounds_are_anchored(a, None)

@@ -119,6 +119,11 @@ def check_shape(a: Account) -> list[Finding]:
             if ref not in a.nodes:
                 out.append(Finding("an-account-is-an-aif-graph", n.get("id", "?"), _q(n),
                                    f"edge names {ref!r}, which is not a node here"))
+        if n.get("type") == CA_NODE and (not n.get("premises")
+                                         or not n.get("conclusion")):
+            out.append(Finding("an-account-is-an-aif-graph", n.get("id", "?"), _q(n),
+                               "a conflict node with an end missing is not an edge "
+                               "of the graph"))
     # AIF's "an I-node never points straight at another I-node" holds by
     # construction in this format: only RA and CA nodes carry edges.
     return out
@@ -165,14 +170,41 @@ def check_no_circular_support(a: Account) -> list[Finding]:
 
 
 def check_counter_evidence_is_consumed(a: Account) -> list[Finding]:
-    """Greenwell et al., Ignoring Available Counter-Evidence: a CA-node present in the
-    graph and attached to nothing is Dung's input, unconsumed."""
+    """Greenwell et al., Ignoring Available Counter-Evidence, made precise with
+    Dung's defense notion: a conclusion is flawed while a well-formed attack on it,
+    or on anything transitively supporting it, stands unanswered -- answered meaning
+    the attacker is itself attacked. A dangling CA is a format defect (check_shape);
+    the flaw here is relying on a claim under standing attack."""
+    # transitive support of every stated conclusion
+    supports: dict[str, set] = {}
+    for r in a.of_type(RA_NODE):
+        c = r.get("conclusion")
+        for cid in ([c] if isinstance(c, str) else list(c or [])):
+            supports.setdefault(cid, set()).update(r.get("premises", []))
+    live: set = set()
+    stack = [n["id"] for n in a.conclusions()]
+    while stack:
+        cur = stack.pop()
+        if cur in live:
+            continue
+        live.add(cur)
+        stack.extend(supports.get(cur, ()))
+    attacked_cas = {t for x in a.of_type(CA_NODE)
+                    for t in ([x.get("conclusion")]
+                              if isinstance(x.get("conclusion"), str)
+                              else list(x.get("conclusion") or []))}
     out = []
-    for n in a.of_type(CA_NODE):
-        if not n.get("premises") or not n.get("conclusion"):
-            out.append(Finding("counter-evidence-is-answered", n["id"], _q(n),
-                               "a conflict node with an end missing: counter-evidence "
-                               "recorded and attached to nothing"))
+    for x in a.of_type(CA_NODE):
+        t = x.get("conclusion")
+        tid = t if isinstance(t, str) else (list(t or [None])[0])
+        if not tid or not x.get("premises"):
+            continue                      # dangling: format, judged in check_shape
+        if tid in live and x["id"] not in attacked_cas:
+            out.append(Finding("counter-evidence-is-answered", x["id"],
+                               _q(a.nodes.get(tid, {})),
+                               "this counter-evidence attacks support the conclusion "
+                               "still relies on, and nothing answers it (Greenwell et "
+                               "al.; Dung 1995, defense)"))
     return out
 
 
@@ -219,58 +251,18 @@ def check_absence_concludes_nothing(a: Account) -> list[Finding]:
 
 
 def check_strength_is_licensed(a: Account) -> list[Finding]:
-    """The machine never computes a grade -- counting premise nodes is not counting
-    evidence, as the owner showed within an hour of the count-based version shipping:
-    one premise can quote a 254-run suite, and one quote split across two nodes is not
-    two lines of evidence. What the note actually instructs is mechanizable with no
-    false positives: every graded finding carries a traceable account of the judgment.
-
-    So: `limited` claims little and needs nothing. `medium` or `robust` on empirical
-    support demands `basis` -- the author's stated evaluation, prose, beside the
-    grade. A verified entailment from given premises needs no basis: the proof is the
-    basis, and necessity is not an empirical grade. Whether a stated basis is honest
-    stays with a reader, who has the anchors beside it; a missing one is a fact."""
-    from .categorical import ParseError, parse
-    from .entailment import entails
-
+    """Scale membership only. Two versions of a grading rule died here in one day:
+    a premise-count cap (counts of nodes are not counts of evidence) and a demanded
+    `basis` field (convicting an UNDOCUMENTED grade, not a WRONG one -- paperwork,
+    as the owner ruled: rules ensure no reasoning flaw remains, not that everything
+    is justified). Whether limited, medium or robust honestly grades the evidence is
+    a judgment; the machine checks that the word is on the agreed scale, and stops."""
     out = []
     for n in a.conclusions():
         said = n.get("strength")
-        if said is None:
-            continue
-        where, quote = n["id"], _q(n)
-        if said not in STRENGTH:
-            out.append(Finding("calibration-is-agreed-before-the-case", where, quote,
-                               f"strength {said!r} is no term of {STRENGTH}"))
-            continue
-        if said == "limited":
-            continue
-        ras = [r for r in a.of_type(RA_NODE)
-               if n["id"] in ([r.get("conclusion")] if isinstance(r.get("conclusion"),
-                                                                  str)
-                              else list(r.get("conclusion") or []))]
-        necessary = False
-        for r in ras:
-            pids = list(r.get("premises", []))
-            if not pids or any(a.nodes.get(pid, {}).get("ground") != "given"
-                               for pid in pids):
-                continue
-            try:
-                prem = [parse(str(a.nodes[pid].get("prop"))) for pid in pids]
-                con = parse(str(n.get("prop")))
-            except (ParseError, KeyError, TypeError):
-                continue
-            if entails(prem, con,
-                       nonempty_terms=bool(r.get("existential_import"))).valid:
-                necessary = True
-                break
-        if necessary:
-            continue
-        if not str(n.get("basis") or "").strip():
-            out.append(Finding("a-qualifier-is-licensed-by-the-evidence", where, quote,
-                               f"graded {said!r} with no basis: the note requires a "
-                               "traceable account of the evaluation behind every "
-                               "graded finding -- state it, or grade limited"))
+        if said is not None and said not in STRENGTH:
+            out.append(Finding("calibration-is-agreed-before-the-case", n["id"],
+                               _q(n), f"strength {said!r} is no term of {STRENGTH}"))
     return out
 
 
@@ -291,6 +283,13 @@ def check_declared_deductions_are_valid(a: Account) -> list[Finding]:
 
     out = []
     for r in a.of_type(RA_NODE):
+        if r.get("scheme") == "deduction" and r.get("form") != "syllogism":
+            out.append(Finding("the-premises-entail-the-conclusion-or-they-do-not",
+                               r["id"], "",
+                               "necessity is claimed and nothing checkable is "
+                               "exhibited: a deduction that cannot be examined is "
+                               "asserted, not shown"))
+            continue
         if r.get("form") != "syllogism":
             continue
         cid = r.get("conclusion")
@@ -348,11 +347,10 @@ def check_grounds_are_anchored(a: Account, corpus=None) -> list[Finding]:
                                "stretch of the record, not a word the author picks"))
             continue
         if corpus is None:
-            out.append(Finding("a-ground-is-a-quotation-from-the-record",
-                               n.get("id", "?"), _q(n),
-                               "no record supplied, so this quote could not be "
-                               "checked -- and unchecked is not anchored"))
-            continue
+            raise LookupError(
+                "this account carries grounded premises and no record was supplied "
+                "to check them against -- give the transcript; unverifiable is not "
+                "judged either way")
         if not corpus.anchors(g, quote):
             pool = ("tool results" if g in ("producer", "stand-in")
                     else "the user's messages")
@@ -404,12 +402,14 @@ GUILTY = {
          "prop": "every S is P"},
         {"id": "r5", "type": "RA", "scheme": "deduction", "form": "syllogism",
          "premises": ["s1", "s3"], "conclusion": "s2"},
-        {"id": "s4", "type": "I", "role": "conclusion", "strength": "robust",
-         "text": "an empirical premise stated as necessary"},
+        {"id": "s4", "type": "I", "role": "conclusion", "strength": "overwhelming",
+         "text": "a grade off the agreed scale"},
         {"id": "s5", "type": "I", "ground": "producer", "quote": "one run",
-         "text": "one observation"},
+         "text": "an observed premise"},
         {"id": "r6", "type": "RA", "scheme": "verified-source", "premises": ["s5"],
          "conclusion": "s4"},
+        {"id": "x3", "type": "CA", "premises": ["a1"], "conclusion": "p1",
+         "text": "an unanswered attack on support c1 relies on"},
         {"id": "x1", "type": "CA", "text": "dangling conflict"},
         {"id": "a1", "type": "I", "text": "nothing was found"},
         {"id": "r3", "type": "RA", "scheme": "absence", "premises": ["a1"],
@@ -469,8 +469,11 @@ def _alarm() -> int:
     if got != {"p1", "p2", "p3"}:
         bad.append(f"check_grounds_are_anchored missed a fabrication: convicted {got}, "
                    "wanted p1 (invented), p2 (wrong pool), p3 (no quote)")
-    if len(check_grounds_are_anchored(anchored, None)) != 2:
-        bad.append("with no record, grounded nodes must be reported unverifiable")
+    try:
+        check_grounds_are_anchored(anchored, None)
+        bad.append("with no record, grounded nodes must refuse, not pass")
+    except LookupError:
+        pass
     dead += bad
     print(f"  {'DEAD' if bad else 'ok  '} check_grounds_are_anchored")
     with tempfile.TemporaryDirectory() as d:
@@ -517,8 +520,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"record: {corpus.counts.get('tool_results', 0)} tool result(s), "
               f"{corpus.counts.get('user_texts', 0)} user text(s)")
     found = []
-    for f in args.files:
-        found += check_file(Path(f), corpus)
+    try:
+        for f in args.files:
+            found += check_file(Path(f), corpus)
+    except LookupError as e:
+        print(f"CANNOT CHECK: {e}")
+        return 2
     for fd in found:
         print(f"  RED {fd.law} [{fd.where}] {fd.quote}\n      {fd.why}")
     if not found:

@@ -134,7 +134,9 @@ ACCOUNT = (
     ),
     AccountLaw(
         "counter-evidence-is-answered",
-        "A conflict node attached to nothing is counter-evidence recorded and ignored",
+        "A conclusion is flawed while a well-formed attack on it, or on anything "
+        "transitively supporting it, stands unanswered - answered meaning the "
+        "attacker is itself attacked (Dung's defense)",
         source=GREENWELL, source_item="Ignoring Available Counter-Evidence",
         citations=((GREENWELL + ", p.7", GREENWELL_URL,
                     "An argument ignores available counter-evidence when it makes a "
@@ -170,8 +172,7 @@ ACCOUNT = (
 # Practice-family law ids the account deciders also convict under. They are not
 # re-registered here -- one law, one home -- but the gate verifies they exist in
 # craft.practice with citations, so a rename there goes red here.
-PRACTICE_REUSED = ("a-qualifier-is-licensed-by-the-evidence",
-                   "calibration-is-agreed-before-the-case")
+PRACTICE_REUSED = ("calibration-is-agreed-before-the-case",)
 
 # Which census rows of the whole-source adoption these laws mechanize. The gate holds
 # this mapping against craft.census_argument.CENSUS: the row must exist, and its route

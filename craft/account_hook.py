@@ -84,12 +84,23 @@ reply's residual, the sentences no node claims, and records it beside the accoun
 
 
 def accounts_for(session: str, roots: list[Path]) -> list[Path]:
-    out = []
-    for r in roots:
-        d = r / ".craft" / "accounts" / session
+    """Every account this session filed, wherever it filed them.
+
+    Searching only the repos a turn WROTE TO was a real defect: a turn that argues
+    without editing anything -- most answers -- filed its account in one repo and
+    the hook looked in another, so the account existed and was never judged. The
+    session id is the key, and the search covers the roots the turn touched plus
+    the checkout this hook lives in and the working directory. Deduplicated by
+    resolved path, so one account is judged once however many roots reach it."""
+    seen: dict = {}
+    for r in list(roots) + [_ROOT, Path.cwd()]:
+        d = Path(r) / ".craft" / "accounts" / session
         if d.is_dir():
-            out += sorted(d.glob("*.json"))
-    return out
+            for f in sorted(d.glob("*.json")):
+                if f.name == "residual.json":
+                    continue
+                seen[f.resolve()] = f
+    return [seen[k] for k in sorted(seen)]
 
 
 def repos_touched(transcript: Path) -> list[Path]:
@@ -138,6 +149,25 @@ def _already_reported(key: str) -> bool:
     return False
 
 
+_RESIDUAL_SEEN = _ROOT / ".craft" / "residual-seen.json"
+
+
+def _residual_seen() -> set:
+    try:
+        return set(json.loads(_RESIDUAL_SEEN.read_text(encoding="utf-8")))
+    except Exception:
+        return set()
+
+
+def _mark_residual_seen(paths) -> None:
+    seen = _residual_seen() | {str(Path(p).resolve()) for p in paths}
+    try:
+        _RESIDUAL_SEEN.parent.mkdir(parents=True, exist_ok=True)
+        _RESIDUAL_SEEN.write_text(json.dumps(sorted(seen)[-400:]), encoding="utf-8")
+    except OSError:
+        pass
+
+
 def reply_text(transcript: Path) -> str:
     """The turn's final assistant prose -- the response the accounts formalize."""
     last = ""
@@ -181,14 +211,21 @@ def residual(reply: str, accounts: list) -> dict:
         for n in raw.get("nodes", []):
             says = _canon(str(n.get("says") or ""))
             if says:
-                claims.append((n.get("id"), says, Path(path).name))
+                claims.append((n.get("id"), says, Path(path).name,
+                               str(Path(path).resolve())))
+    # `says` belongs to the reply of the turn that filed it. Accounts persist in the
+    # session directory, so re-checking an older account's says against a later reply
+    # is a category error -- the first live run reported exactly that. Only accounts
+    # not yet residual-checked contribute unmatched quotes.
     canon_reply = _canon(reply)
+    fresh = {str(Path(p).resolve()) for p in accounts} - _residual_seen()
     unmatched = [{"node": nid, "account": acc, "says": txt[:120]}
-                 for nid, txt, acc in claims if txt not in canon_reply]
+                 for nid, txt, acc, path in claims
+                 if path in fresh and txt not in canon_reply]
     sents = sentences(reply)
     covered = [x for x in sents
                if any(_canon(x) in txt or txt in _canon(x)
-                      for _nid, txt, _acc in claims)]
+                      for _nid, txt, _acc, _p in claims)]
     residue = [x for x in sents if x not in covered]
     return {"sentences": len(sents), "covered": len(covered),
             "residual": residue, "unmatched_says": unmatched}
@@ -223,6 +260,7 @@ def stop(payload: dict) -> int:
             res = residual(reply, files)
             out_path = files[0].parent / "residual.json"
             out_path.write_text(json.dumps(res, indent=1), encoding="utf-8")
+            _mark_residual_seen(files)
             n_res = res["sentences"] - res["covered"]
             summary = ("\n" + f"residual: {n_res} of {res['sentences']} reply "
                        f"sentence(s) outside the formal account ({out_path.name})")
@@ -232,6 +270,14 @@ def stop(payload: dict) -> int:
     except Exception:
         pass
     if not findings:
+        # A clean verdict is reported too, once per turn. Silence on a pass is why
+        # "the harness checked this" could not be said without running the checker
+        # by hand: an author cannot tell a pass from a hook that never looked.
+        verdict = (f"{len(files)} account(s) checked, no decider convicts." + summary)
+        if not _already_reported("pass:" + hashlib.sha256(
+                verdict.encode("utf-8", "replace")).hexdigest()):
+            print(verdict, file=sys.stderr)
+            return 2
         return 0
     key = hashlib.sha256("|".join(f"{f.law}{f.where}{f.quote}" for f in findings)
                          .encode("utf-8", "replace")).hexdigest()

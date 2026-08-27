@@ -312,3 +312,48 @@ def test_a_raised_critical_question_defeats_until_answered():
     a.nodes["x2"] = {"id": "x2", "type": "CA", "premises": ["w3"],
                      "conclusion": "x1", "text": "the payment was disclosed and vetted"}
     assert account.check_counter_evidence_is_consumed(a) == []
+
+
+# --- the hook's two defects, fixed ----------------------------------------------------
+
+def test_accounts_are_found_session_wide_not_only_where_the_turn_wrote(tmp_path,
+                                                                       monkeypatch):
+    """The defect: a turn that argues without editing filed its account in one repo
+    while the hook searched the repos it wrote to, so the account was never judged."""
+    elsewhere = tmp_path / "elsewhere"
+    d = elsewhere / ".craft" / "accounts" / "sess"
+    d.mkdir(parents=True)
+    (d / "1.json").write_text(json.dumps({"nodes": []}), encoding="utf-8")
+    monkeypatch.setattr(account_hook, "_ROOT", elsewhere)
+    # roots is empty: the turn wrote to no repo at all
+    found = account_hook.accounts_for("sess", [])
+    assert [p.name for p in found] == ["1.json"]
+
+
+def test_residual_json_is_not_judged_as_an_account(tmp_path, monkeypatch):
+    d = tmp_path / ".craft" / "accounts" / "sess"
+    d.mkdir(parents=True)
+    (d / "1.json").write_text(json.dumps({"nodes": []}), encoding="utf-8")
+    (d / "residual.json").write_text(json.dumps({"sentences": 3}), encoding="utf-8")
+    monkeypatch.setattr(account_hook, "_ROOT", tmp_path)
+    assert [p.name for p in account_hook.accounts_for("sess", [])] == ["1.json"]
+
+
+def test_a_clean_verdict_is_reported_not_silent(tmp_path, monkeypatch, capsys):
+    """Silence on a pass is indistinguishable from a hook that never looked."""
+    repo = tmp_path / "repo"
+    (repo / ".git").mkdir(parents=True)
+    d = repo / ".craft" / "accounts" / "sess"
+    d.mkdir(parents=True)
+    (d / "1.json").write_text(json.dumps({"nodes": [
+        {"id": "c1", "type": "I", "role": "conclusion", "text": "so it holds"},
+        {"id": "p1", "type": "I", "text": "a premise"},
+        {"id": "r1", "type": "RA", "scheme": "sign", "premises": ["p1"],
+         "conclusion": "c1"}]}), encoding="utf-8")
+    monkeypatch.setattr(account_hook, "repos_touched", lambda _p: [repo])
+    monkeypatch.setattr(account_hook, "_already_reported", lambda _k: False)
+    t = tmp_path / "t.jsonl"
+    t.write_text("", encoding="utf-8")
+    code = account_hook.stop({"session_id": "sess", "transcript_path": str(t)})
+    assert code == 2
+    assert "no decider convicts" in capsys.readouterr().err

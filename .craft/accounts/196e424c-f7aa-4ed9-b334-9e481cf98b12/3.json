@@ -1,0 +1,37 @@
+{
+ "source": "the turn answering 'did the harness check this response'",
+ "nodes": [
+  {
+   "id": "p1",
+   "type": "I",
+   "ground": "producer",
+   "quote": "return 0            # nothing filed: silence is information, not a conviction",
+   "text": "the Stop hook's own code: with no filed account it exits without judging"
+  },
+  {
+   "id": "p2",
+   "type": "I",
+   "ground": "producer",
+   "quote": "ON - disarmed and wired; every turn is asked for an account and checked.",
+   "text": "the toggle reports the hooks wired and armed"
+  },
+  {
+   "id": "c1",
+   "type": "I",
+   "role": "conclusion",
+   "strength": "medium",
+   "says": "The hook **fired** at that turn's Stop \u2014 it's wired and this session's hooks run live \u2014 but it **judged nothing**, for two reasons I can point at in its own code:",
+   "text": "the previous response was not checked: the hook ran and had nothing to judge"
+  },
+  {
+   "id": "r1",
+   "type": "RA",
+   "scheme": "verified-source",
+   "premises": [
+    "p1",
+    "p2"
+   ],
+   "conclusion": "c1"
+  }
+ ]
+}

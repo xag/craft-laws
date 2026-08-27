@@ -57,17 +57,6 @@ def test_a_declared_deduction_is_verified_not_believed():
     assert found[0].why.strip().endswith("]")      # Z3's own counter-model
 
 
-def test_a_deduction_with_no_form_shows_nothing_and_says_so():
-    a = account.Account(path="t", nodes={n["id"]: n for n in [
-        {"id": "p1", "type": "I", "text": "a premise"},
-        {"id": "c1", "type": "I", "role": "conclusion", "text": "a conclusion"},
-        {"id": "r1", "type": "RA", "scheme": "deduction", "premises": ["p1"],
-         "conclusion": "c1"},
-    ]})
-    assert [f.law for f in account.check_deduction_shows_its_form(a)] == [
-        "a-declared-deduction-shows-its-form"]
-
-
 def test_the_syllogism_alarm_rings():
     assert syllogism._alarm() == 0
 
@@ -86,17 +75,17 @@ def test_the_same_propositions_cannot_be_relabelled_into_a_different_figure():
     assert derive(["every P is M", "every S is M"], "every S is P") == ("AAA", 2)
 
 
-def test_a_stated_mood_or_figure_is_refused():
-    a = account.Account(path="t", nodes={n["id"]: n for n in [
-        {"id": "p1", "type": "I", "prop": "every P is M"},
-        {"id": "p2", "type": "I", "prop": "every S is M"},
-        {"id": "c1", "type": "I", "role": "conclusion",
-         "prop": "every S is P"},
+def test_a_stated_mood_or_figure_is_refused_at_load(tmp_path):
+    """The format does not admit the fields at all: load() raises, so a declared
+    form cannot even reach a decider."""
+    import json
+    p = tmp_path / "a.json"
+    p.write_text(json.dumps({"nodes": [
         {"id": "r1", "type": "RA", "scheme": "deduction", "form": "syllogism",
-         "mood": "AAA", "figure": 1, "premises": ["p1", "p2"], "conclusion": "c1"},
-    ]})
-    assert [f.law for f in account.check_declared_deductions_are_valid(a)] == [
-        "a-form-is-derived-not-declared"]
+         "mood": "AAA", "figure": 1, "premises": [], "conclusion": None}]}),
+        encoding="utf-8")
+    found = account.check_file(p)
+    assert found and "mood or figure" in found[0].why
 
 
 def test_premises_that_never_meet_are_reported_as_not_a_syllogism():

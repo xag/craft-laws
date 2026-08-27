@@ -1322,3 +1322,52 @@ DECISIONS.append(Node(
                              "the defect one field deeper."}),
     ],
 ))
+
+DECISIONS.append(Node(
+    id="the-account-laws-are-sourced-whole-or-absent",
+    kind="decision",
+    links={"rests_on": ["the-account-is-anchored-to-the-turns-record"]},
+    name="Every law the account deciders convict under is registered with a fetched "
+         "citation and maps into a source adopted whole; the invented warrant and "
+         "ground tables are deleted, and a rule added by hand is a red build",
+    payload={
+        "rationale":
+            "Ordered by the owner on 2026-08-27: remove ours, replace with sourced "
+            "laws, and never adopt a rule in isolation - when you source, you fetch "
+            "them all, and CI goes red otherwise. The Greenwell taxonomy paper was "
+            "fetched whole and captured (docs/sources/), and fetching it corrected a "
+            "law: Arguing from Ignorance ships its own exemption for a documented "
+            "search, which the decider had omitted - adopting the conviction without "
+            "the exemption is authoring a stricter rule under the source's name. "
+            "The warrant table (sign/example/authority ceilings) and the ground "
+            "table are gone; strength is now the IPCC note's paragraph-8 scale "
+            "computed from the account - one grounded premise is limited, two or "
+            "more medium, robust only for a verified entailment from given premises "
+            "- and it convicts under the practice family's own IPCC-cited law, not "
+            "a minted double. craft/account_laws.py is the registry; "
+            "tests/test_law_registry.py, run by CI, refuses an unregistered decider "
+            "id, an uncited law, a cherry-picked census row, a decider on a "
+            "judge-routed row, a dead registry entry and a missing capture. Its "
+            "first run caught its own scanner miscounting law constructors as "
+            "convictions, which is what an alarm is for.",
+        "note":
+            "The protocol is the source-a-law skill (.claude/skills/); the gate is "
+            "its checkable half. What no gate checks, stated: whether a census "
+            "route honestly reads the source, and whether a quote's context "
+            "supports the law drawn from it - the captures are committed so a "
+            "reader can refute both from the file.",
+    },
+    children=[
+        Node(id="alt-keep-ours-as-honest-reds", kind="alternative",
+             name="Keep the invented tables, carried red under a-law-cites-a-source",
+             payload={"why": "The carried-red state exists for laws awaiting a "
+                             "capture, not for numbers nobody published; the owner "
+                             "ruled the new family starts clean or not at all."}),
+        Node(id="alt-paraphrase-when-fetch-fails", kind="alternative",
+             name="Cite with a paraphrase when the paper resists fetching",
+             payload={"why": "A paraphrase dressed as a quotation is the fabrication "
+                             "the citation discipline exists against; the one capture "
+                             "that is a reading (AIF) says so in its own source "
+                             "string instead."}),
+    ],
+))

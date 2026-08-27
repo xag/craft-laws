@@ -69,11 +69,11 @@ craft.account is ON. If this turn ARGUES for a conclusion, file the argument as 
 
 EVERY GROUNDED PREMISE MUST QUOTE THE RECORD, and the Stop hook checks the quote
 against the transcript: producer/stand-in quote tool results, given/user-surface quote
-the user's messages. A quote the record does not hold convicts. The scheme and the
-grounds cap the strength: deduction over given premises may say robust; anything
-resting on observation caps at medium; sign/example/authority cap at limited; absence
-licenses nothing. A turn that argues nothing files nothing, and that is the honest
-state, not a gap."""
+the user's messages. A quote the record does not hold convicts. Strength follows the
+IPCC scale, computed: one grounded premise is limited, two or more is medium, and
+robust needs a verified entailment from given premises alone. An absence warrant
+convicts unless a grounded premise documents the search. A turn that argues nothing
+files nothing, and that is the honest state, not a gap."""
 
 
 def accounts_for(session: str, roots: list[Path]) -> list[Path]:

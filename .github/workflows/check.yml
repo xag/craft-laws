@@ -57,6 +57,13 @@ jobs:
       # The prose deciders, on the front page that earned them. docs/ still holds
       # standing findings — visible debt, run `python -m craft.prose docs/*.md` to
       # see it — but the front page stays green or the build says so.
+      # The law registry gate: every id a decider convicts under must resolve to a
+      # registered, cited law, and every source must be adopted whole. A rule added
+      # by hand fails here -- the owner's standing order of 2026-08-27.
+      - name: No rule enters by hand
+        run: uv run python -m pytest tests -q
+      - name: The account deciders' alarms are live
+        run: uv run python -m craft.account --alarm
       - name: The claim deciders' alarms are live
         run: uv run python -m craft.claims --alarm
       - name: The card deciders' alarms are live

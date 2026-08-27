@@ -20,7 +20,11 @@ THE VOCABULARIES ARE PUBLISHED, NOT INVENTED: AIF for the graph (I/RA/CA nodes),
 entailment over Lark-parsed propositions for declared deductions, Greenwell, Holloway
 & Knight (DSN 2005) for the graph-decidable fallacies -- 6 of 33, per
 craft/census_argument.py, and the pass report says so, so a green is never read as
-"the argument is sound". The warrant and ground ceilings are OURS and marked so.
+"the argument is sound". Every law a decider convicts under is registered and cited in
+craft/account_laws.py, sources adopted whole; tests/test_law_registry.py is the gate
+that makes an ad-hoc rule a red build. Strength is the IPCC note's own scale, computed:
+one grounded premise is limited, two or more medium, and robust only for a verified
+entailment from given premises -- necessity, where the empirical scale does not apply.
 
     python -m craft.account --transcript T FILE...   hold accounts to the laws
     python -m craft.account --alarm                  prove every decider can convict
@@ -56,67 +60,6 @@ GROUNDS = ("user-surface", "stand-in", "producer", "given")
 
 STRENGTH = ("limited", "medium", "robust")
 
-# --- OURS: what a warrant licenses ----------------------------------------------------
-#
-# Read this as the estate's reading, not as anybody's specification. A scheme name comes
-# from Walton's catalogue where one fits; the CEILING beside it is ours.
-#
-#   deduction        the conclusion cannot be false if the premises hold -- definitional
-#                    restatement, arithmetic over stated numbers. Licenses robust.
-#   verified-source  a fact read directly off a system that was run or a file that was
-#                    read. Licenses medium: reading one file correctly says nothing about
-#                    the next one.
-#   sign             an indicator taken to show something else -- a count, a symptom, a
-#                    correlate. Licenses limited, and this is the row that convicts a
-#                    count of grep hits called a proof.
-#   example          one or more instances offered for a general claim. Licenses limited.
-#   authority        somebody said so. Licenses limited.
-#   absence          nothing was found. Licenses NOTHING: see arguing-from-ignorance.
-#
-# The words above the ceiling are refused, not warned about, because the whole failure
-# this module exists for is a strength word nobody was entitled to.
-
-WARRANTS = {
-    "deduction": "robust",
-    "verified-source": "medium",
-    "sign": "limited",
-    "example": "limited",
-    "authority": "limited",
-    "absence": None,
-}
-
-# --- OURS: what a GROUND licenses, and why validity is not enough ---------------------
-#
-# The founding case survived every layer above. "The proof is in one fact: no rule reads
-# the claim's sentence" formalises as Celarent, EAE-1, and Z3 confirms the entailment.
-# It passed at `robust`.
-#
-# It should not have. Its universal premise -- every use of `text` in the deciders is a
-# quoting-use -- was established by counting eleven occurrences in one file at one
-# moment. That is an enumeration, and an enumeration is contingent: it holds for the file
-# as it was, and says nothing about the next commit. A valid deduction inherits the
-# contingency of its premises. Validity is not soundness, and the checker had only
-# validity.
-#
-# So a deduction is no stronger than its weakest premise. Only a `given` -- a definition,
-# or something the user stipulated -- is not an empirical report, and only a `given`
-# licenses `robust` through an inference.
-#
-#   given          not a report about the world; a definition or a stipulation  robust
-#   user-surface   observed where the user stands                               medium
-#   producer       observed on the author's own machine                         medium
-#   stand-in       observed on a reconstruction                                 limited
-#
-# An I-node with no ground stated is not capped: absence of a ground is caught by
-# a-premise-names-its-ground below, and one law per defect.
-
-GROUND_CEILING = {
-    "given": "robust",
-    "user-surface": "medium",
-    "producer": "medium",
-    "stand-in": "limited",
-}
-
 _RANK = {"limited": 1, "medium": 2, "robust": 3}
 
 
@@ -144,6 +87,11 @@ class Account:
 def load(path: Path) -> Account:
     raw = json.loads(path.read_text(encoding="utf-8"))
     nodes = {n["id"]: n for n in raw.get("nodes", []) if "id" in n}
+    for n in nodes.values():
+        if "mood" in n or "figure" in n:
+            raise ValueError(f"node {n['id']!r} declares its own mood or figure; the "
+                             "format does not admit them -- both are computed from "
+                             "the propositions")
     return Account(path=path.name, nodes=nodes, raw=raw)
 
 
@@ -171,10 +119,8 @@ def check_shape(a: Account) -> list[Finding]:
             if ref not in a.nodes:
                 out.append(Finding("an-account-is-an-aif-graph", n.get("id", "?"), _q(n),
                                    f"edge names {ref!r}, which is not a node here"))
-        if n.get("type") in (RA_NODE, CA_NODE):
-            for ref in list(n.get("premises", [])):
-                if a.nodes.get(ref, {}).get("type") in (RA_NODE, CA_NODE):
-                    continue
+    # AIF's "an I-node never points straight at another I-node" holds by
+    # construction in this format: only RA and CA nodes carry edges.
     return out
 
 
@@ -249,73 +195,84 @@ def check_support_is_not_only_attack(a: Account) -> list[Finding]:
 
 
 def check_absence_concludes_nothing(a: Account) -> list[Finding]:
-    """Greenwell et al., Arguing from Ignorance: a conclusion whose only support is
-    that no counter-evidence was found."""
+    """Greenwell et al., Arguing from Ignorance -- with the source's own exemption:
+    the argument does not exhibit the fallacy if it cites a sufficiently-exhaustive
+    search for counter-evidence that turned up none. A grounded premise on the same
+    inference documents that search; whether it was exhaustive stays with a reader."""
     out = []
     for r in a.of_type(RA_NODE):
         if r.get("scheme") != "absence":
+            continue
+        searched = any(a.nodes.get(pid, {}).get("ground")
+                       in ("producer", "stand-in", "user-surface")
+                       for pid in r.get("premises", []))
+        if searched:
             continue
         c = r.get("conclusion")
         cid = c if isinstance(c, str) else (list(c or [None])[0])
         out.append(Finding("absence-of-evidence-concludes-nothing", r["id"],
                            _q(a.nodes.get(cid, {})),
-                           "the warrant is that nothing was found; absence licenses no "
-                           "conclusion (Greenwell et al., Arguing from Ignorance)"))
+                           "the warrant is that nothing was found, and no grounded "
+                           "premise documents the search (Greenwell et al., Arguing "
+                           "from Ignorance, exemption unmet)"))
     return out
 
 
 def check_strength_is_licensed(a: Account) -> list[Finding]:
-    """OURS: a conclusion may not be stated more strongly than its warrant licenses.
-    The scheme names come from the catalogue; the ceiling is this estate's reading."""
-    ceiling: dict[str, str] = {}
-    for r in a.of_type(RA_NODE):
-        w = WARRANTS.get(r.get("scheme"))
-        if w is None:
-            continue
-        # A valid inference is no stronger than what it reasons FROM. The founding case
-        # was a sound-looking Celarent over a premise established by counting.
-        for pid in r.get("premises", []):
-            g = a.nodes.get(pid, {}).get("ground")
-            cap = GROUND_CEILING.get(g)
-            if cap is not None and _RANK[cap] < _RANK[w]:
-                w = cap
-        c = r.get("conclusion")
-        for cid in ([c] if isinstance(c, str) else list(c or [])):
-            best = ceiling.get(cid)
-            if best is None or _RANK[w] > _RANK[best]:
-                ceiling[cid] = w
+    """The IPCC note's own scale, computed instead of tabulated. Paragraph 8 defines
+    the evidence terms; the agreed operationalization (the-calibration-vocabulary,
+    2026-08-24) reads them as: limited -- one source or one run; medium -- repeated
+    runs; robust -- multiple consistent independent lines. Independence is a judgment
+    no record shows, so no empirical account earns robust mechanically; what does is
+    necessity -- a Z3-verified entailment whose premises are all given (definitions or
+    the user's stipulations), where the empirical scale does not apply at all.
+    Convicts under the practice family's own IPCC-cited laws, never a double."""
+    from .categorical import ParseError, parse
+    from .entailment import entails
+
     out = []
     for n in a.conclusions():
         said = n.get("strength")
         if said is None:
             continue
+        where, quote = n["id"], _q(n)
         if said not in STRENGTH:
-            out.append(Finding("a-conclusion-is-graded-on-the-agreed-scale", n["id"],
-                               _q(n), f"strength {said!r} is no term of {STRENGTH}"))
+            out.append(Finding("calibration-is-agreed-before-the-case", where, quote,
+                               f"strength {said!r} is no term of {STRENGTH}"))
             continue
-        allowed = ceiling.get(n["id"])
-        if allowed is None:
-            continue
-        if _RANK[said] > _RANK[allowed]:
-            out.append(Finding("a-conclusion-is-no-stronger-than-its-warrant", n["id"],
-                               _q(n),
-                               f"stated {said!r} where at most {allowed!r} is "
-                               "licensed: an inference is no stronger than the "
-                               "warrant it uses or the premises it reasons from"))
-    return out
-
-
-def check_deduction_shows_its_form(a: Account) -> list[Finding]:
-    """`deduction` is the only warrant licensing `robust`, so it is the only one that
-    must show its work. A deduction that names no form is a label, and a label is
-    what this module was built because of."""
-    out = []
-    for r in a.of_type(RA_NODE):
-        if r.get("scheme") != "deduction" or r.get("form"):
-            continue
-        out.append(Finding("a-declared-deduction-shows-its-form", r["id"], "",
-                           "scheme is 'deduction' and no form is given: nothing here "
-                           "can be checked, so the strongest warrant rests on a word"))
+        ras = [r for r in a.of_type(RA_NODE)
+               if n["id"] in ([r.get("conclusion")] if isinstance(r.get("conclusion"),
+                                                                  str)
+                              else list(r.get("conclusion") or []))]
+        grounded = {pid for r in ras for pid in r.get("premises", [])
+                    if a.nodes.get(pid, {}).get("ground")
+                    in ("producer", "stand-in", "user-surface")}
+        necessary = False
+        for r in ras:
+            pids = list(r.get("premises", []))
+            if not pids or any(a.nodes.get(pid, {}).get("ground") != "given"
+                               for pid in pids):
+                continue
+            try:
+                prem = [parse(str(a.nodes[pid].get("prop"))) for pid in pids]
+                con = parse(str(n.get("prop")))
+            except (ParseError, KeyError, TypeError):
+                continue
+            if entails(prem, con,
+                       nonempty_terms=bool(r.get("existential_import"))).valid:
+                necessary = True
+                break
+        cap = ("robust" if necessary
+               else "medium" if len(grounded) >= 2 else "limited")
+        if _RANK[said] > _RANK[cap]:
+            why = ("follows of necessity from nothing: no verified entailment from "
+                   "given premises" if said == "robust" and not necessary else
+                   f"{len(grounded)} grounded premise(s) is at most "
+                   f"{'medium (repeated runs)' if len(grounded) >= 2 else 'limited (one source or run)'}"
+                   " on the note's own terms")
+            out.append(Finding("a-qualifier-is-licensed-by-the-evidence", where, quote,
+                               f"stated {said!r} where at most {cap!r} is licensed: "
+                               + why))
     return out
 
 
@@ -338,20 +295,15 @@ def check_declared_deductions_are_valid(a: Account) -> list[Finding]:
     for r in a.of_type(RA_NODE):
         if r.get("form") != "syllogism":
             continue
-        if "mood" in r or "figure" in r:
-            out.append(Finding("a-form-is-derived-not-declared", r["id"], "",
-                               "this node states its own mood or figure; both are "
-                               "consequences of the propositions, and accepting them "
-                               "is how a label passed for a formalisation"))
-            continue
         cid = r.get("conclusion")
         cid = cid if isinstance(cid, str) else (list(cid or [None])[0])
         texts = [a.nodes.get(pid, {}).get("prop") for pid in r.get("premises", [])]
         con_text = a.nodes.get(cid, {}).get("prop")
         if not con_text or any(t is None for t in texts):
-            out.append(Finding("a-form-is-derived-not-declared", r["id"], "",
+            out.append(Finding("a-proposition-is-in-the-language", r["id"], "",
                                "form is 'syllogism' and a premise or the conclusion "
-                               "carries no `prop` written in the language"))
+                               "carries no `prop` written in the language: nothing "
+                               "here can be parsed, so nothing can be decided"))
             continue
         try:
             premises = [parse(t) for t in texts]
@@ -416,7 +368,6 @@ def check_grounds_are_anchored(a: Account, corpus=None) -> list[Finding]:
 CHECKS = (check_shape, check_conclusions_are_supported, check_no_circular_support,
           check_counter_evidence_is_consumed, check_support_is_not_only_attack,
           check_absence_concludes_nothing, check_strength_is_licensed,
-          check_deduction_shows_its_form,
           check_declared_deductions_are_valid)
 
 
@@ -455,6 +406,12 @@ GUILTY = {
          "prop": "every S is P"},
         {"id": "r5", "type": "RA", "scheme": "deduction", "form": "syllogism",
          "premises": ["s1", "s3"], "conclusion": "s2"},
+        {"id": "s4", "type": "I", "role": "conclusion", "strength": "robust",
+         "text": "an empirical premise stated as necessary"},
+        {"id": "s5", "type": "I", "ground": "producer", "quote": "one run",
+         "text": "one observation"},
+        {"id": "r6", "type": "RA", "scheme": "verified-source", "premises": ["s5"],
+         "conclusion": "s4"},
         {"id": "x1", "type": "CA", "text": "dangling conflict"},
         {"id": "a1", "type": "I", "text": "nothing was found"},
         {"id": "r3", "type": "RA", "scheme": "absence", "premises": ["a1"],

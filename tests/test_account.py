@@ -21,7 +21,7 @@ def test_a_sign_does_not_license_a_proof():
          "conclusion": "c1"},
     ])
     found = account.check_strength_is_licensed(a)
-    assert [f.law for f in found] == ["a-conclusion-is-no-stronger-than-its-warrant"]
+    assert [f.law for f in found] == ["a-qualifier-is-licensed-by-the-evidence"]
     assert "at most 'limited'" in found[0].why
 
 
@@ -37,7 +37,7 @@ def test_calling_it_a_deduction_does_not_launder_a_counted_premise():
          "conclusion": "c1"},
     ])
     found = account.check_strength_is_licensed(a)
-    assert found and "at most 'medium'" in found[0].why
+    assert found and "at most 'limited'" in found[0].why
 
 
 def test_absence_licenses_nothing():
@@ -167,8 +167,8 @@ def test_a_valid_deduction_over_a_counted_premise_is_not_robust():
     ]})
     assert account.check_declared_deductions_are_valid(a) == []   # the form holds
     found = account.check_strength_is_licensed(a)                 # the grounds do not
-    assert [f.law for f in found] == ["a-conclusion-is-no-stronger-than-its-warrant"]
-    assert "at most 'medium'" in found[0].why
+    assert [f.law for f in found] == ["a-qualifier-is-licensed-by-the-evidence"]
+    assert "at most 'limited'" in found[0].why
 
 
 def test_the_same_syllogism_over_stipulated_premises_earns_robust():

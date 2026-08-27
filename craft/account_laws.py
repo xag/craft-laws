@@ -51,6 +51,12 @@ ARISTOTLE_SR = ("Aristotle, On Sophistical Refutations, tr. W. A. "
                 "craft/census_sophistici.py")
 ARISTOTLE_SR_URL = "https://classics.mit.edu/Aristotle/sophist_refut.1.1.html"
 
+WALTON = ("Walton, Reed & Macagno 2008, Argumentation Schemes (Cambridge UP), via "
+          "the Carneades encoding captured at "
+          "docs/sources/walton-reed-macagno-2008-carneades.yml")
+WALTON_URL = ("https://raw.githubusercontent.com/carneades/carneades-4/master/"
+              "examples/AGs/YAML/walton.yml")
+
 AIF = ("Chesnevar et al. 2006, the Argument Interchange Format, as recorded in the "
        "estate's implementation (quality-harness/harness/argument.py) -- an estate "
        "capture, not the paper's own sentence")
@@ -146,7 +152,11 @@ ACCOUNT = (
         citations=((GREENWELL + ", p.7", GREENWELL_URL,
                     "An argument ignores available counter-evidence when it makes a "
                     "claim for which there exists refuting evidence but fails to "
-                    "address that evidence."),),
+                    "address that evidence."),
+                   (WALTON + ", meta note", WALTON_URL,
+                    "Here we illustrate one way to represent many of the "
+                    "argumentation schemes of Doug Walton, including critical "
+                    "questions."),),
     ),
     AccountLaw(
         "a-conclusion-stands-on-its-own-feet",
@@ -177,6 +187,19 @@ ACCOUNT = (
                     "Mathematical Fallacies: Faith in Probability, Gambler's "
                     "Fallacy, Insufficient Sample Size, Pseudo-Precision, "
                     "Unrepresentative Sample"),),
+    ),
+    AccountLaw(
+        "a-scheme-is-instantiated-not-invoked",
+        "A Walton scheme claimed by name is held to the captured catalogue: the "
+        "scheme must exist, every premise slot it states must be exhibited by a "
+        "premise filling that slot, and a slot the scheme does not state is not the "
+        "published pattern -- a scheme invoked with premises unexhibited is its "
+        "warrant asserted, not shown",
+        source=WALTON, source_item="the uniform scheme structure",
+        citations=((WALTON + ", meta note", WALTON_URL,
+                    "Here we illustrate one way to represent many of the "
+                    "argumentation schemes of Doug Walton, including critical "
+                    "questions."),),
     ),
     AccountLaw(
         "a-ground-is-a-quotation-from-the-record",

@@ -189,6 +189,12 @@ def check_counter_evidence_is_consumed(a: Account) -> list[Finding]:
             continue
         live.add(cur)
         stack.extend(supports.get(cur, ()))
+    # an RA is live when its conclusion is: attacking the inference (an undercut,
+    # which is how a scheme's critical question is raised) is attacking the support
+    for r in a.of_type(RA_NODE):
+        c = r.get("conclusion")
+        if any(cid in live for cid in ([c] if isinstance(c, str) else list(c or []))):
+            live.add(r["id"])
     attacked_cas = {t for x in a.of_type(CA_NODE)
                     for t in ([x.get("conclusion")]
                               if isinstance(x.get("conclusion"), str)
@@ -200,11 +206,19 @@ def check_counter_evidence_is_consumed(a: Account) -> list[Finding]:
         if not tid or not x.get("premises"):
             continue                      # dangling: format, judged in check_shape
         if tid in live and x["id"] not in attacked_cas:
+            why = ("this counter-evidence attacks support the conclusion "
+                   "still relies on, and nothing answers it (Greenwell et "
+                   "al.; Dung 1995, defense)")
+            slot = x.get("slot")
+            target = a.nodes.get(tid, {})
+            if slot and target.get("type") == RA_NODE:
+                from .schemes import language
+                rendered = language().get(str(slot), str(slot))
+                why = (f"the critical question {slot!r} is raised against this "
+                       f"inference and nothing answers it -- {rendered!r} "
+                       "(Walton, via the captured scheme; Dung 1995, defense)")
             out.append(Finding("counter-evidence-is-answered", x["id"],
-                               _q(a.nodes.get(tid, {})),
-                               "this counter-evidence attacks support the conclusion "
-                               "still relies on, and nothing answers it (Greenwell et "
-                               "al.; Dung 1995, defense)"))
+                               _q(target), why))
     return out
 
 
@@ -329,6 +343,48 @@ def check_declared_deductions_are_valid(a: Account) -> list[Finding]:
     return out
 
 
+def check_scheme_instances(a: Account) -> list[Finding]:
+    """A Walton scheme claimed by name is held to the catalogue: the scheme must
+    exist in the capture, and every premise slot the scheme states must be exhibited
+    by a premise node declaring which slot it fills. A scheme invoked with its
+    premises unexhibited is its warrant asserted, not shown -- the same flaw as an
+    unexhibited deduction, one level up. The critical questions need no decider
+    here: raising one is a CA on the inference carrying `slot`, and the defense
+    decider already judges whether it was answered."""
+    from .schemes import slots
+
+    out = []
+    for r in a.of_type(RA_NODE):
+        scheme = str(r.get("scheme") or "")
+        if not scheme.startswith("walton:"):
+            continue
+        spec = slots(scheme[len("walton:"):])
+        if spec is None:
+            out.append(Finding("a-scheme-is-instantiated-not-invoked", r["id"], "",
+                               f"{scheme!r} names no scheme in the captured "
+                               "catalogue: an inference pattern nobody published"))
+            continue
+        filled = {}
+        for pid in r.get("premises", []):
+            slot = a.nodes.get(pid, {}).get("slot")
+            if slot is not None:
+                filled.setdefault(str(slot), []).append(pid)
+        missing = [x for x in spec["premises"] if x not in filled]
+        unknown = [x for x in filled
+                   if x not in spec["premises"] and x not in spec["assumptions"]]
+        if missing:
+            out.append(Finding("a-scheme-is-instantiated-not-invoked", r["id"], "",
+                               f"{scheme!r} is claimed and its premise slot(s) "
+                               f"{missing} are not exhibited: the warrant is "
+                               "asserted, not shown"))
+        if unknown:
+            out.append(Finding("a-scheme-is-instantiated-not-invoked", r["id"], "",
+                               f"premise slot(s) {unknown} belong to no premise or "
+                               f"assumption of {scheme!r}: not the published "
+                               "pattern"))
+    return out
+
+
 def check_precision_is_earned(a: Account) -> list[Finding]:
     """Greenwell et al., Pseudo-Precision, over declared quantities: a conclusion
     stating a figure tighter than every input it rests on claims precision from
@@ -395,7 +451,8 @@ def check_grounds_are_anchored(a: Account, corpus=None) -> list[Finding]:
 CHECKS = (check_shape, check_conclusions_are_supported, check_no_circular_support,
           check_counter_evidence_is_consumed, check_support_is_not_only_attack,
           check_absence_concludes_nothing, check_strength_is_licensed,
-          check_declared_deductions_are_valid, check_precision_is_earned)
+          check_declared_deductions_are_valid, check_precision_is_earned,
+          check_scheme_instances)
 
 
 def check_file(path: Path, corpus=None) -> list[Finding]:
@@ -448,6 +505,12 @@ GUILTY = {
          "text": "Barbara with an idle passenger"},
         {"id": "r7", "type": "RA", "scheme": "deduction",
          "premises": ["n1", "n2", "n3"], "conclusion": "n4"},
+        {"id": "g1", "type": "I", "slot": "expert", "text": "W is an expert"},
+        {"id": "g2", "type": "I", "role": "conclusion", "text": "so S holds"},
+        {"id": "g3", "type": "RA", "scheme": "walton:expert_opinion",
+         "premises": ["g1"], "conclusion": "g2"},
+        {"id": "g4", "type": "RA", "scheme": "walton:no_such_scheme",
+         "premises": ["g1"], "conclusion": "g2"},
         {"id": "q1", "type": "I",
          "quantity": {"value": 44.7, "tolerance": 0.5}, "text": "the measurement"},
         {"id": "q2", "type": "I", "role": "conclusion",
@@ -477,6 +540,16 @@ CLEAN = {
          "text": "text is read eleven times, each time only to quote"},
         {"id": "r1", "type": "RA", "scheme": "sign", "premises": ["p1"],
          "conclusion": "c1"},
+        {"id": "w1", "type": "I", "slot": "expert", "text": "W is an expert in D"},
+        {"id": "w2", "type": "I", "slot": "in_domain", "text": "S is in D"},
+        {"id": "w3", "type": "I", "slot": "asserts", "text": "W asserts S"},
+        {"id": "w4", "type": "I", "role": "conclusion", "text": "S, defeasibly"},
+        {"id": "w5", "type": "RA", "scheme": "walton:expert_opinion",
+         "premises": ["w1", "w2", "w3"], "conclusion": "w4"},
+        {"id": "w6", "type": "CA", "slot": "untrustworthy", "premises": ["w1"],
+         "conclusion": "w5", "text": "the critical question, raised"},
+        {"id": "w7", "type": "CA", "premises": ["w3"], "conclusion": "w6",
+         "text": "and answered"},
         {"id": "s1", "type": "I", "ground": "given", "text": "every B is A",
          "prop": "every B is A"},
         {"id": "s3", "type": "I", "ground": "given", "text": "every C is B",

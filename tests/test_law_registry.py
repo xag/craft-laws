@@ -101,6 +101,17 @@ def test_the_second_source_is_adopted_whole_too():
             f"{law_id} mechanizes {row!r}, routed {census[row][0]!r}")
 
 
+def test_the_scheme_catalogue_is_the_capture():
+    """The schemes the decider holds accounts to are exactly the captured, censused
+    catalogue -- a scheme added by hand in code would show here as a drift."""
+    from craft import census_walton, schemes
+    cat = schemes.catalogue()
+    assert sorted(cat) == sorted(census_walton.CENSUS)
+    for k, (np, ne, na) in census_walton.CENSUS.items():
+        assert (len(cat[k]["premises"]), len(cat[k]["exceptions"]),
+                len(cat[k]["assumptions"])) == (np, ne, na), k
+
+
 def test_the_practice_reuse_is_real():
     """The account deciders convict under two practice-family ids; both must exist
     there, cited -- one law, one home, and a rename there goes red here."""

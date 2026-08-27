@@ -1421,3 +1421,51 @@ DECISIONS.append(Node(
                              "highlight reel."}),
     ],
 ))
+
+DECISIONS.append(Node(
+    id="one-formalism-carries-the-schemes",
+    kind="decision",
+    links={"rests_on": ["the-account-laws-are-sourced-whole-or-absent"]},
+    name="Defeasible inference enters as data in one structure - premises, "
+         "exceptions, assumptions - and every critical question flows through the "
+         "existing defense decider; the decider count for the whole catalogue is one",
+    payload={
+        "rationale":
+            "Ordered by the owner on 2026-08-27 after the audits: one formalism "
+            "that covers all, never per-law ad-hoc interpretations. The Carneades "
+            "encoding of Walton, Reed & Macagno 2008 proves the uniformity - 24 "
+            "schemes, 41 critical questions, one shape - so craft/schemes.py reads "
+            "the committed capture as the catalogue (never a copy in code, and the "
+            "gate holds parser, census and capture equal), and the account gains "
+            "two small things: an RA may claim scheme walton:<id> with premises "
+            "filling the scheme's slots, and a critical question is a CA on the "
+            "inference carrying the exception's slot. Undercuts were the one "
+            "extension the defense decider needed - an attack on a live inference "
+            "counts like an attack on live support - so raising and answering "
+            "critical questions is judged by machinery that already existed. One "
+            "new law only: a scheme invoked without exhibiting its premises is its "
+            "warrant asserted, not shown - the unexhibited-deduction flaw one "
+            "level up. The registry gate convicted this law before it was "
+            "registered, which is the gate doing its job on its own author.",
+        "note":
+            "Burden of proof is not modeled: Carneades distinguishes exceptions "
+            "(defeat when raised) from assumptions (proponent discharges when "
+            "questioned), and here both defeat when raised and unanswered. Stated "
+            "rather than approximated silently; the distinction becomes meaningful "
+            "only with an evaluation semantics over unknowns, which nothing here "
+            "computes yet.",
+    },
+    children=[
+        Node(id="alt-forty-one-deciders", kind="alternative",
+             name="Mechanize each critical question as its own decider",
+             payload={"why": "Forty-one hand-written interpretations of one "
+                             "uniform structure, each a place to drift; the "
+                             "structure was the source's own answer."}),
+        Node(id="alt-full-aspic-semantics", kind="alternative",
+             name="Implement ASPIC+ preferences and burden-aware evaluation now",
+             payload={"why": "Nothing files preference or burden data yet; "
+                             "machinery for data that does not exist is the "
+                             "withdrawn-pin shape. The grounded-defense fragment "
+                             "in use is the part with inputs."}),
+    ],
+))

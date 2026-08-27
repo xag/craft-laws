@@ -74,8 +74,11 @@ reasoning flaws, never missing paperwork: a fabricated ground, a circular argume
 claimed deduction that fails or exhibits nothing, an unanswered attack on support you
 still rely on, an absence warrant with no documented search, support that is only
 attacks on alternatives. Strength words come from the agreed scale and are otherwise
-your judgment. A turn that argues nothing files nothing, and that is the honest
-state, not a gap."""
+your judgment. A defeasible inference may claim a published pattern with
+scheme "walton:<id>" -- its premises then fill the scheme's slots (`slot` on each
+premise), and a critical question is raised as a CA on the inference carrying the
+exception's slot name, judged by the same defense as any attack. A turn that argues
+nothing files nothing, and that is the honest state, not a gap."""
 
 
 def accounts_for(session: str, roots: list[Path]) -> list[Path]:

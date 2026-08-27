@@ -264,3 +264,51 @@ def test_precision_from_nowhere_convicts_and_earned_precision_passes():
     assert [f.law for f in found] == ["a-figure-is-no-more-precise-than-its-inputs"]
     a.nodes["c1"]["quantity"]["tolerance"] = 0.5
     assert account.check_precision_is_earned(a) == []
+
+
+# --- the structured layer: schemes as data, critical questions as undercuts -----------
+
+def test_a_scheme_invoked_without_its_premises_convicts():
+    a = _acc([
+        {"id": "w1", "type": "I", "slot": "expert", "text": "W is an expert"},
+        {"id": "c1", "type": "I", "role": "conclusion", "text": "so S"},
+        {"id": "r1", "type": "RA", "scheme": "walton:expert_opinion",
+         "premises": ["w1"], "conclusion": "c1"},
+    ])
+    found = account.check_scheme_instances(a)
+    assert [f.law for f in found] == ["a-scheme-is-instantiated-not-invoked"]
+    assert "in_domain" in found[0].why and "asserts" in found[0].why
+
+
+def test_an_unpublished_scheme_name_convicts():
+    a = _acc([
+        {"id": "c1", "type": "I", "role": "conclusion", "text": "so S"},
+        {"id": "r1", "type": "RA", "scheme": "walton:vibes", "premises": [],
+         "conclusion": "c1"},
+    ])
+    found = account.check_scheme_instances(a)
+    assert found and "nobody published" in found[0].why
+
+
+def test_a_raised_critical_question_defeats_until_answered():
+    """The 41 critical questions need one decider: an undercut carrying the
+    exception slot, judged by the same defense mechanics as any attack."""
+    nodes = [
+        {"id": "w1", "type": "I", "slot": "expert", "text": "W is an expert in D"},
+        {"id": "w2", "type": "I", "slot": "in_domain", "text": "S is in D"},
+        {"id": "w3", "type": "I", "slot": "asserts", "text": "W asserts S"},
+        {"id": "c1", "type": "I", "role": "conclusion", "text": "S, defeasibly"},
+        {"id": "r1", "type": "RA", "scheme": "walton:expert_opinion",
+         "premises": ["w1", "w2", "w3"], "conclusion": "c1"},
+        {"id": "e1", "type": "I", "text": "W took money from the vendor"},
+        {"id": "x1", "type": "CA", "slot": "untrustworthy", "premises": ["e1"],
+         "conclusion": "r1", "text": "CQ: is W trustworthy?"},
+    ]
+    a = _acc(nodes)
+    assert account.check_scheme_instances(a) == []
+    found = account.check_counter_evidence_is_consumed(a)
+    assert found and "critical question 'untrustworthy'" in found[0].why
+    # answering the question clears the defeat
+    a.nodes["x2"] = {"id": "x2", "type": "CA", "premises": ["w3"],
+                     "conclusion": "x1", "text": "the payment was disclosed and vetted"}
+    assert account.check_counter_evidence_is_consumed(a) == []

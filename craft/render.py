@@ -70,7 +70,25 @@ def render() -> str:
     _render_laws(w, PRACTICE)
 
     w("---\n\n## The practice gate\n\n")
-    w(f"{PRACTICE_GATE.payload['note']}\n")
+    w(f"{PRACTICE_GATE.payload['note']}\n\n")
+
+    from .account_laws import ACCOUNT, PRACTICE_REUSED
+    w("---\n\n# The account family\n\n")
+    w(f"{len(ACCOUNT)} laws the turn-account deciders convict under "
+      "(craft/account_laws.py): each rooted in a source adopted whole, each with a "
+      "fetched citation, gated by tests/test_law_registry.py so a hand-added rule "
+      "is a red build. The account's own syntax is craft/account.schema.json; the "
+      "scheme catalogue is the capture in docs/sources/.\n\n")
+    for law in ACCOUNT:
+        w(f"## {law.id.upper()}\n\n")
+        w(f"**{law.statement}.**\n\n")
+        w(f"- **Mechanizes:** {law.source_item}\n")
+        for src, url, quote in law.citations:
+            w(f"- **Source:** [{src}]({url})\n")
+            w(f"  > {quote}\n")
+        w("\n")
+    w("Two convictions reuse practice-family laws rather than minting doubles: "
+      + ", ".join(f"`{x}`" for x in PRACTICE_REUSED) + ".\n")
     return o.getvalue()
 
 

@@ -1469,3 +1469,49 @@ DECISIONS.append(Node(
                              "in use is the part with inputs."}),
     ],
 ))
+
+DECISIONS.append(Node(
+    id="the-account-has-a-grammar-and-the-reply-has-a-residual",
+    kind="decision",
+    links={"rests_on": ["one-formalism-carries-the-schemes"]},
+    name="The account's syntax is a JSON Schema validated before any soundness "
+         "decider runs, and the reply's unchecked share is extracted at Stop as a "
+         "named residual instead of an invisible one",
+    payload={
+        "rationale":
+            "The owner's checklist of 2026-08-27, closed item by item. Syntax "
+            "before soundness: account.schema.json is the grammar - node types, "
+            "field enums, additionalProperties refusing what the format does not "
+            "admit (mood and figure among it) - validated per node in check_shape, "
+            "so hand-written ifs stopped being the format's definition. The "
+            "residual: a node may claim a reply sentence with `says`, verbatim "
+            "under the anchor's own canonical form aimed the other way, and the "
+            "Stop hook writes residual.json beside the accounts - sentence count, "
+            "covered count, the unclaimed sentences, and any says-quote the reply "
+            "does not contain. Information, never a conviction: formalizing part "
+            "of a reply is the honest common case, and the point is that the "
+            "unchecked part is named. The docs follow the data: the account "
+            "family renders into LAWS.md from the registry, and the README "
+            "carries the lane.",
+        "note":
+            "Coverage is claimed by the author and measured by matching, so "
+            "under-claiming inflates the residual and never deflates it - the "
+            "safe direction. Sentence-splitting reuses craft.prose; a says-quote "
+            "matching is case-sensitive by the same canonical form as the record "
+            "anchor.",
+    },
+    children=[
+        Node(id="alt-schema-as-refusal", kind="alternative",
+             name="Reject the whole file on the first schema violation",
+             payload={"why": "A syntax error in one node would silence every "
+                             "soundness decider on the rest - the alarm's guilty "
+                             "fixture depends on junk and judgment coexisting, and "
+                             "so does an honest partial filing."}),
+        Node(id="alt-residual-as-conviction", kind="alternative",
+             name="Convict a reply whose residual is non-empty",
+             payload={"why": "Paperwork by the owner's own criterion: an "
+                             "unformalized sentence is not a demonstrated flaw, "
+                             "and a hook that nags every turn is a hook that gets "
+                             "switched off."}),
+    ],
+))

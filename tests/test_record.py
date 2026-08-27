@@ -67,3 +67,23 @@ def test_relabelling_a_counted_premise_as_given_no_longer_launders():
     ]})
     found = account.check_grounds_are_anchored(a, corpus)
     assert found and "the user's messages" in found[0].why
+
+
+# --- the residual: the reply's unchecked share, extracted ------------------------------
+
+def test_the_residual_names_what_no_node_claims(tmp_path):
+    import json as _json
+    from craft.account_hook import residual
+    acc = tmp_path / "1.json"
+    acc.write_text(_json.dumps({"nodes": [
+        {"id": "c1", "type": "I", "role": "conclusion",
+         "says": "The gate holds both sources.",
+         "text": "the gate holds"},
+        {"id": "p9", "type": "I", "says": "a sentence the reply never contains"},
+    ]}), encoding="utf-8")
+    reply = ("The gate holds both sources. The tray is green. "
+             "Nothing was pushed.")
+    res = residual(reply, [acc])
+    assert res["sentences"] == 3 and res["covered"] == 1
+    assert "The tray is green." in res["residual"]
+    assert res["unmatched_says"] and res["unmatched_says"][0]["node"] == "p9"

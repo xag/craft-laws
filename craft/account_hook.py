@@ -78,7 +78,9 @@ your judgment. A defeasible inference may claim a published pattern with
 scheme "walton:<id>" -- its premises then fill the scheme's slots (`slot` on each
 premise), and a critical question is raised as a CA on the inference carrying the
 exception's slot name, judged by the same defense as any attack. A turn that argues
-nothing files nothing, and that is the honest state, not a gap."""
+nothing files nothing, and that is the honest state, not a gap. A node MAY carry
+`says`: a verbatim sentence of your reply it formalizes -- the Stop hook extracts the
+reply's residual, the sentences no node claims, and records it beside the accounts."""
 
 
 def accounts_for(session: str, roots: list[Path]) -> list[Path]:
@@ -136,6 +138,62 @@ def _already_reported(key: str) -> bool:
     return False
 
 
+def reply_text(transcript: Path) -> str:
+    """The turn's final assistant prose -- the response the accounts formalize."""
+    last = ""
+    try:
+        lines = transcript.read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return ""
+    for line in lines:
+        try:
+            rec = json.loads(line)
+        except ValueError:
+            continue
+        if rec.get("type") != "assistant":
+            continue
+        parts = [b.get("text", "") for b in
+                 ((rec.get("message") or {}).get("content") or [])
+                 if isinstance(b, dict) and b.get("type") == "text"]
+        if parts:
+            last = chr(10).join(parts)
+    return last
+
+
+def residual(reply: str, accounts: list) -> dict:
+    """The part of the response no account node claims -- hence unchecked.
+
+    A node claims a sentence with `says`: a verbatim stretch of the reply, matched
+    with the record anchor's canonical form aimed the other way -- the anchor ties
+    premises to what the world said, `says` ties nodes to what the RESPONSE says.
+    What is left is the residual, written beside the accounts as information, never
+    a conviction: formalizing part of a reply is the honest common case, and the
+    point is that the unchecked part is NAMED instead of invisible."""
+    from .prose import sentences
+    from .record import _canon
+
+    claims = []
+    for path in accounts:
+        try:
+            raw = json.loads(Path(path).read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        for n in raw.get("nodes", []):
+            says = _canon(str(n.get("says") or ""))
+            if says:
+                claims.append((n.get("id"), says, Path(path).name))
+    canon_reply = _canon(reply)
+    unmatched = [{"node": nid, "account": acc, "says": txt[:120]}
+                 for nid, txt, acc in claims if txt not in canon_reply]
+    sents = sentences(reply)
+    covered = [x for x in sents
+               if any(_canon(x) in txt or txt in _canon(x)
+                      for _nid, txt, _acc in claims)]
+    residue = [x for x in sents if x not in covered]
+    return {"sentences": len(sents), "covered": len(covered),
+            "residual": residue, "unmatched_says": unmatched}
+
+
 def user_prompt_submit(payload: dict) -> int:
     print(INSTRUCTION)
     return 0
@@ -155,6 +213,24 @@ def stop(payload: dict) -> int:
     from .record import read
     corpus = read(Path(tpath))          # the record the grounds must quote
     findings = [f for p in files for f in check_file(p, corpus)]
+    # the residual: what the response says that no account node claims. Extracted
+    # and recorded every turn; said aloud only beside convictions, because partial
+    # formalization is honest and a nag gets switched off.
+    summary = ""
+    try:
+        reply = reply_text(Path(tpath))
+        if reply:
+            res = residual(reply, files)
+            out_path = files[0].parent / "residual.json"
+            out_path.write_text(json.dumps(res, indent=1), encoding="utf-8")
+            n_res = res["sentences"] - res["covered"]
+            summary = ("\n" + f"residual: {n_res} of {res['sentences']} reply "
+                       f"sentence(s) outside the formal account ({out_path.name})")
+            if res["unmatched_says"]:
+                summary += (f"; {len(res['unmatched_says'])} says-quote(s) the "
+                            "reply does not contain")
+    except Exception:
+        pass
     if not findings:
         return 0
     key = hashlib.sha256("|".join(f"{f.law}{f.where}{f.quote}" for f in findings)
@@ -169,7 +245,7 @@ def stop(payload: dict) -> int:
         if f.quote:
             lines.append(f"    {f.quote}")
         lines.append(f"    why: {f.why}")
-    print("\n".join(lines), file=sys.stderr)
+    print("\n".join(lines) + summary, file=sys.stderr)
     return 2
 
 

@@ -101,31 +101,45 @@ def _q(node) -> str:
 
 # --- the deciders ---------------------------------------------------------------------
 
+_SCHEMA_PATH = Path(__file__).with_name("account.schema.json")
+
+
+def _validator():
+    """The account's grammar, compiled once from account.schema.json. The schema is
+    the syntax; hand-written ifs are not."""
+    global _VALIDATOR
+    try:
+        return _VALIDATOR
+    except NameError:
+        import jsonschema
+        schema = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
+        _VALIDATOR = jsonschema.Draft202012Validator(
+            schema["$defs"]["node"], resolver=None)
+        return _VALIDATOR
+
+
 def check_shape(a: Account) -> list[Finding]:
-    """Before any law can speak, the graph has to be one: known types, edges that
-    land, and AIF's own rule that an I-node never points straight at an I-node."""
+    """Syntax before soundness: every node is validated against the account's
+    grammar (account.schema.json), and edges must land on nodes -- the one relation
+    a JSON schema cannot state. AIF's I-node-never-to-I-node constraint holds by
+    construction: only RA and CA nodes carry edges."""
     out = []
+    v = _validator()
     for n in a.nodes.values():
-        if n.get("type") not in NODE_TYPES:
+        for err in v.iter_errors(n):
             out.append(Finding("an-account-is-an-aif-graph", n.get("id", "?"), _q(n),
-                               f"node type {n.get('type')!r} is not one of {NODE_TYPES}"))
-        if n.get("type") == I_NODE and n.get("ground") not in GROUNDS + (None,):
-            out.append(Finding("an-account-is-an-aif-graph", n.get("id", "?"), _q(n),
-                               f"ground {n.get('ground')!r} is not one of {GROUNDS}"))
-        for ref in list(n.get("premises", [])) + list(n.get("conclusion", []) if
-                                                      isinstance(n.get("conclusion"), list)
-                                                      else [n["conclusion"]] if
-                                                      n.get("conclusion") else []):
+                               f"not in the account grammar: {err.message}"))
+        for ref in list(n.get("premises", []) or []) +                 list(n.get("conclusion", []) if isinstance(n.get("conclusion"), list)
+                     else [n["conclusion"]] if n.get("conclusion") else []):
             if ref not in a.nodes:
-                out.append(Finding("an-account-is-an-aif-graph", n.get("id", "?"), _q(n),
+                out.append(Finding("an-account-is-an-aif-graph", n.get("id", "?"),
+                                   _q(n),
                                    f"edge names {ref!r}, which is not a node here"))
         if n.get("type") == CA_NODE and (not n.get("premises")
                                          or not n.get("conclusion")):
             out.append(Finding("an-account-is-an-aif-graph", n.get("id", "?"), _q(n),
                                "a conflict node with an end missing is not an edge "
                                "of the graph"))
-    # AIF's "an I-node never points straight at another I-node" holds by
-    # construction in this format: only RA and CA nodes carry edges.
     return out
 
 

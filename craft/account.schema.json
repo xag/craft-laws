@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "craft-laws/account.schema.json",
+  "title": "Turn account",
+  "description": "The grammar of a filed account. THIS FILE IS THE SYNTAX: every node is validated against it before any soundness decider runs, so a field the format does not admit is refused by the schema, not by hand-written ifs. mood and figure are absent from the property list on purpose - both are computed - and additionalProperties:false is what refuses them.",
+  "type": "object",
+  "required": ["nodes"],
+  "properties": {
+    "nodes": {"type": "array", "items": {"$ref": "#/$defs/node"}},
+    "source": {"type": "string"},
+    "session": {"type": "string"},
+    "turn": {"type": "string"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "node": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {"enum": ["I", "RA", "CA"]},
+        "text": {"type": "string"},
+        "role": {"enum": ["conclusion"]},
+        "ground": {"enum": ["producer", "stand-in", "user-surface", "given"]},
+        "quote": {"type": "string"},
+        "prop": {"type": "string"},
+        "says": {"type": "string"},
+        "slot": {"type": "string"},
+        "strength": {"enum": ["limited", "medium", "robust"]},
+        "quantity": {
+          "type": "object",
+          "required": ["value"],
+          "properties": {"value": {"type": "number"},
+                         "tolerance": {"type": "number"}},
+          "additionalProperties": false
+        },
+        "premises": {"type": "array", "items": {"type": "string"}},
+        "conclusion": {
+          "anyOf": [{"type": "string"},
+                    {"type": "array", "items": {"type": "string"}},
+                    {"type": "null"}]
+        },
+        "scheme": {"type": "string"},
+        "form": {"enum": ["syllogism"]},
+        "existential_import": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

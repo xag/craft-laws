@@ -73,3 +73,10 @@ Every defect a person finds passes through one question before it is fixed: *wha
 ## License
 
 Apache-2.0.
+
+
+## The turn account
+
+The same discipline, aimed at the argument a working turn makes. A UserPromptSubmit hook asks for the argument as data (`.craft/accounts/<session>/<n>.json`, syntax in `craft/account.schema.json` — a JSON Schema, validated before any soundness decider runs); the Stop hook checks what was filed against the account family's laws (rendered in LAWS.md, registered in `craft/account_laws.py`, every one cited to a source adopted whole and gated in CI by `tests/test_law_registry.py`). Grounded premises must quote the turn's own record — tool results and the user's messages, read by `craft/record.py` — so support cannot be fabricated, only selected, and selection is auditable.
+
+Defeasible inference claims a published pattern (`walton:<id>`) whose premises fill the captured scheme's slots; critical questions are undercuts judged by the same defense as any attack; declared deductions go to Z3 over `craft/categorical.lark` propositions. The reply's unchecked share is extracted at Stop as `residual.json` — the sentences no account node claims, named instead of invisible. `python -m craft.account_toggle on|off|status` is the switch, `craft-account-tray` the icon.

@@ -22,7 +22,7 @@ def test_a_sign_does_not_license_a_proof():
     ])
     found = account.check_strength_is_licensed(a)
     assert [f.law for f in found] == ["a-qualifier-is-licensed-by-the-evidence"]
-    assert "at most 'limited'" in found[0].why
+    assert "no basis" in found[0].why
 
 
 def test_calling_it_a_deduction_does_not_launder_a_counted_premise():
@@ -37,7 +37,7 @@ def test_calling_it_a_deduction_does_not_launder_a_counted_premise():
          "conclusion": "c1"},
     ])
     found = account.check_strength_is_licensed(a)
-    assert found and "at most 'limited'" in found[0].why
+    assert found and "no basis" in found[0].why
 
 
 def test_absence_licenses_nothing():
@@ -168,7 +168,7 @@ def test_a_valid_deduction_over_a_counted_premise_is_not_robust():
     assert account.check_declared_deductions_are_valid(a) == []   # the form holds
     found = account.check_strength_is_licensed(a)                 # the grounds do not
     assert [f.law for f in found] == ["a-qualifier-is-licensed-by-the-evidence"]
-    assert "at most 'limited'" in found[0].why
+    assert "no basis" in found[0].why
 
 
 def test_the_same_syllogism_over_stipulated_premises_earns_robust():
@@ -194,4 +194,33 @@ def test_a_stand_in_premise_caps_lower_still():
          "conclusion": "c1"},
     ]})
     found = account.check_strength_is_licensed(a)
-    assert found and "at most 'limited'" in found[0].why
+    assert found and "no basis" in found[0].why
+
+
+def test_a_stated_basis_passes_because_the_machine_never_grades():
+    """The count-based cap was refuted by the owner: premise-node counts are not
+    evidence counts. The note's demand is the traceable account, so a graded finding
+    that states its evaluation passes -- honesty of the basis stays with a reader."""
+    a = _acc([
+        {"id": "p1", "type": "I", "ground": "producer", "quote": "254 passed"},
+        {"id": "c1", "type": "I", "role": "conclusion", "strength": "medium",
+         "basis": "one suite run of 254 tests: repeated runs of the behavior under "
+                  "test, all consistent",
+         "text": "the suite holds"},
+        {"id": "r1", "type": "RA", "scheme": "verified-source", "premises": ["p1"],
+         "conclusion": "c1"},
+    ])
+    assert account.check_strength_is_licensed(a) == []
+
+
+def test_a_grade_above_limited_without_its_account_convicts():
+    a = _acc([
+        {"id": "p1", "type": "I", "ground": "producer", "quote": "eleven occurrences"},
+        {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
+         "text": "the proof is in one fact"},
+        {"id": "r1", "type": "RA", "scheme": "sign", "premises": ["p1"],
+         "conclusion": "c1"},
+    ])
+    found = account.check_strength_is_licensed(a)
+    assert [f.law for f in found] == ["a-qualifier-is-licensed-by-the-evidence"]
+    assert "traceable account" in found[0].why

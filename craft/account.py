@@ -22,9 +22,9 @@ entailment over Lark-parsed propositions for declared deductions, Greenwell, Hol
 craft/census_argument.py, and the pass report says so, so a green is never read as
 "the argument is sound". Every law a decider convicts under is registered and cited in
 craft/account_laws.py, sources adopted whole; tests/test_law_registry.py is the gate
-that makes an ad-hoc rule a red build. Strength is the IPCC note's own scale, computed:
-one grounded premise is limited, two or more medium, and robust only for a verified
-entailment from given premises -- necessity, where the empirical scale does not apply.
+that makes an ad-hoc rule a red build. Strength is never computed by the machine -- counting premise nodes is not counting
+evidence. A grade above limited carries `basis`, the note's traceable account, or
+convicts; a verified entailment from given premises needs none, being necessity.
 
     python -m craft.account --transcript T FILE...   hold accounts to the laws
     python -m craft.account --alarm                  prove every decider can convict
@@ -219,14 +219,17 @@ def check_absence_concludes_nothing(a: Account) -> list[Finding]:
 
 
 def check_strength_is_licensed(a: Account) -> list[Finding]:
-    """The IPCC note's own scale, computed instead of tabulated. Paragraph 8 defines
-    the evidence terms; the agreed operationalization (the-calibration-vocabulary,
-    2026-08-24) reads them as: limited -- one source or one run; medium -- repeated
-    runs; robust -- multiple consistent independent lines. Independence is a judgment
-    no record shows, so no empirical account earns robust mechanically; what does is
-    necessity -- a Z3-verified entailment whose premises are all given (definitions or
-    the user's stipulations), where the empirical scale does not apply at all.
-    Convicts under the practice family's own IPCC-cited laws, never a double."""
+    """The machine never computes a grade -- counting premise nodes is not counting
+    evidence, as the owner showed within an hour of the count-based version shipping:
+    one premise can quote a 254-run suite, and one quote split across two nodes is not
+    two lines of evidence. What the note actually instructs is mechanizable with no
+    false positives: every graded finding carries a traceable account of the judgment.
+
+    So: `limited` claims little and needs nothing. `medium` or `robust` on empirical
+    support demands `basis` -- the author's stated evaluation, prose, beside the
+    grade. A verified entailment from given premises needs no basis: the proof is the
+    basis, and necessity is not an empirical grade. Whether a stated basis is honest
+    stays with a reader, who has the anchors beside it; a missing one is a fact."""
     from .categorical import ParseError, parse
     from .entailment import entails
 
@@ -240,13 +243,12 @@ def check_strength_is_licensed(a: Account) -> list[Finding]:
             out.append(Finding("calibration-is-agreed-before-the-case", where, quote,
                                f"strength {said!r} is no term of {STRENGTH}"))
             continue
+        if said == "limited":
+            continue
         ras = [r for r in a.of_type(RA_NODE)
                if n["id"] in ([r.get("conclusion")] if isinstance(r.get("conclusion"),
                                                                   str)
                               else list(r.get("conclusion") or []))]
-        grounded = {pid for r in ras for pid in r.get("premises", [])
-                    if a.nodes.get(pid, {}).get("ground")
-                    in ("producer", "stand-in", "user-surface")}
         necessary = False
         for r in ras:
             pids = list(r.get("premises", []))
@@ -262,17 +264,13 @@ def check_strength_is_licensed(a: Account) -> list[Finding]:
                        nonempty_terms=bool(r.get("existential_import"))).valid:
                 necessary = True
                 break
-        cap = ("robust" if necessary
-               else "medium" if len(grounded) >= 2 else "limited")
-        if _RANK[said] > _RANK[cap]:
-            why = ("follows of necessity from nothing: no verified entailment from "
-                   "given premises" if said == "robust" and not necessary else
-                   f"{len(grounded)} grounded premise(s) is at most "
-                   f"{'medium (repeated runs)' if len(grounded) >= 2 else 'limited (one source or run)'}"
-                   " on the note's own terms")
+        if necessary:
+            continue
+        if not str(n.get("basis") or "").strip():
             out.append(Finding("a-qualifier-is-licensed-by-the-evidence", where, quote,
-                               f"stated {said!r} where at most {cap!r} is licensed: "
-                               + why))
+                               f"graded {said!r} with no basis: the note requires a "
+                               "traceable account of the evaluation behind every "
+                               "graded finding -- state it, or grade limited"))
     return out
 
 

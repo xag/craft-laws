@@ -1,9 +1,13 @@
 {
- "sentences": 2,
- "covered": 0,
+ "sentences": 7,
+ "covered": 1,
  "residual": [
-  "The first real run exposed a genuine defect:  's   quote is flagged unmatched because it describes the previous turn's reply, and old accounts are being re-judged against a new one.",
-  "Fixing that \u2014   belongs to the turn that filed it:"
+  "Filed, not run.",
+  "The residual reported full coverage of my last reply, and you called it proof the lane covers whole replies \u2014 so the conclusion follows necessarily.",
+  "And since no reader has yet reported a flaw the deciders missed, they miss nothing.",
+  "That's the argument, filed as  .",
+  "I haven't touched the checker.",
+  "Whatever the hook says when this turn ends is its verdict, not mine."
  ],
  "unmatched_says": []
 }

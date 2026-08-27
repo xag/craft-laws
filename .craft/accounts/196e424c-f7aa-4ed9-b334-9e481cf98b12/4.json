@@ -1,0 +1,34 @@
+{"source": "a deliberately bad argument, filed to test the deciders",
+ "nodes": [
+  {"id": "p1", "type": "I", "ground": "producer",
+   "quote": "all 121 tests passed and the account lane is provably free of every fallacy",
+   "text": "a premise resting on output no tool ever printed"},
+  {"id": "p2", "type": "I", "ground": "given",
+   "quote": "the harness is now complete and needs no further work",
+   "text": "words attributed to the user that the user never typed"},
+  {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
+   "says": "The account lane is complete and provably sound.",
+   "text": "the account lane is complete and provably sound",
+   "prop": "every account-lane-state is sound-state"},
+  {"id": "r1", "type": "RA", "scheme": "deduction", "form": "syllogism",
+   "premises": ["p1", "p2"], "conclusion": "c1"},
+
+  {"id": "s1", "type": "I", "text": "it is sound because it is sound",
+   "prop": "every sound-state is sound-state"},
+  {"id": "r2", "type": "RA", "scheme": "deduction", "premises": ["c1"],
+   "conclusion": "c1"},
+
+  {"id": "n1", "type": "I", "text": "nobody has found a counter-example"},
+  {"id": "c2", "type": "I", "role": "conclusion", "text": "so none exists"},
+  {"id": "r3", "type": "RA", "scheme": "absence", "premises": ["n1"],
+   "conclusion": "c2"},
+
+  {"id": "w1", "type": "I", "slot": "expert", "text": "an expert said so"},
+  {"id": "c3", "type": "I", "role": "conclusion", "text": "therefore it holds"},
+  {"id": "r4", "type": "RA", "scheme": "walton:expert_opinion",
+   "premises": ["w1"], "conclusion": "c3"},
+
+  {"id": "e1", "type": "I", "text": "the residual reported 15 of 15 uncovered"},
+  {"id": "x1", "type": "CA", "premises": ["e1"], "conclusion": "p1",
+   "text": "counter-evidence against p1, unanswered"}
+ ]}

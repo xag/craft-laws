@@ -279,18 +279,33 @@ def stop(payload: dict) -> int:
             print(verdict, file=sys.stderr)
             return 2
         return 0
-    key = hashlib.sha256("|".join(f"{f.law}{f.where}{f.quote}" for f in findings)
-                         .encode("utf-8", "replace")).hexdigest()
-    if _already_reported(key):
+    # Throttle PER FINDING, not per set. Hashing the whole set meant one new account
+    # changed the hash and every standing conviction returned as news -- eleven
+    # findings reported for a turn that produced four. A hook that repeats yesterday's
+    # convictions is one nobody reads, which is the failure a throttle exists to stop.
+    fresh, carried = [], 0
+    for f in findings:
+        key = hashlib.sha256(
+            f"{f.law}|{f.where}|{f.quote}|{f.why}".encode("utf-8", "replace")
+        ).hexdigest()
+        if _already_reported(key):
+            carried += 1
+        else:
+            fresh.append(f)
+    if not fresh:
         return 0
-    lines = [f"{len(findings)} finding(s) in this turn's argument. Each names a law "
+    lines = [f"{len(fresh)} finding(s) in this turn's argument. Each names a law "
              "with a published root; fix the argument or the account and finish. "
              "Nothing is refused."]
-    for f in findings:
+    for f in fresh:
         lines.append(f"  {f.law}  ({f.where})")
         if f.quote:
             lines.append(f"    {f.quote}")
         lines.append(f"    why: {f.why}")
+    if carried:
+        # standing convictions are counted, never re-listed: still true, already said
+        lines.append(f"  ({carried} earlier finding(s) still standing, reported once "
+                     "when they appeared)")
     print("\n".join(lines) + summary, file=sys.stderr)
     return 2
 

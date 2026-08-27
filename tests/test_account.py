@@ -357,3 +357,45 @@ def test_a_clean_verdict_is_reported_not_silent(tmp_path, monkeypatch, capsys):
     code = account_hook.stop({"session_id": "sess", "transcript_path": str(t)})
     assert code == 2
     assert "no decider convicts" in capsys.readouterr().err
+
+
+def test_a_standing_finding_is_reported_once_not_every_turn(tmp_path, monkeypatch,
+                                                            capsys):
+    """The defect: the throttle hashed the whole finding SET, so filing a new account
+    changed the hash and every old conviction returned as news -- eleven findings
+    reported for a turn that produced four."""
+    repo = tmp_path / "repo"
+    (repo / ".git").mkdir(parents=True)
+    d = repo / ".craft" / "accounts" / "sess"
+    d.mkdir(parents=True)
+    bad = {"nodes": [
+        {"id": "n1", "type": "I", "text": "nothing was found"},
+        {"id": "c1", "type": "I", "role": "conclusion", "text": "so none exists"},
+        {"id": "r1", "type": "RA", "scheme": "absence", "premises": ["n1"],
+         "conclusion": "c1"}]}
+    (d / "1.json").write_text(json.dumps(bad), encoding="utf-8")
+    seen = set()
+    monkeypatch.setattr(account_hook, "repos_touched", lambda _p: [repo])
+    monkeypatch.setattr(account_hook, "_already_reported",
+                        lambda k: (k in seen) or (seen.add(k) and False))
+    t = tmp_path / "t.jsonl"
+    t.write_text("", encoding="utf-8")
+    payload = {"session_id": "sess", "transcript_path": str(t)}
+
+    assert account_hook.stop(payload) == 2
+    first = capsys.readouterr().err
+    assert "1 finding(s)" in first and "still standing" not in first
+
+    # a second account with its own new flaw: only the new one is listed
+    (d / "2.json").write_text(json.dumps({"nodes": [
+        {"id": "c2", "type": "I", "role": "conclusion", "text": "it holds"},
+        {"id": "r2", "type": "RA", "scheme": "deduction", "premises": [],
+         "conclusion": "c2"}]}), encoding="utf-8")
+    assert account_hook.stop(payload) == 2
+    second = capsys.readouterr().err
+    assert "1 finding(s)" in second
+    assert "1 earlier finding(s) still standing" in second
+    assert "so none exists" not in second        # the old one is not re-listed
+
+    # nothing new at all: silence
+    assert account_hook.stop(payload) == 0

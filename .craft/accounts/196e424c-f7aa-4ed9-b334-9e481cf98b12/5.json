@@ -1,0 +1,21 @@
+{"source": "the turn claiming the residual proves the lane covers whole replies",
+ "nodes": [
+  {"id": "p1", "type": "I", "ground": "producer",
+   "quote": "residual: 0 of 14 reply sentence(s) outside the formal account",
+   "text": "the hook reported full coverage of the last reply"},
+  {"id": "p2", "type": "I", "ground": "given",
+   "quote": "the residual proves the lane covers whole replies now",
+   "text": "the owner's assessment of the residual"},
+  {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
+   "says": "Every sentence of a reply is now formally checked, so nothing I write escapes the deciders.",
+   "text": "the lane checks whole replies, so nothing escapes",
+   "prop": "every reply-sentence is checked-sentence"},
+  {"id": "r1", "type": "RA", "scheme": "deduction", "form": "syllogism",
+   "premises": ["p1", "p2"], "conclusion": "c1"},
+
+  {"id": "n1", "type": "I", "text": "no reader has reported an uncaught flaw"},
+  {"id": "c2", "type": "I", "role": "conclusion",
+   "text": "so the deciders miss nothing"},
+  {"id": "r2", "type": "RA", "scheme": "absence", "premises": ["n1"],
+   "conclusion": "c2"}
+ ]}

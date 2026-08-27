@@ -294,14 +294,19 @@ def check_deduction_shows_its_form(a: Account) -> list[Finding]:
 
 
 def check_declared_deductions_are_valid(a: Account) -> list[Finding]:
-    """A declared syllogistic form is judged on the form DERIVED from its propositions.
+    """A declared deduction is decided by Z3, over first-order logic.
 
-    mood and figure are not read from the account, and an account that supplies them is
-    refused: they were accepted once, and changing "figure": 2 to 1 with every
-    proposition byte-identical turned a conviction into a pass. Each premise and the
-    conclusion carry their own quantity, quality, subject and predicate; the form is a
-    consequence of those, so a different verdict needs a different premise."""
-    from .syllogism import FormError, derive, judge
+    Nothing here knows what a syllogism is. Each proposition is parsed by Lark against
+    craft/categorical.lark, translated to FOL, and the solver is asked whether premises
+    AND NOT conclusion is unsatisfiable. When it is satisfiable the solver's own
+    counter-model is reported, which is a refutation a reader can check rather than a
+    rule name they have to trust.
+
+    Four earlier versions of this check read a label: `scheme`, then `mood`+`figure`,
+    then a record of parts, then rules transcribed by hand. Each was caught by the
+    owner. This one asks a prover."""
+    from .categorical import ParseError, parse
+    from .entailment import entails
 
     out = []
     for r in a.of_type(RA_NODE):
@@ -310,29 +315,41 @@ def check_declared_deductions_are_valid(a: Account) -> list[Finding]:
         if "mood" in r or "figure" in r:
             out.append(Finding("a-form-is-derived-not-declared", r["id"], "",
                                "this node states its own mood or figure; both are "
-                               "computed from the propositions, and accepting them "
+                               "consequences of the propositions, and accepting them "
                                "is how a label passed for a formalisation"))
             continue
-        props = [a.nodes.get(pid, {}).get("prop") for pid in r.get("premises", [])]
         cid = r.get("conclusion")
         cid = cid if isinstance(cid, str) else (list(cid or [None])[0])
-        con = a.nodes.get(cid, {}).get("prop")
-        if not con or any(pr is None for pr in props):
+        texts = [a.nodes.get(pid, {}).get("prop") for pid in r.get("premises", [])]
+        con_text = a.nodes.get(cid, {}).get("prop")
+        if not con_text or any(t is None for t in texts):
             out.append(Finding("a-form-is-derived-not-declared", r["id"], "",
                                "form is 'syllogism' and a premise or the conclusion "
-                               "carries no `prop`: nothing to derive a form from"))
+                               "carries no `prop` written in the language"))
             continue
         try:
-            mood, figure = derive(props, con)
-        except FormError as e:
-            out.append(Finding("a-syllogism-holds-or-it-does-not", r["id"], "",
-                               f"these propositions are not a syllogism: {e}"))
+            premises = [parse(t) for t in texts]
+            conclusion = parse(con_text)
+        except ParseError as e:
+            out.append(Finding("a-proposition-is-in-the-language", r["id"], "",
+                               f"the grammar refused a proposition: {e}"))
             continue
-        v = judge(mood, figure, bool(r.get("existential_import")))
-        if not v.valid:
-            out.append(Finding("a-syllogism-holds-or-it-does-not", r["id"], "",
-                               f"derived {mood}-{figure}, which is not valid: "
-                               f"{', '.join(v.broke)}"))
+        result = entails(premises, conclusion,
+                         nonempty_terms=bool(r.get("existential_import")))
+        if result.valid:
+            continue
+        label = ""
+        try:
+            from .syllogism import derive
+            mood, figure = derive(texts, con_text)
+            label = f" (the form is {mood}-{figure})"
+        except Exception:
+            pass
+        out.append(Finding("the-premises-entail-the-conclusion-or-they-do-not",
+                           r["id"], "",
+                           f"Z3 finds the premises do not entail the conclusion"
+                           f"{label}; it satisfies them with the conclusion false: "
+                           f"{result.counter_model.replace(chr(10), ' ')[:200]}"))
     return out
 
 

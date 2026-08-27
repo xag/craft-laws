@@ -42,15 +42,30 @@ no longer states the form, only the sentence, and every structural fact is deriv
 
 from __future__ import annotations
 
-import re
 import sys
 from dataclasses import dataclass
+from pathlib import Path
+
+from lark import Lark
+from lark.exceptions import LarkError, UnexpectedInput
 
 QUANTIFIERS = ("every", "no", "some")
 COPULA = "is"
 NEGATOR = "not"
 
-_WORD = re.compile(r"[A-Za-z][A-Za-z0-9'-]*")
+_GRAMMAR = Path(__file__).with_suffix(".lark")
+
+# Lark builds the parser FROM the grammar file. There is no second implementation to
+# drift: the .lark file is the only statement of the language.
+_PARSER = Lark(_GRAMMAR.read_text(encoding="utf-8"), start="proposition",
+               parser="earley", propagate_positions=True)
+
+_FORM = {
+    "universal_affirmative": ("all", "affirmative"),
+    "universal_negative": ("all", "negative"),
+    "particular_affirmative": ("some", "affirmative"),
+    "particular_negative": ("some", "negative"),
+}
 
 
 class ParseError(ValueError):
@@ -75,63 +90,29 @@ class Proposition:
         return self.source
 
 
-def tokenize(text: str) -> list[tuple[str, int]]:
-    """Words with their offsets. Anything that is not a word is a parse error at the
-    place it appears, rather than something quietly skipped."""
-    out, i = [], 0
-    while i < len(text):
-        if text[i].isspace():
-            i += 1
-            continue
-        m = _WORD.match(text, i)
-        if not m:
-            raise ParseError(f"unexpected character {text[i]!r} at position {i}")
-        out.append((m.group(0), i))
-        i = m.end()
-    return out
-
-
 def parse(text: str) -> Proposition:
-    """proposition = quantifier term "is" ["not"] term. Refuses everything else."""
-    toks = tokenize(text)
-    if not toks:
+    """Parse with Lark, against craft/categorical.lark. Every structural fact below
+    comes out of the tree; none of it is read from a field."""
+    if not text or not text.strip():
         raise ParseError("empty proposition")
-    head, at = toks[0]
-    q = head.lower()
-    if q not in QUANTIFIERS:
-        raise ParseError(
-            f"expected one of {QUANTIFIERS} at position {at}, found {head!r}")
-
-    copulas = [i for i, (w, _) in enumerate(toks) if w.lower() == COPULA]
-    if not copulas:
-        raise ParseError(f"no {COPULA!r}: a proposition joins two terms with it")
-    if len(copulas) > 1:
-        raise ParseError(
-            f"{len(copulas)} occurrences of {COPULA!r}: the language joins exactly "
-            "two terms, so a term may not contain it")
-    c = copulas[0]
-
-    subject = toks[1:c]
-    rest = toks[c + 1:]
-    if not subject:
-        raise ParseError(f"no subject term between {head!r} and {COPULA!r}")
-
-    negated = bool(rest) and rest[0][0].lower() == NEGATOR
-    if negated:
-        rest = rest[1:]
-        if q != "some":
-            raise ParseError(
-                f"{head!r} ... {NEGATOR!r} is not in the language: write "
-                f"'no <term> is <term>' for a universal negative")
-    if not rest:
-        raise ParseError(f"no predicate term after {COPULA!r}")
-
-    quantity = "all" if q in ("every", "no") else "some"
-    quality = "negative" if (q == "no" or negated) else "affirmative"
+    try:
+        tree = _PARSER.parse(text)
+    except (UnexpectedInput, LarkError) as e:
+        col = getattr(e, "column", None)
+        where = f" at position {col - 1}" if isinstance(col, int) else ""
+        expected = ""
+        allowed = getattr(e, "expected", None) or getattr(e, "accepts", None)
+        if allowed:
+            words = sorted({str(t).replace("__ANON_0", "WORD") for t in allowed})
+            expected = f"; expected one of {words}"
+        raise ParseError(f"not in the language{where}: {e.__class__.__name__}"
+                         f"{expected}") from None
+    quantity, quality = _FORM[tree.data]
+    terms = [" ".join(str(tok) for tok in sub.children) for sub in tree.children]
+    if len(terms) != 2:
+        raise ParseError(f"a proposition joins exactly two terms, found {len(terms)}")
     return Proposition(quantity=quantity, quality=quality,
-                       subject=" ".join(w for w, _ in subject),
-                       predicate=" ".join(w for w, _ in rest),
-                       source=text.strip())
+                       subject=terms[0], predicate=terms[1], source=text.strip())
 
 
 # --- the alarm ------------------------------------------------------------------------
@@ -150,16 +131,17 @@ ACCEPTS = [
     ("some things that are pleasant is good", "I", "things that are pleasant", "good"),
 ]
 
+# Each near-miss must be refused, and the reason is Lark's, not one written here.
 REFUSES = [
-    ("all B is A", "expected one of"),
-    ("B is A", "expected one of"),
-    ("every B A", "no 'is'"),
-    ("every is A", "no subject term"),
-    ("every B is", "no predicate term"),
-    ("every B is not A", "not in the language"),
-    ("every B is A is C", "occurrences of"),
-    ("every B is A.", "unexpected character"),
-    ("", "empty proposition"),
+    "all B is A",            # not a quantifier of this language
+    "B is A",                # no quantifier at all
+    "every B A",             # no copula
+    "every is A",            # no subject term
+    "every B is",            # no predicate term
+    "every B is not A",      # universal negative is written "no B is A"
+    "every B is A is C",     # a term may not contain the copula
+    "every B is A.",         # not a word character
+    "",                      # empty
 ]
 
 
@@ -174,18 +156,16 @@ def _alarm() -> int:
         if (p.type, p.subject, p.predicate) != (want_type, subj, pred):
             dead.append(f"{text!r} parsed as {p.type} {p.subject!r}/{p.predicate!r}, "
                         f"wanted {want_type} {subj!r}/{pred!r}")
-    for text, fragment in REFUSES:
+    for text in REFUSES:
         try:
             parse(text)
-        except ParseError as e:
-            if fragment not in str(e):
-                dead.append(f"{text!r} refused for the wrong reason: {e}")
+        except ParseError:
             continue
         dead.append(f"accepted {text!r}, which is not in the language")
     print(f"  {'DEAD' if dead else 'ok  '} {len(ACCEPTS)} proposition(s) in the "
           "language parse to the tradition's four types")
-    print(f"  {'DEAD' if dead else 'ok  '} {len(REFUSES)} near-miss(es) refused, "
-          "each for its own reason")
+    print(f"  {'DEAD' if dead else 'ok  '} {len(REFUSES)} near-miss(es) refused by "
+          "the grammar")
     for d in dead:
         print("\nDEAD ALARM  " + d)
     return 1 if dead else 0

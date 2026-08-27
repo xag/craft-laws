@@ -51,8 +51,10 @@ def test_a_declared_deduction_is_verified_not_believed():
          "premises": ["p1", "p2"], "conclusion": "c1"},
     ]})
     found = account.check_declared_deductions_are_valid(a)
-    assert [f.law for f in found] == ["a-syllogism-holds-or-it-does-not"]
-    assert "AAA-2" in found[0].why and "undistributed-middle" in found[0].why
+    assert [f.law for f in found] == [
+        "the-premises-entail-the-conclusion-or-they-do-not"]
+    assert "AAA-2" in found[0].why and "counter" not in found[0].law
+    assert found[0].why.strip().endswith("]")      # Z3's own counter-model
 
 
 def test_a_deduction_with_no_form_shows_nothing_and_says_so():

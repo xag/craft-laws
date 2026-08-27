@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "craft@0.1.0 — the laws of interface and copy, as checkable data."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["quern"]
+dependencies = ["quern", "lark>=1.2", "z3-solver>=4.13"]
 
 # The tray icon only; the checker itself stays stdlib, so a machine that never
 # wants an icon installs nothing extra.

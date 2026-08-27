@@ -6,6 +6,17 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["quern"]
 
+# The tray icon only; the checker itself stays stdlib, so a machine that never
+# wants an icon installs nothing extra.
+[project.optional-dependencies]
+tray = ["pystray>=0.19", "pillow>=10"]
+
+[project.scripts]
+craft-account-tray = "craft.account_tray:main"
+
+[dependency-groups]
+dev = ["pytest>=8.0.0"]
+
 [tool.uv.sources]
 # Pinned by rev, always. quern is pre-1.0 and its own doctrine is fork-or-republish over resolver
 # algebra. This package builds ON quern's ledger and grounding packages; it does not live inside

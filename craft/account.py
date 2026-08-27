@@ -99,6 +99,38 @@ WARRANTS = {
     "absence": None,
 }
 
+# --- OURS: what a GROUND licenses, and why validity is not enough ---------------------
+#
+# The founding case survived every layer above. "The proof is in one fact: no rule reads
+# the claim's sentence" formalises as Celarent, EAE-1, and Z3 confirms the entailment.
+# It passed at `robust`.
+#
+# It should not have. Its universal premise -- every use of `text` in the deciders is a
+# quoting-use -- was established by counting eleven occurrences in one file at one
+# moment. That is an enumeration, and an enumeration is contingent: it holds for the file
+# as it was, and says nothing about the next commit. A valid deduction inherits the
+# contingency of its premises. Validity is not soundness, and the checker had only
+# validity.
+#
+# So a deduction is no stronger than its weakest premise. Only a `given` -- a definition,
+# or something the user stipulated -- is not an empirical report, and only a `given`
+# licenses `robust` through an inference.
+#
+#   given          not a report about the world; a definition or a stipulation  robust
+#   user-surface   observed where the user stands                               medium
+#   producer       observed on the author's own machine                         medium
+#   stand-in       observed on a reconstruction                                 limited
+#
+# An I-node with no ground stated is not capped: absence of a ground is caught by
+# a-premise-names-its-ground below, and one law per defect.
+
+GROUND_CEILING = {
+    "given": "robust",
+    "user-surface": "medium",
+    "producer": "medium",
+    "stand-in": "limited",
+}
+
 _RANK = {"limited": 1, "medium": 2, "robust": 3}
 
 
@@ -252,10 +284,17 @@ def check_strength_is_licensed(a: Account) -> list[Finding]:
     ceiling: dict[str, str] = {}
     for r in a.of_type(RA_NODE):
         w = WARRANTS.get(r.get("scheme"))
+        if w is None:
+            continue
+        # A valid inference is no stronger than what it reasons FROM. The founding case
+        # was a sound-looking Celarent over a premise established by counting.
+        for pid in r.get("premises", []):
+            g = a.nodes.get(pid, {}).get("ground")
+            cap = GROUND_CEILING.get(g)
+            if cap is not None and _RANK[cap] < _RANK[w]:
+                w = cap
         c = r.get("conclusion")
         for cid in ([c] if isinstance(c, str) else list(c or [])):
-            if w is None:
-                continue
             best = ceiling.get(cid)
             if best is None or _RANK[w] > _RANK[best]:
                 ceiling[cid] = w
@@ -274,8 +313,9 @@ def check_strength_is_licensed(a: Account) -> list[Finding]:
         if _RANK[said] > _RANK[allowed]:
             out.append(Finding("a-conclusion-is-no-stronger-than-its-warrant", n["id"],
                                _q(n),
-                               f"stated {said!r} on a warrant that licenses at most "
-                               f"{allowed!r}: the strength is not earned"))
+                               f"stated {said!r} where at most {allowed!r} is "
+                               "licensed: an inference is no stronger than the "
+                               "warrant it uses or the premises it reasons from"))
     return out
 
 
@@ -416,9 +456,9 @@ CLEAN = {
          "text": "text is read eleven times, each time only to quote"},
         {"id": "r1", "type": "RA", "scheme": "sign", "premises": ["p1"],
          "conclusion": "c1"},
-        {"id": "s1", "type": "I", "text": "every B is A",
+        {"id": "s1", "type": "I", "ground": "given", "text": "every B is A",
          "prop": "every B is A"},
-        {"id": "s3", "type": "I", "text": "every C is B",
+        {"id": "s3", "type": "I", "ground": "given", "text": "every C is B",
          "prop": "every C is B"},
         {"id": "s2", "type": "I", "role": "conclusion", "strength": "robust",
          "text": "every C is A",

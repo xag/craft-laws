@@ -22,11 +22,13 @@ def test_a_sign_does_not_license_a_proof():
     ])
     found = account.check_strength_is_licensed(a)
     assert [f.law for f in found] == ["a-conclusion-is-no-stronger-than-its-warrant"]
-    assert "licenses at most 'limited'" in found[0].why
+    assert "at most 'limited'" in found[0].why
 
 
-def test_the_same_premise_under_a_deduction_licenses_robust():
-    """The ceiling is a property of the warrant, not of the words in the conclusion."""
+def test_calling_it_a_deduction_does_not_launder_a_counted_premise():
+    """This test used to assert the opposite, and the assertion was the defect: a
+    deduction over a `producer` premise was let through at robust. A valid form does
+    not make an empirical premise necessary."""
     a = _acc([
         {"id": "p1", "type": "I", "ground": "producer", "text": "eleven occurrences"},
         {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
@@ -34,7 +36,8 @@ def test_the_same_premise_under_a_deduction_licenses_robust():
         {"id": "r1", "type": "RA", "scheme": "deduction", "premises": ["p1"],
          "conclusion": "c1"},
     ])
-    assert account.check_strength_is_licensed(a) == []
+    found = account.check_strength_is_licensed(a)
+    assert found and "at most 'medium'" in found[0].why
 
 
 def test_absence_licenses_nothing():
@@ -141,3 +144,53 @@ def test_the_toggle_reports_three_states(monkeypatch):
                         lambda: {"UserPromptSubmit": True, "Stop": False})
     s = account_toggle.state()
     assert s["colour"] == "amber" and "Stop" in account_toggle.render(s)
+
+
+# --- validity is not soundness --------------------------------------------------------
+
+def test_a_valid_deduction_over_a_counted_premise_is_not_robust():
+    """The founding case, and it survived every earlier layer. 'The proof is in one
+    fact' formalises as Celarent and Z3 confirms the entailment -- but its universal
+    premise was established by counting eleven occurrences in one file."""
+    a = account.Account(path="t", nodes={n["id"]: n for n in [
+        {"id": "p1", "type": "I", "ground": "producer",
+         "text": "text appears eleven times, each time only to quote",
+         "prop": "every use-of-text is a-quoting-use"},
+        {"id": "p2", "type": "I", "ground": "given",
+         "prop": "no a-quoting-use is a-rule-reading"},
+        {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
+         "text": "The proof is in one fact: no rule reads the claim's sentence",
+         "prop": "no use-of-text is a-rule-reading"},
+        {"id": "r1", "type": "RA", "scheme": "deduction", "form": "syllogism",
+         "premises": ["p2", "p1"], "conclusion": "c1"},
+    ]})
+    assert account.check_declared_deductions_are_valid(a) == []   # the form holds
+    found = account.check_strength_is_licensed(a)                 # the grounds do not
+    assert [f.law for f in found] == ["a-conclusion-is-no-stronger-than-its-warrant"]
+    assert "at most 'medium'" in found[0].why
+
+
+def test_the_same_syllogism_over_stipulated_premises_earns_robust():
+    a = account.Account(path="t", nodes={n["id"]: n for n in [
+        {"id": "p1", "type": "I", "ground": "given",
+         "prop": "every use-of-text is a-quoting-use"},
+        {"id": "p2", "type": "I", "ground": "given",
+         "prop": "no a-quoting-use is a-rule-reading"},
+        {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
+         "prop": "no use-of-text is a-rule-reading"},
+        {"id": "r1", "type": "RA", "scheme": "deduction", "form": "syllogism",
+         "premises": ["p2", "p1"], "conclusion": "c1"},
+    ]})
+    assert account.check_strength_is_licensed(a) == []
+
+
+def test_a_stand_in_premise_caps_lower_still():
+    a = account.Account(path="t", nodes={n["id"]: n for n in [
+        {"id": "p1", "type": "I", "ground": "stand-in", "prop": "every B is A"},
+        {"id": "c1", "type": "I", "role": "conclusion", "strength": "medium",
+         "prop": "every C is A"},
+        {"id": "r1", "type": "RA", "scheme": "verified-source", "premises": ["p1"],
+         "conclusion": "c1"},
+    ]})
+    found = account.check_strength_is_licensed(a)
+    assert found and "at most 'limited'" in found[0].why

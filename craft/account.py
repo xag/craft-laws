@@ -294,21 +294,45 @@ def check_deduction_shows_its_form(a: Account) -> list[Finding]:
 
 
 def check_declared_deductions_are_valid(a: Account) -> list[Finding]:
-    """A declared syllogistic form is judged by craft.syllogism's five rules, which
-    compute validity from the form rather than looking it up."""
-    from .syllogism import judge
+    """A declared syllogistic form is judged on the form DERIVED from its propositions.
+
+    mood and figure are not read from the account, and an account that supplies them is
+    refused: they were accepted once, and changing "figure": 2 to 1 with every
+    proposition byte-identical turned a conviction into a pass. Each premise and the
+    conclusion carry their own quantity, quality, subject and predicate; the form is a
+    consequence of those, so a different verdict needs a different premise."""
+    from .syllogism import FormError, derive, judge
 
     out = []
     for r in a.of_type(RA_NODE):
         if r.get("form") != "syllogism":
             continue
-        v = judge(str(r.get("mood", "")), r.get("figure", 0),
-                  bool(r.get("existential_import")))
-        if v.valid:
+        if "mood" in r or "figure" in r:
+            out.append(Finding("a-form-is-derived-not-declared", r["id"], "",
+                               "this node states its own mood or figure; both are "
+                               "computed from the propositions, and accepting them "
+                               "is how a label passed for a formalisation"))
             continue
-        out.append(Finding("a-syllogism-holds-or-it-does-not", r["id"], "",
-                           f"{r.get('mood')}-{r.get('figure')} is not a valid "
-                           f"syllogism: {', '.join(v.broke)}"))
+        props = [a.nodes.get(pid, {}).get("prop") for pid in r.get("premises", [])]
+        cid = r.get("conclusion")
+        cid = cid if isinstance(cid, str) else (list(cid or [None])[0])
+        con = a.nodes.get(cid, {}).get("prop")
+        if not con or any(pr is None for pr in props):
+            out.append(Finding("a-form-is-derived-not-declared", r["id"], "",
+                               "form is 'syllogism' and a premise or the conclusion "
+                               "carries no `prop`: nothing to derive a form from"))
+            continue
+        try:
+            mood, figure = derive(props, con)
+        except FormError as e:
+            out.append(Finding("a-syllogism-holds-or-it-does-not", r["id"], "",
+                               f"these propositions are not a syllogism: {e}"))
+            continue
+        v = judge(mood, figure, bool(r.get("existential_import")))
+        if not v.valid:
+            out.append(Finding("a-syllogism-holds-or-it-does-not", r["id"], "",
+                               f"derived {mood}-{figure}, which is not valid: "
+                               f"{', '.join(v.broke)}"))
     return out
 
 
@@ -345,10 +369,17 @@ GUILTY = {
         {"id": "l1", "type": "I", "text": "loop"},
         {"id": "r2", "type": "RA", "scheme": "deduction", "premises": ["l1"],
          "conclusion": "l1"},
-        {"id": "s1", "type": "I", "text": "every B is A, and every C is B"},
-        {"id": "s2", "type": "I", "role": "conclusion", "text": "so every A is C"},
+        {"id": "s1", "type": "I", "text": "every P is M",
+         "prop": {"quantity": "all", "quality": "affirmative",
+                  "subject": "P", "predicate": "M"}},
+        {"id": "s3", "type": "I", "text": "every S is M",
+         "prop": {"quantity": "all", "quality": "affirmative",
+                  "subject": "S", "predicate": "M"}},
+        {"id": "s2", "type": "I", "role": "conclusion", "text": "so every S is P",
+         "prop": {"quantity": "all", "quality": "affirmative",
+                  "subject": "S", "predicate": "P"}},
         {"id": "r5", "type": "RA", "scheme": "deduction", "form": "syllogism",
-         "mood": "AAA", "figure": 2, "premises": ["s1"], "conclusion": "s2"},
+         "premises": ["s1", "s3"], "conclusion": "s2"},
         {"id": "x1", "type": "CA", "text": "dangling conflict"},
         {"id": "a1", "type": "I", "text": "nothing was found"},
         {"id": "r3", "type": "RA", "scheme": "absence", "premises": ["a1"],
@@ -371,11 +402,18 @@ CLEAN = {
          "text": "text is read eleven times, each time only to quote"},
         {"id": "r1", "type": "RA", "scheme": "sign", "premises": ["p1"],
          "conclusion": "c1"},
-        {"id": "s1", "type": "I", "text": "every B is A, and every C is B"},
+        {"id": "s1", "type": "I", "text": "every B is A",
+         "prop": {"quantity": "all", "quality": "affirmative",
+                  "subject": "B", "predicate": "A"}},
+        {"id": "s3", "type": "I", "text": "every C is B",
+         "prop": {"quantity": "all", "quality": "affirmative",
+                  "subject": "C", "predicate": "B"}},
         {"id": "s2", "type": "I", "role": "conclusion", "strength": "robust",
-         "text": "every C is A"},
+         "text": "every C is A",
+         "prop": {"quantity": "all", "quality": "affirmative",
+                  "subject": "C", "predicate": "A"}},
         {"id": "r2", "type": "RA", "scheme": "deduction", "form": "syllogism",
-         "mood": "AAA", "figure": 1, "premises": ["s1"], "conclusion": "s2"},
+         "premises": ["s1", "s3"], "conclusion": "s2"},
     ]
 }
 

@@ -36,18 +36,26 @@ def test_existential_import_is_a_choice_not_a_constant():
     assert syllogism.judge("AAI", 3, existential_import=True).valid
 
 
-def test_a_declared_deduction_is_verified_not_believed(tmp_path):
-    """The defect this closed: scheme='deduction' used to pass on the word alone."""
+def test_a_declared_deduction_is_verified_not_believed():
+    """The defect this closed: scheme='deduction' used to pass on the word alone.
+    Now the propositions decide, and these compose to AAA-2."""
     a = account.Account(path="t", nodes={n["id"]: n for n in [
-        {"id": "p1", "type": "I", "text": "every B is A, every C is B"},
+        {"id": "p1", "type": "I", "text": "every P is M",
+         "prop": {"quantity": "all", "quality": "affirmative",
+                  "subject": "P", "predicate": "M"}},
+        {"id": "p2", "type": "I", "text": "every S is M",
+         "prop": {"quantity": "all", "quality": "affirmative",
+                  "subject": "S", "predicate": "M"}},
         {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
-         "text": "every A is C"},
+         "text": "every S is P",
+         "prop": {"quantity": "all", "quality": "affirmative",
+                  "subject": "S", "predicate": "P"}},
         {"id": "r1", "type": "RA", "scheme": "deduction", "form": "syllogism",
-         "mood": "AAA", "figure": 2, "premises": ["p1"], "conclusion": "c1"},
+         "premises": ["p1", "p2"], "conclusion": "c1"},
     ]})
     found = account.check_declared_deductions_are_valid(a)
     assert [f.law for f in found] == ["a-syllogism-holds-or-it-does-not"]
-    assert "undistributed-middle" in found[0].why
+    assert "AAA-2" in found[0].why and "undistributed-middle" in found[0].why
 
 
 def test_a_deduction_with_no_form_shows_nothing_and_says_so():
@@ -63,3 +71,56 @@ def test_a_deduction_with_no_form_shows_nothing_and_says_so():
 
 def test_the_syllogism_alarm_rings():
     assert syllogism._alarm() == 0
+
+
+# --- the form is derived, not declared ------------------------------------------------
+
+def test_the_form_is_computed_from_the_propositions():
+    from craft.syllogism import derive
+    barbara = ([{"quantity": "all", "quality": "affirmative",
+                 "subject": "B", "predicate": "A"},
+                {"quantity": "all", "quality": "affirmative",
+                 "subject": "C", "predicate": "B"}],
+               {"quantity": "all", "quality": "affirmative",
+                "subject": "C", "predicate": "A"})
+    assert derive(*barbara) == ("AAA", 1)
+
+
+def test_the_same_propositions_cannot_be_relabelled_into_a_different_figure():
+    """The defect the owner found: 'figure': 2 -> 1, propositions unchanged, verdict
+    flipped. The figure is now a consequence of where the middle term sits."""
+    from craft.syllogism import derive
+    props = ([{"quantity": "all", "quality": "affirmative",
+               "subject": "P", "predicate": "M"},
+              {"quantity": "all", "quality": "affirmative",
+               "subject": "S", "predicate": "M"}],
+             {"quantity": "all", "quality": "affirmative",
+              "subject": "S", "predicate": "P"})
+    assert derive(*props) == ("AAA", 2)          # and no field can say otherwise
+
+
+def test_a_stated_mood_or_figure_is_refused():
+    a = account.Account(path="t", nodes={n["id"]: n for n in [
+        {"id": "p1", "type": "I", "prop": {"quantity": "all", "quality": "affirmative",
+                                           "subject": "P", "predicate": "M"}},
+        {"id": "p2", "type": "I", "prop": {"quantity": "all", "quality": "affirmative",
+                                           "subject": "S", "predicate": "M"}},
+        {"id": "c1", "type": "I", "role": "conclusion",
+         "prop": {"quantity": "all", "quality": "affirmative",
+                  "subject": "S", "predicate": "P"}},
+        {"id": "r1", "type": "RA", "scheme": "deduction", "form": "syllogism",
+         "mood": "AAA", "figure": 1, "premises": ["p1", "p2"], "conclusion": "c1"},
+    ]})
+    assert [f.law for f in account.check_declared_deductions_are_valid(a)] == [
+        "a-form-is-derived-not-declared"]
+
+
+def test_premises_that_never_meet_are_reported_as_not_a_syllogism():
+    from craft.syllogism import FormError, derive
+    with pytest.raises(FormError, match="never meet"):
+        derive([{"quantity": "all", "quality": "affirmative",
+                 "subject": "A", "predicate": "B"},
+                {"quantity": "all", "quality": "affirmative",
+                 "subject": "C", "predicate": "D"}],
+               {"quantity": "all", "quality": "affirmative",
+                "subject": "C", "predicate": "B"})

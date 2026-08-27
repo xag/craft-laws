@@ -214,3 +214,89 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+# --- deriving the form from the propositions ------------------------------------------
+#
+# WHY THIS EXISTS, and it is the second time the same defect was caught. The first
+# version of craft/account.py let the author write `scheme: "deduction"` and checked
+# nothing. The fix asked for `mood` and `figure` -- and the owner showed, on 2026-08-27,
+# that this was the same defect one layer down: changing "figure": 2 to "figure": 1, with
+# every proposition byte-identical, turned a conviction into a pass. Two labels instead
+# of one is not a formalisation.
+#
+# So mood and figure are no longer accepted. Each proposition carries its own parts:
+#
+#     {"quantity": "all" | "some", "quality": "affirmative" | "negative",
+#      "subject": "<term>", "predicate": "<term>"}
+#
+# and the form is COMPUTED from the three of them. The author still translates the
+# sentence into quantity, quality and two terms -- that step is the irreducible reading,
+# and no machine does it -- but it is now atomic and local per proposition. Which mood,
+# which figure, and whether it holds are consequences, and an author who wants a
+# different verdict has to change what a premise SAYS.
+
+QUANTITIES = ("all", "some")
+QUALITIES = ("affirmative", "negative")
+
+_TYPE_OF = {("all", "affirmative"): "A", ("all", "negative"): "E",
+            ("some", "affirmative"): "I", ("some", "negative"): "O"}
+
+
+class FormError(ValueError):
+    """These propositions do not compose into a syllogism, and the reason says why."""
+
+
+def type_of(prop: dict) -> str:
+    """A, E, I or O, from the proposition's own quantity and quality."""
+    q, k = prop.get("quantity"), prop.get("quality")
+    if q not in QUANTITIES or k not in QUALITIES:
+        raise FormError(f"quantity {q!r} / quality {k!r} is not one of "
+                        f"{QUANTITIES} x {QUALITIES}")
+    for t in ("subject", "predicate"):
+        if not str(prop.get(t) or "").strip():
+            raise FormError(f"the proposition names no {t}")
+    return _TYPE_OF[(q, k)]
+
+
+def derive(premises: list[dict], conclusion: dict) -> tuple[str, int]:
+    """(mood, figure), computed. Raises FormError when the propositions are not a
+    syllogism at all -- which is itself a finding, not a silence."""
+    if len(premises) != 2:
+        raise FormError(f"a syllogism has two premises, not {len(premises)}")
+    con_t = type_of(conclusion)
+    S, P = conclusion["subject"], conclusion["predicate"]
+    if S == P:
+        raise FormError("the conclusion's subject and predicate are the same term")
+
+    terms = [{p["subject"], p["predicate"]} for p in premises]
+    middles = (terms[0] & terms[1]) - {S, P}
+    if len(middles) != 1:
+        raise FormError(
+            "no single middle term: the premises share "
+            f"{sorted(terms[0] & terms[1]) or 'nothing'} outside the conclusion, "
+            "so they never meet")
+    M = middles.pop()
+
+    major = [p for p in premises if P in (p["subject"], p["predicate"])]
+    minor = [p for p in premises if S in (p["subject"], p["predicate"])]
+    if len(major) != 1 or len(minor) != 1 or major[0] is minor[0]:
+        raise FormError("the conclusion's terms do not sit in one premise each")
+    maj, min_ = major[0], minor[0]
+    for p, name in ((maj, "major"), (min_, "minor")):
+        if M not in (p["subject"], p["predicate"]):
+            raise FormError(f"the {name} premise does not carry the middle term")
+
+    # The figure is where the middle term sits: subject of the major or predicate of it,
+    # crossed with subject or predicate of the minor.
+    if maj["subject"] == M and min_["predicate"] == M:
+        figure = 1
+    elif maj["predicate"] == M and min_["predicate"] == M:
+        figure = 2
+    elif maj["subject"] == M and min_["subject"] == M:
+        figure = 3
+    elif maj["predicate"] == M and min_["subject"] == M:
+        figure = 4
+    else:
+        raise FormError("the middle term sits in no recognised figure")
+    return type_of(maj) + type_of(min_) + con_t, figure

@@ -1,0 +1,27 @@
+// The language of categorical propositions. THIS FILE IS THE GRAMMAR -- Lark builds the
+// parser from it at import time, so there is no hand-written tokenizer or recursive
+// descent that could drift from what is written here. Edit this file and the parser
+// changes; there is nothing else to keep in step.
+//
+// The four forms the tradition names:
+//   every S is P     A  universal affirmative
+//   no    S is P     E  universal negative
+//   some  S is P     I  particular affirmative
+//   some  S is not P O  particular negative
+
+?proposition: universal_affirmative
+            | universal_negative
+            | particular_affirmative
+            | particular_negative
+
+universal_affirmative:  "every" term "is" term
+universal_negative:     "no"    term "is" term
+particular_affirmative: "some"  term "is" term
+particular_negative:    "some"  term "is" "not" term
+
+term: WORD+
+
+WORD: /(?!\bis\b|\bnot\b)[A-Za-z][A-Za-z0-9'-]*/
+
+%import common.WS
+%ignore WS

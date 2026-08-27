@@ -1,0 +1,11 @@
+{"nodes": [
+  {"id": "p1", "type": "I", "ground": "producer",
+   "quote": "every alarm rings: 9 decider(s) over one guilty account and one clean one.",
+   "text": "the rebuilt deciders all convict their guilty case and acquit their clean one"},
+  {"id": "g1", "type": "I", "ground": "given",
+   "quote": "instead of just removing, I expect you to build something that works",
+   "text": "the owner asked for a working design, not a removal"},
+  {"id": "c1", "type": "I", "role": "conclusion", "strength": "limited",
+   "text": "the anchored account lane meets the owner's ask as far as one session's runs can show"},
+  {"id": "r1", "type": "RA", "scheme": "sign", "premises": ["p1", "g1"], "conclusion": "c1"}
+]}

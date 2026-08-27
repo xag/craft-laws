@@ -1275,3 +1275,50 @@ DECISIONS.append(Node(
                              "grader can recover it by commit."}),
     ],
 ))
+
+DECISIONS.append(Node(
+    id="the-account-is-anchored-to-the-turns-record",
+    kind="decision",
+    links={"rests_on": ["the-turn-account-lane-is-removed"]},
+    name="The account lane returns anchored: every grounded premise quotes, verbatim, "
+         "an artifact its author does not write - tool results for producer and "
+         "stand-in, the user's own messages for given and user-surface",
+    payload={
+        "rationale":
+            "The removal entry states the constraint: a checker fed only by the "
+            "checked party's labels reports those labels. The rebuild supplies the "
+            "anchor the first lane lacked, the same one the working lanes already "
+            "use: craft/record.py reads the session transcript - written by the "
+            "harness, not by the author - into two pools, and "
+            "a-ground-is-a-quotation-from-the-record convicts any grounded premise "
+            "whose quote the right pool does not hold, any grounded premise with no "
+            "quote, and any grounded premise checked with no record supplied. The "
+            "closing defect of the removed lane is closed by construction: "
+            "relabelling a counted observation as `given` now demands words the "
+            "user actually typed. Run against this session's real transcript (538 "
+            "tool results, 73 user texts): an honest filing passes, a fabricated "
+            "quote convicts, the laundered founding case convicts on the anchor, "
+            "and the honest founding case convicts on strength.",
+        "residue":
+            "Three things stay with a reader, stated so the pass report cannot "
+            "overclaim: selection (quoting the one line that helps), translation "
+            "into the controlled language, and a staged record - a command run to "
+            "print a wanted sentence anchors, but sits in the record beside its "
+            "output where an audit can see it. Silence stays information, never a "
+            "conviction.",
+    },
+    children=[
+        Node(id="alt-an-independent-model-grader", kind="alternative",
+             name="Have a second model derive the account and grade the turn",
+             payload={"why": "The removed prose grader measured 33-47 seconds a turn "
+                             "and non-deterministic verdicts. An independent AUDITOR "
+                             "of selection bias, run off the hot path over committed "
+                             "accounts, remains the natural next instrument - as an "
+                             "audit, not a gate."}),
+        Node(id="alt-trust-the-labels", kind="alternative",
+             name="Keep grounds and strengths as authored fields, checked for shape only",
+             payload={"why": "The removed lane, whole: five refutations in one day "
+                             "showed each shape-check of an authored label relocates "
+                             "the defect one field deeper."}),
+    ],
+))

@@ -4,10 +4,17 @@ version = "0.1.0"
 description = "craft@0.1.0 — the laws of interface and copy, as checkable data."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["quern"]
+dependencies = ["quern", "lark>=1.2", "z3-solver>=4.13"]
 
 [dependency-groups]
 dev = ["pytest>=8.0.0"]
+
+# The tray icon only; the checker itself needs no GUI dependency.
+[project.optional-dependencies]
+tray = ["pystray>=0.19", "pillow>=10"]
+
+[project.scripts]
+craft-account-tray = "craft.account_tray:main"
 
 [tool.uv.sources]
 # Pinned by rev, always. quern is pre-1.0 and its own doctrine is fork-or-republish over resolver

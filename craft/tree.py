@@ -1372,3 +1372,52 @@ DECISIONS.append(Node(
                              "string instead."}),
     ],
 ))
+
+DECISIONS.append(Node(
+    id="the-second-source-is-the-founding-catalogue",
+    kind="decision",
+    links={"rests_on": ["the-account-laws-are-sourced-whole-or-absent"]},
+    name="Sophistical Refutations is adopted whole - thirteen fallacies, the "
+         "author's own complete enumeration - and the Greenwell adoption is "
+         "finished: every row either census routes as decidable now has a decider",
+    payload={
+        "rationale":
+            "Ordered by the owner on 2026-08-27: source known patterns of reasoning "
+            "flaw and detect them. Two moves, both under the whole-source rule. "
+            "Greenwell's last decidable row, Pseudo-Precision, is mechanized over "
+            "declared quantities: a conclusion whose tolerance is tighter than "
+            "every input's claims precision from nowhere. And the founding "
+            "catalogue is censused whole (craft/census_sophistici.py, 13 rows): "
+            "three rows were already covered - Consequent and Ignoratio elenchi by "
+            "the entailment law, Begging the question by circularity - and the one "
+            "newly decidable row, non-cause, is mechanized by re-asking Z3 with "
+            "each premise removed: a premise the verified entailment holds without "
+            "was inserted as though the conclusion depended upon it, which is "
+            "Aristotle's own definition. Declared deductions also stop needing a "
+            "form field: any count of parseable premises goes to Z3 directly, and "
+            "the syllogism name is only a label when the shape has one.",
+        "note":
+            "The honest count across both adoptions: Greenwell 6 of 33 decidable, "
+            "all six now live; Sophistici 4 of 13, all four live (three covered, "
+            "one new). Eight of the thirteen SR rows are linguistic or "
+            "meaning-bound and stay with a reader; the census says which and why.",
+    },
+    children=[
+        Node(id="alt-adopt-a-modern-compendium-instead", kind="alternative",
+             name="Adopt Walton's scheme catalogue or the IEP fallacy files next",
+             payload={"why": "Both are real and both are large - sixty schemes, two "
+                             "hundred entries - and a census that big authored in "
+                             "one sitting would be a reading nobody checked. The "
+                             "quality-harness kill-criterion on Walton's critical "
+                             "questions is the standing reason to do it properly "
+                             "later, at thirty questions tried against a real "
+                             "graph."}),
+        Node(id="alt-detect-without-censusing", kind="alternative",
+             name="Add the two deciders without adopting their sources whole",
+             payload={"why": "The sourcing rule exists because a source mined for "
+                             "one convenient rule is a word list one level up; "
+                             "thirteen rows is an afternoon, and the census is what "
+                             "makes the 4-of-13 an honest number instead of a "
+                             "highlight reel."}),
+    ],
+))

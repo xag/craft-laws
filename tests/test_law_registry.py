@@ -10,7 +10,7 @@ says needs a reader.
 import ast
 from pathlib import Path
 
-from craft import account_laws, census_argument, laws, practice
+from craft import account_laws, census_argument, census_sophistici, laws, practice
 
 CRAFT = Path(__file__).resolve().parents[1] / "craft"
 
@@ -88,6 +88,17 @@ def test_no_source_is_adopted_in_isolation():
         assert str(route) in decidable, (
             f"{law_id} mechanizes {row!r}, which the census routes {route!r} -- "
             "a decider on a row that needs a reader")
+
+
+def test_the_second_source_is_adopted_whole_too():
+    """Sophistical Refutations: the author states a complete enumeration of 13; the
+    census holds them all, and every SR-rooted decider claims a decidable row."""
+    census = census_sophistici.CENSUS
+    assert len(census) == census_sophistici.SOURCE_COUNT == 13
+    for law_id, row in account_laws.SOPHISTICI_ROWS.items():
+        assert row in census, f"{law_id} claims a row the census does not hold"
+        assert census[row][0] in ("zero", "covered"), (
+            f"{law_id} mechanizes {row!r}, routed {census[row][0]!r}")
 
 
 def test_the_practice_reuse_is_real():

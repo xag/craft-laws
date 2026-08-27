@@ -46,6 +46,11 @@ ARISTOTLE_URL = "https://classics.mit.edu/Aristotle/prior.1.i.html"
 SEP_LC = "Stanford Encyclopedia of Philosophy, Logical Consequence, section 3.1"
 SEP_LC_URL = "https://plato.stanford.edu/entries/logical-consequence/"
 
+ARISTOTLE_SR = ("Aristotle, On Sophistical Refutations, tr. W. A. "
+                "Pickard-Cambridge (classics.mit.edu); censused whole in "
+                "craft/census_sophistici.py")
+ARISTOTLE_SR_URL = "https://classics.mit.edu/Aristotle/sophist_refut.1.1.html"
+
 AIF = ("Chesnevar et al. 2006, the Argument Interchange Format, as recorded in the "
        "estate's implementation (quality-harness/harness/argument.py) -- an estate "
        "capture, not the paper's own sentence")
@@ -153,6 +158,27 @@ ACCOUNT = (
                     "circumstances but fail to generalize their validity."),),
     ),
     AccountLaw(
+        "a-premise-does-its-work",
+        "In a verified deduction, a premise the entailment holds without was inserted "
+        "as though the conclusion depended on it; Z3 re-asked with the premise "
+        "removed decides it",
+        source=ARISTOTLE_SR, source_item="Non-cause as cause",
+        citations=((ARISTOTLE_SR, ARISTOTLE_SR_URL,
+                    "The refutation which depends upon treating as cause what is not "
+                    "a cause, occurs whenever what is not a cause is inserted in the "
+                    "argument, as though the refutation depended upon it."),),
+    ),
+    AccountLaw(
+        "a-figure-is-no-more-precise-than-its-inputs",
+        "A conclusion stating a tolerance tighter than every input it rests on, or "
+        "with no input stating one, claims precision from nowhere",
+        source=GREENWELL, source_item="Pseudo-Precision",
+        citations=((GREENWELL + ", Table 6", GREENWELL_URL,
+                    "Mathematical Fallacies: Faith in Probability, Gambler's "
+                    "Fallacy, Insufficient Sample Size, Pseudo-Precision, "
+                    "Unrepresentative Sample"),),
+    ),
+    AccountLaw(
         "a-ground-is-a-quotation-from-the-record",
         "A grounded premise quotes, verbatim, the turn's own record -- the traceable "
         "account, mechanized: tool results for producer and stand-in, the user's "
@@ -182,4 +208,13 @@ GREENWELL_ROWS = {
     "absence-of-evidence-concludes-nothing": "Arguing from Ignorance",
     "counter-evidence-is-answered": "Ignoring Available Counter-Evidence",
     "a-conclusion-stands-on-its-own-feet": "Damning the Alternatives",
+    "a-figure-is-no-more-precise-than-its-inputs": "Pseudo-Precision",
+}
+
+# The same mapping for the second whole-source adoption. Rows the census routes
+# `covered` are decided by machinery that predates the adoption: Consequent and
+# Ignoratio elenchi by the entailment law, Begging the question by
+# no-claim-supports-itself.
+SOPHISTICI_ROWS = {
+    "a-premise-does-its-work": "Non-cause as cause",
 }

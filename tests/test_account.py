@@ -215,3 +215,52 @@ def test_grounded_nodes_with_no_record_refuse_rather_than_judge():
     a = _acc([{"id": "p1", "type": "I", "ground": "producer", "quote": "43 passed"}])
     with _pytest.raises(LookupError, match="unverifiable is not judged"):
         account.check_grounds_are_anchored(a, None)
+
+
+# --- the second whole-source adoption: Sophistical Refutations ------------------------
+
+def test_an_idle_premise_in_a_verified_deduction_convicts():
+    """Aristotle's non-cause: Barbara holds without the inserted passenger, and Z3
+    re-asked without each premise names exactly the idle one."""
+    a = _acc([
+        {"id": "n1", "type": "I", "prop": "every B is A"},
+        {"id": "n2", "type": "I", "prop": "every C is B"},
+        {"id": "n3", "type": "I", "prop": "some D is A", "text": "inserted, idle"},
+        {"id": "c1", "type": "I", "role": "conclusion", "prop": "every C is A"},
+        {"id": "r1", "type": "RA", "scheme": "deduction",
+         "premises": ["n1", "n2", "n3"], "conclusion": "c1"},
+    ])
+    found = account.check_declared_deductions_are_valid(a)
+    assert [f.law for f in found] == ["a-premise-does-its-work"]
+    assert "'n3'" in found[0].why
+    # remove the passenger and the deduction is clean
+    a.nodes["r1"]["premises"] = ["n1", "n2"]
+    assert account.check_declared_deductions_are_valid(a) == []
+
+
+def test_a_deduction_needs_no_declared_form_any_more():
+    """Three parseable premises, no form field: Z3 decides directly."""
+    a = _acc([
+        {"id": "n1", "type": "I", "prop": "every B is A"},
+        {"id": "n2", "type": "I", "prop": "every C is B"},
+        {"id": "c1", "type": "I", "role": "conclusion", "prop": "some C is not A"},
+        {"id": "r1", "type": "RA", "scheme": "deduction",
+         "premises": ["n1", "n2"], "conclusion": "c1"},
+    ])
+    found = account.check_declared_deductions_are_valid(a)
+    assert [f.law for f in found] == [
+        "the-premises-entail-the-conclusion-or-they-do-not"]
+
+
+def test_precision_from_nowhere_convicts_and_earned_precision_passes():
+    a = _acc([
+        {"id": "q1", "type": "I", "quantity": {"value": 44.7, "tolerance": 0.5}},
+        {"id": "c1", "type": "I", "role": "conclusion",
+         "quantity": {"value": 44.71, "tolerance": 0.001}},
+        {"id": "r1", "type": "RA", "scheme": "verified-source", "premises": ["q1"],
+         "conclusion": "c1"},
+    ])
+    found = account.check_precision_is_earned(a)
+    assert [f.law for f in found] == ["a-figure-is-no-more-precise-than-its-inputs"]
+    a.nodes["c1"]["quantity"]["tolerance"] = 0.5
+    assert account.check_precision_is_earned(a) == []

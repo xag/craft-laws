@@ -267,64 +267,95 @@ def check_strength_is_licensed(a: Account) -> list[Finding]:
 
 
 def check_declared_deductions_are_valid(a: Account) -> list[Finding]:
-    """A declared deduction is decided by Z3, over first-order logic.
-
-    Nothing here knows what a syllogism is. Each proposition is parsed by Lark against
-    craft/categorical.lark, translated to FOL, and the solver is asked whether premises
-    AND NOT conclusion is unsatisfiable. When it is satisfiable the solver's own
-    counter-model is reported, which is a refutation a reader can check rather than a
-    rule name they have to trust.
-
-    Four earlier versions of this check read a label: `scheme`, then `mood`+`figure`,
-    then a record of parts, then rules transcribed by hand. Each was caught by the
-    owner. This one asks a prover."""
+    """A declared deduction is decided by Z3 over its parsed propositions -- any
+    number of premises, no form declaration needed; `form: syllogism` only adds the
+    traditional name when the shape has one. When the entailment HOLDS, Aristotle's
+    non-cause check runs: a premise the entailment holds without was inserted as
+    though the conclusion depended on it (Sophistical Refutations, independent
+    fallacy 6), and naming it costs one more Z3 call per premise."""
     from .categorical import ParseError, parse
     from .entailment import entails
 
     out = []
     for r in a.of_type(RA_NODE):
-        if r.get("scheme") == "deduction" and r.get("form") != "syllogism":
+        if r.get("scheme") != "deduction" and r.get("form") != "syllogism":
+            continue
+        cid = r.get("conclusion")
+        cid = cid if isinstance(cid, str) else (list(cid or [None])[0])
+        pids = list(r.get("premises", []))
+        texts = [a.nodes.get(pid, {}).get("prop") for pid in pids]
+        con_text = a.nodes.get(cid, {}).get("prop") if cid else None
+        if not con_text or not texts or any(t is None for t in texts):
             out.append(Finding("the-premises-entail-the-conclusion-or-they-do-not",
                                r["id"], "",
                                "necessity is claimed and nothing checkable is "
                                "exhibited: a deduction that cannot be examined is "
                                "asserted, not shown"))
             continue
-        if r.get("form") != "syllogism":
-            continue
-        cid = r.get("conclusion")
-        cid = cid if isinstance(cid, str) else (list(cid or [None])[0])
-        texts = [a.nodes.get(pid, {}).get("prop") for pid in r.get("premises", [])]
-        con_text = a.nodes.get(cid, {}).get("prop")
-        if not con_text or any(t is None for t in texts):
-            out.append(Finding("a-proposition-is-in-the-language", r["id"], "",
-                               "form is 'syllogism' and a premise or the conclusion "
-                               "carries no `prop` written in the language: nothing "
-                               "here can be parsed, so nothing can be decided"))
-            continue
         try:
-            premises = [parse(t) for t in texts]
-            conclusion = parse(con_text)
+            premises = [parse(str(t)) for t in texts]
+            conclusion = parse(str(con_text))
         except ParseError as e:
             out.append(Finding("a-proposition-is-in-the-language", r["id"], "",
                                f"the grammar refused a proposition: {e}"))
             continue
-        result = entails(premises, conclusion,
-                         nonempty_terms=bool(r.get("existential_import")))
-        if result.valid:
+        ei = bool(r.get("existential_import"))
+        result = entails(premises, conclusion, nonempty_terms=ei)
+        if not result.valid:
+            label = ""
+            if len(premises) == 2:
+                try:
+                    from .syllogism import derive
+                    mood, figure = derive([str(t) for t in texts], str(con_text))
+                    label = f" (the form is {mood}-{figure})"
+                except Exception:
+                    pass
+            out.append(Finding("the-premises-entail-the-conclusion-or-they-do-not",
+                               r["id"], "",
+                               f"Z3 finds the premises do not entail the conclusion"
+                               f"{label}; it satisfies them with the conclusion "
+                               f"false: {result.counter_model.replace(chr(10), ' ')[:200]}"))
             continue
-        label = ""
-        try:
-            from .syllogism import derive
-            mood, figure = derive(texts, con_text)
-            label = f" (the form is {mood}-{figure})"
-        except Exception:
-            pass
-        out.append(Finding("the-premises-entail-the-conclusion-or-they-do-not",
-                           r["id"], "",
-                           f"Z3 finds the premises do not entail the conclusion"
-                           f"{label}; it satisfies them with the conclusion false: "
-                           f"{result.counter_model.replace(chr(10), ' ')[:200]}"))
+        if len(premises) > 1:
+            for i, pid in enumerate(pids):
+                rest = premises[:i] + premises[i + 1:]
+                if entails(rest, conclusion, nonempty_terms=ei).valid:
+                    out.append(Finding("a-premise-does-its-work", r["id"],
+                                       _q(a.nodes.get(pid, {})),
+                                       f"the entailment holds without {pid!r}: a "
+                                       "premise inserted as though the conclusion "
+                                       "depended upon it (Aristotle, Sophistical "
+                                       "Refutations, non-cause)"))
+    return out
+
+
+def check_precision_is_earned(a: Account) -> list[Finding]:
+    """Greenwell et al., Pseudo-Precision, over declared quantities: a conclusion
+    stating a figure tighter than every input it rests on claims precision from
+    nowhere. An I-node MAY carry {"quantity": {"value": v, "tolerance": t}}; the
+    decider reads only declarations and convicts only the impossible relation."""
+    supports: dict[str, set] = {}
+    for r in a.of_type(RA_NODE):
+        c = r.get("conclusion")
+        for cid in ([c] if isinstance(c, str) else list(c or [])):
+            supports.setdefault(cid, set()).update(r.get("premises", []))
+    out = []
+    for n in a.conclusions():
+        q = n.get("quantity") or {}
+        tol = q.get("tolerance")
+        if tol is None:
+            continue
+        premise_tols = [
+            (a.nodes.get(pid, {}).get("quantity") or {}).get("tolerance")
+            for pid in supports.get(n["id"], ())]
+        premise_tols = [t for t in premise_tols if t is not None]
+        if not premise_tols or float(tol) < min(float(t) for t in premise_tols):
+            out.append(Finding("a-figure-is-no-more-precise-than-its-inputs",
+                               n["id"], _q(n),
+                               "the conclusion's stated tolerance is tighter than "
+                               "every input's, or no input states one: precision "
+                               "beyond what the measurement supports (Greenwell et "
+                               "al., Pseudo-Precision)"))
     return out
 
 
@@ -364,7 +395,7 @@ def check_grounds_are_anchored(a: Account, corpus=None) -> list[Finding]:
 CHECKS = (check_shape, check_conclusions_are_supported, check_no_circular_support,
           check_counter_evidence_is_consumed, check_support_is_not_only_attack,
           check_absence_concludes_nothing, check_strength_is_licensed,
-          check_declared_deductions_are_valid)
+          check_declared_deductions_are_valid, check_precision_is_earned)
 
 
 def check_file(path: Path, corpus=None) -> list[Finding]:
@@ -410,6 +441,20 @@ GUILTY = {
          "conclusion": "s4"},
         {"id": "x3", "type": "CA", "premises": ["a1"], "conclusion": "p1",
          "text": "an unanswered attack on support c1 relies on"},
+        {"id": "n1", "type": "I", "prop": "every B is A", "text": "load-bearing"},
+        {"id": "n2", "type": "I", "prop": "every C is B", "text": "load-bearing"},
+        {"id": "n3", "type": "I", "prop": "some C is A", "text": "inserted, idle"},
+        {"id": "n4", "type": "I", "role": "conclusion", "prop": "every C is A",
+         "text": "Barbara with an idle passenger"},
+        {"id": "r7", "type": "RA", "scheme": "deduction",
+         "premises": ["n1", "n2", "n3"], "conclusion": "n4"},
+        {"id": "q1", "type": "I",
+         "quantity": {"value": 44.7, "tolerance": 0.5}, "text": "the measurement"},
+        {"id": "q2", "type": "I", "role": "conclusion",
+         "quantity": {"value": 44.71, "tolerance": 0.001},
+         "text": "a figure tighter than its input"},
+        {"id": "r8", "type": "RA", "scheme": "verified-source", "premises": ["q1"],
+         "conclusion": "q2"},
         {"id": "x1", "type": "CA", "text": "dangling conflict"},
         {"id": "a1", "type": "I", "text": "nothing was found"},
         {"id": "r3", "type": "RA", "scheme": "absence", "premises": ["a1"],

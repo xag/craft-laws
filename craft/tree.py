@@ -1227,3 +1227,51 @@ DEBTS = [
         ],
     ),
 ]
+
+DECISIONS.append(Node(
+    id="the-turn-account-lane-is-removed",
+    kind="decision",
+    name="The turn-account lane is removed: every verdict it produced tracked words "
+         "the graded author chose, and its live hooks never convicted a real turn",
+    payload={
+        "rationale":
+            "Built 2026-08-27 at the owner's direction to check the argument a turn "
+            "makes: AIF nodes filed per turn, a controlled proposition language parsed "
+            "by Lark, entailment decided by Z3, a prompt hook asking for the filing and "
+            "a Stop hook judging it. The owner refuted five versions in one day, each "
+            "the same defect one field deeper: scheme was a label; mood and figure were "
+            "two labels; the proposition was a record of typed parts; the parser and "
+            "rules were hand-rolled; and with all of that replaced, `ground` and "
+            "`strength` still were words the author picked. The closing observation: "
+            "the only filing ever convicted was authored by the checked party with the "
+            "incriminating strength typed in by that party; relabelling one word "
+            "(producer to given), propositions unchanged, passed the same argument; and "
+            "across the whole day the live Stop hook convicted nothing. Lark and Z3 "
+            "computed real consequences, but only of choices - translation, scheme, "
+            "ground, strength - the graded author made alone. A grader fed only by the "
+            "graded party's labels reports those labels.",
+        "note":
+            "The ambition stands; it is quality-harness's argument hypothesis, whose "
+            "kill-criteria concern an honestly extracted graph and are untouched by "
+            "this. What this paid for is the constraint one step earlier, the same "
+            "boundary Yuan et al. 2016 reported: the lanes that keep working here "
+            "(claims, prose, drawing) each hold a filing to something its author "
+            "cannot retro-fit - a field's shape, a source hash, a verbatim quote - "
+            "and the account had no such anchor anywhere.",
+    },
+    children=[
+        Node(id="alt-verify-the-grounds-too", kind="alternative",
+             name="Add a sixth layer that checks `ground` against the claims record",
+             payload={"why": "Each of the five fixes moved the author-chosen word one "
+                             "field deeper and bought no independence; the translation "
+                             "into the controlled language would still be the author's, "
+                             "so the regress does not terminate inside self-report."}),
+        Node(id="alt-keep-lark-and-z3", kind="alternative",
+             name="Keep the grammar and the entailment module as an unconsumed library",
+             payload={"why": "Nothing consumes them, and a second mechanism standing "
+                             "near a subject drifts from the first - the reason the "
+                             "scope-rulings pin was withdrawn although it worked. git "
+                             "keeps the code; a future design with an independent "
+                             "grader can recover it by commit."}),
+    ],
+))

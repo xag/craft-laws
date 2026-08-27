@@ -41,15 +41,12 @@ def test_a_declared_deduction_is_verified_not_believed():
     Now the propositions decide, and these compose to AAA-2."""
     a = account.Account(path="t", nodes={n["id"]: n for n in [
         {"id": "p1", "type": "I", "text": "every P is M",
-         "prop": {"quantity": "all", "quality": "affirmative",
-                  "subject": "P", "predicate": "M"}},
+         "prop": "every P is M"},
         {"id": "p2", "type": "I", "text": "every S is M",
-         "prop": {"quantity": "all", "quality": "affirmative",
-                  "subject": "S", "predicate": "M"}},
+         "prop": "every S is M"},
         {"id": "c1", "type": "I", "role": "conclusion", "strength": "robust",
          "text": "every S is P",
-         "prop": {"quantity": "all", "quality": "affirmative",
-                  "subject": "S", "predicate": "P"}},
+         "prop": "every S is P"},
         {"id": "r1", "type": "RA", "scheme": "deduction", "form": "syllogism",
          "premises": ["p1", "p2"], "conclusion": "c1"},
     ]})
@@ -77,37 +74,22 @@ def test_the_syllogism_alarm_rings():
 
 def test_the_form_is_computed_from_the_propositions():
     from craft.syllogism import derive
-    barbara = ([{"quantity": "all", "quality": "affirmative",
-                 "subject": "B", "predicate": "A"},
-                {"quantity": "all", "quality": "affirmative",
-                 "subject": "C", "predicate": "B"}],
-               {"quantity": "all", "quality": "affirmative",
-                "subject": "C", "predicate": "A"})
-    assert derive(*barbara) == ("AAA", 1)
+    assert derive(["every B is A", "every C is B"], "every C is A") == ("AAA", 1)
 
 
 def test_the_same_propositions_cannot_be_relabelled_into_a_different_figure():
     """The defect the owner found: 'figure': 2 -> 1, propositions unchanged, verdict
     flipped. The figure is now a consequence of where the middle term sits."""
     from craft.syllogism import derive
-    props = ([{"quantity": "all", "quality": "affirmative",
-               "subject": "P", "predicate": "M"},
-              {"quantity": "all", "quality": "affirmative",
-               "subject": "S", "predicate": "M"}],
-             {"quantity": "all", "quality": "affirmative",
-              "subject": "S", "predicate": "P"})
-    assert derive(*props) == ("AAA", 2)          # and no field can say otherwise
+    assert derive(["every P is M", "every S is M"], "every S is P") == ("AAA", 2)
 
 
 def test_a_stated_mood_or_figure_is_refused():
     a = account.Account(path="t", nodes={n["id"]: n for n in [
-        {"id": "p1", "type": "I", "prop": {"quantity": "all", "quality": "affirmative",
-                                           "subject": "P", "predicate": "M"}},
-        {"id": "p2", "type": "I", "prop": {"quantity": "all", "quality": "affirmative",
-                                           "subject": "S", "predicate": "M"}},
+        {"id": "p1", "type": "I", "prop": "every P is M"},
+        {"id": "p2", "type": "I", "prop": "every S is M"},
         {"id": "c1", "type": "I", "role": "conclusion",
-         "prop": {"quantity": "all", "quality": "affirmative",
-                  "subject": "S", "predicate": "P"}},
+         "prop": "every S is P"},
         {"id": "r1", "type": "RA", "scheme": "deduction", "form": "syllogism",
          "mood": "AAA", "figure": 1, "premises": ["p1", "p2"], "conclusion": "c1"},
     ]})
@@ -118,9 +100,4 @@ def test_a_stated_mood_or_figure_is_refused():
 def test_premises_that_never_meet_are_reported_as_not_a_syllogism():
     from craft.syllogism import FormError, derive
     with pytest.raises(FormError, match="never meet"):
-        derive([{"quantity": "all", "quality": "affirmative",
-                 "subject": "A", "predicate": "B"},
-                {"quantity": "all", "quality": "affirmative",
-                 "subject": "C", "predicate": "D"}],
-               {"quantity": "all", "quality": "affirmative",
-                "subject": "C", "predicate": "B"})
+        derive(["every A is B", "every C is D"], "every C is B")

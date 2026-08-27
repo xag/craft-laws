@@ -247,29 +247,42 @@ class FormError(ValueError):
     """These propositions do not compose into a syllogism, and the reason says why."""
 
 
-def type_of(prop: dict) -> str:
-    """A, E, I or O, from the proposition's own quantity and quality."""
-    q, k = prop.get("quantity"), prop.get("quality")
-    if q not in QUANTITIES or k not in QUALITIES:
-        raise FormError(f"quantity {q!r} / quality {k!r} is not one of "
-                        f"{QUANTITIES} x {QUALITIES}")
-    for t in ("subject", "predicate"):
-        if not str(prop.get(t) or "").strip():
-            raise FormError(f"the proposition names no {t}")
-    return _TYPE_OF[(q, k)]
+def type_of(prop) -> str:
+    """A, E, I or O. `prop` is a sentence in craft.categorical's language, parsed here;
+    a dict of hand-written parts is refused, because that was the previous defect."""
+    from .categorical import ParseError, parse
+    if not isinstance(prop, str):
+        raise FormError("a proposition is a sentence in the language, not a record of "
+                        "parts: write \"every S is P\", not {\"quantity\": ...}")
+    try:
+        return parse(prop).type
+    except ParseError as e:
+        raise FormError(str(e)) from None
 
 
-def derive(premises: list[dict], conclusion: dict) -> tuple[str, int]:
-    """(mood, figure), computed. Raises FormError when the propositions are not a
-    syllogism at all -- which is itself a finding, not a silence."""
+def _parsed(prop):
+    from .categorical import ParseError, parse
+    if not isinstance(prop, str):
+        raise FormError("a proposition is a sentence in the language, not a record of "
+                        "parts")
+    try:
+        return parse(prop)
+    except ParseError as e:
+        raise FormError(str(e)) from None
+
+
+def derive(premises: list, conclusion) -> tuple[str, int]:
+    """(mood, figure), computed from parsed propositions. Raises FormError when these
+    sentences are not a syllogism -- itself a finding, not a silence."""
     if len(premises) != 2:
         raise FormError(f"a syllogism has two premises, not {len(premises)}")
-    con_t = type_of(conclusion)
-    S, P = conclusion["subject"], conclusion["predicate"]
+    con = _parsed(conclusion)
+    prem = [_parsed(x) for x in premises]
+    S, P = con.subject, con.predicate
     if S == P:
         raise FormError("the conclusion's subject and predicate are the same term")
 
-    terms = [{p["subject"], p["predicate"]} for p in premises]
+    terms = [{x.subject, x.predicate} for x in prem]
     middles = (terms[0] & terms[1]) - {S, P}
     if len(middles) != 1:
         raise FormError(
@@ -278,25 +291,23 @@ def derive(premises: list[dict], conclusion: dict) -> tuple[str, int]:
             "so they never meet")
     M = middles.pop()
 
-    major = [p for p in premises if P in (p["subject"], p["predicate"])]
-    minor = [p for p in premises if S in (p["subject"], p["predicate"])]
+    major = [x for x in prem if P in (x.subject, x.predicate)]
+    minor = [x for x in prem if S in (x.subject, x.predicate)]
     if len(major) != 1 or len(minor) != 1 or major[0] is minor[0]:
         raise FormError("the conclusion's terms do not sit in one premise each")
     maj, min_ = major[0], minor[0]
-    for p, name in ((maj, "major"), (min_, "minor")):
-        if M not in (p["subject"], p["predicate"]):
+    for x, name in ((maj, "major"), (min_, "minor")):
+        if M not in (x.subject, x.predicate):
             raise FormError(f"the {name} premise does not carry the middle term")
 
-    # The figure is where the middle term sits: subject of the major or predicate of it,
-    # crossed with subject or predicate of the minor.
-    if maj["subject"] == M and min_["predicate"] == M:
+    if maj.subject == M and min_.predicate == M:
         figure = 1
-    elif maj["predicate"] == M and min_["predicate"] == M:
+    elif maj.predicate == M and min_.predicate == M:
         figure = 2
-    elif maj["subject"] == M and min_["subject"] == M:
+    elif maj.subject == M and min_.subject == M:
         figure = 3
-    elif maj["predicate"] == M and min_["subject"] == M:
+    elif maj.predicate == M and min_.subject == M:
         figure = 4
     else:
         raise FormError("the middle term sits in no recognised figure")
-    return type_of(maj) + type_of(min_) + con_t, figure
+    return maj.type + min_.type + con.type, figure

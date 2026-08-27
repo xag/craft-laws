@@ -279,9 +279,44 @@ def check_strength_is_licensed(a: Account) -> list[Finding]:
     return out
 
 
+def check_deduction_shows_its_form(a: Account) -> list[Finding]:
+    """`deduction` is the only warrant licensing `robust`, so it is the only one that
+    must show its work. A deduction that names no form is a label, and a label is
+    what this module was built because of."""
+    out = []
+    for r in a.of_type(RA_NODE):
+        if r.get("scheme") != "deduction" or r.get("form"):
+            continue
+        out.append(Finding("a-declared-deduction-shows-its-form", r["id"], "",
+                           "scheme is 'deduction' and no form is given: nothing here "
+                           "can be checked, so the strongest warrant rests on a word"))
+    return out
+
+
+def check_declared_deductions_are_valid(a: Account) -> list[Finding]:
+    """A declared syllogistic form is judged by craft.syllogism's five rules, which
+    compute validity from the form rather than looking it up."""
+    from .syllogism import judge
+
+    out = []
+    for r in a.of_type(RA_NODE):
+        if r.get("form") != "syllogism":
+            continue
+        v = judge(str(r.get("mood", "")), r.get("figure", 0),
+                  bool(r.get("existential_import")))
+        if v.valid:
+            continue
+        out.append(Finding("a-syllogism-holds-or-it-does-not", r["id"], "",
+                           f"{r.get('mood')}-{r.get('figure')} is not a valid "
+                           f"syllogism: {', '.join(v.broke)}"))
+    return out
+
+
 CHECKS = (check_shape, check_conclusions_are_supported, check_no_circular_support,
           check_counter_evidence_is_consumed, check_support_is_not_only_attack,
-          check_absence_concludes_nothing, check_strength_is_licensed)
+          check_absence_concludes_nothing, check_strength_is_licensed,
+          check_deduction_shows_its_form,
+          check_declared_deductions_are_valid)
 
 
 def check_file(path: Path) -> list[Finding]:
@@ -310,6 +345,10 @@ GUILTY = {
         {"id": "l1", "type": "I", "text": "loop"},
         {"id": "r2", "type": "RA", "scheme": "deduction", "premises": ["l1"],
          "conclusion": "l1"},
+        {"id": "s1", "type": "I", "text": "every B is A, and every C is B"},
+        {"id": "s2", "type": "I", "role": "conclusion", "text": "so every A is C"},
+        {"id": "r5", "type": "RA", "scheme": "deduction", "form": "syllogism",
+         "mood": "AAA", "figure": 2, "premises": ["s1"], "conclusion": "s2"},
         {"id": "x1", "type": "CA", "text": "dangling conflict"},
         {"id": "a1", "type": "I", "text": "nothing was found"},
         {"id": "r3", "type": "RA", "scheme": "absence", "premises": ["a1"],
@@ -332,6 +371,11 @@ CLEAN = {
          "text": "text is read eleven times, each time only to quote"},
         {"id": "r1", "type": "RA", "scheme": "sign", "premises": ["p1"],
          "conclusion": "c1"},
+        {"id": "s1", "type": "I", "text": "every B is A, and every C is B"},
+        {"id": "s2", "type": "I", "role": "conclusion", "strength": "robust",
+         "text": "every C is A"},
+        {"id": "r2", "type": "RA", "scheme": "deduction", "form": "syllogism",
+         "mood": "AAA", "figure": 1, "premises": ["s1"], "conclusion": "s2"},
     ]
 }
 

@@ -1,0 +1,13 @@
+{"source": "the turn answering 'try it on an excerpt of Aristotle'",
+ "nodes": [
+  {"id": "p1", "type": "I", "ground": "producer",
+   "text": "the Barbara syllogism from Prior Analytics, filed with scheme deduction and strength robust, passed with no finding"},
+  {"id": "p2", "type": "I", "ground": "producer",
+   "text": "De Caelo's eclipse argument, filed with scheme sign and strength robust, was convicted by a-conclusion-is-no-stronger-than-its-warrant, although its conclusion that the earth is spherical is true"},
+  {"id": "p3", "type": "I", "ground": "producer",
+   "text": "the Politics natural-slavery argument, filed with scheme example and strength robust, was convicted by the same law"},
+  {"id": "c1", "type": "I", "role": "conclusion", "strength": "limited",
+   "text": "the checker discriminates by the warrant a conclusion rests on, not by whether the conclusion is true"},
+  {"id": "r1", "type": "RA", "scheme": "example", "premises": ["p1", "p2", "p3"],
+   "conclusion": "c1"}
+ ]}

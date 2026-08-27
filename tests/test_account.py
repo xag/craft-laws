@@ -399,3 +399,31 @@ def test_a_standing_finding_is_reported_once_not_every_turn(tmp_path, monkeypatc
 
     # nothing new at all: silence
     assert account_hook.stop(payload) == 0
+
+
+def test_the_same_flaw_in_two_accounts_is_reported_twice(tmp_path, monkeypatch,
+                                                          capsys):
+    """The false negative the live run exposed: two accounts holding the same flaw
+    at the same node id produced one key, so the second was swallowed as already
+    reported. A finding is identified by its account too."""
+    repo = tmp_path / "repo"
+    (repo / ".git").mkdir(parents=True)
+    d = repo / ".craft" / "accounts" / "sess"
+    d.mkdir(parents=True)
+    same = {"nodes": [
+        {"id": "c1", "type": "I", "role": "conclusion", "text": "it holds"},
+        {"id": "r1", "type": "RA", "scheme": "deduction", "premises": [],
+         "conclusion": "c1"}]}
+    (d / "1.json").write_text(json.dumps(same), encoding="utf-8")
+    (d / "2.json").write_text(json.dumps(same), encoding="utf-8")
+    seen = set()
+    monkeypatch.setattr(account_hook, "repos_touched", lambda _p: [repo])
+    monkeypatch.setattr(account_hook, "_already_reported",
+                        lambda k: (k in seen) or (seen.add(k) and False))
+    t = tmp_path / "t.jsonl"
+    t.write_text("", encoding="utf-8")
+    assert account_hook.stop({"session_id": "sess",
+                              "transcript_path": str(t)}) == 2
+    err = capsys.readouterr().err
+    assert "2 finding(s)" in err
+    assert "1.json r1" in err and "2.json r1" in err

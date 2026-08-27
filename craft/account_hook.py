@@ -249,7 +249,11 @@ def stop(payload: dict) -> int:
         return 0            # nothing filed: silence is information, not a conviction
     from .record import read
     corpus = read(Path(tpath))          # the record the grounds must quote
-    findings = [f for p in files for f in check_file(p, corpus)]
+    # each finding is carried with the account it came from: two accounts can hold
+    # the same flaw at the same node id with the same message, and keying without
+    # the file made the second one vanish as "already reported" -- a false negative,
+    # which is worse than the noise the throttle exists to stop
+    findings = [(p, f) for p in files for f in check_file(p, corpus)]
     # the residual: what the response says that no account node claims. Extracted
     # and recorded every turn; said aloud only beside convictions, because partial
     # formalization is honest and a nag gets switched off.
@@ -284,21 +288,21 @@ def stop(payload: dict) -> int:
     # findings reported for a turn that produced four. A hook that repeats yesterday's
     # convictions is one nobody reads, which is the failure a throttle exists to stop.
     fresh, carried = [], 0
-    for f in findings:
+    for path, f in findings:
         key = hashlib.sha256(
-            f"{f.law}|{f.where}|{f.quote}|{f.why}".encode("utf-8", "replace")
-        ).hexdigest()
+            f"{Path(path).name}|{f.law}|{f.where}|{f.quote}|{f.why}"
+            .encode("utf-8", "replace")).hexdigest()
         if _already_reported(key):
             carried += 1
         else:
-            fresh.append(f)
+            fresh.append((Path(path).name, f))
     if not fresh:
         return 0
     lines = [f"{len(fresh)} finding(s) in this turn's argument. Each names a law "
              "with a published root; fix the argument or the account and finish. "
              "Nothing is refused."]
-    for f in fresh:
-        lines.append(f"  {f.law}  ({f.where})")
+    for acc, f in fresh:
+        lines.append(f"  {f.law}  ({acc} {f.where})")
         if f.quote:
             lines.append(f"    {f.quote}")
         lines.append(f"    why: {f.why}")

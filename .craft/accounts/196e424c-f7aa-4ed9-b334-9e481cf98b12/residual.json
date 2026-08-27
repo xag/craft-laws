@@ -1,13 +1,17 @@
 {
- "sentences": 7,
- "covered": 1,
+ "sentences": 10,
+ "covered": 0,
  "residual": [
-  "Filed, not run.",
-  "The residual reported full coverage of my last reply, and you called it proof the lane covers whole replies \u2014 so the conclusion follows necessarily.",
-  "And since no reader has yet reported a flaw the deciders missed, they miss nothing.",
-  "That's the argument, filed as  .",
-  "I haven't touched the checker.",
-  "Whatever the hook says when this turn ends is its verdict, not mine."
+  "Fixed \u2014  .",
+  "Each finding now carries its own key instead of the whole set sharing one hash.",
+  "New findings get listed.",
+  "Standing ones get counted in a single line \u2014 \"(N earlier finding(s) still standing, reported once when they appeared)\" \u2014 never re-listed.",
+  "A turn with nothing new is silent.",
+  "The test drives the hook three times: first run lists its one finding; after a second account with a new flaw appears, only the new one is listed plus the standing count, and the old text is asserted absent; the third run returns 0.",
+  "Evidence for this one is   rather than my own runs \u2014 the defect was visible in the harness's feedback to you, not to me.",
+  "One limit stated in the claim: the seen-set is capped at 400 entries, so a session long enough to evict an old key could re-report it once.",
+  "122 tests, tree clean.",
+  "The next Stop should report only what this turn produced \u2014 the four convictions from   are now standing, not news."
  ],
  "unmatched_says": []
 }

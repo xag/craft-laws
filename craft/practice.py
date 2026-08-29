@@ -85,6 +85,12 @@ MAST = ("Cemri et al., Why Do Multi-Agent LLM Systems Fail?, arXiv 2503.13657v3,
         "censused whole in craft/census_mast.py)")
 MAST_URL = "https://arxiv.org/abs/2503.13657"
 
+CROSKERRY = ("Croskerry P., The Importance of Cognitive Errors in Diagnosis and "
+             "Strategies to Minimize Them, Academic Medicine 78(8):775-780, 2003 "
+             "(captured at docs/sources/croskerry-2003-cognitive-errors.pdf and "
+             "censused whole in craft/census_croskerry.py)")
+CROSKERRY_URL = "https://doi.org/10.1097/00001888-200308000-00003"
+
 
 def _agans(rule: str) -> Quantity:
     return Quantity(value=1, unit="law", provenance="cited", grounded=True,
@@ -1306,6 +1312,225 @@ PRACTICE = [
              "is the one output a dead instrument and a healthy practice share. "
              "Built 2026-08-29 from the error census, aimed by frequency: both of "
              "the commissioning session's costliest errors fall to this one law.",
+    ),
+
+    # --- the drained owed queues of the two 2026-08-29 error censuses ---------------
+    # The logged rule: a source adopted is censused whole and its owed rows drain
+    # into laws, never one cherry-picked row. Twenty owed rows (16 Croskerry, 4
+    # MAST) consolidate into the fourteen laws below; each census row's meaning
+    # text keeps the gap it recorded, and its route reads covered.
+
+    _law(
+        "the-work-is-compared-against-the-ask",
+        "What was done is compared against what was asked, in both directions: work "
+        "the ask did not require is as recorded as work it required and did not get",
+        _cited("MAST FM-1.1/FM-2.3; Croskerry commission and omission biases"),
+        falsifier="A delivery whose acts or diff include work the ask did not "
+                  "require, or omit work it did, with no record naming the "
+                  "difference. Countable: the ask's items against the delivery's.",
+        triggers=["work is delivered", "a session acts on an instruction"],
+        citations=[(f"{MAST} - FM-1.1", MAST_URL,
+                    "Failure to adhere to the specified constraints or requirements "
+                    "of a given task"),
+                   (f"{CROSKERRY} - commission bias", CROSKERRY_URL,
+                    "It is the tendency toward action rather than inaction")],
+        sightings=[("this session, 2026-08-29",
+                    "The account checker run by hand in the same hour the owner "
+                    "said the hook is there for that - side-effecting the "
+                    "throttle's seen-state and eating one live delivery.")],
+    ),
+
+    _law(
+        "a-finished-step-is-not-rerun",
+        "A completed step is rerun only for a stated reason; repetition without one "
+        "is waste, and damage when the step side-effects",
+        _cited("MAST FM-1.3, step repetition"),
+        falsifier="The same step executed twice in one session with identical "
+                  "inputs and no stated reason between the runs.",
+        triggers=["a step that already ran is run again"],
+        citations=[(f"{MAST} - FM-1.3", MAST_URL,
+                    "Unnecessary reiteration of previously completed steps in a "
+                    "process")],
+    ),
+
+    _law(
+        "an-assumption-that-forks-the-work-is-a-question",
+        "Where different readings of the ask lead to materially different work, the "
+        "divergence goes to the asker before the work; assumptions are stated only "
+        "where the readings converge",
+        _cited("MAST FM-2.2, fail to ask for clarification"),
+        falsifier="Work delivered under one reading of an ambiguous ask where "
+                  "another reasonable reading required materially different work, "
+                  "with no question asked and no assumption stated.",
+        triggers=["an ask admits more than one reading"],
+        citations=[(f"{MAST} - FM-2.2", MAST_URL,
+                    "Inability to request additional information when faced with "
+                    "unclear or incomplete data")],
+    ),
+
+    _law(
+        "an-exemption-carries-its-evidence",
+        "A standing rule is set aside for the case in hand only with evidence the "
+        "case is atypical, never on the feeling that this one is the exception",
+        _cited("Croskerry 2003, aggregate bias"),
+        falsifier="A recorded act or claim that waives an estate rule or convention "
+                  "for the current case with no stated evidence of atypicality.",
+        triggers=["a standing rule or convention is not followed"],
+        citations=[(CROSKERRY, CROSKERRY_URL,
+                    "when physicians believe that aggregated data, such as those "
+                    "used to develop clinical practice guidelines, do not apply to "
+                    "individual patients")],
+    ),
+
+    _law(
+        "a-likelihood-is-not-its-recency",
+        "How readily a failure shape comes to mind is not evidence of its "
+        "likelihood: a diagnosis says why the cause is likely here, not that it was "
+        "seen recently elsewhere",
+        _cited("Croskerry 2003, availability"),
+        falsifier="A diagnosis whose stated ground is a recent sighting of the same "
+                  "shape, with no frequency or mechanism beside it.",
+        triggers=["a diagnosis names a cause"],
+        citations=[(CROSKERRY, CROSKERRY_URL,
+                    "the disposition to judge things as being more likely, or "
+                    "frequently occurring, if they readily come to mind")],
+    ),
+
+    _law(
+        "a-repeated-hypothesis-stays-a-hypothesis",
+        "Restating a hypothesis does not promote it: a claim relied on as settled "
+        "carries the observation that settled it, however many records repeat it",
+        _cited("Croskerry 2003, diagnosis momentum"),
+        falsifier="A hypothesis appearing as settled fact in a later record with no "
+                  "settling observation recorded between the two.",
+        triggers=["a prior conclusion is relied on"],
+        citations=[(CROSKERRY, CROSKERRY_URL,
+                    "once diagnostic labels are attached to patients they tend to "
+                    "become stickier and stickier")],
+    ),
+
+    _law(
+        "a-conclusion-carries-one-reading",
+        "A conclusion is worded to carry one reading; a sentence that answers two "
+        "questions at once answers whichever the reader prefers",
+        _cited("Croskerry 2003, framing effect"),
+        falsifier="A conclusion whose wording supports two materially different "
+                  "readings, with the evidence licensing only the weaker.",
+        triggers=["a conclusion is stated"],
+        citations=[(CROSKERRY, CROSKERRY_URL,
+                    "how diagnosticians see things may be strongly influenced by "
+                    "the way in which the problem is framed")],
+        sightings=[("this session, 2026-08-29",
+                    "'invest can be exercised without real money' carried both "
+                    "'the sandbox exists' and 'it runs today'; the evidence "
+                    "licensed the first and the phrasing sold the second, and the "
+                    "repair was splitting the readings apart.")],
+    ),
+
+    _law(
+        "a-shortlist-names-what-it-dropped",
+        "When candidates multiply, the shortlist names the remainder it dropped; "
+        "reverting to the familiar few is recorded, never silent",
+        _cited("Croskerry 2003, multiple alternatives bias"),
+        falsifier="A candidate list reduced from many to few with the dropped "
+                  "remainder unnamed in the record.",
+        triggers=["candidate causes or fixes are shortlisted"],
+        citations=[(CROSKERRY, CROSKERRY_URL,
+                    "The process may be simplified by reverting to a smaller "
+                    "subset with which the physician is familiar but may result in "
+                    "inadequate consideration of other possibilities")],
+    ),
+
+    _law(
+        "the-benign-read-is-priced-against-the-serious-one",
+        "A benign or convenient explanation of a red signal is filed only with the "
+        "serious alternative priced beside it",
+        _cited("Croskerry 2003, playing the odds and outcome bias"),
+        falsifier="A red signal explained as benign - flaky, stale, noise - with no "
+                  "record pricing the serious alternative it would mask.",
+        triggers=["a failure is explained as benign"],
+        citations=[(CROSKERRY, CROSKERRY_URL,
+                    "the tendency in equivocal or ambiguous presentations to opt "
+                    "for a benign diagnosis on the basis that it is significantly "
+                    "more likely than a serious one"),
+                   (f"{CROSKERRY} - outcome bias", CROSKERRY_URL,
+                    "the tendency to opt for diagnostic decisions that will lead "
+                    "to good outcomes, rather than those associated with bad "
+                    "outcomes")],
+    ),
+
+    _law(
+        "a-label-does-not-diagnose",
+        "A standing label - flaky, known-issue, wontfix - and a ticket's first "
+        "frame are not diagnoses: what they excuse is re-derived from evidence at "
+        "each recurrence",
+        _cited("Croskerry 2003, psych-out error and triage cueing"),
+        falsifier="A recurring failure dismissed under a standing label with no "
+                  "re-derivation recorded at the recurrence.",
+        triggers=["a failure carries a standing label", "work arrives pre-framed"],
+        citations=[(CROSKERRY, CROSKERRY_URL,
+                    "comorbid medical conditions may be overlooked or minimized"),
+                   (f"{CROSKERRY} - triage cueing", CROSKERRY_URL,
+                    "Many CDRs are initiated at triage, leading to the maxim: "
+                    "Geography is destiny")],
+    ),
+
+    _law(
+        "a-diagnosis-accounts-for-what-does-not-fit",
+        "A pattern-matched diagnosis accounts for the evidence that does not fit "
+        "the pattern; the atypical variant is missed exactly where the prototype "
+        "is trusted",
+        _cited("Croskerry 2003, representativeness restraint"),
+        falsifier="A diagnosis filed while named evidence it does not explain "
+                  "stands unaddressed in the same record.",
+        triggers=["a diagnosis rests on resemblance to a known shape"],
+        citations=[(CROSKERRY, CROSKERRY_URL,
+                    "restraining decision-making along these pattern-recognition "
+                    "lines leads to atypical variants being missed")],
+    ),
+
+    _law(
+        "what-else-might-this-be-is-asked-before-closing",
+        "Before a hunt closes on the obvious or the routine, the lateral question - "
+        "what else might this be - is asked and its answer recorded",
+        _cited("Croskerry 2003, Sutton's slip and vertical line failure"),
+        falsifier="A closed hunt whose record holds exactly one considered cause, "
+                  "the obvious one.",
+        triggers=["a hunt closes on a cause"],
+        citations=[(CROSKERRY, CROSKERRY_URL,
+                    "The slip occurs when possibilities other than the obvious are "
+                    "not given sufficient consideration"),
+                   (f"{CROSKERRY} - vertical line failure", CROSKERRY_URL,
+                    "An effective lateral thinking strategy is simply to pose the "
+                    "question: What else might this be?")],
+    ),
+
+    _law(
+        "investment-is-not-evidence",
+        "Hours already spent on a theory or fix are not evidence for it: "
+        "abandonment is priced by the evidence, never by the investment",
+        _cited("Croskerry 2003, sunk costs"),
+        falsifier="A theory retained after contrary evidence, with the stated or "
+                  "apparent reason being the work already sunk into it.",
+        triggers=["a theory or fix has consumed real effort"],
+        citations=[(CROSKERRY, CROSKERRY_URL,
+                    "the more clinicians invest in a particular diagnosis, the "
+                    "less likely they may be to release it and consider "
+                    "alternatives")],
+    ),
+
+    _law(
+        "feelings-toward-the-counterparty-are-not-evidence",
+        "The counterparty's frustration, enthusiasm or hope is not evidence about "
+        "the system: a verdict cites observations, and a verdict that moved names "
+        "the observation that moved it",
+        _cited("Croskerry 2003, visceral bias"),
+        falsifier="A verdict that moved between records with no new observation "
+                  "between them, following the counterparty's expressed mood.",
+        triggers=["a verdict is delivered to a person with a stake in it"],
+        citations=[(CROSKERRY, CROSKERRY_URL,
+                    "the influence of affective sources of error on "
+                    "decision-making has been widely underestimated")],
     ),
 ]
 

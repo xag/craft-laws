@@ -29,6 +29,9 @@ instrument believed — belonged to dispositions this list names (search satisfy
 premature closure, overconfidence). The census exists so the next decider is aimed by
 frequency, not by what was feasible to build.
 
+The owed queue was drained into laws on 2026-08-29 (see practice.py); each row's
+meaning text still records what the gap was.
+
     python -m craft.census_croskerry
     python -m craft.census_croskerry --owed
 """
@@ -40,7 +43,7 @@ from collections import Counter
 # CDR -> (route, the source's own words (opening clause), what it means for the work)
 CENSUS: dict[str, tuple[str, str, str]] = {
     "aggregate-bias": (
-        "owed",
+        "covered",
         "when physicians believe that aggregated data, such as those used to develop "
         "clinical practice guidelines, do not apply to individual patients",
         "'this project is the exception, the general rule does not apply here' — a law "
@@ -60,7 +63,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "a-corpus-names-its-assembly and a-corpus-of-reports-carries-its-reporting-bias "
         "make the assembly and its bias declarable"),
     "availability": (
-        "owed",
+        "covered",
         "the disposition to judge things as being more likely, or frequently "
         "occurring, if they readily come to mind",
         "the recently-seen failure shape diagnosed again because it is recent, not "
@@ -73,7 +76,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "a-cause-is-weighed-by-how-often-not-only-how-alike — the diagnosis kind "
         "carries base_rate and the decider convicts resemblance without it"),
     "commission-bias": (
-        "owed",
+        "covered",
         "the tendency toward action rather than inaction",
         "the unrequested fix: editing what was not asked, widening scope because "
         "acting feels like progress. The estate forbids it in prose (the requested "
@@ -86,7 +89,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "fix-it forces the disconfirming observation first; a falsifier is the "
         "refuting shape stated in advance"),
     "diagnosis-momentum": (
-        "owed",
+        "covered",
         "once diagnostic labels are attached to patients they tend to become stickier "
         "and stickier",
         "a theory hardening as it is restated across turns and records until nobody "
@@ -100,7 +103,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "routed back to its author's record. The claims ledger is the calibration "
         "loop the source says is missing"),
     "framing-effect": (
-        "owed",
+        "covered",
         "how diagnosticians see things may be strongly influenced by the way in which "
         "the problem is framed",
         "the bug report's own words steering the investigation; an ambiguous "
@@ -136,7 +139,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "a-protocol-is-an-artifact-before-the-run: the expectation is an artifact "
         "dated before the outcome, so the after-the-fact story is checkable"),
     "multiple-alternatives-bias": (
-        "owed",
+        "covered",
         "a multiplicity of options on a differential diagnosis may lead to "
         "significant conflict and uncertainty",
         "reverting to the familiar three when the differential is wide — the "
@@ -144,7 +147,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "structural-unknowns-are-considered is adjacent but fires on unknowns, not "
         "on a trimmed differential"),
     "omission-bias": (
-        "owed",
+        "covered",
         "the tendency toward inaction",
         "the unflagged remainder: work silently scaled down because acting felt "
         "riskier than skipping. a-remainder-names-its-debt covers the claim's text; "
@@ -157,7 +160,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "loss is real but mechanically different (truncation, not U-shaped recall) "
         "and is routed in the MAST census at loss-of-conversation-history"),
     "outcome-bias": (
-        "owed",
+        "covered",
         "the tendency to opt for diagnostic decisions that will lead to good "
         "outcomes, rather than those associated with bad outcomes",
         "preferring the diagnosis that would be convenient — the flaky test, the "
@@ -172,7 +175,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "and the closed strength scale in accounts. This session's over-claimed "
         "deduction labels were this CDR and were convicted"),
     "playing-the-odds": (
-        "owed",
+        "covered",
         "the tendency in equivocal or ambiguous presentations to opt for a benign "
         "diagnosis on the basis that it is significantly more likely than a serious "
         "one",
@@ -194,13 +197,13 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "the-user-stands and make-it-fail-before-you-fix-it exist for exactly this, "
         "and both convicted claims in this estate this month"),
     "psych-out-error": (
-        "owed",
+        "covered",
         "comorbid medical conditions may be overlooked or minimized",
         "the marginalized subject: the intermittent, environment-dependent failure "
         "dismissed as noise, where real defects hide behind the label already "
         "attached (flaky, known-issue). Nothing audits what the label excused"),
     "representativeness-restraint": (
-        "owed",
+        "covered",
         "the representativeness heuristic drives the diagnostician toward looking "
         "for prototypical manifestations of disease",
         "pattern-matching to the prototypical bug; the atypical variant missed "
@@ -216,21 +219,21 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "be named — this session's vacuous zero-node check was this CDR escaping "
         "both, because the ad-hoc check was not held to either law"),
     "suttons-slip": (
-        "owed",
+        "covered",
         "The slip occurs when possibilities other than the obvious are not given "
         "sufficient consideration",
         "going for the obvious cause without pricing the rest; the single-theory "
         "hunt. instrument-before-the-second-theory fires only once a second theory "
         "exists — the slip is stopping at the first"),
     "sunk-costs": (
-        "owed",
+        "covered",
         "the more clinicians invest in a particular diagnosis, the less likely they "
         "may be to release it and consider alternatives",
         "the fix iterated on for hours because abandoning it wastes the hours. "
         "a-resisting-failure-gets-fresh-eyes is the antidote law but keys on the "
         "failure resisting, not on the investment growing"),
     "triage-cueing": (
-        "owed",
+        "covered",
         "the triage process occurs throughout the health care system... Many CDRs "
         "are initiated at triage",
         "'geography is destiny': the issue's title, label or first assignment cueing "
@@ -244,13 +247,13 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "the-baseline-assumption-is-verified both force the elicitation before the "
         "differential narrows"),
     "vertical-line-failure": (
-        "owed",
+        "covered",
         "routine, repetitive tasks often lead to thinking in silos — predictable, "
         "orthodox styles that emphasize economy, efficacy, and utility",
         "'what else might this be?' never asked; the orthodox procedure run because "
         "it is the procedure. No check prompts the lateral question on a stuck hunt"),
     "visceral-bias": (
-        "owed",
+        "covered",
         "the influence of affective sources of error on decision-making has been "
         "widely underestimated",
         "sycophancy is this CDR in an agent: the user's frustration or enthusiasm "

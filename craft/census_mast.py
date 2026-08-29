@@ -19,6 +19,9 @@ is SET ASIDE and says so.
                a law candidate
   set aside    exists only in multi-agent coordination this estate does not run
 
+The owed queue was drained into laws on 2026-08-29 (see practice.py); each row's
+meaning text still records what the gap was.
+
     python -m craft.census_mast
     python -m craft.census_mast --owed
 """
@@ -31,7 +34,7 @@ from collections import Counter
 CENSUS: dict[str, tuple[str, str, str]] = {
     # --- FC1: system design issues ---------------------------------------------------
     "fm-1.1-disobey-task-specification": (
-        "owed",
+        "covered",
         "Failure to adhere to the specified constraints or requirements of a given "
         "task",
         "the ask narrowed, widened or transformed. This session's instance: the "
@@ -45,7 +48,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "refused to non-humans, verdicts propose and never dispose — role walls "
         "enforced in code where they matter most"),
     "fm-1.3-step-repetition": (
-        "owed",
+        "covered",
         "Unnecessary reiteration of previously completed steps in a process",
         "the re-run of a finished step because its result fell out of view; billed "
         "twice, sometimes side-effecting twice. Tapes record repetition but nothing "
@@ -70,14 +73,14 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "a coordinating-agents phenomenon; the single-session analogue is context "
         "truncation, routed at fm-1.4"),
     "fm-2.2-fail-to-ask-for-clarification": (
-        "owed",
+        "covered",
         "Inability to request additional information when faced with unclear or "
         "incomplete data",
         "proceeding under an assumption where different readings diverge materially. "
         "The estate's prose says ask at the divergence; no check notices an "
         "assumption that should have been a question"),
     "fm-2.3-task-derailment": (
-        "owed",
+        "covered",
         "Deviation from the intended objective or focus of a given task",
         "the session that wanders from the ask into adjacent work. Same gap as "
         "fm-1.1 seen from the trajectory side: nothing compares what was done "

@@ -28,12 +28,15 @@ What it does, mechanically:
     PROPOSE. An `unsupported` is a finding for a person to act on; nothing here
     edits an account, and nothing here exempts one.
 
-The judge is a callable `judge(units) -> list[dict]` so tests inject a fake; the
-default is `api_judge`, which calls the Anthropic API (lazily imported, key from
-ANTHROPIC_API_KEY) with every unit of one account in one request. The API judge is
-deliberate: the party being graded authors the accounts, so the client that wrote
-them cannot also be the judge - that is the self-report failure this estate
-convicts elsewhere.
+The judge is a callable `judge(units) -> list[dict]` so tests inject a fake. The
+default is `cli_judge`: a fresh `claude -p` process per batch - the client the
+owner already pays for, per the recorded hypothesis the-ai-client-suffices (the
+metered API judge, `api_judge`, stays as the option for unattended runs with an
+ANTHROPIC_API_KEY). Independence note, corrected 2026-08-29: what self-report
+requires is that the judging CONTEXT is not the authoring context - a fresh
+process that sees only the quote and the reading has no memory of authoring and
+no stake, whatever weights it runs on. The first build wrongly demanded a
+different billing account for that and blocked on a key it never needed.
 
     python -m craft.adjudicate <dir-or-account.json ...>      # judge fresh units
     python -m craft.adjudicate --list <dir ...>               # show units, no judge
@@ -131,30 +134,25 @@ def _already(dirpath: Path) -> set[tuple[str, str]]:
     return seen
 
 
-def api_judge(batch: list[Unit], model: str = DEFAULT_MODEL):
-    """One API request per account batch. Lazily imported so the module costs
-    nothing to import; raises with a plain sentence when the key is absent."""
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise RuntimeError("ANTHROPIC_API_KEY is not set - the adjudicator needs "
-                           "the metered judge; the graded author cannot judge "
-                           "its own accounts")
-    import anthropic
-
-    prompt = (
-        "You adjudicate links in a formal argument account. For each numbered unit "
-        "answer with a JSON array of objects {\"i\": <number>, \"verdict\": "
-        "\"supported\"|\"unsupported\"|\"cannot-tell\", \"why\": <one sentence>}. "
-        "Only the JSON array, nothing else.\n\n"
+def _prompt(batch: list[Unit]) -> str:
+    return (
+        "You adjudicate links in a formal argument account. You know nothing of the "
+        "account's author or purpose; judge only the material shown. For each "
+        "numbered unit answer with a JSON array of objects {\"i\": <number>, "
+        "\"verdict\": \"supported\"|\"unsupported\"|\"cannot-tell\", "
+        "\"why\": <one sentence>}. Only the JSON array, nothing else.\n\n"
         + "\n\n".join(f"UNIT {i}:\n{u.question}" for i, u in enumerate(batch)))
-    client = anthropic.Anthropic()
-    msg = client.messages.create(model=model, max_tokens=2000,
-                                 messages=[{"role": "user", "content": prompt}])
-    text = "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
+
+
+def _parse(text: str, batch: list[Unit]) -> list[dict]:
     start, end = text.find("["), text.rfind("]")
-    rows = json.loads(text[start:end + 1]) if start >= 0 <= end else []
+    try:
+        rows = json.loads(text[start:end + 1]) if 0 <= start <= end else []
+    except ValueError:
+        rows = []
     out = []
     for i, u in enumerate(batch):
-        row = next((r for r in rows if r.get("i") == i), None)
+        row = next((r for r in rows if isinstance(r, dict) and r.get("i") == i), None)
         v = str((row or {}).get("verdict", "cannot-tell"))
         why = str((row or {}).get("why", "the judge returned nothing for this unit"))
         if v not in VERDICTS:
@@ -164,11 +162,40 @@ def api_judge(batch: list[Unit], model: str = DEFAULT_MODEL):
     return out
 
 
+def cli_judge(batch: list[Unit]):
+    """A fresh `claude -p` process: the client the owner already pays for, with
+    no conversation context - it sees the units and nothing else."""
+    import subprocess
+    done = subprocess.run(["claude", "-p", _prompt(batch)],
+                          capture_output=True, text=True, timeout=600,
+                          encoding="utf-8", errors="replace", shell=False)
+    if done.returncode != 0:
+        raise RuntimeError(f"claude -p failed ({done.returncode}): "
+                           f"{(done.stderr or '')[:200]}")
+    return _parse(done.stdout or "", batch)
+
+
+def api_judge(batch: list[Unit], model: str = DEFAULT_MODEL):
+    """One API request per account batch. Lazily imported so the module costs
+    nothing to import; raises with a plain sentence when the key is absent."""
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        raise RuntimeError("ANTHROPIC_API_KEY is not set - the adjudicator needs "
+                           "the metered judge; the graded author cannot judge "
+                           "its own accounts")
+    import anthropic
+
+    client = anthropic.Anthropic()
+    msg = client.messages.create(model=model, max_tokens=4000,
+                                 messages=[{"role": "user", "content": _prompt(batch)}])
+    text = "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
+    return _parse(text, batch)
+
+
 def adjudicate(paths: list[Path], judge=None, judge_name: str = DEFAULT_MODEL
                ) -> tuple[list[Verdict], int]:
     """Judge every fresh unit of the given account files; append verdicts beside
     them. Returns (fresh verdicts, units skipped as already adjudicated)."""
-    judge = judge or api_judge
+    judge = judge or cli_judge
     fresh: list[Verdict] = []
     skipped = 0
     by_dir: dict[Path, list[Path]] = {}
@@ -177,15 +204,17 @@ def adjudicate(paths: list[Path], judge=None, judge_name: str = DEFAULT_MODEL
     for d, files in by_dir.items():
         seen = _already(d)
         dir_fresh: list[Verdict] = []
+        todo: list[Unit] = []
         for f in sorted(files):
             us = units(f)
-            todo = [u for u in us if (u.account, u.node) not in seen]
-            skipped += len(us) - len(todo)
-            if not todo:
-                continue
-            answers = judge(todo)
+            todo.extend(u for u in us if (u.account, u.node) not in seen)
+            skipped += len([u for u in us if (u.account, u.node) in seen])
+        CHUNK = 25
+        for i in range(0, len(todo), CHUNK):
+            chunk = todo[i:i + CHUNK]
+            answers = judge(chunk)
             now = datetime.now(timezone.utc).isoformat()
-            for u, a in zip(todo, answers):
+            for u, a in zip(chunk, answers):
                 dir_fresh.append(Verdict(account=u.account, node=u.node, kind=u.kind,
                                          verdict=a["verdict"], why=a["why"],
                                          judge=judge_name, at=now))
@@ -217,6 +246,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--list", action="store_true",
                     help="print the judgeable units and stop; no judge is called")
     ap.add_argument("--model", default=DEFAULT_MODEL)
+    ap.add_argument("--api", action="store_true",
+                    help="use the metered Anthropic API instead of the claude CLI "
+                         "(for unattended runs; needs ANTHROPIC_API_KEY)")
     ns = ap.parse_args(argv)
 
     files = _account_files(ns.paths)
@@ -231,8 +263,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{len(files)} account(s), 0 judgeable unit(s): nothing judged.")
         return 0
     try:
-        fresh, skipped = adjudicate(files, judge_name=ns.model,
-                                    judge=lambda b: api_judge(b, ns.model))
+        if ns.api:
+            fresh, skipped = adjudicate(files, judge_name=ns.model,
+                                        judge=lambda b: api_judge(b, ns.model))
+        else:
+            fresh, skipped = adjudicate(files, judge_name="claude-cli",
+                                        judge=cli_judge)
     except RuntimeError as e:
         print(str(e))
         return 1

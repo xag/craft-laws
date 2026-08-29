@@ -84,8 +84,8 @@ def test_the_cli_exhibits_a_zero(tmp_path, capsys):
     assert "0 judgeable unit(s): nothing judged." in capsys.readouterr().out
 
 
-def test_the_cli_without_a_key_says_so_plainly(tmp_path, monkeypatch, capsys):
+def test_the_api_route_without_a_key_says_so_plainly(tmp_path, monkeypatch, capsys):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     p = _write(tmp_path)
-    assert adjudicate.main([str(p)]) == 1
+    assert adjudicate.main([str(p), "--api"]) == 1
     assert "ANTHROPIC_API_KEY is not set" in capsys.readouterr().out

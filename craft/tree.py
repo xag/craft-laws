@@ -1226,6 +1226,50 @@ DEBTS = [
                           "sourced."}),
         ],
     ),
+    Node(
+        id="a-laws-denominator-is-uncounted",
+        kind="debt",
+        name="A law's record counts its catches and not its trials - how many candidate "
+             "laws were tried and dropped, and how many convictions a ruling later stood "
+             "down, are counted nowhere, so a surviving law's sightings cannot be "
+             "discounted for selection",
+        payload={
+            "what_it_costs":
+                "The catalogue trusts a law by its sightings - a law that has never caught "
+                "anything is a law nobody should trust - which is the numerator of a rate "
+                "whose denominator nobody keeps. Laws are mined from corrections and "
+                "censuses, candidates are tried and dropped, and the drops leave no count; "
+                "rulings stand findings down and no projection folds those back onto the "
+                "law that convicted. The estate has paid for the missing number once "
+                "already, at small n: a turn checker calibrated at zero false positives "
+                "over 33 turns was later found wrong about seven times in eight, and the "
+                "selection story stayed invisible until a person read the cleared cases. "
+                "Every multiple-testing correction the finance literature offers (deflated "
+                "statistics, reality checks) needs exactly the number this catalogue does "
+                "not keep: how many were tried.",
+            "why_it_is_not_paid":
+                "The records that would carry the counts exist in pieces - dropped "
+                "candidates sit in the tree's git history and in the corrections debt's "
+                "prose, rulings are data, sightings ride on the laws - but no projection "
+                "reads them together, and back-counting drops from git history is a "
+                "reading, not a computation. The cheap version, a hand-typed trials field "
+                "per law, is the self-report this repository refuses elsewhere: a count "
+                "whose deciding input the counted party chooses reports those choices.",
+        },
+        children=[
+            Node(id="discharge-the-denominator-is-a-projection", kind="discharge",
+                 name="Trials and overturns are computed from records that already exist, "
+                      "never typed",
+                 payload={"route":
+                          "Candidate laws enter as recorded candidates from the day this "
+                          "discharges - the corrections debt already holds them as data - "
+                          "so tried-and-dropped becomes countable from the tree itself; a "
+                          "ruling that stands a finding down is joined back to the "
+                          "convicting law by id. Both counts are computed beside sightings "
+                          "wherever sightings are shown. No field an author fills; "
+                          "grounding is the join existing and being read."}),
+        ],
+    ),
 ]
 
 DECISIONS.append(Node(

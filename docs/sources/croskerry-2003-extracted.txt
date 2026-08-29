@@ -1,0 +1,483 @@
+A RTICLE
+The Importance of Cognitive Errors in Diagnosis
+and Strategies to Minimize Them
+Pat Croskerry, MD, PhD
+T
+he recent article by Graber et al. 1 provides
+a comprehensive overview of diagnostic errors in
+medicine. There is, indeed, a long overdue and
+pressing need to focus on this area. They raise
+many important points, several of which deserve extra
+emphasis in the light of recent developments. They also
+provide an important conceptual framework within which
+strategies may be developed to minimize errors in this
+critical aspect of patient safety. Diagnostic errors are
+associated with a proportionately higher morbidity than is
+the case with other types of medical errors.
+2–4
+The no-fault and system-related categories of diagnostic
+errors described1 certainly have the potential for reduction.
+In fact, very simple changes to the system could result in
+a signiﬁcant reduction in these errors. However, the
+greatest challenge, as they note, is the minimization of
+cognitive errors, and speciﬁcally the biases and failed
+heuristics that underlie them. Historically, there has pre-
+vailed an unduly negative mood toward tackling cognitive
+bias and ﬁnding ways to minimize or eliminate it.
+The cognitive revolution in psychology that took place
+over the last 30 years gave rise to an extensive, empirical
+literature on cognitive bias in decision-making, but this
+advance has been ponderously slow to enter medicine.
+Decision-making theorists in medicine have clung to nor-
+mative, often robotic, models of clinical decision making
+that have little practical application in the real world of
+decision making. What is needed, instead, is a systematic
+analysis of what Reason
+5 has called ‘‘ﬂesh and blood’’
+decision-making. This is the real decision making that
+occurs at the front line, when resources are in short supply,
+when time constraints apply, and when shortcuts are being
+sought. When we look more closely at exactly what
+ABSTRACT
+In the area of patient safety, recent attention has focused
+on diagnostic error. The reduction of diagnostic error is
+an important goal because of its associated morbidity and
+potential preventability. A critical subset of diagnostic
+errors arises through cognitive errors, especially those
+associated with failures in perception, failed heuristics,
+and biases; collectively, these have been referred to as
+cognitive dispositions to respond (CDRs). Historically,
+models of decision-making have given insufﬁcient
+attention to the contribution of such biases, and there
+has been a prevailing pessimism against improving
+cognitive performance through debiasing techniques.
+Recent work has catalogued the major cognitive biases
+in medicine; the author lists these and describes
+a number of strategies for reducing them (‘‘cognitive
+debiasing’’). Principle among them is metacognition,
+a reﬂective approach to problem solving that involves
+stepping back from the immediate problem to examine
+and reﬂect on the thinking process. Further research
+effort should be directed at a full and complete
+description and analysis of CDRs in the context of
+medicine and the development of techniques for
+avoiding their associated adverse outcomes. Consider-
+able potential exists for reducing cognitive diagnostic
+errors with this approach. The author provides an
+extensive list of CDRs and a list of strategies to reduce
+diagnostic errors.
+Acad. Med. 2003;78:775–780.
+Dr. Croskerry is associate professor, Departments of Emergency Medicine
+and Medical Education, Dalhousie University Faculty of Medicine, Halifax,
+Nova Scotia, Canada. He is also a member of the Center for Safety in
+Emergency Care, a research consortium of the University of Florida College
+of Medicine, Dalhousie University Faculty of Medicine, Northwestern
+University The Feinberg School of Medicine, and Brown Medical School.
+Correspondence and requests for reprints should be sent to Dr. Croskerry,
+Emergency Department, Dartmouth General Hospital Site, Capital District,
+325 Pleasant Street, Dartmouth, Nova Scotia, Canada B2Y 4G8;
+telephone: (902) 465-8491; fax: (902) 460-4148; e-mail: hxkerry@
+accesscable.neti.
+Two responses to this article are printed after it.
+A CADEMIC M EDICINE ,V OL . 78, N O .8/A UGUST 2003 7 7 5
+cognitive activity is occurring when these clinical decisions
+are being made, we may be struck by how far it is removed
+from what normative theory describes. Although it seems
+certain we would be less likely to fail patients diagnostically
+when we follow rational, normative models of decision
+making, and although such models are deserving of ‘‘a
+prominent place in Plato’s heaven of ideas,’’
+6 they are
+impractical at the sharp end of patient care. Cognitive
+diagnostic failure is inevitable when exigencies of the clinical
+workplace do not allow such Olympian cerebral approaches.
+Medical decision makers and educators have to do three
+things: (1) appreciate the full impact of diagnostic errors in
+medicine and the contribution of cognitive errors in
+particular; (2) refute the inevitability of cognitive diagnostic
+errors; and (3) dismiss the pessimism that surrounds ap-
+proaches for lessening cognitive bias.
+For the ﬁrst, the specialties in which diagnostic un-
+certainty is most evident and in which delayed or missed
+diagnoses are most likely are internal, family, and emer-
+gency medicine; this is borne out in ﬁndings from the
+benchmark studies of medical error.
+2–4 However, all spe-
+cialties are vulnerable to this particular adverse event. The
+often impalpable nature of diagnostic error perhaps reﬂects
+why it does not appear in lists of serious reportable events.
+7
+For the second, there needs to be greater understanding of
+the origins of the widespread inertia that prevails against
+reducing or eliminating cognitive errors. This inertia may
+exist because such errors appear to be so predictable, so
+widespread among all walks of life, so ﬁrmly entrenched,
+and, therefore, probably hardwired. Although the evolu-
+tionary imperatives that spawned them may have served us
+well in earlier times, it now seems we are left with
+cognitively vestigial approaches to the complex decision
+making required of us in the modern world. Although
+‘‘cognitive ﬁrewalls’’ may have evolved to quarantine or
+avoid cognitive errors, they are clearly imperfect
+8 and will
+require ontogenetic assistance (i.e., cognitive debiasing) to
+avoid their consequences. Accepting this, we should say less
+about biases and failed heuristics and more about cognitive
+dispositions to respond (CDRs) to particular situations in
+various predictable ways. Removing the stigma of bias clears
+the way toward accepting the capricious nature of decision-
+making, and perhaps goes some way toward exculpating
+clinicians when their diagnoses fail.
+An understanding of why clinicians have particular
+CDRs in particular clinical situations will throw consider-
+able light on cognitive diagnostic errors. The unmasking of
+cognitive errors in the diagnostic process then allows for the
+development of debiasing techniques. This should be the
+ultimate goal, and it is not unrealistic.
+Certainly, a number of clear strategies exist for reducing
+the memory limitations and excessive cognitive loading
+1
+that can lead to diagnostic errors, but the most important
+strategy may well lie in familiarizing clinicians with the
+various types of CDRs that are out there, and how they
+might be avoided. I made a recent extensive trawl of medical
+and psychological literature, which revealed at least 30
+CDRs,
+9 and there are probably more (List 1). This catalogue
+provides some idea of the extent of cognitive bias on
+decision-making and gives us a working language to describe
+it. The failures to show improvement in decision support for
+clinical diagnosis that are noted by Graber et al.
+1 should
+come as no surprise. They are likely due to insufﬁcient
+awareness of the inﬂuence of these CDRs, which is often
+subtle and covert.
+10 There appears to have been an historic
+failure to fully appreciate, and therefore capture, where the
+most signiﬁcant diagnostic failures are coming from.
+Not surprisingly, all CDRs are evident in emergency
+medicine, a discipline that has been described as a ‘‘natural
+laboratory of error.’’
+11 In this milieu, decision-making is
+often naked and raw, with its ﬂaws highly visible. Nowhere
+in medicine is rationality more bounded by relatively poor
+access to information and with limited time to process it, all
+within a milieu renowned for its error-producing con-
+ditions.
+12 It is where heuristics dominate, and without them
+emergency departments would inexorably grind to a halt. 13
+Best of all, for those who would like to study real decision
+making, it is where heuristics can be seen to catastrophically
+fail. Approximately half of all litigation brought against
+emergency physicians arises from delayed or missed diag-
+noses.
+14
+If we accept the pervasiveness and predictability of the
+CDRs that underlie diagnostic cognitive error, then we are
+obliged to search for effective debiasing techniques. Despite
+the prevailing pessimism, it has been demonstrated that,
+using a variety of strategies
+15,16 (Table 1), CDRs can be
+overcome for a number of speciﬁc biases. 16–23 It appears
+that there are, indeed, cognitive pills for cognitive ills, 22
+which makes intuitive sense. This is fortunate, for other-
+wise, how would we learn to avoid pitfalls, develop
+expertise, and acquire clinical acumen, particularly if the
+predisposition for certain cognitive errors is hardwired?
+However, medical educators should be aware that if the
+pills are not sufﬁciently sugared, they may not be swallowed.
+Yates et al.
+24 have summarized some of the major
+impediments that have stood in the way of developing
+effective cognitive debiasing strategies, and they are not
+insurmountable. The ﬁrst step is to overcome the bias
+against overcoming bias. Metacognition will likely be the
+mainstay of this approach. A recent cognitive debiasing
+technique using cognitive forcing strategies is based on
+metacognitive principles
+10 and seems to be teachable to
+medical undergraduates and postgraduates. 25 Essentially,
+the strategy requires ﬁrst that the learner be aware of the
+C OGNITIVE E RRORS IN D IAGNOSIS , CONTINUED
+A CADEMIC M EDICINE ,V OL .7 8 ,N O .8/A UGUST 2003776
+List 1
+Cognitive Dispositions to Respond (CDRs) That May Lead to Diagnostic Error*
+Aggregate bias: when physicians believe that aggregated data, such as those used to develop clinical practice guidelines, do not apply to individual
+patients (especially their own), they are invoking the aggregate fallacy. The belief that their patients are atypical or somehow exceptional may lead to
+errors of commission, e.g., ordering x-rays or other tests when guidelines indicate none are required.
+Anchoring: the tendency to perceptually lock onto salient features in the patient’s initial presentation too early in the diagnostic process, and failing to
+adjust this initial impression in the light of later information. This CDR may be severely compounded by the conﬁrmation bias.
+Ascertainment bias: occurs when a physician’s thinking is shaped by prior expectation; stereotyping and gender bias are both good examples.
+Availability: the disposition to judge things as being more likely, or frequently occurring, if they readily come to mind. Thus, recent experience with
+a disease may inﬂate the likelihood of its being diagnosed. Conversely, if a disease has not been seen for a long time (is less available), it may be
+underdiagnosed.
+Base-rate neglect: the tendency to ignore the true prevalence of a disease, either inﬂating or reducing its base-rate, and distorting Bayesian reasoning.
+However, in some cases, clinicians may (consciously or otherwise) deliberately inﬂate the likelihood of disease, such as in the strategy of ‘‘rule ou t
+worst-case scenario’’ to avoid missing a rare but signiﬁcant diagnosis.
+Commission bias: results from the obligation toward beneﬁcence, in that harm to the patient can only be prevented by active intervention. It is the
+tendency toward action rather than inaction. It is more likely in over-conﬁdent physicians. Commission bias is less common than omission bias.
+Conﬁrmation bias: the tendency to look for conﬁrming evidence to support a diagnosis rather than look for disconﬁrming evidence to refute it, despite
+the latter often being more persuasive and deﬁnitive.
+Diagnosis momentum: once diagnostic labels are attached to patients they tend to become stickier and stickier. Through intermediaries (patients,
+paramedics, nurses, physicians), what might have started as a possibility gathers increasing momentum until it becomes deﬁnite, and all other
+possibilities are excluded.
+Feedback sanction: a form of ignorance trap and time-delay trap CDR. Making a diagnostic error may carry no immediate consequences, as considerable
+time may elapse before the error is discovered, if ever, or poor system feedback processes prevent important information on decisions getting back to
+the decision maker. The particular CDR that failed the patient persists because of these temporal and systemic sanctions.
+Framing effect: how diagnosticians see things may be strongly inﬂuenced by the way in which the problem is framed, e.g., physicians’ perceptions of
+risk to the patient may be strongly inﬂuenced by whether the outcome is expressed in terms of the possibility that the patient might die or might live.
+In terms of diagnosis, physicians should be aware of how patients, nurses, and other physicians frame potential outcomes and contingencies of the
+clinical problem to them.
+Fundamental attribution error : the tendency to be judgmental and blame patients for their illnesses (dispositional causes) rather than examine the
+circumstances (situational factors) that might have been responsible. In particular, psychiatric patients, minorities, and other marginalized g roups
+tend to suffer from this CDR. Cultural differences exist in terms of the respective weights attributed to dispositional and situational causes.
+Gambler’s fallacy: attributed to gamblers, this fallacy is the belief that if a coin is tossed ten times and is heads each time, the 11
+th toss has a greater
+chance of being tails (even though a fair coin has no memory). An example would be a physician who sees a series of patients with chest pain in clinic
+or the emergency department, diagnoses all of them with an acute coronary syndrome, and assumes the sequence will not continue. Thus, the pretest
+probability that a patient will have a particular diagnosis might be inﬂuenced by preceding but independent events.
+Gender bias: the tendency to believe that gender is a determining factor in the probability of diagnosis of a particular disease when no such
+pathophysiological basis exists. Generally, it results in an overdiagnosis of the favored gender and underdiagnosis of the neglected gender.
+Hindsight bias: knowing the outcome may profoundly inﬂuence the perception of past events and prevent a realistic appraisal of what actually occurred.
+In the context of diagnostic error, it may compromise learning through either an underestimation (illusion of failure) or overestimation (illusion of
+control) of the decision maker’s abilities.
+Multiple alternatives bias : a multiplicity of options on a differential diagnosis may lead to signiﬁcant conﬂict and uncertainty. The process may be
+simpliﬁed by reverting to a smaller subset with which the physician is familiar but may result in inadequate consideration of other possibilities. On e
+such strategy is the three-diagnosis differential: ‘‘It is probably A, but it might be B, or I don’t know (C).’’ Although this approach has some heuristic
+value, if the disease falls in the C category and is not pursued adequately, it will minimize the chances that some serious diagnoses can be made.
+Omission bias: the tendency toward inaction and rooted in the principle of nonmaleﬁcence. In hindsight, events that have occurred through the natural
+progression of a disease are more acceptable than those that may be attributed directly to the action of the physician. The bias may be sustained by the
+reinforcement often associated with not doing anything, but it may prove disastrous. Omission biases typically outnumber commission biases.
+Order effects: information transfer is a U-function: we tend to remember the beginning part (primacy effect) or the end (recency effect). Primacy effect
+may be augmented by anchoring. In transitions of care, in which information transferred from patients, nurses, or other physicians is being evaluated,
+care should be taken to give due consideration to all information, regardless of the order in which it was presented.
+Outcome bias: the tendency to opt for diagnostic decisions that will lead to good outcomes, rather than those associated with bad outcomes, thereby
+avoiding chagrin associated with the latter. It is a form of value bias in that physicians may express a stronger likelihood in their decision-making for
+what they hope will happen rather than for what they really believe might happen. This may result in serious diagnoses being minimized.
+C OGNITIVE E RRORS IN D IAGNOSIS , CONTINUED
+A CADEMIC M EDICINE ,V OL . 78, N O .8/A UGUST 2003 7 7 7
+List 1
+Continued
+Overconﬁdence bias: a universal tendency to believe we know more than we do. Overconﬁdence reﬂects a tendency to act on incomplete information,
+intuitions, or hunches. Too much faith is placed in opinion instead of carefully gathered evidence. The bias may be augmented by both anchoring and
+availability, and catastrophic outcomes may result when there is a prevailing commission bias.
+Playing the odds : (also known as frequency gambling) is the tendency in equivocal or ambiguous presentations to opt for a benign diagnosis on the
+basis that it is signiﬁcantly more likely than a serious one. It may be compounded by the fact that the signs and symptoms of many common and
+benign diseases are mimicked by more serious and rare ones. The strategy may be unwitting or deliberate and is diametrically opposed to the rule out
+worst-case scenario strategy (see base-rate neglect ).
+Posterior probability error : occurs when a physician’s estimate for the likelihood of disease is unduly inﬂuenced by what has gone on before for a
+particular patient. It is the opposite of the gambler’s fallacyin that the physician is gambling on the sequence continuing, e.g., if a patient presents to
+the ofﬁce ﬁve times with a headache that is correctly diagnosed as migraine on each visit, it is the tendency to diagnose migraine on the sixth visit.
+Common things for most patients continue to be common, and the potential for a nonbenign headache being diagnosed is lowered through posterior
+probability.
+Premature closure: a powerful CDR accounting for a high proportion of missed diagnoses. It is the tendency to apply premature closure to the decision-
+making process, accepting a diagnosis before it has been fully veriﬁed. The consequences of the bias are reﬂected in the maxim: ‘‘When the diagnosis is
+made, the thinking stops.’’
+Psych-out error : psychiatric patients appear to be particularly vulnerable to the CDRs described in this list and to other errors in their management,
+some of which may exacerbate their condition. They appear especially vulnerable to fundamental attribution error . In particular, comorbid medical
+conditions may be overlooked or minimized. A variant of psych-out error occurs when serious medical conditions (e.g., hypoxia, delerium, metabolic
+abnormalities, CNS infections, head injury) are misdiagnosed as psychiatric conditions.
+Representativeness restraint: the representativeness heuristic drives the diagnostician toward looking for prototypical manifestations of disease: ‘‘If it
+looks like a duck, walks like a duck, quacks like a duck, then it is a duck.’’ Yet restraining decision-making along these pattern-recognition lines leads to
+atypical variants being missed.
+Search satisfying : reﬂects the universal tendency to call off a search once something is found. Comorbidities, second foreign bodies, other fractures,
+and coingestants in poisoning may all be missed. Also, if the search yields nothing, diagnosticians should satisfy themselves that they have been
+looking in the right place.
+Sutton’s slip: takes its name from the apocryphal story of the Brooklyn bank-robber Willie Sutton who, when asked by the Judge why he robbed banks,
+is alleged to have replied: ‘‘Because that’s where the money is!’’ The diagnostic strategy of going for the obvious is referred to asSutton’s law. The
+slip occurs when possibilities other than the obvious are not given sufﬁcient consideration.
+Sunk costs: the more clinicians invest in a particular diagnosis, the less likely they may be to release it and consider alternatives. This is an entrapment
+form of CDR more associated with investment and ﬁnancial considerations. However, for the diagnostician, the investment is time and mental energy
+and, for some, ego may be a precious investment. Conﬁrmation bias may be a manifestation of such an unwillingness to let go of a failing diagnosis.
+Triage cueing : the triage process occurs throughout the health care system, from the self-triage of patients to the selection of a specialist by the
+referring physician. In the emergency department, triage is a formal process that results in patients being sent in particular directions, which cue s
+their subsequent management. Many CDRs are initiated at triage, leading to the maxim: ‘‘Geography is destiny.’’
+Unpacking principle : failure to elicit all relevant information (unpacking) in establishing a differential diagnosis may result in signiﬁcant possibilities
+being missed. The more speciﬁc a description of an illness that is received, the more likely the event is judged to exist. If patients are allowed to limi t
+their history-giving, or physicians otherwise limit their history-taking, unspeciﬁed possibilities may be discounted.
+Vertical line failure : routine, repetitive tasks often lead to thinking in silos —predictable, orthodox styles that emphasize economy, efﬁcacy, and utility.
+Though often rewarded, the approach carries the inherent penalty of inﬂexibility. In contrast, lateral thinking styles create opportunities for diagnosing
+the unexpected, rare, or esoteric. An effective lateral thinking strategy is simply to pose the question: ‘‘What else might this be?’’
+Visceral bias : the inﬂuence of affective sources of error on decision-making has been widely underestimated. Visceral arousal leads to poor decisions.
+Countertransference, both negative and positive feelings toward patients, may result in diagnoses being missed. Some attribution phenomena
+(fundamental attribution error ) may have their origin in countertransference.
+Yin-Yang out : when patients have been subjected to exhaustive and unavailing diagnostic investigations, they are said to have been worked up the Yin-
+Yang. The Yin-Yang out is the tendency to believe that nothing further can be done to throw light on the dark place where, and if, any deﬁnitive
+diagnosis resides for the patient, i.e., the physician is let out of further diagnostic effort. This may prove ultimately to be true, but to adopt the strategy
+at the outset is fraught with the chance of a variety of errors.
+*
+The terms used to describe the various CDRs above are those by which they are commonly known in the psychology and medicine literature, as well as colloq uially. Some,
+such as feedback sanction and hindsight bias, are indirect, reﬂecting more on processes that interfere with physician calibration. There is considerable overlap among CDRs,
+some being known by other synonyms. These, together with further detail and citations for the original work, are described in Croskerry P. Achieving q uality in clinical
+decision making: cognitive strategies and detection of bias. Acad Emerg Med. 2002;9:1184–1204. The above list was based on material in that article and in an earlier work.27
+C OGNITIVE E RRORS IN D IAGNOSIS , CONTINUED
+A CADEMIC M EDICINE ,V OL .7 8 ,N O .8/A UGUST 2003778
+various cognitive pitfalls, and second that speciﬁc forcing
+strategies be developed to counter them.
+Much of clinical decision making, as Reason 5 notes, is
+where ‘‘the cognitive reality departs from the formalized
+ideal.’’ This cognitive reality is extremely vulnerable to
+error. The problem is that cognitive error is high-hanging
+fruit and difﬁcult to get at, and there will be a tendency to
+pursue more readily attainable goals. There is a story about
+a jogger who came across a man on his knees under
+a streetlight one evening. He explained that he had
+dropped his wedding ring. The jogger offered to help him
+search, and he accepted. With no luck after a half hour, the
+jogger asked the man if he was sure he had dropped the ring
+at the place where they were searching. The man replied
+that he actually dropped it several yards away in the
+shadows. ‘‘Then why are we looking here?’’ asked the
+jogger. ‘‘Because the light is better,’’ came the reply.
+Real solutions to cognitive diagnostic errors lie in the
+shadows, and they will be difﬁcult to ﬁnd. One very clear
+goal in reducing diagnostic errors in medicine is to ﬁrst
+describe, analyze, and research CDRs in the context of
+medical decision making, and to then ﬁnd effective ways of
+cognitively debiasing ourselves and those whom we teach.
+Not only should we be able to reduce many cognitive
+diagnostic errors, but we may also be pleasantly surprised to
+ﬁnd how many can be eliminated.
+The author gratefully acknowledges support through a Senior Clinical
+Research Fellowship from the Faculty of Medicine, Dalhousie University,
+Halifax, Nova Scotia, Canada, and a grant (#P20HS11592-02) awarded by
+the Agency for Healthcare Research and Quality.
+REFERENCES
+1. Graber M, Gordon R, Franklin N. Reducing diagnostic errors in
+medicine: what’s the goal? Acad Med. 2002;77:981–92.
+2. Brennan TA, Leape LL, Laird NM, et al. Incidence of adverse events
+and negligence in hospitalized patients: results of the Harvard Medical
+Practice Study 1. N Eng J Med. 1991;324:370–6.
+3. Wilson RM, Runciman WB, Gibberd RW, et al. The Quality in
+Australian Health Care Study. Med J Australia 1995;163:458–71.
+4. Thomas EJ, Studdert DM, Burstin HR, et al. Incidence and types of
+adverse events and negligent care in Utah and Colorado. Med Care.
+2000;38:261–2.
+5. Reason, J. Human Error. New York: Cambridge University Press, 1990.
+6. Simon HA. Alternate visions of rationality. In: Arkes HR, Hammond
+KR (eds.). Judgment and Decision Making: An Interdisciplinary
+Reader. New York: Cambridge University Press, 1986: 97–113.
+7. Serious reportable events in patient safety: A National Quality Forum
+consensus report. Washington, D.C.: National Quality Forum, 2002.
+8. Cosmides L, Tooby J. Consider the source: the evolution of adaptations
+for decoupling and metarepresentation. In: Sperber D (ed.). Meta-
+representation. Vancouver Studies in Cognitive Science. New York:
+Oxford University Press, 2001.
+9. Croskerry P. Achieving quality in clinical decision making: cognitive
+strategies and detection of bias. Acad Emerg Med 2002;9:1184–1204.
+Table 1
+Cognitive Debiasing Strategies to Reduce Diagnostic Error*
+Strategy Mechanism/Action
+Develop insight/
+awareness
+Provide detailed descriptions and thorough
+characterizations of known cognitive
+biases, together with multiple clinical
+examples illustrating their adverse effects
+on decision-making and diagnosis
+formulation.
+Consider
+alternatives
+Establish forced consideration of alternative
+possibilities e.g., the generation and
+working through of a differential
+diagnosis. Encourage routinely asking the
+question: What else might this be?
+Metacognition Train for a reﬂective approach to problem
+solving: stepping back from the immediate
+problem to examine and reﬂect on the
+thinking process.
+Decrease reliance
+on memory
+Improve the accuracy of judgments through
+cognitive aids: mnemonics, clinical
+practice guidelines, algorithms, hand-held
+computers.
+Speciﬁc training Identify speciﬁc ﬂaws and biases in thinking
+and provide directed training to overcome
+them: e.g., instruction in fundamental
+rules of probability, distinguishing
+correlation from causation, basic Bayesian
+probability theory.
+Simulation Develop mental rehearsal, ‘‘cognitive
+walkthrough’’ strategies for speciﬁc
+clinical scenarios to allow cognitive biases
+to be made and their consequences to be
+observed. Construct clinical training
+videos contrasting incorrect (biased)
+approaches with the correct (debiased)
+approach.
+Cognitive forcing
+strategies
+Develop generic and speciﬁc strategies to
+avoid predictable bias in particular clinical
+situations.
+Make task easier Provide more information about the speciﬁc
+problem to reduce task difﬁculty and
+ambiguity. Make available rapid access
+to concise, clear, well-organized
+information.
+Minimize time
+pressures
+Provide adequate time for quality decision-
+making.
+Accountability Establish clear accountability and follow-up
+for decisions made.
+Feedback Provide as rapid and reliable feedback as
+possible to decision makers so that errors
+are immediately appreciated, understood,
+and corrected, resulting in better
+calibration of decision makers.
+26
+*Based on information from: Slovic and Fischhoff (1977),19 Fischhoff (1982),15
+Arkes (1986),16 Plous (1993),23 Croskerry (2002),9 and Croskerry (2003). 10
+C OGNITIVE E RRORS IN D IAGNOSIS , CONTINUED
+A CADEMIC M EDICINE ,V OL . 78, N O .8/A UGUST 2003 7 7 9
+10. Croskerry P. Cognitive forcing strategies in clinical decision making.
+Ann Emerg Med. 2003;41:110–20.
+11. Bogner, MS. (ed.). Human Error in Medicine. New Jersey: Lawrence
+Erlbaum Associates, 1994.
+12. Croskerry P, Wears RL. Safety errors in emergency medicine. In:
+Markovchick VJ and Pons PT (eds.). Emergency Medicine Secrets, 3 rd
+ed. Philadelphia: Hanley and Belfus, 2002: 29–37.
+13. Kovacs G, Croskerry P. Clinical decision making: an emergency
+medicine perspective. Acad Emerg Med. 1999;6:947–52.
+14. Data from the U.S General Accounting Ofﬁce, the Ohio Hospital
+Association and the St. Paul (MN) Insurance Company, 1998 hhttp://
+hookman.com/mp9807.htmi. Accessed 4/24/03.
+15. Fischhoff B. Debiasing. In: Kahneman D. Slovic P. and Tversky A
+(eds). Judgment under Uncertainty: Heuristics and Biases. New York:
+Cambridge University Press, 1982: 422–44.
+16. Arkes HA. Impediments to accurate clinical judgment and possible
+ways to minimize their impact. In: Arkes HR, Hammond KR (eds).
+Judgment and Decision Making: An Interdisciplinary Reader. New
+York: Cambridge University Press, 1986: 582–92.
+17. Nathanson S, Brockner J, Brenner D, et al. Toward the reduction of
+entrapment. J Applied Soc Psychol. 1982;12:193–208.
+18. Schwartz WB, Gorry GA, Kassirer JP, Essig A. Decision analysis and
+clinical judgment. Am J Med. 1973;55:459–72.
+19. Slovic P, Fischhoff B. On the psychology of experimental surprises.
+J Exp Psychol Hum Percept Perform. 1977;3:544–51.
+20. Edwards W, von Winterfeldt D. On cognitive illusions and their
+implications. In: Arkes HR, Hammond KR (eds). Judgment and
+Decision Making: An Interdisciplinary Reader. New York: Cambridge
+University Press, 1986: 642–79.
+21. Wolf FM, Gruppen LD, Billi JE. Use of a competing-hypothesis
+heuristic to reduce pseudodiagnosticity. J Med Educ 1988;63:548–54.
+22. Keren G. Cognitive aids and debiasing methods: can cognitive pills
+cure cognitive ills? In: Caverni JP, Fabre JM, Gonzales M (eds).
+Cognitive Biases. New York: Elsevier, 1990: 523-52.
+23. Plous S. The Psychology of Judgment and Decision Making.
+Philadelphia: Temple University Press, 1993.
+24. Yates JF, Veinott ES, Patalano AL. Hard decisions, bad decisions: on
+decision quality and decision aiding. In: Schneider S, Shanteau J.
+(eds.). Emerging Perspectives in Judgment and Decision Making. New
+York: Cambridge University Press, 2003.
+25. Croskerry P. Cognitive forcing strategies in emergency medicine.
+Emerg Med J. 2002;19(suppl 1):A9.
+26. Croskerry P. The feedback sanction. Acad Emerg Med. 2000;7:
+1232–38.
+27. Hogarth RM. Judgment and Choice: The Psychology of Decision.
+Chichester, England: Wiley, 1980.
+C OGNITIVE E RRORS IN D IAGNOSIS , CONTINUED
+A CADEMIC M EDICINE ,V OL .7 8 ,N O .8/A UGUST 2003780

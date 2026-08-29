@@ -128,7 +128,10 @@ def _already(dirpath: Path) -> set[tuple[str, str]]:
         for line in f.read_text(encoding="utf-8").splitlines():
             try:
                 r = json.loads(line)
-                seen.add((r["account"], r["node"]))
+                # a cannot-tell is the unresolved queue, not a ruling: it is
+                # re-judged on the next run instead of blocking one
+                if r.get("verdict") in ("supported", "unsupported"):
+                    seen.add((r["account"], r["node"]))
             except (ValueError, KeyError):
                 continue
     return seen
@@ -164,11 +167,16 @@ def _parse(text: str, batch: list[Unit]) -> list[dict]:
 
 def cli_judge(batch: list[Unit]):
     """A fresh `claude -p` process: the client the owner already pays for, with
-    no conversation context - it sees the units and nothing else."""
+    no conversation context - it sees the units and nothing else. The account
+    hook is switched off for the child (CRAFT_ACCOUNTS_OFF, its documented
+    switch): the first live run inherited the hook, whose injected instruction
+    contaminated every reply, and 106 of 106 units came back unanswered."""
     import subprocess
+    env = dict(os.environ, CRAFT_ACCOUNTS_OFF="1")
     done = subprocess.run(["claude", "-p", _prompt(batch)],
                           capture_output=True, text=True, timeout=600,
-                          encoding="utf-8", errors="replace", shell=False)
+                          encoding="utf-8", errors="replace", shell=False,
+                          env=env)
     if done.returncode != 0:
         raise RuntimeError(f"claude -p failed ({done.returncode}): "
                            f"{(done.stderr or '')[:200]}")
@@ -274,11 +282,16 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     bad = [v for v in fresh if v.verdict == "unsupported"]
     unsure = [v for v in fresh if v.verdict == "cannot-tell"]
+    answered = [v for v in fresh if "returned nothing" not in v.why]
     for v in bad + unsure:
         print(f"{v.verdict.upper()}  {v.account} {v.node} [{v.kind}]: {v.why}")
     print(f"{len(files)} account(s), {len(fresh)} unit(s) adjudicated "
-          f"({skipped} already ruled), {len(bad)} unsupported, "
-          f"{len(unsure)} cannot-tell.")
+          f"({skipped} already ruled), {len(answered)} answered, "
+          f"{len(bad)} unsupported, {len(unsure)} cannot-tell.")
+    if fresh and not answered:
+        print("the judge answered nothing: this run judged 0 units and is a "
+              "failure, not a pass")
+        return 1
     return 1 if bad else 0
 
 

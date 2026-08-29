@@ -435,3 +435,25 @@ def test_the_same_flaw_in_two_accounts_is_reported_twice(tmp_path, monkeypatch,
     err = capsys.readouterr().err
     assert "2 finding(s)" in err
     assert "1.json r1" in err and "2.json r1" in err
+
+
+
+def test_a_says_survives_punctuation_drift_and_a_fabricated_says_does_not(tmp_path):
+    """The mismatch note means one thing: the reply never asserted the claimed
+    sentence. Wording drift - a period before a parenthetical, an appended commit
+    id - is not a mismatch."""
+    d = tmp_path / ".craft" / "accounts" / "sess"
+    d.mkdir(parents=True)
+    acc = d / "1.json"
+    acc.write_text(json.dumps({"nodes": [
+        {"id": "c1", "type": "I", "role": "conclusion", "text": "x",
+         "says": "Drained whole now."},
+        {"id": "c2", "type": "I", "role": "conclusion", "text": "y",
+         "says": "Every test was green on the first run."},
+    ]}), encoding="utf-8")
+    res = account_hook.residual(
+        "Drained whole now (craft-laws 40fe582, 132 tests green, pushed).",
+        [acc])
+    unmatched = [u["says"] for u in res["unmatched_says"]]
+    assert "Drained whole now." not in unmatched          # drift: matched
+    assert "Every test was green on the first run." in unmatched  # never said

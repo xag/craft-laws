@@ -217,11 +217,22 @@ def residual(reply: str, accounts: list) -> dict:
     # session directory, so re-checking an older account's says against a later reply
     # is a category error -- the first live run reported exactly that. Only accounts
     # not yet residual-checked contribute unmatched quotes.
-    canon_reply = _canon(reply)
+    # Matching is punctuation- and case-insensitive on purpose. The first weeks ran
+    # verbatim containment, and every mismatch it reported was wording drift - a
+    # period falling before a parenthetical, an appended commit id - which made the
+    # note indistinguishable from the one thing worth reporting: a says the reply
+    # NEVER asserted. A signal that fires the same way on fraud and on a period is
+    # not a signal (the owner's words, 2026-08-29). Content-word containment keeps
+    # exactly the fraud case.
+    def _loose(s: str) -> str:
+        import re as _re
+        return " ".join(_re.findall(r"[a-z0-9]+", s.lower()))
+
+    canon_reply = _loose(_canon(reply))
     fresh = {str(Path(p).resolve()) for p in accounts} - _residual_seen()
     unmatched = [{"node": nid, "account": acc, "says": txt[:120]}
                  for nid, txt, acc, path in claims
-                 if path in fresh and txt not in canon_reply]
+                 if path in fresh and _loose(txt) not in canon_reply]
     sents = sentences(reply)
     covered = [x for x in sents
                if any(_canon(x) in txt or txt in _canon(x)

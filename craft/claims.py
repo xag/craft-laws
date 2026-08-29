@@ -570,12 +570,24 @@ def main(argv: list[str] | None = None) -> int:
     if ns.alarm:
         return _alarm()
     total = 0
+    n_claims = 0
     for f in ns.files:
+        try:
+            n_claims += sum(1 for line in f.read_text(encoding="utf-8").splitlines()
+                            if line.strip())
+        except OSError:
+            pass
         for x in check_file(f):
             total += 1
             print(f"{x.law}  {x.where}\n  «{x.quote}»\n  {x.why}")
     if not total:
-        print(f"{len(ns.files)} file(s): no claim decider convicts.")
+        # a-check-exhibits-what-it-read: the verdict carries the units judged,
+        # and zero units is could-not-judge, never the pass sentence.
+        if n_claims:
+            print(f"{len(ns.files)} file(s), {n_claims} claim(s): no claim "
+                  "decider convicts.")
+        else:
+            print(f"{len(ns.files)} file(s), 0 claim(s): nothing judged.")
     return 1 if total else 0
 
 

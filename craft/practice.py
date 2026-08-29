@@ -80,6 +80,11 @@ MODELCARDS = ("Mitchell et al., Model Cards for Model Reporting, Proceedings of 
               "FAT* 2019")
 MODELCARDS_URL = "https://doi.org/10.1145/3287560.3287596"
 
+MAST = ("Cemri et al., Why Do Multi-Agent LLM Systems Fail?, arXiv 2503.13657v3, "
+        "2025 (the MAST taxonomy; captured at docs/sources/cemri-2025-mast.pdf and "
+        "censused whole in craft/census_mast.py)")
+MAST_URL = "https://arxiv.org/abs/2503.13657"
+
 
 def _agans(rule: str) -> Quantity:
     return Quantity(value=1, unit="law", provenance="cited", grounded=True,
@@ -1262,6 +1267,45 @@ PRACTICE = [
              "number, which is what makes the law mechanizable: a diagnosis carrying "
              "`resembles` carries `base_rate`, and 'unknown: why' is an honest value "
              "where the record is too thin to count.",
+    ),
+
+    _law(
+        "a-check-exhibits-what-it-read",
+        "A check's verdict travels with the count of units it actually judged, and a "
+        "verdict over zero units is could-not-judge, never a pass",
+        _cited("MAST FM-3.3, incorrect verification; the mechanized form of the "
+               "hypothesis a-defect-in-what-a-check-reads-is-invisible-to-that-check"),
+        falsifier="A check reports a pass (or 'no findings') while the number of units "
+                  "its reduction actually handed to its deciders was zero, or is "
+                  "absent from the report. Countable: the units read, printed beside "
+                  "the verdict, against zero.",
+        triggers=["a check reports a pass or no findings",
+                  "a checker's input is assembled by a reduction that can come up "
+                  "empty"],
+        citations=[(MAST, MAST_URL,
+                    "Failure to adequately validate or cross-check crucial "
+                    "information or decisions"),
+                   (f"{MAST} — FM-3.2", MAST_URL,
+                    "Omission of proper checking or confirmation of task outcomes "
+                    "or system outputs")],
+        sightings=[
+            ("this estate's own account checker, 2026-08-29",
+             "An account checked through the wrong constructor parsed to zero nodes, "
+             "every decider ran over nothing, and the empty finding list was read as "
+             "all-pass - twice, and reported to the owner as a pass before a third "
+             "look caught it."),
+            ("the account hook, 2026-08-29",
+             "The hook's wiring displaced its working directory, its search found "
+             "zero accounts every turn, and it exited 0 silently for an entire "
+             "session - a dead instrument indistinguishable from a passing one "
+             "until the owner asked 'does it work?'."),
+        ],
+        note="The weak reading is a coverage line beside the verdict. The strong "
+             "reading is the sighting pair's: zero is not a small sample but a "
+             "different event - the check did not run - and reporting it as a pass "
+             "is the one output a dead instrument and a healthy practice share. "
+             "Built 2026-08-29 from the error census, aimed by frequency: both of "
+             "the commissioning session's costliest errors fall to this one law.",
     ),
 ]
 

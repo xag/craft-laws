@@ -246,6 +246,20 @@ def stop(payload: dict) -> int:
     roots = repos_touched(Path(tpath)) or [Path.cwd()]
     files = accounts_for(session, roots)
     if not files:
+        # a-check-exhibits-what-it-read: finding nothing is a fact the author can
+        # only use if it is said once. For a whole session on 2026-08-29 this path
+        # returned 0 silently while accounts sat in a directory the displaced cwd
+        # never covered, and the silence read as passes. Once per session, the
+        # zero is exhibited; after that, silence means the same zero.
+        key = "nothing:" + hashlib.sha256(
+            f"{session}|{[str(r) for r in roots]}".encode("utf-8", "replace")
+        ).hexdigest()
+        if not _already_reported(key):
+            print(f"account check: 0 account(s) found for this session "
+                  f"(searched {len(set(map(str, list(roots) + [str(_ROOT), str(Path.cwd())])))} root(s)) "
+                  "-- if this turn filed one, the search did not reach it; further "
+                  "silence this session means the same zero", file=sys.stderr)
+            return 2
         return 0            # nothing filed: silence is information, not a conviction
     from .record import read
     corpus = read(Path(tpath))          # the record the grounds must quote
@@ -277,7 +291,14 @@ def stop(payload: dict) -> int:
         # A clean verdict is reported too, once per turn. Silence on a pass is why
         # "the harness checked this" could not be said without running the checker
         # by hand: an author cannot tell a pass from a hook that never looked.
-        verdict = (f"{len(files)} account(s) checked, no decider convicts." + summary)
+        n_nodes = 0
+        for p in files:
+            try:
+                n_nodes += len(json.loads(Path(p).read_text(encoding="utf-8")).get("nodes", []))
+            except (OSError, ValueError):
+                pass
+        verdict = (f"{len(files)} account(s), {n_nodes} node(s) checked, "
+                   "no decider convicts." + summary)
         if not _already_reported("pass:" + hashlib.sha256(
                 verdict.encode("utf-8", "replace")).hexdigest()):
             print(verdict, file=sys.stderr)

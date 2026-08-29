@@ -84,11 +84,19 @@ def test_the_prompt_hook_asks_for_the_account(capsys):
     assert ".craft/accounts/" in out
 
 
-def test_a_turn_that_files_nothing_is_not_convicted(tmp_path):
-    """Silence is the record's reporting bias, not a verdict on the answer."""
+def test_a_turn_that_files_nothing_is_not_convicted(tmp_path, monkeypatch, capsys):
+    """Filing nothing is honest and never a conviction — but the zero is exhibited
+    once per session (a-check-exhibits-what-it-read): the first zero says so, and
+    silence after that means the same zero, not a pass."""
     t = tmp_path / "t.jsonl"
     t.write_text("", encoding="utf-8")
-    assert account_hook.stop({"session_id": "s", "transcript_path": str(t)}) == 0
+    monkeypatch.setattr(account_hook, "_SEEN", tmp_path / "seen.json")
+    monkeypatch.chdir(tmp_path)
+    payload = {"session_id": "s", "transcript_path": str(t)}
+    assert account_hook.stop(payload) == 2
+    err = capsys.readouterr().err
+    assert "0 account(s) found" in err and "finding" not in err
+    assert account_hook.stop(payload) == 0
 
 
 def test_a_filed_account_that_convicts_comes_back_with_exit_2(tmp_path, monkeypatch,

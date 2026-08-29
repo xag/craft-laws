@@ -119,15 +119,17 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "and no claim about the hook was ever filed — the mode's cost lands "
         "where its laws do not reach"),
     "fm-3.3-incorrect-verification": (
-        "owed",
+        "covered",
         "Failure to adequately validate or cross-check crucial information or "
         "decisions",
         "the verification that ran and verified nothing: this session's zero-node "
         "check read as all-pass. a-defect-in-what-a-check-reads-is-invisible-to-"
-        "that-check states the class as a hypothesis; a-check-reports-what-it-"
-        "could-not-judge is law for published checks — but an ad-hoc check "
-        "assembled in-session is held to neither. The costliest owed row of both "
-        "censuses"),
+        "that-check states the class as a hypothesis, and since 2026-08-29 "
+        "a-check-exhibits-what-it-read is its law: a verdict travels with the "
+        "count of units judged, and zero units convicts instead of passing. The "
+        "row was owed for the hours between the census and the build; the gap it "
+        "recorded (ad-hoc in-session checks held to nothing) is what the law now "
+        "names"),
 }
 
 SOURCE_ROWS = 14

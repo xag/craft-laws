@@ -475,6 +475,15 @@ def check_file(path: Path, corpus=None) -> list[Finding]:
     except (OSError, ValueError) as e:
         return [Finding("an-account-is-an-aif-graph", path.name, "",
                         f"the account did not parse: {e}")]
+    # a-check-exhibits-what-it-read: an account that parses to zero nodes gives the
+    # deciders nothing to judge, and an empty finding list over nothing is the one
+    # output a dead check and a clean argument share. This repo produced exactly that
+    # on 2026-08-29 (a wrong constructor, zero nodes, "all pass" reported twice), so
+    # zero units read is a conviction here, never a pass.
+    if not a.nodes:
+        return [Finding("a-check-exhibits-what-it-read", path.name, "",
+                        "the account parsed to zero nodes: every decider ran over "
+                        "nothing, so this is could-not-judge, not a pass")]
     return ([f for c in CHECKS for f in c(a)]
             + check_grounds_are_anchored(a, corpus))
 

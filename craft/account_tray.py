@@ -51,19 +51,20 @@ def already_running() -> bool:
 
 
 def image(state: str = "on") -> Image.Image:
-    """A bare section sign, no badge - the mark sits among the other tray glyphs
-    in their own idiom: dark grey ink, struck through when off (the OneDrive
-    convention, a halo gap punched through the glyph so the strike reads), and
-    amber ink as the one use of colour, reserved for the liar state. Drawn at
-    256px, downscaled once with Lanczos."""
-    from PIL import ImageChops, ImageFont
+    """A bare section sign, no badge, in the dark grey of the neighbouring tray
+    glyphs. Segoe UI Black with a dilation pass for weight - the bold cut read
+    as a thin line at 16 pixels - and the off-state strike is narrow with a
+    modest halo, so the sign stays recognizable under it (the wide first cut
+    hid what the icon was). Amber ink is the one use of colour, reserved for
+    the liar state. Drawn at 256px, downscaled once with Lanczos."""
+    from PIL import ImageChops, ImageFilter, ImageFont
     S = 256
     colour = WARN if state == "liar" else INK
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     font = None
-    for path in (r"C:\Windows\Fonts\segoeuib.ttf",
-                 r"C:\Windows\Fonts\georgiab.ttf"):
+    for path in ("C:/Windows/Fonts/seguibl.ttf", "C:/Windows/Fonts/segoeuib.ttf",
+                 "C:/Windows/Fonts/georgiab.ttf"):
         try:
             font = ImageFont.truetype(path, 250)
             break
@@ -74,16 +75,19 @@ def image(state: str = "on") -> Image.Image:
         w, h = bb[2] - bb[0], bb[3] - bb[1]
         d.text(((S - w) / 2 - bb[0], (S - h) / 2 - bb[1]), "§", font=font,
                fill=colour)
+        a = img.getchannel("A").filter(ImageFilter.MaxFilter(7))
+        solid = Image.new("RGBA", (S, S), colour)
+        img = Image.composite(solid, Image.new("RGBA", (S, S), (0, 0, 0, 0)), a)
     else:                       # no font: a plain square keeps the state visible
         d.rounded_rectangle((48, 48, 208, 208), radius=40, fill=colour)
     if state == "off":
         halo = Image.new("L", (S, S), 0)
-        ImageDraw.Draw(halo).line((26, 230, 230, 26), fill=255, width=64)
+        ImageDraw.Draw(halo).line((30, 226, 226, 30), fill=255, width=34)
         img.putalpha(ImageChops.subtract(img.getchannel("A"), halo))
         d = ImageDraw.Draw(img)
-        d.line((36, 220, 220, 36), fill=colour, width=24)
-        for cx, cy in ((36, 220), (220, 36)):
-            d.ellipse((cx - 12, cy - 12, cx + 12, cy + 12), fill=colour)
+        d.line((38, 218, 218, 38), fill=colour, width=16)
+        for cx, cy in ((38, 218), (218, 38)):
+            d.ellipse((cx - 8, cy - 8, cx + 8, cy + 8), fill=colour)
     return img.resize((64, 64), Image.LANCZOS)
 
 

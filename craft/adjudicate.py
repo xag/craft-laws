@@ -173,7 +173,8 @@ def cli_judge(batch: list[Unit]):
     contaminated every reply, and 106 of 106 units came back unanswered."""
     import subprocess
     env = dict(os.environ, CRAFT_ACCOUNTS_OFF="1")
-    done = subprocess.run(["claude", "-p", _prompt(batch)],
+    # stdin, not argv: a large batch trips Windows' command-line length limit
+    done = subprocess.run(["claude", "-p"], input=_prompt(batch),
                           capture_output=True, text=True, timeout=600,
                           encoding="utf-8", errors="replace", shell=False,
                           env=env)

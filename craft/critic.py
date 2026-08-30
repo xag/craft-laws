@@ -104,8 +104,11 @@ def critic_prompt(pairs: list[dict]) -> str:
 def cli_runner(prompt: str) -> str:
     import subprocess
     env = dict(os.environ, CRAFT_ACCOUNTS_OFF="1")
-    done = subprocess.run(["claude", "-p", prompt], capture_output=True, text=True,
-                          timeout=600, encoding="utf-8", errors="replace", env=env)
+    # the prompt travels on stdin: a digest-sized argv element trips Windows'
+    # command-line length limit (WinError 206, seen on the first live run)
+    done = subprocess.run(["claude", "-p"], input=prompt, capture_output=True,
+                          text=True, timeout=600, encoding="utf-8",
+                          errors="replace", env=env)
     if done.returncode != 0:
         raise RuntimeError(f"claude -p failed ({done.returncode}): "
                            f"{(done.stderr or '')[:200]}")

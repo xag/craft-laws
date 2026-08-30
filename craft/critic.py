@@ -32,6 +32,8 @@ import json
 import os
 from pathlib import Path
 
+from . import flight
+
 MAX_TURN_CHARS = 1500      # each side of a turn is clipped to this (whole-session)
 MAX_TOOL_CHARS = 2000      # per-turn tool-result excerpt (whole-session)
 LIVE_TURN_CHARS = 6000     # the live critic sees the last turn nearly whole
@@ -82,7 +84,7 @@ def digest(transcript: Path, max_turn_chars: int = MAX_TURN_CHARS,
         cur = None
 
     try:
-        lines = transcript.read_text(encoding="utf-8", errors="replace").splitlines()
+        lines = flight.transcript_text(transcript).splitlines()
     except OSError:
         return []
     for line in lines:
@@ -194,7 +196,7 @@ def run(transcript: Path, session: str, out_dir: Path, runner=None) -> int:
             continue
         a["reconstruction"] = True
         p = out_dir / f"critic-{a.get('turn', len(written))}.json"
-        p.write_text(json.dumps(a, indent=1), encoding="utf-8")
+        flight.write_text(p, json.dumps(a, indent=1))
         written.append(p)
     if not written:
         return 0
@@ -249,7 +251,7 @@ def criticize_turn(transcript: Path, session: str, out_dir: Path,
         accounts = []
     written = []
     out_dir.mkdir(parents=True, exist_ok=True)
-    k = len(list(out_dir.glob("critic-live-*.json")))
+    k = len(flight.listing(out_dir, "critic-live-*.json"))
     last_turn = len(window) - 1
     for a in accounts:
         if not isinstance(a, dict) or not a.get("nodes"):
@@ -259,7 +261,7 @@ def criticize_turn(transcript: Path, session: str, out_dir: Path,
         a["reconstruction"] = True
         f = out_dir / f"critic-live-{k}.json"
         k += 1
-        f.write_text(json.dumps(a, indent=1), encoding="utf-8")
+        flight.write_text(f, json.dumps(a, indent=1))
         written.append(f)
     if not written:
         return []

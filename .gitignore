@@ -11,6 +11,9 @@ uv.lock
 # The publish runs record their nondeterminism boundary here; tapes are evidence, not source.
 .quern/flight/
 
+# The hooks record every judged turn here (craft.flight); same doctrine.
+.craft/flight/
+
 # Findings and the once-per-report marker: evidence about a run, not source.
 .craft/seen.json
 .craft/answers.jsonl

@@ -36,6 +36,8 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from . import flight
+
 _WS = re.compile(r"\s+")
 
 
@@ -84,7 +86,7 @@ def read(transcript: Path) -> Corpus:
     user_parts: list[str] = []
     n_tool = n_user = 0
     try:
-        lines = transcript.read_text(encoding="utf-8", errors="replace").splitlines()
+        lines = flight.transcript_text(transcript).splitlines()
     except OSError:
         lines = []
     for line in lines:

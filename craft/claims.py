@@ -76,6 +76,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from . import flight
 from craft.practice import PRACTICE
 
 _LAW_IDS = {law.id for law in PRACTICE}
@@ -461,7 +462,7 @@ CHECKS = (check_done_is_observed, check_fixed_reproduced_first,
 
 def check_file(path: Path) -> list[ClaimFinding]:
     claims = []
-    for line in path.read_text(encoding="utf-8").splitlines():
+    for line in flight.file_text(path).splitlines():
         line = line.strip()
         if line:
             claims.append(json.loads(line))

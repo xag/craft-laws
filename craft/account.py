@@ -36,6 +36,8 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from . import flight
+
 # --- AIF node types, as the specification names them ----------------------------------
 
 I_NODE = "I"    # propositional information: a premise, a datum, a conclusion
@@ -85,7 +87,7 @@ class Account:
 
 
 def load(path: Path) -> Account:
-    raw = json.loads(path.read_text(encoding="utf-8"))
+    raw = json.loads(flight.file_text(path))
     nodes = {n["id"]: n for n in raw.get("nodes", []) if "id" in n}
     for n in nodes.values():
         if "mood" in n or "figure" in n:

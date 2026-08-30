@@ -18,6 +18,11 @@ within the day.
 EVERY FAILURE PATH EXITS 0 IN SILENCE. Instrumentation that breaks the thing it
 instruments gets removed, and then nothing is checked at all.
 
+EACH JUDGED TURN RECORDS ONE FLIGHT TAPE under this checkout's .craft/flight: the
+payload is the call; the transcript, the filed accounts, the seen-state and the
+critic's model call all cross as effects of the craft.flight boundary. CRAFT_FLIGHT=0
+opts out; a recorder failure is as silent as every other failure here.
+
 OFF MEANS OFF, and it must reach a session already running: `~/.craft/ACCOUNTS_OFF`
 (or CRAFT_ACCOUNTS_OFF=1) is checked on every call, so the tray icon and the CLI both
 reach a live session instantly. Removing the hooks from settings.json only affects
@@ -31,6 +36,8 @@ import json
 import os
 import sys
 from pathlib import Path
+
+from . import flight
 
 _ROOT = Path(__file__).resolve().parents[1]
 _SEEN = _ROOT / ".craft" / "accounts-seen.json"
@@ -93,10 +100,10 @@ def accounts_for(session: str, roots: list[Path]) -> list[Path]:
     the checkout this hook lives in and the working directory. Deduplicated by
     resolved path, so one account is judged once however many roots reach it."""
     seen: dict = {}
-    for r in list(roots) + [_ROOT, Path.cwd()]:
+    for r in list(roots) + [_ROOT, Path(flight.working_dir())]:
         d = Path(r) / ".craft" / "accounts" / session
-        if d.is_dir():
-            for f in sorted(d.glob("*.json")):
+        if flight.is_dir(d):
+            for f in (Path(x) for x in flight.listing(d, "*.json")):
                 # the critic's own products live beside author-filed accounts and
                 # are judged at their own firing point - re-reading them here made
                 # yesterday's reconstructions convict as today's filed argument
@@ -113,7 +120,7 @@ def repos_touched(transcript: Path) -> list[Path]:
     file_path is counted, whatever the tool was."""
     roots: set[Path] = set()
     try:
-        lines = transcript.read_text(encoding="utf-8", errors="replace").splitlines()
+        lines = flight.transcript_text(transcript).splitlines()
     except OSError:
         return []
     for line in lines[-4000:]:
@@ -129,17 +136,15 @@ def repos_touched(transcript: Path) -> list[Path]:
             path = (block.get("input") or {}).get("file_path")
             if not path:
                 continue
-            here = Path(str(path)).parent
-            for parent in [here, *here.parents]:
-                if (parent / ".git").exists():
-                    roots.add(parent)
-                    break
+            root = flight.git_root(Path(str(path)).parent)
+            if root:
+                roots.add(Path(root))
     return sorted(roots)
 
 
 def _already_reported(key: str) -> bool:
     try:
-        seen = set(json.loads(_SEEN.read_text(encoding="utf-8")))
+        seen = set(json.loads(flight.file_text(_SEEN)))
     except Exception:
         seen = set()
     if key in seen:
@@ -147,7 +152,7 @@ def _already_reported(key: str) -> bool:
     seen.add(key)
     try:
         _SEEN.parent.mkdir(parents=True, exist_ok=True)
-        _SEEN.write_text(json.dumps(sorted(seen)[-400:]), encoding="utf-8")
+        flight.write_text(_SEEN, json.dumps(sorted(seen)[-400:]))
     except OSError:
         pass
     return False
@@ -158,7 +163,7 @@ _RESIDUAL_SEEN = _ROOT / ".craft" / "residual-seen.json"
 
 def _residual_seen() -> set:
     try:
-        return set(json.loads(_RESIDUAL_SEEN.read_text(encoding="utf-8")))
+        return set(json.loads(flight.file_text(_RESIDUAL_SEEN)))
     except Exception:
         return set()
 
@@ -167,7 +172,7 @@ def _mark_residual_seen(paths) -> None:
     seen = _residual_seen() | {str(Path(p).resolve()) for p in paths}
     try:
         _RESIDUAL_SEEN.parent.mkdir(parents=True, exist_ok=True)
-        _RESIDUAL_SEEN.write_text(json.dumps(sorted(seen)[-400:]), encoding="utf-8")
+        flight.write_text(_RESIDUAL_SEEN, json.dumps(sorted(seen)[-400:]))
     except OSError:
         pass
 
@@ -176,7 +181,7 @@ def reply_text(transcript: Path) -> str:
     """The turn's final assistant prose -- the response the accounts formalize."""
     last = ""
     try:
-        lines = transcript.read_text(encoding="utf-8", errors="replace").splitlines()
+        lines = flight.transcript_text(transcript).splitlines()
     except OSError:
         return ""
     for line in lines:
@@ -209,7 +214,7 @@ def residual(reply: str, accounts: list) -> dict:
     claims = []
     for path in accounts:
         try:
-            raw = json.loads(Path(path).read_text(encoding="utf-8"))
+            raw = json.loads(flight.file_text(path))
         except (OSError, ValueError):
             continue
         for n in raw.get("nodes", []):
@@ -264,7 +269,7 @@ def _live_critic(session: str, tpath) -> int:
     failure of the critic itself is silent - a dead critic must never block."""
     try:
         from .critic import criticize_turn
-        out = Path.cwd() / ".craft" / "accounts" / session
+        out = Path(flight.working_dir()) / ".craft" / "accounts" / session
         lines = criticize_turn(Path(str(tpath)), session, out)
     except Exception:
         return 0
@@ -292,7 +297,7 @@ def stop(payload: dict) -> int:
     tpath = payload.get("transcript_path")
     if not session or not tpath:
         return 0
-    roots = repos_touched(Path(tpath)) or [Path.cwd()]
+    roots = repos_touched(Path(tpath)) or [Path(flight.working_dir())]
     files = accounts_for(session, roots)
     if not files:
         # Nothing filed is the NORM since 2026-08-30: the author is no longer
@@ -315,7 +320,7 @@ def stop(payload: dict) -> int:
         if reply:
             res = residual(reply, files)
             out_path = files[0].parent / "residual.json"
-            out_path.write_text(json.dumps(res, indent=1), encoding="utf-8")
+            flight.write_text(out_path, json.dumps(res, indent=1))
             _mark_residual_seen(files)
             n_res = res["sentences"] - res["covered"]
             summary = ("\n" + f"residual: {n_res} of {res['sentences']} reply "
@@ -363,18 +368,25 @@ def stop(payload: dict) -> int:
     return 2
 
 
-HANDLERS = {"UserPromptSubmit": user_prompt_submit, "Stop": stop}
-
-
 def main() -> int:
+    """Dispatches by NAME through the module, never through a dict built at import:
+    the recorder patches module attributes, and a dict holding the original function
+    objects would route every live turn around the wrapper it just installed."""
     try:
         if off():
             return 0
         payload = json.load(sys.stdin)
         if payload.get("stop_hook_active"):
             return 0
-        handler = HANDLERS.get(payload.get("hook_event_name") or "")
-        return handler(payload) if handler else 0
+        event = payload.get("hook_event_name") or ""
+        if event == "Stop":
+            # one tape per judged turn; the prompt-submit lane is silent and records
+            # nothing worth a file
+            flight.record(sys.modules[__name__], "account")
+            return stop(payload)
+        if event == "UserPromptSubmit":
+            return user_prompt_submit(payload)
+        return 0
     except SystemExit:
         raise
     except Exception:

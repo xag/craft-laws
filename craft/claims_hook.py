@@ -18,6 +18,10 @@ never what they check.
 Once per set of findings, by hash: a turn that has already been told, and chose, is not told
 again. Every failure path exits 0 in silence, because instrumentation that breaks the thing
 it instruments gets removed, and then nothing is checked at all.
+
+Each working turn records one flight tape under this checkout's .craft/flight: the payload
+is the call, everything read and written crosses as effects of the craft.flight boundary.
+CRAFT_FLIGHT=0 opts out; a recorder failure is as silent as every other failure here.
 """
 
 from __future__ import annotations
@@ -27,6 +31,8 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+
+from . import flight
 
 _ROOT = Path(__file__).resolve().parents[1]
 _SEEN = _ROOT / ".craft" / "seen.json"
@@ -39,7 +45,7 @@ def touched(transcript: Path) -> list[Path]:
     the work was in. Reading only the current directory's file would miss exactly the claims
     a cross-repo turn makes."""
     roots: set[Path] = set()
-    for line in transcript.read_text(encoding="utf-8", errors="replace").splitlines()[-4000:]:
+    for line in flight.transcript_text(transcript).splitlines()[-4000:]:
         try:
             rec = json.loads(line)
         except ValueError:
@@ -52,12 +58,11 @@ def touched(transcript: Path) -> list[Path]:
             path = (block.get("input") or {}).get("file_path")
             if not path:
                 continue
-            here = Path(str(path)).parent
-            for parent in [here, *here.parents]:
-                if (parent / ".git").exists():
-                    roots.add(parent)
-                    break
-    return sorted(r / "claims.jsonl" for r in roots if (r / "claims.jsonl").exists())
+            root = flight.git_root(Path(str(path)).parent)
+            if root:
+                roots.add(Path(root))
+    return sorted(r / "claims.jsonl" for r in roots
+                  if flight.exists(r / "claims.jsonl"))
 
 
 def silent_repos(transcript: Path) -> list[Path]:
@@ -77,8 +82,7 @@ def silent_repos(transcript: Path) -> list[Path]:
     wrote: set[Path] = set()
     filed: set[Path] = set()
     cleared_all = False
-    for line in transcript.read_text(encoding="utf-8",
-                                     errors="replace").splitlines()[-4000:]:
+    for line in flight.transcript_text(transcript).splitlines()[-4000:]:
         try:
             rec = json.loads(line)
         except ValueError:
@@ -91,13 +95,11 @@ def silent_repos(transcript: Path) -> list[Path]:
             inp = block.get("input") or {}
             path = inp.get("file_path")
             if path:
-                here = Path(str(path)).parent
-                for parent in [here, *here.parents]:
-                    if (parent / ".git").exists():
-                        wrote.add(parent)
-                        if str(path).replace("\\", "/").endswith("claims.jsonl"):
-                            filed.add(parent)
-                        break
+                root = flight.git_root(Path(str(path)).parent)
+                if root:
+                    wrote.add(Path(root))
+                    if str(path).replace("\\", "/").endswith("claims.jsonl"):
+                        filed.add(Path(root))
             cmd = str(inp.get("command") or "")
             if "claims.jsonl" in cmd:
                 named = False
@@ -110,7 +112,7 @@ def silent_repos(transcript: Path) -> list[Path]:
                     cleared_all = True
     if cleared_all:
         return []
-    return sorted(r for r in wrote - filed if (r / "claims.jsonl").exists())
+    return sorted(r for r in wrote - filed if flight.exists(r / "claims.jsonl"))
 
 
 def _already_reported(findings) -> bool:
@@ -118,7 +120,7 @@ def _already_reported(findings) -> bool:
         "|".join(f"{f.law}{f.where}{f.quote}" for f in findings).encode("utf-8", "replace")
     ).hexdigest()
     try:
-        seen = set(json.loads(_SEEN.read_text(encoding="utf-8")))
+        seen = set(json.loads(flight.file_text(_SEEN)))
     except Exception:
         seen = set()
     if key in seen:
@@ -126,7 +128,7 @@ def _already_reported(findings) -> bool:
     seen.add(key)
     try:
         _SEEN.parent.mkdir(parents=True, exist_ok=True)
-        _SEEN.write_text(json.dumps(sorted(seen)[-400:]), encoding="utf-8")
+        flight.write_text(_SEEN, json.dumps(sorted(seen)[-400:]))
     except OSError:
         pass
     return False
@@ -154,31 +156,42 @@ def _silence_note(repos: list[Path]) -> str:
         "is refused."]))
 
 
+def run(payload: dict) -> int:
+    """One turn's check, whole. Public and called through the module so the recorder
+    wraps it: the payload is the recorded call, and everything the deciders read
+    arrives as effects (craft.flight is the boundary)."""
+    path = payload.get("transcript_path")
+    if not path or payload.get("stop_hook_active"):
+        return 0
+    from .claims import ClaimFinding, check_file
+    findings = [f for claims in touched(Path(path)) for f in check_file(claims)]
+    silent = silent_repos(Path(path))
+    # the silence rides the same once-per-content throttle as the findings: a
+    # repo the author was told about, and chose to leave silent, is not nagged —
+    # a noisy informant is one that gets switched off
+    notes = []
+    if silent:
+        marker = [ClaimFinding(law="intake-silence", quote="",
+                               where="|".join(sorted(r.name for r in silent)),
+                               why="")]
+        if not _already_reported(marker):
+            notes.append(_silence_note(silent))
+    if findings and not _already_reported(findings):
+        notes.insert(0, report(findings))
+    if not notes:
+        return 0
+    print("\n\n".join(notes), file=sys.stderr)
+    return 2
+
+
 def main() -> int:
     try:
         payload = json.load(sys.stdin)
-        path = payload.get("transcript_path")
-        if not path or payload.get("stop_hook_active"):
-            return 0
-        from .claims import ClaimFinding, check_file
-        findings = [f for claims in touched(Path(path)) for f in check_file(claims)]
-        silent = silent_repos(Path(path))
-        # the silence rides the same once-per-content throttle as the findings: a
-        # repo the author was told about, and chose to leave silent, is not nagged —
-        # a noisy informant is one that gets switched off
-        notes = []
-        if silent:
-            marker = [ClaimFinding(law="intake-silence", quote="",
-                                   where="|".join(sorted(r.name for r in silent)),
-                                   why="")]
-            if not _already_reported(marker):
-                notes.append(_silence_note(silent))
-        if findings and not _already_reported(findings):
-            notes.insert(0, report(findings))
-        if not notes:
-            return 0
-        print("\n\n".join(notes), file=sys.stderr)
-        return 2
+        # a re-fire (stop_hook_active) and a payload with no transcript both do no
+        # work; a tape of nothing is noise in the pile the tapes exist to be read as
+        if payload.get("transcript_path") and not payload.get("stop_hook_active"):
+            flight.record(sys.modules[__name__], "claims")
+        return run(payload)
     except Exception:
         return 0
 

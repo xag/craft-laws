@@ -53,38 +53,34 @@ def colour(s: dict) -> str:
     return {"green": GREEN, "grey": GREY, "amber": AMBER}[s["colour"]]
 
 
-def image(fill: str, glyph: str = "open") -> Image.Image:
-    """A filled badge with an eye - the critic watches replies. Open when
-    reviewing, closed when off, struck through in the liar state (claims to
-    watch, does not). A check glyph read as a to-do app; an eye says what this
-    actually does. Drawn at 256px, downscaled once with Lanczos."""
+def image(fill: str, glyph: str = "balanced") -> Image.Image:
+    """Bold filled scales on a coloured badge - the argument weighed against its
+    warrant, the identity this icon always had, drawn to survive 16 tray pixels:
+    thick white shapes, no thin outlines. The amber liar state tilts the beam -
+    unbalanced scales, and a silhouette a colour-blind eye can still tell apart.
+    Drawn at 256px, downscaled once with Lanczos."""
     S = 256
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     d.rounded_rectangle((6, 6, S - 6, S - 6), radius=58, fill=fill)
     white = "#ffffff"
-    if glyph == "closed":
-        # the lower lid: a thick downward arc, with three short lashes
-        d.arc((40, 8, 216, 168), start=25, end=155, fill=white, width=24)
-        for x0, y0, x1, y1 in ((70, 138, 52, 172), (128, 152, 128, 188),
-                               (186, 138, 204, 172)):
-            d.line((x0, y0, x1, y1), fill=white, width=18)
+    d.rounded_rectangle((115, 56, 141, 200), radius=13, fill=white)     # column
+    d.rounded_rectangle((72, 196, 184, 224), radius=13, fill=white)     # base
+    if glyph == "tilted":
+        d.line((46, 104, 210, 54), fill=white, width=26)                # beam, askew
+        for cx, cy in ((46, 104), (210, 54)):
+            d.ellipse((cx - 13, cy - 13, cx + 13, cy + 13), fill=white)
+        d.pieslice((28, 112, 104, 188), 0, 180, fill=white)             # low pan
+        d.pieslice((152, 62, 228, 138), 0, 180, fill=white)             # high pan
     else:
-        # the open eye: white almond (two overlapping arcs approximated by an
-        # ellipse), pupil punched in the badge colour, white highlight dot
-        d.ellipse((36, 78, 220, 178), fill=white)
-        d.ellipse((98, 98, 158, 158), fill=fill)
-        d.ellipse((134, 106, 152, 124), fill=white)
-        if glyph == "struck":
-            # the liar state: the eye crossed out, badge-coloured stroke with a
-            # thin white edge so it reads over the sclera
-            d.line((52, 208, 204, 48), fill=white, width=40)
-            d.line((52, 208, 204, 48), fill=fill, width=22)
+        d.rounded_rectangle((36, 58, 220, 84), radius=13, fill=white)   # beam
+        d.pieslice((30, 92, 106, 168), 0, 180, fill=white)              # left pan
+        d.pieslice((150, 92, 226, 168), 0, 180, fill=white)             # right pan
     return img.resize((64, 64), Image.LANCZOS)
 
 
 def glyph_for(s: dict) -> str:
-    return {"green": "open", "grey": "closed", "amber": "struck"}[s["colour"]]
+    return {"green": "balanced", "grey": "balanced", "amber": "tilted"}[s["colour"]]
 
 
 def title(s: dict) -> str:

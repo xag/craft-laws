@@ -13,10 +13,13 @@ Three colours, because the toggle says there are three states worth telling apar
   AMBER  the liar state: not armed, but a hook is missing from settings.json, so
          nothing is checked and the switch says it is on.
 
-Left-click flips it. The icon is a balance-beam: the argument weighed against its
-warrant. `pystray` and `Pillow` arrive via the `tray` extra -- the checker itself stays
-stdlib. Run headless with `pythonw -m craft.account_tray`; a second launch bows out
-rather than stacking icons.
+Left-click flips it. The icon is a filled badge with a state glyph - check for ON,
+dash for OFF, exclamation for the liar state - because at 16 tray pixels a drawing
+with thin strokes turns to fog; colour and glyph carry the state redundantly, so it
+still reads without colour. Drawn at 256px and downscaled once with Lanczos, edge to
+edge, no ornament. `pystray` and `Pillow` arrive via the `tray` extra -- the checker
+itself stays stdlib. Run headless with `pythonw -m craft.account_tray`; a second
+launch bows out rather than stacking icons.
 """
 
 from __future__ import annotations
@@ -50,18 +53,35 @@ def colour(s: dict) -> str:
     return {"green": GREEN, "grey": GREY, "amber": AMBER}[s["colour"]]
 
 
-def image(fill: str) -> Image.Image:
-    """A balance beam: the claim on one side, its warrant on the other. Drawn rather
-    than shipped -- an asset file is one more thing to install."""
-    size = 64
-    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+def image(fill: str, glyph: str = "check") -> Image.Image:
+    """A filled rounded badge with a bold white glyph, drawn at 256px and downscaled
+    once - thin strokes on a transparent ground are what made the old balance-beam
+    blurry mush at tray size. Drawn rather than shipped: an asset file is one more
+    thing to install."""
+    S = 256
+    img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    d.line((10, 22, 54, 22), fill=fill, width=5)        # the beam
-    d.line((32, 22, 32, 50), fill=fill, width=5)        # the column
-    d.line((18, 50, 46, 50), fill=fill, width=5)        # the base
-    d.ellipse((4, 26, 20, 42), outline=fill, width=4)   # left pan
-    d.ellipse((44, 26, 60, 42), outline=fill, width=4)  # right pan
-    return img
+    d.rounded_rectangle((6, 6, S - 6, S - 6), radius=58, fill=fill)
+    w = 34                                       # glyph stroke width
+    white = "#ffffff"
+    if glyph == "check":
+        d.line((60, 136, 110, 186), fill=white, width=w)
+        d.line((110, 186, 200, 78), fill=white, width=w)
+        d.ellipse((60 - w // 2, 136 - w // 2, 60 + w // 2, 136 + w // 2), fill=white)
+        d.ellipse((110 - w // 2, 186 - w // 2, 110 + w // 2, 186 + w // 2), fill=white)
+        d.ellipse((200 - w // 2, 78 - w // 2, 200 + w // 2, 78 + w // 2), fill=white)
+    elif glyph == "dash":
+        d.rounded_rectangle((62, 128 - w // 2, 194, 128 + w // 2), radius=w // 2,
+                            fill=white)
+    else:                                        # "bang" - the liar state
+        d.rounded_rectangle((128 - w // 2, 52, 128 + w // 2, 158), radius=w // 2,
+                            fill=white)
+        d.ellipse((128 - w // 2 - 2, 176, 128 + w // 2 + 2, 176 + w + 4), fill=white)
+    return img.resize((64, 64), Image.LANCZOS)
+
+
+def glyph_for(s: dict) -> str:
+    return {"green": "check", "grey": "dash", "amber": "bang"}[s["colour"]]
 
 
 def title(s: dict) -> str:
@@ -75,7 +95,7 @@ def title(s: dict) -> str:
 
 def refresh(icon: pystray.Icon) -> None:
     s = account_toggle.state()
-    icon.icon = image(colour(s))
+    icon.icon = image(colour(s), glyph_for(s))
     icon.title = title(s)
 
 
@@ -101,7 +121,8 @@ def main() -> int:
         print("a craft.account tray icon is already running")
         return 0
     s = account_toggle.state()
-    icon = pystray.Icon("craft-account", image(colour(s)), title(s), menu=pystray.Menu(
+    icon = pystray.Icon("craft-account", image(colour(s), glyph_for(s)), title(s),
+                        menu=pystray.Menu(
         pystray.MenuItem("Turn checking on/off", flip, default=True),
         pystray.MenuItem("Status", lambda *_: print(account_toggle.render(
             account_toggle.state()))),

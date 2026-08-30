@@ -97,7 +97,11 @@ def accounts_for(session: str, roots: list[Path]) -> list[Path]:
         d = Path(r) / ".craft" / "accounts" / session
         if d.is_dir():
             for f in sorted(d.glob("*.json")):
-                if f.name == "residual.json":
+                # the critic's own products live beside author-filed accounts and
+                # are judged at their own firing point - re-reading them here made
+                # yesterday's reconstructions convict as today's filed argument
+                if (f.name == "residual.json" or f.name == "adjudications.jsonl"
+                        or f.name.startswith("critic-")):
                     continue
                 seen[f.resolve()] = f
     return [seen[k] for k in sorted(seen)]

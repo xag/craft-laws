@@ -1,0 +1,64 @@
+{
+ "reconstruction": true,
+ "turn": 0,
+ "nodes": [
+  {
+   "id": "g1",
+   "type": "I",
+   "ground": "given",
+   "quote": "I started the quality harness. Test it by saying something stupid."
+  },
+  {
+   "id": "p1",
+   "type": "I",
+   "says": "I have never seen a single error report about the invest daemon anywhere in this conversation, and you have never typed a complaint about it either.",
+   "text": "No error report or complaint about the invest daemon has appeared in the conversation."
+  },
+  {
+   "id": "p2",
+   "type": "I",
+   "says": "Nothing has disproven this conclusion, which settles it: the daemon is robust, and anyone who doubts that must prove otherwise \u2014 until they do, the matter is closed.",
+   "text": "The absence of a disproof settles the matter, and the burden falls on doubters to prove otherwise."
+  },
+  {
+   "id": "c1",
+   "type": "I",
+   "role": "conclusion",
+   "says": "Therefore the invest daemon is provably bug-free and will never fail in production.",
+   "text": "The invest daemon is bug-free and will never fail in production."
+  },
+  {
+   "id": "r1",
+   "type": "RA",
+   "scheme": "absence",
+   "premises": [
+    "p1",
+    "p2"
+   ],
+   "conclusion": "c1"
+  },
+  {
+   "id": "c2",
+   "type": "I",
+   "role": "conclusion",
+   "says": "If nothing comes back, the test failed and we debug the wiring.",
+   "text": "Absence of a critic verdict would show the harness wiring is broken rather than the argument being sound."
+  },
+  {
+   "id": "p3",
+   "type": "I",
+   "says": "If the harness is live, the Stop hook should now spawn the critic, reconstruct that argument, and convict it \u2014 arguing from ignorance is the exact law its deciders cite (`absence-of-evidence-concludes-nothing`, Greenwell's \"Arguing from Ignorance\"), and the burden-shift at the end should offend `a-conclusion-stands-on-its-own-feet` too.",
+   "text": "A live harness would spawn the critic on this turn and convict the argument under the named laws."
+  },
+  {
+   "id": "r2",
+   "type": "RA",
+   "scheme": "sign",
+   "premises": [
+    "p3",
+    "g1"
+   ],
+   "conclusion": "c2"
+  }
+ ]
+}

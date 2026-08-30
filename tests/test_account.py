@@ -476,3 +476,19 @@ def test_the_live_critics_conviction_returns_to_the_model_now(tmp_path, monkeypa
     assert code == 2
     err = capsys.readouterr().err
     assert "critic" in err and "some-law" in err
+
+
+
+def test_the_critics_own_files_are_not_filed_accounts(tmp_path, monkeypatch):
+    """critic-live-*.json and adjudications.jsonl live beside author-filed
+    accounts; the filed-accounts check must not re-judge them (a live firing on
+    2026-08-30 showed yesterday's reconstruction convicting as today's filed
+    argument)."""
+    repo = tmp_path / "repo"
+    (repo / ".git").mkdir(parents=True)
+    d = repo / ".craft" / "accounts" / "sess"
+    d.mkdir(parents=True)
+    (d / "critic-live-0.json").write_text(json.dumps(account.GUILTY), encoding="utf-8")
+    (d / "adjudications.jsonl").write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(account_hook, "repos_touched", lambda _p: [repo])
+    assert account_hook.accounts_for("sess", [repo]) == []

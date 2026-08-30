@@ -14,9 +14,13 @@ uv.lock
 # The hooks record every judged turn here (craft.flight); same doctrine.
 .craft/flight/
 
-# Findings and the once-per-report marker: evidence about a run, not source.
+# Findings and the once-per-report markers: evidence about runs, not source. The
+# seen-state advances on every turn of every session, so tracking it means a tree
+# that is dirty whenever the hooks are alive.
 .craft/seen.json
 .craft/answers.jsonl
+.craft/accounts-seen.json
+.craft/residual-seen.json
 
 # Convicted turns' false-positive reports, appended live by any session (craft.disputes);
 # tracked state that every hook run dirties is state nobody can commit around.

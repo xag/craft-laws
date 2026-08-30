@@ -53,34 +53,45 @@ def colour(s: dict) -> str:
     return {"green": GREEN, "grey": GREY, "amber": AMBER}[s["colour"]]
 
 
-def image(fill: str, glyph: str = "balanced") -> Image.Image:
-    """Bold filled scales on a coloured badge - the argument weighed against its
-    warrant, the identity this icon always had, drawn to survive 16 tray pixels:
-    thick white shapes, no thin outlines. The amber liar state tilts the beam -
-    unbalanced scales, and a silhouette a colour-blind eye can still tell apart.
-    Drawn at 256px, downscaled once with Lanczos."""
+def image(fill: str, glyph: str = "on") -> Image.Image:
+    """The section sign on a state badge. The checker's whole job is citing laws,
+    and the sign a law is cited by is the mark - a letterform, because at 16 tray
+    pixels a letter survives where every pictogram tried here turned into
+    something else (a to-do check, an eye, a mask). State is carried twice:
+    colour, and solid-versus-hollow (a drained outline is off). Georgia bold for
+    a jurisprudential serif; Segoe UI bold is the fallback when Georgia is not
+    installed. Drawn at 256px, downscaled once with Lanczos."""
+    from PIL import ImageFont
     S = 256
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    d.rounded_rectangle((6, 6, S - 6, S - 6), radius=58, fill=fill)
-    white = "#ffffff"
-    d.rounded_rectangle((115, 56, 141, 200), radius=13, fill=white)     # column
-    d.rounded_rectangle((72, 196, 184, 224), radius=13, fill=white)     # base
-    if glyph == "tilted":
-        d.line((46, 104, 210, 54), fill=white, width=26)                # beam, askew
-        for cx, cy in ((46, 104), (210, 54)):
-            d.ellipse((cx - 13, cy - 13, cx + 13, cy + 13), fill=white)
-        d.pieslice((28, 112, 104, 188), 0, 180, fill=white)             # low pan
-        d.pieslice((152, 62, 228, 138), 0, 180, fill=white)             # high pan
+    hollow = glyph == "off"
+    if hollow:
+        d.rounded_rectangle((10, 10, S - 10, S - 10), radius=54, outline=fill,
+                            width=18)
+        glyph_col = fill
     else:
-        d.rounded_rectangle((36, 58, 220, 84), radius=13, fill=white)   # beam
-        d.pieslice((30, 92, 106, 168), 0, 180, fill=white)              # left pan
-        d.pieslice((150, 92, 226, 168), 0, 180, fill=white)             # right pan
+        d.rounded_rectangle((6, 6, S - 6, S - 6), radius=58, fill=fill)
+        glyph_col = "#ffffff"
+    font = None
+    for path in (r"C:\Windows\Fonts\georgiab.ttf",
+                 r"C:\Windows\Fonts\segoeuib.ttf"):
+        try:
+            font = ImageFont.truetype(path, 185)
+            break
+        except OSError:
+            continue
+    if font is None:                    # no known font: the badge alone carries state
+        return img.resize((64, 64), Image.LANCZOS)
+    bb = d.textbbox((0, 0), "§", font=font)
+    w, h = bb[2] - bb[0], bb[3] - bb[1]
+    d.text(((S - w) / 2 - bb[0], (S - h) / 2 - bb[1]), "§", font=font,
+           fill=glyph_col)
     return img.resize((64, 64), Image.LANCZOS)
 
 
 def glyph_for(s: dict) -> str:
-    return {"green": "balanced", "grey": "balanced", "amber": "tilted"}[s["colour"]]
+    return {"green": "on", "grey": "off", "amber": "liar"}[s["colour"]]
 
 
 def title(s: dict) -> str:

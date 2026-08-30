@@ -1282,7 +1282,7 @@ PRACTICE = [
         _cited("MAST FM-3.3, incorrect verification; the mechanized form of the "
                "hypothesis a-defect-in-what-a-check-reads-is-invisible-to-that-check"),
         falsifier="A check reports a pass (or 'no findings') while the number of units "
-                  "its reduction actually handed to its deciders was zero, or is "
+                  "its reduction actually handed to its rules was zero, or is "
                   "absent from the report. Countable: the units read, printed beside "
                   "the verdict, against zero.",
         triggers=["a check reports a pass or no findings",

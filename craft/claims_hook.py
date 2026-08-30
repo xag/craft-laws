@@ -179,6 +179,17 @@ def run(payload: dict) -> int:
         return 0
     from .claims import ClaimFinding, check_file
     findings = [f for claims in touched(Path(path)) for f in check_file(claims)]
+    # the consult gate, at the moment the claim can still be edited. CI was the only
+    # place it ran, and CI red on anything else meant it never ran at all - a gate
+    # behind a wall gates nothing. A repo whose ledger module this environment cannot
+    # import is skipped in silence; its own CI still holds it.
+    from .consulted import check_file as consult_file
+    for claims_path in touched(Path(path)):
+        try:
+            findings.extend(ClaimFinding(law=f.check, where=f.where, quote="", why=f.why)
+                            for f in (consult_file(claims_path) or []))
+        except Exception:
+            pass
     silent = silent_repos(Path(path))
     # the silence rides the same once-per-content throttle as the findings: a
     # repo the author was told about, and chose to leave silent, is not nagged —

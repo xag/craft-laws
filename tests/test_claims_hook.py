@@ -127,3 +127,25 @@ def test_a_repo_without_a_record_is_not_nagged_about_one(tmp_path):
     (repo / ".git").mkdir(parents=True)
     t = _transcript_with(tmp_path, [_tool({"file_path": str(repo / "src.py")})])
     assert hook.silent_repos(t) == []
+
+
+def test_the_consult_gate_reaches_the_author_at_the_stop(tmp_path, monkeypatch, capsys):
+    """The gate ran only in CI, and CI red on anything else meant it never ran at
+    all. Now an unconsulted work claim comes back through the same Stop handback as
+    every other finding - while the claim can still be edited."""
+    repo = tmp_path / "adopted"
+    (repo / ".git").mkdir(parents=True)
+    (repo / ".craft").mkdir()
+    (repo / ".craft" / "ledger.json").write_text(
+        json.dumps({"module": "tests.fake_ledger", "since": 0}), encoding="utf-8")
+    (repo / "claims.jsonl").write_text(json.dumps(
+        {"kind": "done", "text": "walked in",
+         "evidence": [{"where": "user-surface", "what": "seen at the door"}]}) + "\n",
+        encoding="utf-8")
+    (repo / "src").mkdir()
+    t = _transcript(tmp_path, repo / "src" / "a.py")
+    monkeypatch.setattr(hook, "_SEEN", tmp_path / "seen.json")
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1]))
+    rc = hook.run({"transcript_path": str(t), "session_id": "s"})
+    assert rc == 2
+    assert "unconsulted" in capsys.readouterr().err

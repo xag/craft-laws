@@ -261,6 +261,26 @@ def user_prompt_submit(payload: dict) -> int:
     return 0
 
 
+def _conviction_contract(session: str) -> str:
+    """The tail of every conviction handed back: fix it or dispute it, and either
+    way the USER HEARS NOTHING. A conviction is between the author and the record.
+    The turns that argued back in the reply proved the failure mode this closes:
+    the person reads a rebuttal of a message they never saw, which is pure noise --
+    and the rebuttal itself evaporates with the transcript, measuring nothing. The
+    dispute file is the channel that persists: false positives filed there are what
+    the checker's own defect rate is computed from (a critique reconstructs from a
+    bounded excerpt, and may itself be at fault)."""
+    return ("If a finding is right, correct the reply. If it is a false positive, "
+            "file that as data and move on:\n"
+            f"  uv run --no-sync --directory {_ROOT.as_posix()} python -m "
+            f"craft.disputes --law <law> --where \"<where>\" "
+            f"--why \"<one line>\" --session {session or '<session-id>'}\n"
+            "Do NOT re-run searches or re-verify work the record already shows. "
+            "And say NOTHING about any of this in your reply - not the conviction, "
+            "not the dispute, not a defense. The user never saw the conviction; "
+            "to them every word about it is noise.")
+
+
 def _live_critic(session: str, tpath) -> int:
     """The critic in the turn it criticizes (the owner's 2026-08-30 correction of
     the session-end design: a critique nobody reads is waste). Tray-gated by the
@@ -278,15 +298,10 @@ def _live_critic(session: str, tpath) -> int:
     if not fresh:
         return 0
     print("the critic reconstructed this turn's argument and the deciders "
-          "convicted it. Each line names a law with a published root; correct "
-          "the reply, or state why it stands. Nothing is refused.\n  "
+          "convicted it. Each line names a law with a published root. "
+          "Nothing is refused.\n  "
           + "\n  ".join(fresh)
-          + "\nStating why it stands takes one short paragraph pointing at the "
-            "record (which turn, which output). Do NOT re-run searches or "
-            "re-verify work the record already shows - re-deriving settled "
-            "evidence is the wrong response to a conviction, and the critique "
-            "may itself be at fault: it reconstructs from a bounded excerpt.",
-          file=sys.stderr)
+          + "\n" + _conviction_contract(session), file=sys.stderr)
     return 2
 
 
@@ -353,8 +368,7 @@ def stop(payload: dict) -> int:
     if not fresh:
         return _live_critic(session, tpath)
     lines = [f"{len(fresh)} finding(s) in this turn's argument. Each names a law "
-             "with a published root; fix the argument or the account and finish. "
-             "Nothing is refused."]
+             "with a published root. Nothing is refused."]
     for acc, f in fresh:
         lines.append(f"  {f.law}  ({acc} {f.where})")
         if f.quote:
@@ -364,7 +378,8 @@ def stop(payload: dict) -> int:
         # standing convictions are counted, never re-listed: still true, already said
         lines.append(f"  ({carried} earlier finding(s) still standing, reported once "
                      "when they appeared)")
-    print("\n".join(lines) + summary, file=sys.stderr)
+    print("\n".join(lines) + summary + "\n" + _conviction_contract(session),
+          file=sys.stderr)
     return 2
 
 

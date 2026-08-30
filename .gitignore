@@ -17,3 +17,7 @@ uv.lock
 # Findings and the once-per-report marker: evidence about a run, not source.
 .craft/seen.json
 .craft/answers.jsonl
+
+# Convicted turns' false-positive reports, appended live by any session (craft.disputes);
+# tracked state that every hook run dirties is state nobody can commit around.
+.craft/disputes.jsonl

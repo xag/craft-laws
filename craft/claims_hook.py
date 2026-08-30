@@ -134,13 +134,25 @@ def _already_reported(findings) -> bool:
     return False
 
 
-def report(findings) -> str:
+def report(findings, session: str = "") -> str:
     lines = [f"{len(findings)} claim(s) recorded this turn break a practice law. Each law "
-             "carries a falsifier; fix the claim or the work and finish. Nothing is refused."]
+             "carries a falsifier. Nothing is refused."]
     for f in findings:
         lines.append(f"  {f.law}  ({f.where})")
         lines.append(f"    {f.quote[:150]}")
         lines.append(f"    why: {f.why}")
+    # fix it or dispute it, and either way the user hears nothing: a conviction is
+    # between the author and the record, and a rebuttal in the reply is noise to a
+    # person who never saw the charge (the account hook says this at length)
+    lines.append(
+        "If a finding is right, fix the claim or the work. If it is a false "
+        "positive, file that as data and move on:\n"
+        f"  uv run --no-sync --directory {_ROOT.as_posix()} python -m "
+        f"craft.disputes --law <law> --where \"<where>\" --why \"<one line>\" "
+        f"--session {session or '<session-id>'}\n"
+        "Say NOTHING about any of this in your reply - not the conviction, not "
+        "the dispute, not a defense. The user never saw the conviction; to them "
+        "every word about it is noise.")
     return "\n".join(lines)
 
 
@@ -177,7 +189,7 @@ def run(payload: dict) -> int:
         if not _already_reported(marker):
             notes.append(_silence_note(silent))
     if findings and not _already_reported(findings):
-        notes.insert(0, report(findings))
+        notes.insert(0, report(findings, str(payload.get("session_id") or "")))
     if not notes:
         return 0
     print("\n\n".join(notes), file=sys.stderr)

@@ -57,14 +57,14 @@ def image(state: str = "on") -> Image.Image:
     modest halo, so the sign stays recognizable under it (the wide first cut
     hid what the icon was). Amber ink is the one use of colour, reserved for
     the liar state. Drawn at 256px, downscaled once with Lanczos."""
-    from PIL import ImageChops, ImageFilter, ImageFont
+    from PIL import ImageChops, ImageFont
     S = 256
     colour = WARN if state == "liar" else INK
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     font = None
-    for path in ("C:/Windows/Fonts/seguibl.ttf", "C:/Windows/Fonts/segoeuib.ttf",
-                 "C:/Windows/Fonts/georgiab.ttf"):
+    for path in ("C:/Windows/Fonts/seguisb.ttf", "C:/Windows/Fonts/segoeui.ttf",
+                 "C:/Windows/Fonts/georgia.ttf"):
         try:
             font = ImageFont.truetype(path, 250)
             break
@@ -75,9 +75,6 @@ def image(state: str = "on") -> Image.Image:
         w, h = bb[2] - bb[0], bb[3] - bb[1]
         d.text(((S - w) / 2 - bb[0], (S - h) / 2 - bb[1]), "§", font=font,
                fill=colour)
-        a = img.getchannel("A").filter(ImageFilter.MaxFilter(11))
-        solid = Image.new("RGBA", (S, S), colour)
-        img = Image.composite(solid, Image.new("RGBA", (S, S), (0, 0, 0, 0)), a)
     else:                       # no font: a plain square keeps the state visible
         d.rounded_rectangle((48, 48, 208, 208), radius=40, fill=colour)
     if state == "off":

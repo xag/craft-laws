@@ -89,6 +89,46 @@ def test_the_tape_replays_the_turn_without_touching_the_world(tmp_path, monkeypa
     assert (tmp_path / "seen.json").read_text(encoding="utf-8") == seen_after_record
 
 
+def _tape(d: Path, name: str, size: int, mtime: float) -> Path:
+    p = d / name
+    p.write_bytes(b"x" * size)
+    import os
+    os.utime(p, (mtime, mtime))
+    return p
+
+
+def test_the_pile_is_rolled_oldest_first_to_its_budget(tmp_path):
+    d = tmp_path / "flight"
+    d.mkdir()
+    mb = 1024 * 1024
+    old = _tape(d, "flight-20260101-000000-1.jsonl", 2 * mb, 1_000_000)
+    mid = _tape(d, "flight-20260102-000000-2.jsonl", 2 * mb, 2_000_000)
+    new = _tape(d, "flight-20260103-000000-3.jsonl", 2 * mb, 3_000_000)
+    side = d / "flight-20260101-000000-1.call1.inflight"
+    side.write_bytes(b"y")
+
+    flight.roll(d, budget_mb=5)       # 6MB of tapes, 5MB of budget
+    assert not old.exists() and mid.exists() and new.exists()
+    assert not side.exists()          # the dead tape's sidecar goes with it
+
+    # a budget under one tape's size must not empty the directory: the newest is
+    # never swept, because it is the one a concurrent hook process may be writing
+    flight.roll(d, budget_mb=1)
+    assert not mid.exists() and new.exists()
+
+
+def test_a_pile_inside_its_budget_is_left_alone(tmp_path):
+    d = tmp_path / "flight"
+    d.mkdir()
+    keep = _tape(d, "flight-20260101-000000-1.jsonl", 1024, 1_000_000)
+    flight.roll(d, budget_mb=100)
+    assert keep.exists()
+
+
+def test_rolling_a_directory_that_does_not_exist_is_silent(tmp_path):
+    flight.roll(tmp_path / "never-created", budget_mb=1)    # must not raise
+
+
 def test_an_account_turn_records_its_tape_too(tmp_path, monkeypatch, capsys):
     from flight_recorder import install, session_path, uninstall
 

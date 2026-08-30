@@ -17,6 +17,9 @@ The tape carries transcript excerpts and command output, which is exactly what t
 transcripts already carry, in the same directory tree, under the same user. The one
 thing recorded here that the transcript does not hold is subprocess environments --
 masked by name (`env`), because an environment block is where credentials live.
+
+The pile is BOUNDED (see `roll`): a directory nothing prunes is one that surprises
+somebody months later, and a tape's worth decays with the run that made it.
 """
 
 from __future__ import annotations
@@ -93,6 +96,59 @@ def working_dir() -> str:
     return os.getcwd()
 
 
+# The pile's ceiling, in megabytes, overridable with CRAFT_FLIGHT_MB. A BYTE budget
+# rather than an age or a count: a tape runs from 90KB to 1.5MB depending on the
+# transcript it carries, so only bytes give a ceiling anyone can predict.
+BUDGET_MB = 100
+
+
+def roll(directory, budget_mb: int | None = None) -> None:
+    """Delete the oldest tapes until the pile fits its budget.
+
+    A SWEEP DELETES EVIDENCE, and that is the trade rather than an oversight: a tape
+    is the only replayable record of a verdict, and what outlives it is the verdict
+    itself (seen.json, critique.md) and not the run that produced it. Said here so
+    the loss is read before it is met.
+
+    Runs before this process opens its own tape, so it can never delete the file
+    about to be written; oldest-first, so a tape another hook process is writing at
+    this moment -- the newest -- is the last thing at risk. Every failure is silent
+    and partial progress is kept: a sweep that cannot delete one file goes on to the
+    next, because a recorder whose cleanup raises breaks the hook it instruments.
+    """
+    d = Path(directory)
+    if budget_mb is None:
+        try:
+            budget_mb = int(os.environ.get("CRAFT_FLIGHT_MB", BUDGET_MB))
+        except ValueError:
+            budget_mb = BUDGET_MB
+    budget = max(0, budget_mb) * 1024 * 1024
+    try:
+        tapes = sorted(d.glob("flight-*.jsonl"), key=lambda p: p.stat().st_mtime)
+        total = sum(p.stat().st_size for p in tapes)
+    except OSError:
+        return
+    # never the newest, whatever the budget says. A budget smaller than one tape would
+    # otherwise empty the directory -- and the newest file is the one a concurrent hook
+    # process is most likely writing right now, which a sweep must not touch. An
+    # over-budget survivor is a better answer than a corrupted live recording.
+    for tape in tapes[:-1]:
+        if total <= budget:
+            return
+        try:
+            size = tape.stat().st_size
+            tape.unlink()
+        except OSError:
+            continue        # locked or already gone; the next one still counts
+        total -= size
+        # the call sidecars are fragments of the run that just went: they die with it
+        for side in d.glob(tape.stem + ".call*.inflight"):
+            try:
+                side.unlink()
+            except OSError:
+                pass
+
+
 def boundary(hook_name: str):
     from flight_recorder import Boundary
 
@@ -118,7 +174,8 @@ def record(tools_module, hook_name: str) -> None:
         from flight_recorder import install
 
         root = Path(__file__).resolve().parents[1]
-        install(boundary(hook_name), tools_module,
-                directory=str(root / ".craft" / "flight"))
+        directory = root / ".craft" / "flight"
+        roll(directory)
+        install(boundary(hook_name), tools_module, directory=str(directory))
     except Exception:
         pass

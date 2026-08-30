@@ -275,7 +275,13 @@ def _live_critic(session: str, tpath) -> int:
     print("the critic reconstructed this turn's argument and the deciders "
           "convicted it. Each line names a law with a published root; correct "
           "the reply, or state why it stands. Nothing is refused.\n  "
-          + "\n  ".join(fresh), file=sys.stderr)
+          + "\n  ".join(fresh)
+          + "\nStating why it stands takes one short paragraph pointing at the "
+            "record (which turn, which output). Do NOT re-run searches or "
+            "re-verify work the record already shows - re-deriving settled "
+            "evidence is the wrong response to a conviction, and the critique "
+            "may itself be at fault: it reconstructs from a bounded excerpt.",
+          file=sys.stderr)
     return 2
 
 

@@ -33,18 +33,37 @@ import os
 from pathlib import Path
 
 MAX_TURN_CHARS = 1500      # each side of a turn is clipped to this (whole-session)
+MAX_TOOL_CHARS = 2000      # per-turn tool-result excerpt (whole-session)
 LIVE_TURN_CHARS = 6000     # the live critic sees the last turn nearly whole
+LIVE_TOOL_CHARS = 8000     # and a wide excerpt of its tool results
 MIN_REPLY_CHARS = 200      # below this a reply is an acknowledgement, not an argument
 MAX_DIGEST_CHARS = 40_000  # the whole digest is clipped to this
 CRITIC_DIR_NOTE = "critic"  # accounts written as critic-<n>.json
 
 
-def digest(transcript: Path, max_turn_chars: int = MAX_TURN_CHARS) -> list[dict]:
-    """(user, reply) pairs for the session's turns, bounded. Tool traffic is left
-    out on purpose: the deciders re-anchor quotes against the full corpus later,
-    so the critic needs the dialogue, not the record."""
+def digest(transcript: Path, max_turn_chars: int = MAX_TURN_CHARS,
+           max_tool_chars: int = MAX_TOOL_CHARS) -> list[dict]:
+    """One dict per turn: the user's words, an excerpt of the turn's tool results,
+    and the reply (all assistant text until the next user message, merged).
+
+    The tool excerpt exists because its absence manufactured convictions: the
+    critic was forbidden to invent quotes for tool output it could not see, while
+    the absence law demands a grounded search - so every true nothing-was-found
+    conclusion convicted, deterministically (seen live 2026-08-30). The excerpt
+    keeps the tail of the turn's tool text, where the searches a reply cites
+    usually sit; quotes copied from it anchor against the full corpus."""
     pairs: list[dict] = []
-    user_text = None
+    cur: dict | None = None
+
+    def close():
+        nonlocal cur
+        if cur and cur["reply"]:
+            pairs.append({
+                "user": cur["user"][:max_turn_chars],
+                "tools": "\n".join(cur["tools"])[-max_tool_chars:],
+                "reply": "\n".join(cur["reply"]).strip()[:max_turn_chars]})
+        cur = None
+
     try:
         lines = transcript.read_text(encoding="utf-8", errors="replace").splitlines()
     except OSError:
@@ -57,28 +76,40 @@ def digest(transcript: Path, max_turn_chars: int = MAX_TURN_CHARS) -> list[dict]
         if rec.get("type") == "user":
             c = (rec.get("message") or {}).get("content")
             if isinstance(c, str) and c.strip():
-                user_text = c
-        elif rec.get("type") == "assistant":
+                close()
+                cur = {"user": c, "tools": [], "reply": []}
+            elif isinstance(c, list) and cur is not None:
+                for b in c:
+                    if not (isinstance(b, dict) and b.get("type") == "tool_result"):
+                        continue
+                    cc = b.get("content")
+                    if isinstance(cc, str):
+                        cur["tools"].append(cc)
+                    elif isinstance(cc, list):
+                        cur["tools"].append(" ".join(
+                            str(x.get("text", "")) for x in cc if isinstance(x, dict)))
+        elif rec.get("type") == "assistant" and cur is not None:
             parts = [b.get("text", "") for b in (rec.get("message") or {}).get("content") or []
                      if isinstance(b, dict) and b.get("type") == "text"]
-            reply = "\n".join(p for p in parts if p).strip()
-            if reply:
-                pairs.append({"user": (user_text or "")[:max_turn_chars],
-                              "reply": reply[:max_turn_chars]})
-                user_text = None
+            joined = "\n".join(x for x in parts if x).strip()
+            if joined:
+                cur["reply"].append(joined)
+    close()
     total = 0
     kept = []
-    for p in reversed(pairs):           # newest turns are kept when space runs out
-        total += len(p["user"]) + len(p["reply"])
+    for pr in reversed(pairs):          # newest turns are kept when space runs out
+        total += len(pr["user"]) + len(pr["reply"]) + len(pr["tools"])
         if total > MAX_DIGEST_CHARS:
             break
-        kept.append(p)
+        kept.append(pr)
     return list(reversed(kept))
 
 
 def critic_prompt(pairs: list[dict]) -> str:
     turns = "\n\n".join(
-        f"TURN {i}:\nUSER: {p['user']}\nREPLY: {p['reply']}"
+        f"TURN {i}:\nUSER: {p['user']}\n"
+        f"TOOLS (excerpt of this turn's tool results): {p.get('tools') or '(none)'}\n"
+        f"REPLY: {p['reply']}"
         for i, p in enumerate(pairs))
     return (
         "You are a critic reconstructing the arguments of a finished assistant "
@@ -95,11 +126,14 @@ def critic_prompt(pairs: list[dict]) -> str:
         '"verified-source|sign|example|authority|absence", "premises": ["g1"], '
         '"conclusion": "c1"}]}\n'
         "Rules: every `says` and every `quote` must be copied verbatim from the "
-        "turn shown; do not invent premises the reply does not state; if the "
-        "reply cites tool output you cannot see, write the premise as an I node "
-        "WITHOUT a ground or quote (an unanchored premise is honest; a fabricated "
-        "quote is not). Mark every account {\"reconstruction\": true}. Answer "
-        "with a JSON array of these account objects and nothing else.\n\n"
+        "turn shown; do not invent premises the reply does not state. When the "
+        "reply rests on tool output - a search, a listing, a test run - ground "
+        "that premise {\"ground\": \"producer\"} and copy its quote verbatim "
+        "from the TOOLS excerpt; only when the needed output is absent from the "
+        "excerpt write the premise WITHOUT a ground or quote (an unanchored "
+        "premise is honest; a fabricated quote is not). Mark every account "
+        "{\"reconstruction\": true}. Answer with a JSON array of these account "
+        "objects and nothing else.\n\n"
         + turns)
 
 
@@ -176,7 +210,8 @@ def criticize_turn(transcript: Path, session: str, out_dir: Path,
     from .record import read
 
     runner = runner or cli_runner
-    pairs = digest(transcript, max_turn_chars=LIVE_TURN_CHARS)
+    pairs = digest(transcript, max_turn_chars=LIVE_TURN_CHARS,
+                   max_tool_chars=LIVE_TOOL_CHARS)
     if not pairs:
         return []
     last = pairs[-1]

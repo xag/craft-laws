@@ -111,3 +111,41 @@ def test_a_clean_live_turn_returns_nothing(tmp_path):
              "conclusion": "c1"}]}])
 
     assert critic.criticize_turn(t, "s", tmp_path / "acc", runner=runner) == []
+
+
+def test_tool_results_reach_the_digest_and_the_prompt(tmp_path):
+    """The tool excerpt exists so a true nothing-was-found conclusion can ground
+    its search: without it the anti-fabrication rule and the absence law made
+    such convictions deterministic (seen live 2026-08-30)."""
+    lines = [
+        json.dumps({"type": "user", "message": {"content": "is there any pnl code?"}}),
+        json.dumps({"type": "assistant", "message": {"content": [
+            {"type": "tool_use", "id": "t1", "name": "Bash", "input": {}}]}}),
+        json.dumps({"type": "user", "message": {"content": [
+            {"type": "tool_result", "tool_use_id": "t1",
+             "content": "grep -rn pnl: no matches in 41 files"}]}}),
+        json.dumps({"type": "assistant", "message": {"content": [
+            {"type": "text", "text": "No P&L code exists; the grep over all 41 "
+             "files found no matches, so the notebook cannot compute returns. " * 4}]}}),
+    ]
+    t = tmp_path / "t.jsonl"
+    t.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    pairs = critic.digest(t)
+    assert len(pairs) == 1
+    assert "no matches in 41 files" in pairs[0]["tools"]
+    assert "TOOLS (excerpt" in critic.critic_prompt(pairs)
+
+
+def test_a_turns_reply_is_all_its_assistant_text_merged(tmp_path):
+    lines = [
+        json.dumps({"type": "user", "message": {"content": "q"}}),
+        json.dumps({"type": "assistant", "message": {"content": [
+            {"type": "text", "text": "status note"}]}}),
+        json.dumps({"type": "assistant", "message": {"content": [
+            {"type": "text", "text": "the actual answer"}]}}),
+    ]
+    t = tmp_path / "t.jsonl"
+    t.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    pairs = critic.digest(t)
+    assert len(pairs) == 1
+    assert "status note" in pairs[0]["reply"] and "the actual answer" in pairs[0]["reply"]

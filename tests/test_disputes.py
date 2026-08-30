@@ -34,16 +34,32 @@ def test_the_cli_files_and_confirms(tmp_path, monkeypatch, capsys):
     assert (tmp_path / "disputes.jsonl").exists()
 
 
-def test_every_conviction_text_routes_rebuttal_to_the_ledger_not_the_user():
-    """The three promises of the contract: the dispute command is in the text, the
-    text forbids responding to the conviction in the conversation, and the visible
-    move it licenses is self-correction of what was said."""
+def test_the_command_every_conviction_text_carries_actually_files(tmp_path,
+                                                                  monkeypatch,
+                                                                  capsys):
+    """The mechanically checkable promise: the command a convicted model is told
+    to run must run. Extracted from the text as written, placeholders filled the
+    way a reader would fill them, argv split the way a shell would split it, and
+    driven through the real module: a record lands, carrying the session the text
+    embedded. What the surrounding prose persuades a model to do is not testable
+    by reading the prose, and this test deliberately does not try -- the filed
+    claim's gap names the live observation that will."""
+    import shlex
+
+    monkeypatch.setattr(disputes, "DISPUTES", tmp_path / "disputes.jsonl")
     claims_text = claims_hook.report(
         [ClaimFinding(law="l", where="claims.jsonl#1", quote="q", why="w")],
         session="sess-1")
     account_text = account_hook._conviction_contract("sess-1")
     for text in (claims_text, account_text):
-        assert "craft.disputes" in text and "--law" in text
-        assert "sess-1" in text
-        assert "Never RESPOND" in text and "noise" in text
-        assert "correct" in text and "caught" in text
+        line = next(x.strip() for x in text.splitlines()
+                    if "craft.disputes" in x)
+        line = (line.replace("<law>", "some-law")
+                    .replace("<where>", "acct.json r1")
+                    .replace("<one line>", "why it is false"))
+        argv = shlex.split(line)
+        assert disputes.main(argv[argv.index("craft.disputes") + 1:]) == 0
+    recs = [json.loads(x) for x in
+            (tmp_path / "disputes.jsonl").read_text(encoding="utf-8").splitlines()]
+    assert [r["session"] for r in recs] == ["sess-1", "sess-1"]
+    assert [r["where"] for r in recs] == ["acct.json r1", "acct.json r1"]

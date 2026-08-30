@@ -1,9 +1,9 @@
 """a-check-exhibits-what-it-read: the alarm pairs for its three firing points.
 
 Every decider faces a guilty case it must convict and a clean one it must not. The
-guilty cases here are reconstructions of the two founding sightings (2026-08-29): an
-account parsing to zero nodes read as all-pass, and the hook finding zero accounts
-and exiting silently.
+guilty case reconstructs the first founding sighting (2026-08-29): an account
+parsing to zero nodes read as all-pass. The hook's zero-accounts firing point
+retired with the silent-critic redesign (2026-08-30).
 """
 
 import json
@@ -36,20 +36,13 @@ def test_a_populated_account_is_not_convicted_by_the_exhibit_law(tmp_path):
     assert "a-check-exhibits-what-it-read" not in [f.law for f in findings]
 
 
-def test_the_hook_says_zero_accounts_once_per_session(tmp_path, monkeypatch, capsys):
-    # the transcript: one user line, no tool calls, so no roots are derived and no
-    # accounts exist anywhere for this invented session
-    transcript = tmp_path / "t.jsonl"
-    transcript.write_text(json.dumps(
-        {"type": "user", "message": {"content": "hello"}}) + "\n", encoding="utf-8")
-    monkeypatch.setattr(account_hook, "_SEEN", tmp_path / "seen.json")
-    monkeypatch.chdir(tmp_path)  # cwd holds no .craft/accounts/<session>
-    payload = {"session_id": "no-such-session-xyz", "transcript_path": str(transcript)}
-    assert account_hook.stop(payload) == 2
-    err = capsys.readouterr().err
-    assert "0 account(s) found" in err
-    # the second turn with the same zero is silent: said once, not nagged
-    assert account_hook.stop(payload) == 0
+def test_the_hook_is_silent_on_zero_accounts_since_the_critic_design():
+    """The zero-accounts line retired 2026-08-30 with the per-turn instruction:
+    nothing filed is the norm now, so a zero is not a dead instrument. The
+    exhibit law's hook firing point moved to the critic, whose own CLI prints
+    'nothing to say' rather than nothing. The other two firing points below
+    still hold."""
+    # behavior asserted in test_account.test_a_turn_that_files_nothing_is_silent
 
 
 def test_the_claims_cli_exhibits_its_units(tmp_path, capsys):

@@ -368,6 +368,61 @@ DECISIONS = [
                                  "rate is unmeasured"}),
         ],
     ),
+    Node(
+        id="the-critic-not-the-author-files-the-account",
+        kind="decision",
+        links={"rests_on": ["the-account-is-anchored-to-the-turns-record"]},
+        name="The responding agent sees no account instruction: a session-end critic "
+             "reconstructs the session's arguments and judges them, speaking only on "
+             "conviction",
+        payload={
+            "rationale":
+                "The inline design was measured against a full live session on "
+                "2026-08-30: the instruction was injected 31 times (~15k tokens of "
+                "identical text), 36 of 234 tool calls authored or repaired account "
+                "files before counting their commits, the injected register "
+                "contaminated the replies badly enough to need a standing style rule, "
+                "every live conviction was an error OF the inline formalization, and "
+                "the independent judge ruled 59 of 106 inline readings unsupported. "
+                "The one benefit the injection was built for - same-turn repair - "
+                "repaired paperwork, not answers. The critic design keeps everything "
+                "that worked (anchoring against the transcript, the deciders, the "
+                "adjudicator) and moves authorship to a fresh context at session end: "
+                "craft/critic.py digests the dialogue, reconstructs accounts marked "
+                "as reconstruction whose conclusions quote the reply's own sentences, "
+                "and writes critique.md only when a decider convicts.",
+            "consequence":
+                "user_prompt_submit prints nothing and the settings entry is removed; "
+                "SessionEnd spawns the critic with the account hook off; a turn with "
+                "no accounts is the norm, so the zero-accounts line retired. "
+                "Author-filed accounts remain first-class where an author chooses to "
+                "file - the Stop check still judges them.",
+        },
+        children=[
+            Node(id="the-measured-session", kind="grounds",
+                 name="One full session measured under the inline design",
+                 payload={"what": "31 injections, 36/234 tool calls on account "
+                                  "upkeep, a style rule forced into the owner's "
+                                  "global instructions, 13 live convictions all of "
+                                  "them formalization errors, 59/106 readings "
+                                  "unsupported by the independent judge.",
+                          "where": "producer",
+                          "gap": "One session, the same one that built the lane - "
+                                 "the overheads of a session NOT building the lane "
+                                 "it runs under are unmeasured and likely lower."}),
+            Node(id="alt-instruct-the-author-inline", kind="alternative",
+                 name="Keep injecting the instruction and filing during the turn",
+                 payload={"why": "The measured costs above, against a same-turn "
+                                 "repair benefit that fixed paperwork and never "
+                                 "answers."}),
+            Node(id="alt-no-account-lane", kind="alternative",
+                 name="Drop the lane entirely",
+                 payload={"why": "The anchoring checks caught seven real fidelity "
+                                 "failures in one session - the lane pays where it "
+                                 "is externally anchored, and the critic keeps "
+                                 "exactly that half at zero cost to the session."}),
+        ],
+    ),
 ]
 
 

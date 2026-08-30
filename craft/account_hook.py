@@ -243,7 +243,29 @@ def residual(reply: str, accounts: list) -> dict:
 
 
 def user_prompt_submit(payload: dict) -> int:
-    print(INSTRUCTION)
+    """Silent since 2026-08-30. The per-turn instruction measurably degraded the
+    graded session (style contamination, ~15k tokens and a quarter of tool calls
+    per session spent on inline formalization, every live conviction an error of
+    that formalization) while buying near-zero answer repair. The lane now runs
+    as the silent critic (craft/critic.py) at session end; INSTRUCTION is kept
+    for the critic's schema reference, injected nowhere."""
+    return 0
+
+
+def session_end(payload: dict) -> int:
+    """Spawn the critic over the finished session. Silent unless it convicts,
+    and the conviction lands in critique.md beside the reconstructed accounts,
+    never in anyone's context mid-work."""
+    from .critic import run
+    session = str(payload.get("session_id") or "")
+    tpath = payload.get("transcript_path")
+    if not session or not tpath:
+        return 0
+    out = Path.cwd() / ".craft" / "accounts" / session
+    try:
+        run(Path(tpath), session, out)
+    except Exception:
+        pass                    # a dead critic must never block a session's end
     return 0
 
 
@@ -257,21 +279,11 @@ def stop(payload: dict) -> int:
     roots = repos_touched(Path(tpath)) or [Path.cwd()]
     files = accounts_for(session, roots)
     if not files:
-        # a-check-exhibits-what-it-read: finding nothing is a fact the author can
-        # only use if it is said once. For a whole session on 2026-08-29 this path
-        # returned 0 silently while accounts sat in a directory the displaced cwd
-        # never covered, and the silence read as passes. Once per session, the
-        # zero is exhibited; after that, silence means the same zero.
-        key = "nothing:" + hashlib.sha256(
-            f"{session}|{[str(r) for r in roots]}".encode("utf-8", "replace")
-        ).hexdigest()
-        if not _already_reported(key):
-            print(f"account check: 0 account(s) found for this session "
-                  f"(searched {len(set(map(str, list(roots) + [str(_ROOT), str(Path.cwd())])))} root(s)) "
-                  "-- if this turn filed one, the search did not reach it; further "
-                  "silence this session means the same zero", file=sys.stderr)
-            return 2
-        return 0            # nothing filed: silence is information, not a conviction
+        # Nothing filed is the NORM since 2026-08-30: the author is no longer
+        # instructed to file, so a zero here is not a dead instrument, and the
+        # once-per-session zero-line (built when it was) retired with the
+        # instruction. The critic checks the session at its end instead.
+        return 0
     from .record import read
     corpus = read(Path(tpath))          # the record the grounds must quote
     # each finding is carried with the account it came from: two accounts can hold
@@ -346,7 +358,8 @@ def stop(payload: dict) -> int:
     return 2
 
 
-HANDLERS = {"UserPromptSubmit": user_prompt_submit, "Stop": stop}
+HANDLERS = {"UserPromptSubmit": user_prompt_submit, "Stop": stop,
+            "SessionEnd": session_end}
 
 
 def main() -> int:

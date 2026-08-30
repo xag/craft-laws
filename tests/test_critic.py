@@ -149,3 +149,32 @@ def test_a_turns_reply_is_all_its_assistant_text_merged(tmp_path):
     pairs = critic.digest(t)
     assert len(pairs) == 1
     assert "status note" in pairs[0]["reply"] and "the actual answer" in pairs[0]["reply"]
+
+
+def test_tool_results_join_with_a_seam_and_cut_at_boundaries():
+    joined = critic._join_tools(["alpha result", "beta result"], 100)
+    assert "--- next tool result ---" in joined
+    assert joined.startswith("alpha result") and joined.endswith("beta result")
+    cut = critic._join_tools(["x" * 90, "tail result"], 40)
+    assert cut == "tail result", "truncation drops whole results, never mid-result"
+
+
+def test_the_live_critic_judges_only_the_last_turn_with_context(tmp_path):
+    long = "This reply argues a conclusion at proper length for the critic. " * 8
+    t = _transcript(tmp_path, [("q1", long), ("q2", long), ("q3", long)])
+    seen = {}
+
+    def runner(prompt):
+        seen["turns"] = prompt.count("TURN ")
+        return json.dumps([
+            {"turn": 0, "nodes": [{"id": "c1", "type": "I", "role": "conclusion",
+                                   "text": "old"}]},
+            {"turn": 2, "nodes": [{"id": "c1", "type": "I", "role": "conclusion",
+                                   "text": "new"}]}])
+
+    out = tmp_path / "acc"
+    critic.criticize_turn(t, "s", out, runner=runner)
+    assert seen["turns"] == 3, "the judged turn arrives with two turns of context"
+    files = list(out.glob("critic-live-*.json"))
+    assert len(files) == 1, "context turns are shown, not re-judged"
+    assert json.loads(files[0].read_text(encoding="utf-8"))["turn"] == 2

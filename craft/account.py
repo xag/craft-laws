@@ -457,7 +457,7 @@ def check_grounds_are_anchored(a: Account, corpus=None) -> list[Finding]:
                     else "the user's messages")
             out.append(Finding("a-ground-is-a-quotation-from-the-record",
                                n.get("id", "?"), _q(n),
-                               f"the quote does not appear in {pool} for this turn: "
+                               f"the quote does not appear in {pool} anywhere in the session: "
                                f"ground {g!r} asserts words the record does not hold"))
     return out
 

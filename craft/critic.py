@@ -37,8 +37,25 @@ MAX_TOOL_CHARS = 2000      # per-turn tool-result excerpt (whole-session)
 LIVE_TURN_CHARS = 6000     # the live critic sees the last turn nearly whole
 LIVE_TOOL_CHARS = 8000     # and a wide excerpt of its tool results
 MIN_REPLY_CHARS = 200      # below this a reply is an acknowledgement, not an argument
+TOOL_SEAM = "\n--- next tool result ---\n"
 MAX_DIGEST_CHARS = 40_000  # the whole digest is clipped to this
 CRITIC_DIR_NOTE = "critic"  # accounts written as critic-<n>.json
+
+
+def _join_tools(tools: list, budget: int) -> str:
+    """Join tool results with a visible seam and truncate at result boundaries,
+    never mid-result: a quote spanning a seam or a cut edge is text no record
+    holds, and one convicted an innocent reconstruction on 2026-08-30."""
+    kept: list = []
+    room = budget
+    for t in reversed(tools):
+        if len(t) + len(TOOL_SEAM) > room:
+            break
+        kept.insert(0, t)
+        room -= len(t) + len(TOOL_SEAM)
+    if not kept and tools:
+        return tools[-1][-budget:]
+    return TOOL_SEAM.join(kept)
 
 
 def digest(transcript: Path, max_turn_chars: int = MAX_TURN_CHARS,
@@ -60,7 +77,7 @@ def digest(transcript: Path, max_turn_chars: int = MAX_TURN_CHARS,
         if cur and cur["reply"]:
             pairs.append({
                 "user": cur["user"][:max_turn_chars],
-                "tools": "\n".join(cur["tools"])[-max_tool_chars:],
+                "tools": _join_tools(cur["tools"], max_tool_chars),
                 "reply": "\n".join(cur["reply"]).strip()[:max_turn_chars]})
         cur = None
 
@@ -129,7 +146,10 @@ def critic_prompt(pairs: list[dict]) -> str:
         "turn shown; do not invent premises the reply does not state. When the "
         "reply rests on tool output - a search, a listing, a test run - ground "
         "that premise {\"ground\": \"producer\"} and copy its quote verbatim "
-        "from the TOOLS excerpt; only when the needed output is absent from the "
+        "from the TOOLS excerpt - and a quote must come from WITHIN one tool "
+        "result, never across a '--- next tool result ---' line, because such "
+        "spans exist only in the excerpt, not in the record; only when the "
+        "needed output is absent from the "
         "excerpt write the premise WITHOUT a ground or quote (an unanchored "
         "premise is honest; a fabricated quote is not). Mark every account "
         "{\"reconstruction\": true}. Answer with a JSON array of these account "
@@ -217,7 +237,11 @@ def criticize_turn(transcript: Path, session: str, out_dir: Path,
     last = pairs[-1]
     if len(last["reply"]) < MIN_REPLY_CHARS:
         return []               # acknowledgements are not arguments
-    text = runner(critic_prompt([last]))
+    # the judged turn arrives with up to two turns of context before it: a reply
+    # citing evidence from two turns back was convicted of an undocumented
+    # search when the critic could only see one turn (2026-08-30)
+    window = pairs[-3:]
+    text = runner(critic_prompt(window))
     start, end = text.find("["), text.rfind("]")
     try:
         accounts = json.loads(text[start:end + 1]) if 0 <= start <= end else []
@@ -226,9 +250,12 @@ def criticize_turn(transcript: Path, session: str, out_dir: Path,
     written = []
     out_dir.mkdir(parents=True, exist_ok=True)
     k = len(list(out_dir.glob("critic-live-*.json")))
+    last_turn = len(window) - 1
     for a in accounts:
         if not isinstance(a, dict) or not a.get("nodes"):
             continue
+        if a.get("turn") != last_turn:
+            continue            # context turns are shown, not re-judged
         a["reconstruction"] = True
         f = out_dir / f"critic-live-{k}.json"
         k += 1

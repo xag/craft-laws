@@ -87,3 +87,23 @@ def test_the_residual_names_what_no_node_claims(tmp_path):
     assert res["sentences"] == 3 and res["covered"] == 1
     assert "The tray is green." in res["residual"]
     assert res["unmatched_says"] and res["unmatched_says"][0]["node"] == "p9"
+
+
+
+
+def test_an_escape_level_in_the_record_does_not_defeat_the_quote(tmp_path):
+    """Both live convictions of a-ground-is-a-quotation-from-the-record on
+    2026-08-30 were this shape: the tool result embedded a JSON-stringified
+    payload, so the corpus held the text one escape level up from what any
+    honest reader quotes. Only the unambiguous escapes fold - a backslash-t in
+    a Windows path must survive - and a genuinely absent quote still convicts."""
+    embedded = 'stopped: SEEN=\\"$SEEN $sid\\" at c:\\users\\trans\\projects (tree clean)'
+    t = _transcript(tmp_path, [
+        {"type": "user", "message": {"content": [
+            {"type": "tool_result", "content": [
+                {"type": "text", "text": embedded}]}]}},
+    ])
+    c = read(t)
+    assert c.anchors('producer', 'SEEN="$SEEN $sid"')
+    assert c.anchors('producer', 'c:\\users\\trans\\projects')
+    assert not c.anchors('producer', 'SEEN="$OTHER $sid"')

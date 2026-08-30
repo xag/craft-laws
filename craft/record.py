@@ -39,9 +39,21 @@ from pathlib import Path
 from . import flight
 
 _WS = re.compile(r"\s+")
+# One level of JSON string escapes, and only the two unambiguous ones. A tool result
+# whose content embeds a JSON-stringified payload (a command echoed back, a message
+# field, a Windows path) keeps that escape level in the corpus, while an honest
+# reader quotes the rendered text - so the verbatim anchor missed on backslashes,
+# twice in one day across two sessions (2026-08-30, both convictions of
+# a-ground-is-a-quotation-from-the-record, both disputed with this mechanism named).
+# Folding \" and \\ is a defined normalization like the whitespace collapse, applied
+# identically to pool and quote. The whitespace escapes are deliberately NOT folded:
+# \t in c:\users\trans is a backslash and a letter, and folding it to a space
+# destroyed exactly the path quote this fix exists to anchor.
+_ESC = re.compile(r'\\(["\\])')
 
 
 def _canon(s: str) -> str:
+    s = _ESC.sub(r"\1", s)
     return _WS.sub(" ", s).strip()
 
 

@@ -36,7 +36,8 @@ from craft import account_toggle
 POLL_SECONDS = 4.0
 _stop = threading.Event()
 
-GREEN, GREY, AMBER = "#2f9e44", "#868e96", "#e8890c"
+INK = "#3b3b3b"      # the standard dark tray-glyph grey beside OneDrive and friends
+WARN = "#c47a10"     # amber ink, reserved for the liar state
 
 
 def already_running() -> bool:
@@ -49,48 +50,44 @@ def already_running() -> bool:
         return False
 
 
-def colour(s: dict) -> str:
-    return {"green": GREEN, "grey": GREY, "amber": AMBER}[s["colour"]]
-
-
-def image(fill: str, glyph: str = "on") -> Image.Image:
-    """The section sign on a state badge. The checker's whole job is citing laws,
-    and the sign a law is cited by is the mark - a letterform, because at 16 tray
-    pixels a letter survives where every pictogram tried here turned into
-    something else (a to-do check, an eye, a mask). State is carried twice:
-    colour, and solid-versus-hollow (a drained outline is off). Georgia bold for
-    a jurisprudential serif; Segoe UI bold is the fallback when Georgia is not
-    installed. Drawn at 256px, downscaled once with Lanczos."""
-    from PIL import ImageFont
+def image(state: str = "on") -> Image.Image:
+    """A bare section sign, no badge - the mark sits among the other tray glyphs
+    in their own idiom: dark grey ink, struck through when off (the OneDrive
+    convention, a halo gap punched through the glyph so the strike reads), and
+    amber ink as the one use of colour, reserved for the liar state. Drawn at
+    256px, downscaled once with Lanczos."""
+    from PIL import ImageChops, ImageFont
     S = 256
+    colour = WARN if state == "liar" else INK
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    hollow = glyph == "off"
-    if hollow:
-        d.rounded_rectangle((10, 10, S - 10, S - 10), radius=54, outline=fill,
-                            width=18)
-        glyph_col = fill
-    else:
-        d.rounded_rectangle((6, 6, S - 6, S - 6), radius=58, fill=fill)
-        glyph_col = "#ffffff"
     font = None
-    for path in (r"C:\Windows\Fonts\georgiab.ttf",
-                 r"C:\Windows\Fonts\segoeuib.ttf"):
+    for path in (r"C:\Windows\Fonts\segoeuib.ttf",
+                 r"C:\Windows\Fonts\georgiab.ttf"):
         try:
-            font = ImageFont.truetype(path, 185)
+            font = ImageFont.truetype(path, 250)
             break
         except OSError:
             continue
-    if font is None:                    # no known font: the badge alone carries state
-        return img.resize((64, 64), Image.LANCZOS)
-    bb = d.textbbox((0, 0), "§", font=font)
-    w, h = bb[2] - bb[0], bb[3] - bb[1]
-    d.text(((S - w) / 2 - bb[0], (S - h) / 2 - bb[1]), "§", font=font,
-           fill=glyph_col)
+    if font is not None:
+        bb = d.textbbox((0, 0), "§", font=font)
+        w, h = bb[2] - bb[0], bb[3] - bb[1]
+        d.text(((S - w) / 2 - bb[0], (S - h) / 2 - bb[1]), "§", font=font,
+               fill=colour)
+    else:                       # no font: a plain square keeps the state visible
+        d.rounded_rectangle((48, 48, 208, 208), radius=40, fill=colour)
+    if state == "off":
+        halo = Image.new("L", (S, S), 0)
+        ImageDraw.Draw(halo).line((26, 230, 230, 26), fill=255, width=64)
+        img.putalpha(ImageChops.subtract(img.getchannel("A"), halo))
+        d = ImageDraw.Draw(img)
+        d.line((36, 220, 220, 36), fill=colour, width=24)
+        for cx, cy in ((36, 220), (220, 36)):
+            d.ellipse((cx - 12, cy - 12, cx + 12, cy + 12), fill=colour)
     return img.resize((64, 64), Image.LANCZOS)
 
 
-def glyph_for(s: dict) -> str:
+def state_name(s: dict) -> str:
     return {"green": "on", "grey": "off", "amber": "liar"}[s["colour"]]
 
 
@@ -105,7 +102,7 @@ def title(s: dict) -> str:
 
 def refresh(icon: pystray.Icon) -> None:
     s = account_toggle.state()
-    icon.icon = image(colour(s), glyph_for(s))
+    icon.icon = image(state_name(s))
     icon.title = title(s)
 
 
@@ -131,7 +128,7 @@ def main() -> int:
         print("a craft.account tray icon is already running")
         return 0
     s = account_toggle.state()
-    icon = pystray.Icon("craft-account", image(colour(s), glyph_for(s)), title(s),
+    icon = pystray.Icon("craft-account", image(state_name(s)), title(s),
                         menu=pystray.Menu(
         pystray.MenuItem("Turn checking on/off", flip, default=True),
         pystray.MenuItem("Status", lambda *_: print(account_toggle.render(

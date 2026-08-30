@@ -75,7 +75,7 @@ def image(state: str = "on") -> Image.Image:
         w, h = bb[2] - bb[0], bb[3] - bb[1]
         d.text(((S - w) / 2 - bb[0], (S - h) / 2 - bb[1]), "§", font=font,
                fill=colour)
-        a = img.getchannel("A").filter(ImageFilter.MaxFilter(7))
+        a = img.getchannel("A").filter(ImageFilter.MaxFilter(11))
         solid = Image.new("RGBA", (S, S), colour)
         img = Image.composite(solid, Image.new("RGBA", (S, S), (0, 0, 0, 0)), a)
     else:                       # no font: a plain square keeps the state visible
@@ -88,7 +88,15 @@ def image(state: str = "on") -> Image.Image:
         d.line((38, 218, 218, 38), fill=colour, width=16)
         for cx, cy in ((38, 218), (218, 38)):
             d.ellipse((cx - 8, cy - 8, cx + 8, cy + 8), fill=colour)
-    return img.resize((64, 64), Image.LANCZOS)
+    # hand Windows its own small-icon metric instead of a 64px image it will
+    # soften: the DPI-scaled tray size (GetSystemMetrics SM_CXSMICON), doubled
+    # for the shell's own downsampling headroom
+    try:
+        metric = ctypes.windll.user32.GetSystemMetrics(49) or 16
+    except AttributeError:
+        metric = 16
+    side = max(32, min(64, metric * 2))
+    return img.resize((side, side), Image.LANCZOS)
 
 
 def state_name(s: dict) -> str:

@@ -35,8 +35,9 @@ def test_the_cli_files_and_confirms(tmp_path, monkeypatch, capsys):
 
 
 def test_every_conviction_text_routes_rebuttal_to_the_ledger_not_the_user():
-    """The two promises of the contract: the dispute command is in the text, and
-    the text forbids saying anything about the conviction to the user."""
+    """The three promises of the contract: the dispute command is in the text, the
+    text forbids responding to the conviction in the conversation, and the visible
+    move it licenses is self-correction of what was said."""
     claims_text = claims_hook.report(
         [ClaimFinding(law="l", where="claims.jsonl#1", quote="q", why="w")],
         session="sess-1")
@@ -44,4 +45,5 @@ def test_every_conviction_text_routes_rebuttal_to_the_ledger_not_the_user():
     for text in (claims_text, account_text):
         assert "craft.disputes" in text and "--law" in text
         assert "sess-1" in text
-        assert "NOTHING" in text and "noise" in text
+        assert "Never RESPOND" in text and "noise" in text
+        assert "correct" in text and "caught" in text

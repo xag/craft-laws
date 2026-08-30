@@ -141,18 +141,20 @@ def report(findings, session: str = "") -> str:
         lines.append(f"  {f.law}  ({f.where})")
         lines.append(f"    {f.quote[:150]}")
         lines.append(f"    why: {f.why}")
-    # fix it or dispute it, and either way the user hears nothing: a conviction is
-    # between the author and the record, and a rebuttal in the reply is noise to a
-    # person who never saw the charge (the account hook says this at length)
+    # correct yourself or dispute, and either way the user hears nothing about the
+    # conviction: it is between the author and the record, and a rebuttal in the
+    # reply is noise to a person who never saw the charge (the account hook's
+    # _conviction_contract says this at length)
     lines.append(
-        "If a finding is right, fix the claim or the work. If it is a false "
-        "positive, file that as data and move on:\n"
+        "If a finding is right, fix the claim or the work, and correct what you "
+        "told the user the way you would fix any error you caught yourself. If it "
+        "is a false positive, file that as data and move on:\n"
         f"  uv run --no-sync --directory {_ROOT.as_posix()} python -m "
         f"craft.disputes --law <law> --where \"<where>\" --why \"<one line>\" "
         f"--session {session or '<session-id>'}\n"
-        "Say NOTHING about any of this in your reply - not the conviction, not "
-        "the dispute, not a defense. The user never saw the conviction; to them "
-        "every word about it is noise.")
+        "Never RESPOND to the conviction in the conversation - no mention, no "
+        "defense, no acknowledgment that a check ran. The user never saw it; to "
+        "them every word about it is noise.")
     return "\n".join(lines)
 
 

@@ -262,23 +262,29 @@ def user_prompt_submit(payload: dict) -> int:
 
 
 def _conviction_contract(session: str) -> str:
-    """The tail of every conviction handed back: fix it or dispute it, and either
-    way the USER HEARS NOTHING. A conviction is between the author and the record.
-    The turns that argued back in the reply proved the failure mode this closes:
-    the person reads a rebuttal of a message they never saw, which is pure noise --
-    and the rebuttal itself evaporates with the transcript, measuring nothing. The
-    dispute file is the channel that persists: false positives filed there are what
-    the checker's own defect rate is computed from (a critique reconstructs from a
-    bounded excerpt, and may itself be at fault)."""
-    return ("If a finding is right, correct the reply. If it is a false positive, "
-            "file that as data and move on:\n"
+    """The tail of every conviction handed back: correct yourself or dispute, and
+    either way the USER HEARS NOTHING ABOUT THE CONVICTION. It is between the
+    author and the record. The turns that argued back in the reply proved the
+    failure mode this closes: the person reads a rebuttal of a message they never
+    saw, which is pure noise -- and the rebuttal itself evaporates with the
+    transcript, measuring nothing. The dispute file is the channel that persists:
+    false positives filed there are what the checker's own defect rate is computed
+    from (a critique reconstructs from a bounded excerpt, and may itself be at
+    fault). And the visible move, when a finding is right, is SELF-correction --
+    the sentence fixed as if the author had caught it, because to the user that is
+    exactly what happened."""
+    return ("If a finding is right, correct what you told the user - restate the "
+            "sentence as it should have been said, the way you would fix any "
+            "error you caught yourself. If it is a false positive, file that as "
+            "data and move on:\n"
             f"  uv run --no-sync --directory {_ROOT.as_posix()} python -m "
             f"craft.disputes --law <law> --where \"<where>\" "
             f"--why \"<one line>\" --session {session or '<session-id>'}\n"
             "Do NOT re-run searches or re-verify work the record already shows. "
-            "And say NOTHING about any of this in your reply - not the conviction, "
-            "not the dispute, not a defense. The user never saw the conviction; "
-            "to them every word about it is noise.")
+            "Never RESPOND to the conviction in the conversation: no mention of "
+            "it, no defense, no acknowledgment that a check ran. The user never "
+            "saw the conviction; to them every word about it is noise, and a "
+            "correction that cites its trigger is a response, not a correction.")
 
 
 def _live_critic(session: str, tpath) -> int:

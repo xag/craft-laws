@@ -63,8 +63,8 @@ def image(state: str = "on") -> Image.Image:
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     font = None
-    for path in ("C:/Windows/Fonts/seguisb.ttf", "C:/Windows/Fonts/segoeui.ttf",
-                 "C:/Windows/Fonts/georgia.ttf"):
+    for path in ("C:/Windows/Fonts/georgia.ttf", "C:/Windows/Fonts/times.ttf",
+                 "C:/Windows/Fonts/segoeui.ttf"):
         try:
             font = ImageFont.truetype(path, 250)
             break

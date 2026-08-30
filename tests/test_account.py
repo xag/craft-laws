@@ -346,8 +346,15 @@ def test_residual_json_is_not_judged_as_an_account(tmp_path, monkeypatch):
     assert [p.name for p in account_hook.accounts_for("sess", [])] == ["1.json"]
 
 
-def test_a_clean_verdict_is_reported_not_silent(tmp_path, monkeypatch, capsys):
-    """Silence on a pass is indistinguishable from a hook that never looked."""
+def test_a_clean_filed_account_is_silent_and_the_critic_still_runs(tmp_path,
+                                                                    monkeypatch,
+                                                                    capsys):
+    """The pass verdict retired with the silent-critic redesign: it re-printed
+    every turn (the residual summary kept its hash fresh) and its exit 2
+    short-circuited the critic, which is how a planted test error sailed past a
+    critic that never ran (2026-08-30). A clean pass says nothing and falls
+    through to the critic."""
+    import craft.critic as critic_mod
     repo = tmp_path / "repo"
     (repo / ".git").mkdir(parents=True)
     d = repo / ".craft" / "accounts" / "sess"
@@ -359,11 +366,16 @@ def test_a_clean_verdict_is_reported_not_silent(tmp_path, monkeypatch, capsys):
          "conclusion": "c1"}]}), encoding="utf-8")
     monkeypatch.setattr(account_hook, "repos_touched", lambda _p: [repo])
     monkeypatch.setattr(account_hook, "_already_reported", lambda _k: False)
+    ran = []
+    monkeypatch.setattr(critic_mod, "criticize_turn",
+                        lambda tr, s, out, runner=None: ran.append(1) or [])
+    monkeypatch.chdir(tmp_path)
     t = tmp_path / "t.jsonl"
     t.write_text("", encoding="utf-8")
     code = account_hook.stop({"session_id": "sess", "transcript_path": str(t)})
-    assert code == 2
-    assert "no decider convicts" in capsys.readouterr().err
+    assert code == 0
+    assert capsys.readouterr().err == ""
+    assert ran == [1], "the critic must run on a clean pass, not be short-circuited"
 
 
 def test_a_standing_finding_is_reported_once_not_every_turn(tmp_path, monkeypatch,

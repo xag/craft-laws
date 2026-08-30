@@ -320,21 +320,11 @@ def stop(payload: dict) -> int:
     except Exception:
         pass
     if not findings:
-        # A clean verdict is reported too, once per turn. Silence on a pass is why
-        # "the harness checked this" could not be said without running the checker
-        # by hand: an author cannot tell a pass from a hook that never looked.
-        n_nodes = 0
-        for p in files:
-            try:
-                n_nodes += len(json.loads(Path(p).read_text(encoding="utf-8")).get("nodes", []))
-            except (OSError, ValueError):
-                pass
-        verdict = (f"{len(files)} account(s), {n_nodes} node(s) checked, "
-                   "no decider convicts." + summary)
-        if not _already_reported("pass:" + hashlib.sha256(
-                verdict.encode("utf-8", "replace")).hexdigest()):
-            print(verdict, file=sys.stderr)
-            return 2
+        # A clean pass is SILENT since the silent-critic redesign - and it must
+        # fall through to the critic, never return early: on 2026-08-30 the
+        # ever-changing residual summary made this pass line "fresh" every turn,
+        # its exit 2 short-circuited the critic, and a planted test error sailed
+        # past a critic that never ran.
         return _live_critic(session, tpath)
     # Throttle PER FINDING, not per set. Hashing the whole set meant one new account
     # changed the hash and every standing conviction returned as news -- eleven

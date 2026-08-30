@@ -20,7 +20,7 @@ from pathlib import Path
 from craft.account_hook import off, off_path
 
 SETTINGS = Path.home() / ".claude" / "settings.json"
-COMMAND = ("uv run --no-sync --directory C:/Users/trans/Projects/craft-laws "
+COMMAND = ("uv run --no-sync --project C:/Users/trans/Projects/craft-laws "
            "python -m craft.account_hook")
 
 
@@ -35,7 +35,7 @@ def wired() -> dict:
     """Which events run the account hook, as settings.json has it now."""
     hooks = (_settings().get("hooks") or {})
     out = {}
-    for event in ("UserPromptSubmit", "Stop"):
+    for event in ("Stop",):
         out[event] = any(h.get("command") == COMMAND
                          for group in (hooks.get(event) or [])
                          for h in (group.get("hooks") or []))
@@ -61,7 +61,8 @@ def render(s: dict) -> str:
     if missing:
         return ("AMBER - not armed, but these hooks are missing from settings.json: "
                 + ", ".join(missing) + ". Nothing is being checked. Run `on` to wire.")
-    return "ON - disarmed and wired; every turn is asked for an account and checked."
+    return ("ON - disarmed and wired; the critic reviews each reply and "
+            "speaks only to convict.")
 
 
 def enable() -> None:
@@ -71,13 +72,13 @@ def enable() -> None:
         pass
     data = _settings()
     hooks = data.setdefault("hooks", {})
-    for event in ("UserPromptSubmit", "Stop"):
+    for event in ("Stop",):
         groups = hooks.setdefault(event, [])
         if any(h.get("command") == COMMAND
                for g in groups for h in (g.get("hooks") or [])):
             continue
         groups.append({"hooks": [{"type": "command", "command": COMMAND,
-                                  "timeout": 20}]})
+                                  "timeout": 300}]})
     SETTINGS.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 

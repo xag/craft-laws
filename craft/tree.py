@@ -393,10 +393,13 @@ DECISIONS = [
                 "and writes critique.md only when a decider convicts.",
             "consequence":
                 "user_prompt_submit prints nothing and the settings entry is removed; "
-                "SessionEnd spawns the critic with the account hook off; a turn with "
-                "no accounts is the norm, so the zero-accounts line retired. "
-                "Author-filed accounts remain first-class where an author chooses to "
-                "file - the Stop check still judges them.",
+                "the critic runs at Stop over the last turn only, tray-gated, and a "
+                "conviction returns to the model in the same turn (exit 2) so it "
+                "corrects itself while the owner reads - the owner's 2026-08-30 "
+                "correction of the first cut, whose session-end critique had no "
+                "reader and was therefore waste. A turn with no accounts is the "
+                "norm, so the zero-accounts line retired; author-filed accounts "
+                "remain first-class where an author chooses to file.",
         },
         children=[
             Node(id="the-measured-session", kind="grounds",

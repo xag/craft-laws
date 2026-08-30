@@ -252,21 +252,27 @@ def user_prompt_submit(payload: dict) -> int:
     return 0
 
 
-def session_end(payload: dict) -> int:
-    """Spawn the critic over the finished session. Silent unless it convicts,
-    and the conviction lands in critique.md beside the reconstructed accounts,
-    never in anyone's context mid-work."""
-    from .critic import run
-    session = str(payload.get("session_id") or "")
-    tpath = payload.get("transcript_path")
-    if not session or not tpath:
-        return 0
-    out = Path.cwd() / ".craft" / "accounts" / session
+def _live_critic(session: str, tpath) -> int:
+    """The critic in the turn it criticizes (the owner's 2026-08-30 correction of
+    the session-end design: a critique nobody reads is waste). Tray-gated by the
+    same switch as this whole hook, silent when clean; a conviction returns to
+    the model NOW, exit 2, so it corrects itself while the owner reads. Any
+    failure of the critic itself is silent - a dead critic must never block."""
     try:
-        run(Path(tpath), session, out)
+        from .critic import criticize_turn
+        out = Path.cwd() / ".craft" / "accounts" / session
+        lines = criticize_turn(Path(str(tpath)), session, out)
     except Exception:
-        pass                    # a dead critic must never block a session's end
-    return 0
+        return 0
+    fresh = [ln for ln in lines if not _already_reported(hashlib.sha256(
+        ("critic|" + ln).encode("utf-8", "replace")).hexdigest())]
+    if not fresh:
+        return 0
+    print("the critic reconstructed this turn's argument and the deciders "
+          "convicted it. Each line names a law with a published root; correct "
+          "the reply, or state why it stands. Nothing is refused.\n  "
+          + "\n  ".join(fresh), file=sys.stderr)
+    return 2
 
 
 def stop(payload: dict) -> int:
@@ -280,10 +286,9 @@ def stop(payload: dict) -> int:
     files = accounts_for(session, roots)
     if not files:
         # Nothing filed is the NORM since 2026-08-30: the author is no longer
-        # instructed to file, so a zero here is not a dead instrument, and the
-        # once-per-session zero-line (built when it was) retired with the
-        # instruction. The critic checks the session at its end instead.
-        return 0
+        # instructed to file, so a zero here is not a dead instrument. The live
+        # critic below judges the turn instead.
+        return _live_critic(session, tpath)
     from .record import read
     corpus = read(Path(tpath))          # the record the grounds must quote
     # each finding is carried with the account it came from: two accounts can hold
@@ -326,7 +331,7 @@ def stop(payload: dict) -> int:
                 verdict.encode("utf-8", "replace")).hexdigest()):
             print(verdict, file=sys.stderr)
             return 2
-        return 0
+        return _live_critic(session, tpath)
     # Throttle PER FINDING, not per set. Hashing the whole set meant one new account
     # changed the hash and every standing conviction returned as news -- eleven
     # findings reported for a turn that produced four. A hook that repeats yesterday's
@@ -341,7 +346,7 @@ def stop(payload: dict) -> int:
         else:
             fresh.append((Path(path).name, f))
     if not fresh:
-        return 0
+        return _live_critic(session, tpath)
     lines = [f"{len(fresh)} finding(s) in this turn's argument. Each names a law "
              "with a published root; fix the argument or the account and finish. "
              "Nothing is refused."]
@@ -358,8 +363,7 @@ def stop(payload: dict) -> int:
     return 2
 
 
-HANDLERS = {"UserPromptSubmit": user_prompt_submit, "Stop": stop,
-            "SessionEnd": session_end}
+HANDLERS = {"UserPromptSubmit": user_prompt_submit, "Stop": stop}
 
 
 def main() -> int:

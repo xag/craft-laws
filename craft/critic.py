@@ -32,12 +32,14 @@ import json
 import os
 from pathlib import Path
 
-MAX_TURN_CHARS = 1500      # each side of a turn is clipped to this
+MAX_TURN_CHARS = 1500      # each side of a turn is clipped to this (whole-session)
+LIVE_TURN_CHARS = 6000     # the live critic sees the last turn nearly whole
+MIN_REPLY_CHARS = 200      # below this a reply is an acknowledgement, not an argument
 MAX_DIGEST_CHARS = 40_000  # the whole digest is clipped to this
 CRITIC_DIR_NOTE = "critic"  # accounts written as critic-<n>.json
 
 
-def digest(transcript: Path) -> list[dict]:
+def digest(transcript: Path, max_turn_chars: int = MAX_TURN_CHARS) -> list[dict]:
     """(user, reply) pairs for the session's turns, bounded. Tool traffic is left
     out on purpose: the deciders re-anchor quotes against the full corpus later,
     so the critic needs the dialogue, not the record."""
@@ -61,8 +63,8 @@ def digest(transcript: Path) -> list[dict]:
                      if isinstance(b, dict) and b.get("type") == "text"]
             reply = "\n".join(p for p in parts if p).strip()
             if reply:
-                pairs.append({"user": (user_text or "")[:MAX_TURN_CHARS],
-                              "reply": reply[:MAX_TURN_CHARS]})
+                pairs.append({"user": (user_text or "")[:max_turn_chars],
+                              "reply": reply[:max_turn_chars]})
                 user_text = None
     total = 0
     kept = []
@@ -157,6 +159,51 @@ def run(transcript: Path, session: str, out_dir: Path, runner=None) -> int:
         (out_dir / "critique.md").write_text("\n".join(lines) + "\n",
                                              encoding="utf-8")
     return len(findings)
+
+
+def criticize_turn(transcript: Path, session: str, out_dir: Path,
+                   runner=None) -> list[str]:
+    """The live critic: the LAST turn only, run at Stop, silent when clean.
+
+    This is the owner's 2026-08-30 correction of the session-end design: a
+    critique nobody reads is waste, and a session-start pointer criticizes an
+    agent that can no longer correct anything. The criticism lands in the turn
+    it criticizes - the hook feeds the returned lines back to the model, which
+    corrects itself while the owner is still reading the reply. Clean turns
+    return [] and the agent never learns the critic exists.
+    """
+    from .account import check_file
+    from .record import read
+
+    runner = runner or cli_runner
+    pairs = digest(transcript, max_turn_chars=LIVE_TURN_CHARS)
+    if not pairs:
+        return []
+    last = pairs[-1]
+    if len(last["reply"]) < MIN_REPLY_CHARS:
+        return []               # acknowledgements are not arguments
+    text = runner(critic_prompt([last]))
+    start, end = text.find("["), text.rfind("]")
+    try:
+        accounts = json.loads(text[start:end + 1]) if 0 <= start <= end else []
+    except ValueError:
+        accounts = []
+    written = []
+    out_dir.mkdir(parents=True, exist_ok=True)
+    k = len(list(out_dir.glob("critic-live-*.json")))
+    for a in accounts:
+        if not isinstance(a, dict) or not a.get("nodes"):
+            continue
+        a["reconstruction"] = True
+        f = out_dir / f"critic-live-{k}.json"
+        k += 1
+        f.write_text(json.dumps(a, indent=1), encoding="utf-8")
+        written.append(f)
+    if not written:
+        return []
+    corpus = read(transcript)
+    return [f"{fi.law} ({f.name} {fi.where}): {fi.why}"
+            for f in written for fi in check_file(f, corpus)]
 
 
 def main(argv: list[str] | None = None) -> int:

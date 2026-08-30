@@ -70,3 +70,44 @@ def test_a_runner_answering_garbage_writes_nothing(tmp_path):
     out = tmp_path / "acc"
     assert critic.run(t, "s", out, runner=lambda p: "not json at all") == 0
     assert not out.exists() or not list(out.glob("critic-*.json"))
+
+
+def test_the_live_critic_skips_short_replies_without_spawning(tmp_path):
+    t = _transcript(tmp_path, [("q", "Clear - nothing to do.")])
+    called = []
+    out = tmp_path / "acc"
+    lines = critic.criticize_turn(t, "s", out, runner=lambda p: called.append(p) or "[]")
+    assert lines == [] and called == []
+
+
+def test_the_live_critic_feeds_back_a_conviction(tmp_path):
+    long_reply = "The check passed and therefore everything works. " * 10
+    t = _transcript(tmp_path, [("does it work?", long_reply)])
+
+    def runner(prompt):
+        assert "TURN 0" in prompt
+        return json.dumps([{"turn": 0, "nodes": [
+            {"id": "g1", "type": "I", "ground": "given",
+             "quote": "words the user never typed"},
+            {"id": "c1", "type": "I", "role": "conclusion", "text": "x"},
+            {"id": "r1", "type": "RA", "scheme": "sign", "premises": ["g1"],
+             "conclusion": "c1"}]}])
+
+    out = tmp_path / "acc"
+    lines = critic.criticize_turn(t, "s", out, runner=runner)
+    assert lines and "a-ground-is-a-quotation-from-the-record" in lines[0]
+    assert (out / "critic-live-0.json").exists()
+
+
+def test_a_clean_live_turn_returns_nothing(tmp_path):
+    long_reply = "The check passed; the record shows the run and its count. " * 8
+    t = _transcript(tmp_path, [("does it work?", long_reply)])
+
+    def runner(prompt):
+        return json.dumps([{"turn": 0, "nodes": [
+            {"id": "g1", "type": "I", "ground": "given", "quote": "does it work?"},
+            {"id": "c1", "type": "I", "role": "conclusion", "text": "it works"},
+            {"id": "r1", "type": "RA", "scheme": "sign", "premises": ["g1"],
+             "conclusion": "c1"}]}])
+
+    assert critic.criticize_turn(t, "s", tmp_path / "acc", runner=runner) == []

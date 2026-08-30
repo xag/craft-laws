@@ -456,3 +456,23 @@ def test_a_says_survives_punctuation_drift_and_a_fabricated_says_does_not(tmp_pa
     unmatched = [u["says"] for u in res["unmatched_says"]]
     assert "Drained whole now." not in unmatched          # drift: matched
     assert "Every test was green on the first run." in unmatched  # never said
+
+
+
+def test_the_live_critics_conviction_returns_to_the_model_now(tmp_path, monkeypatch,
+                                                              capsys):
+    """The owner's design: silent when clean, and a conviction lands in the very
+    turn it criticizes, exit 2, so the model corrects itself before the user
+    has to."""
+    import craft.critic as critic_mod
+    t = tmp_path / "t.jsonl"
+    t.write_text("", encoding="utf-8")
+    monkeypatch.setattr(account_hook, "_SEEN", tmp_path / "seen.json")
+    monkeypatch.setattr(critic_mod, "criticize_turn",
+                        lambda tr, s, out, runner=None: [
+                            "some-law (critic-live-0.json p1): the reading overreaches"])
+    monkeypatch.chdir(tmp_path)
+    code = account_hook.stop({"session_id": "s", "transcript_path": str(t)})
+    assert code == 2
+    err = capsys.readouterr().err
+    assert "critic" in err and "some-law" in err

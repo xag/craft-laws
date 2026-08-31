@@ -429,6 +429,94 @@ DECISIONS = [
 ]
 
 
+DECISIONS.append(Node(
+    id="the-drawing-is-not-the-conviction",
+    kind="decision",
+    links={"rests_on": ["the-turn-account-lane-is-removed",
+                        "the-account-is-anchored-to-the-turns-record"]},
+    name="An element may join the account's drawing only if writing it honestly does "
+         "not decide a conviction: conviction must be a relation the transcriber "
+         "never computes, and the property is enforced, not remembered",
+    payload={
+        "rationale":
+            "Anchoring stops fabricated evidence; it does not stop a smuggled "
+            "judgment. A new element type whose presence equals guilt makes the "
+            "transcriber the judge and the decider a ceremony -- the exact failure "
+            "the lane's removal entry names, one field deeper. The owner asked how "
+            "the trap is avoided rather than warned about (2026-09-01), and the "
+            "answer is three enforced properties. WRITE-TIME TEST: could the "
+            "transcriber, writing one element honestly and locally, already know it "
+            "will convict? If yes, the design is refused. NEUTRALITY AUDIT "
+            "(craft/neutrality.py, alarmed): over an accounts corpus, a feature "
+            "whose presence coincides exactly with conviction, both directions, at "
+            "support, is flagged as a verdict wearing a node type. BLINDNESS: the "
+            "drawing task in craft/critic.py names no law and does not change when "
+            "one is added; a law must convict over elements drawn for another "
+            "purpose, or its new element must pass the audit before its decider "
+            "counts.",
+        "limits":
+            "The audit reads presence, not values, and only structural convictions "
+            "(the record is not stored beside its accounts); a verdict smuggled "
+            "into an enum value is caught by schema review, not by counting. Stated "
+            "in the module rather than papered over.",
+    },
+    children=[
+        Node(id="alt-mark-the-defect-directly", kind="alternative",
+             name="Have the critic mark the defect itself (a figure-of-speech mark, "
+                  "an ornament mark) and convict on the mark",
+             payload={"why": "Marking equals convicting: the judgment lands in the "
+                             "drawing and the decider echoes it. This is the "
+                             "five-versions failure of the removed lane, one field "
+                             "deeper, and it fails the write-time test by "
+                             "construction."}),
+        Node(id="alt-trust-the-anchoring-alone", kind="alternative",
+             name="Rely on quote-anchoring to keep the drawing honest",
+             payload={"why": "Anchoring proves the words exist in the record; it "
+                             "proves nothing about the translation around them. The "
+                             "smuggling this decision closes happens in element "
+                             "TYPES, where every quote can be genuine."}),
+    ],
+))
+
+DECISIONS.append(Node(
+    id="the-names-layer-is-a-join-not-a-mark",
+    kind="decision",
+    links={"rests_on": ["the-drawing-is-not-the-conviction"]},
+    name="The plain law's decidable clause enters the account as two neutral "
+         "elements -- the short names a conclusion leans on, and the reply's own "
+         "definition sites -- and the conviction is a join against the record that "
+         "the transcriber never computes",
+    payload={
+        "rationale":
+            "a-name-is-known-or-defined (account_laws.py, rooted in PLAIN's jargon "
+            "and definitions guidelines): a name is innocent if the record already "
+            "used it, or the reply defines it in place; convicted only when it is "
+            "neither. Both element kinds appear in clean and guilty replies alike, "
+            "so the write-time test passes: the critic transcribing 'the quiet "
+            "period' cannot know whether it convicts without searching the whole "
+            "record, which it is never asked to do. What stays the transcriber's "
+            "reading -- whether a phrase was a name at all -- is the same declared "
+            "residue as every other translation in the lane, disputable through "
+            "the same channel.",
+        "scope":
+            "This mechanizes ONE clause of an-answer-is-plain-on-first-reading. "
+            "The figure-of-speech and lost-nothing clauses stay readings: no "
+            "decomposition found so far passes the write-time test, and the one "
+            "measure tried (restatement word-overlap) was refused by its own filed "
+            "calibration (korean-gpt-coach claims.jsonl, 2026-08-31).",
+    },
+    children=[
+        Node(id="alt-a-glossary-instead-of-the-record", kind="alternative",
+             name="Judge names against a curated glossary rather than the session's "
+                  "own record",
+             payload={"why": "A glossary is authored, so the judge would be whoever "
+                             "curates it -- and it goes stale. The record is the "
+                             "one vocabulary the reader demonstrably has: it is "
+                             "what was said to them and by them this session."}),
+    ],
+))
+
+
 def build() -> Quern:
     # The channel exists now (xag/quern#19) and these lines became the promised pin:
     # craft@0.1.0 is published to the registry like anything else, and this repo consumes

@@ -25,6 +25,8 @@
         "quote": {"type": "string"},
         "prop": {"type": "string"},
         "says": {"type": "string"},
+        "names": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "defines": {"type": "string", "minLength": 1},
         "slot": {"type": "string"},
         "strength": {"enum": ["limited", "medium", "robust"]},
         "quantity": {

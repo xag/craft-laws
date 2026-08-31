@@ -140,12 +140,22 @@ def critic_prompt(pairs: list[dict]) -> str:
         "from the USER text>\"},\n"
         '  {"id": "c1", "type": "I", "role": "conclusion", "says": "<one verbatim '
         'sentence copied from the REPLY>", "text": "<the conclusion in your '
-        'words>"},\n'
+        'words>", "names": ["<short name the sentence uses for a specific thing>"]},\n'
+        '  {"id": "d1", "type": "I", "defines": "<one of those names>", "quote": '
+        '"<verbatim REPLY sentence stating what that name refers to>"},\n'
         '  {"id": "r1", "type": "RA", "scheme": '
         '"verified-source|sign|example|authority|absence", "premises": ["g1"], '
         '"conclusion": "c1"}]}\n'
         "Rules: every `says` and every `quote` must be copied verbatim from the "
-        "turn shown; do not invent premises the reply does not state. When the "
+        "turn shown; do not invent premises the reply does not state. On each "
+        "conclusion, transcribe `names`: the short names — four words or fewer, "
+        "articles included, copied verbatim — the `says` sentence uses to refer "
+        "to specific things (a component, a mechanism, a concept). Where the "
+        "REPLY itself states what one of those names refers to, add a node "
+        "carrying `defines` (the name) and `quote` (that REPLY sentence, "
+        "verbatim; for definition nodes only, the quote comes from the REPLY). "
+        "Transcribe what is there: a sentence using no such names carries no "
+        "`names` field. When the "
         "reply rests on tool output - a search, a listing, a test run - ground "
         "that premise {\"ground\": \"producer\"} and copy its quote verbatim "
         "from the TOOLS excerpt - and a quote must come from WITHIN one tool "

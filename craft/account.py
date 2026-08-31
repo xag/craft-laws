@@ -464,6 +464,55 @@ def check_grounds_are_anchored(a: Account, corpus=None) -> list[Finding]:
     return out
 
 
+
+def check_names_are_known_or_defined(a: Account, corpus=None) -> list[Finding]:
+    """A short name a conclusion leans on was already in the record, or the reply
+    defines it, or it convicts: the reader met a word that stands for more than it
+    says and was given no way in.
+
+    The elements are convicting-neutral on purpose: `names` are transcribed for
+    every conclusion, guilty and clean alike, and `defines` nodes appear wherever a
+    reply explains a term -- neither mark means anything by itself. The conviction
+    is a join the transcriber never computes: name, minus the record, minus the
+    definitions. Writing the drawing honestly does not write the conviction, which
+    is the property the whole lane is built to (the-turn-account-lane-is-removed).
+
+    Matching is case- and whitespace-insensitive containment, both directions
+    generous to the account: a name the record used in any form is known. What
+    stays a reading: whether something was a name at all -- that is the
+    transcriber's translation, disputable like any other.
+
+    A definition node's quote is a REPLY sentence, so it cannot be anchored against
+    the record corpus here; the residual pass owns reply-side quotes. Stated, not
+    hidden."""
+    from .record import _canon
+
+    def key(s) -> str:
+        return _canon(str(s or "")).lower()
+
+    defined = {key(n.get("defines")) for n in a.of_type(I_NODE) if n.get("defines")}
+    named = [(n, name) for n in a.of_type(I_NODE)
+             if n.get("role") == "conclusion"
+             for name in (n.get("names") or [])]
+    if not named:
+        return []
+    if corpus is None:
+        raise LookupError(
+            "this account carries names and no record was supplied to check them "
+            "against -- give the transcript; unverifiable is not judged either way")
+    record = (_canon(corpus.tool_text) + chr(10) + _canon(corpus.user_text)).lower()
+    out = []
+    for n, name in named:
+        k = key(name)
+        if not k or k in defined or k in record:
+            continue
+        out.append(Finding("a-name-is-known-or-defined", n.get("id", "?"), name[:110],
+                           f"the conclusion leans on the name {name!r}: the record "
+                           f"never used it and the reply never defines it, so the "
+                           f"reader meets a word that stands for more than it says"))
+    return out
+
+
 CHECKS = (check_shape, check_conclusions_are_supported, check_no_circular_support,
           check_counter_evidence_is_consumed, check_support_is_not_only_attack,
           check_absence_concludes_nothing, check_strength_is_licensed,
@@ -487,7 +536,8 @@ def check_file(path: Path, corpus=None) -> list[Finding]:
                         "the account parsed to zero nodes: every decider ran over "
                         "nothing, so this is could-not-judge, not a pass")]
     return ([f for c in CHECKS for f in c(a)]
-            + check_grounds_are_anchored(a, corpus))
+            + check_grounds_are_anchored(a, corpus)
+            + check_names_are_known_or_defined(a, corpus))
 
 
 # --- the alarm ------------------------------------------------------------------------
@@ -619,6 +669,29 @@ def _alarm() -> int:
         pass
     dead += bad
     print(f"  {'DEAD' if bad else 'ok  '} check_grounds_are_anchored")
+    named_clean = Account(path="t", nodes={n["id"]: n for n in [
+        {"id": "c1", "type": "I", "role": "conclusion",
+         "names": ["the build", "the quiet period"]},
+        {"id": "d1", "type": "I", "defines": "the quiet period",
+         "quote": "the quiet period is the stretch where no touch goes out"},
+    ]})
+    named_guilty = Account(path="t", nodes={n["id"]: n for n in [
+        {"id": "c1", "type": "I", "role": "conclusion",
+         "names": ["the frobnicator gate"]},
+    ]})
+    corpus2 = Corpus(tool_text="the build passed", user_text="ship it")
+    bad = []
+    if check_names_are_known_or_defined(named_clean, corpus2):
+        bad.append("check_names convicted a name the record holds or the reply defines")
+    if not check_names_are_known_or_defined(named_guilty, corpus2):
+        bad.append("check_names missed a name nobody used and nobody defined")
+    try:
+        check_names_are_known_or_defined(named_guilty, None)
+        bad.append("with no record, named conclusions must refuse, not pass")
+    except LookupError:
+        pass
+    dead += bad
+    print(f"  {'DEAD' if bad else 'ok  '} check_names_are_known_or_defined")
     with tempfile.TemporaryDirectory() as d:
         g, c = Path(d) / "guilty.json", Path(d) / "clean.json"
         g.write_text(json.dumps(GUILTY), encoding="utf-8")

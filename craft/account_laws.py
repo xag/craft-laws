@@ -63,6 +63,12 @@ AIF = ("Chesnevar et al. 2006, the Argument Interchange Format, as recorded in t
 AIF_URL = "https://github.com/xag/quality-harness"
 
 
+FEDPL = ("Federal Plain Language Guidelines, March 2011, Rev. 1 May 2011 (captured at "
+         "docs/sources/plain-2011-federal-guidelines.pdf, censused whole in "
+         "craft/census_plain.py)")
+FEDPL_URL = "https://www.archive.org/details/FederalPLGuidelines"
+
+
 @dataclass(frozen=True)
 class AccountLaw:
     id: str
@@ -73,6 +79,25 @@ class AccountLaw:
 
 
 ACCOUNT = (
+    AccountLaw(
+        "a-name-is-known-or-defined",
+        "A short name a conclusion leans on was already used in the record, or the "
+        "reply defines it in place; a name that is neither makes the reader meet a "
+        "word that stands for more than it says. The names and the definition sites "
+        "are transcribed neutrally; the conviction is the join, which the "
+        "transcriber never computes",
+        source=FEDPL, source_item="III.a.3.v Avoid legal, foreign, and technical jargon",
+        citations=((FEDPL + " -- III.a.3.v", FEDPL_URL,
+                    "Jargon is unnecessarily complicated, technical language used to "
+                    "impress, rather than to inform, your audience. When we say not "
+                    "to use jargon, we're not advocating leaving out necessary "
+                    "technical terms; we are saying to make sure your other language "
+                    "is as clear as possible."),
+                   (FEDPL + " -- III.a.3.iii Dealing with definitions", FEDPL_URL,
+                    "We have ONE rule for dealing with definitions: use them rarely. "
+                    "... It's better to take the time to rewrite to avoid needing to "
+                    "define a term.")),
+    ),
     AccountLaw(
         "an-account-is-an-aif-graph",
         "An account is an AIF graph in this format: I-nodes carry propositions, RA and "

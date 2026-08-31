@@ -124,7 +124,7 @@ def digest(transcript: Path, max_turn_chars: int = MAX_TURN_CHARS,
     return list(reversed(kept))
 
 
-def critic_prompt(pairs: list[dict]) -> str:
+def critic_prompt(pairs: list[dict], judge_turn: int | None = None) -> str:
     turns = "\n\n".join(
         f"TURN {i}:\nUSER: {p['user']}\n"
         f"TOOLS (excerpt of this turn's tool results): {p.get('tools') or '(none)'}\n"
@@ -168,22 +168,38 @@ def critic_prompt(pairs: list[dict]) -> str:
         "excerpt write the premise WITHOUT a ground or quote (an unanchored "
         "premise is honest; a fabricated quote is not). Mark every account "
         "{\"reconstruction\": true}. Answer with a JSON array of these account "
-        "objects and nothing else.\n\n"
+        "objects and nothing else."
+        + (f" Reconstruct ONLY turn {judge_turn}; the earlier turns are context "
+           "for its premises, not subjects - write no account for them."
+           if judge_turn is not None else "")
+        + "\n\n"
         + turns)
 
 
-def cli_runner(prompt: str) -> str:
+LIVE_MODEL = "haiku"       # the drawing task is transcription; the small model does it
+LIVE_TIMEOUT_S = 240       # generous: the critic is detached, the cap only stops runaways
+                           # (measured 2026-09-01: 135-202s on the small model, floor 6s)
+
+
+def cli_runner(prompt: str, model: str | None = None, timeout: int = 600) -> str:
     import subprocess
     env = dict(os.environ, CRAFT_ACCOUNTS_OFF="1")
     # the prompt travels on stdin: a digest-sized argv element trips Windows'
     # command-line length limit (WinError 206, seen on the first live run)
-    done = subprocess.run(["claude", "-p"], input=prompt, capture_output=True,
-                          text=True, timeout=600, encoding="utf-8",
+    cmd = ["claude", "-p"] + (["--model", model] if model else [])
+    done = subprocess.run(cmd, input=prompt, capture_output=True,
+                          text=True, timeout=timeout, encoding="utf-8",
                           errors="replace", env=env)
     if done.returncode != 0:
         raise RuntimeError(f"claude -p failed ({done.returncode}): "
                            f"{(done.stderr or '')[:200]}")
     return done.stdout or ""
+
+
+def live_runner(prompt: str) -> str:
+    """The live path's runner: the small model, on a clock. Timeout raises, and the
+    caller's fallback is the detached spawn -- deferred beats blocked, lost is neither."""
+    return cli_runner(prompt, model=LIVE_MODEL, timeout=LIVE_TIMEOUT_S)
 
 
 def run(transcript: Path, session: str, out_dir: Path, runner=None) -> int:
@@ -244,7 +260,7 @@ def criticize_turn(transcript: Path, session: str, out_dir: Path,
     from .account import check_file
     from .record import read
 
-    runner = runner or cli_runner
+    runner = runner or live_runner
     pairs = digest(transcript, max_turn_chars=LIVE_TURN_CHARS,
                    max_tool_chars=LIVE_TOOL_CHARS)
     if not pairs:
@@ -256,7 +272,7 @@ def criticize_turn(transcript: Path, session: str, out_dir: Path,
     # citing evidence from two turns back was convicted of an undocumented
     # search when the critic could only see one turn (2026-08-30)
     window = pairs[-3:]
-    text = runner(critic_prompt(window))
+    text = runner(critic_prompt(window, judge_turn=len(window) - 1))
     start, end = text.find("["), text.rfind("]")
     try:
         accounts = json.loads(text[start:end + 1]) if 0 <= start <= end else []

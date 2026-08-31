@@ -471,33 +471,51 @@ def test_a_says_survives_punctuation_drift_and_a_fabricated_says_does_not(tmp_pa
 
 
 
-def test_the_live_critics_conviction_returns_one_turn_late(tmp_path, monkeypatch,
+def test_the_critique_of_a_reply_informs_the_very_next_one(tmp_path, monkeypatch,
                                                            capsys):
-    """Two owner corrections, together: a conviction lands in the conversation it
-    criticizes (2026-08-30), and the stop hook does not wait for the model that
-    finds it (2026-09-01). So Stop drains what the previous turn's critic left in
-    the pending file -- exit 2, reported once, file deleted -- and spawns this
-    turn's critic detached."""
-    t = tmp_path / "t.jsonl"
-    t.write_text("", encoding="utf-8")
+    """The critic judges the turn that just ended, detached (measured 2026-09-01:
+    135-202s a critique, so nothing synchronous survives). Its findings drain at
+    the user's NEXT PROMPT as context, informing the reply being written; the
+    next Stop is the fallback seam. Neither waits for anything."""
     monkeypatch.setattr(account_hook, "_SEEN", tmp_path / "seen.json")
-    spawned = []
-    monkeypatch.setattr(account_hook, "_spawn_critic",
-                        lambda sess, tp, out: spawned.append(1))
     monkeypatch.chdir(tmp_path)
     pend = tmp_path / ".craft" / "accounts" / "s" / "pending-critique.txt"
     pend.parent.mkdir(parents=True)
     pend.write_text("some-law (critic-live-0.json p1): the reading overreaches",
                     encoding="utf-8")
-    code = account_hook.stop({"session_id": "s", "transcript_path": str(t)})
-    assert code == 2
-    err = capsys.readouterr().err
-    assert "critic" in err and "some-law" in err and "PREVIOUS" in err
+    code = account_hook.user_prompt_submit({"session_id": "s"})
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "some-law" in out and "previous reply" in out
     assert not pend.exists(), "a drained critique must not be re-reported"
-    assert spawned == [1]
+    # drained means drained: the Stop seam stays silent afterwards
+    spawned = []
+    monkeypatch.setattr(account_hook, "_spawn_critic",
+                        lambda sess, tp, out_: spawned.append(1))
+    t = tmp_path / "t.jsonl"
+    t.write_text("", encoding="utf-8")
     code2 = account_hook.stop({"session_id": "s", "transcript_path": str(t)})
     assert code2 == 0 and capsys.readouterr().err == ""
+    assert spawned == [1]
 
+
+def test_the_stop_seam_carries_a_critique_the_user_never_prompted_after(
+        tmp_path, monkeypatch, capsys):
+    """The fallback drain: when no next prompt arrives before the next Stop, the
+    finding lands there, exit 2, once."""
+    monkeypatch.setattr(account_hook, "_SEEN", tmp_path / "seen.json")
+    monkeypatch.setattr(account_hook, "_spawn_critic", lambda sess, tp, out: None)
+    monkeypatch.chdir(tmp_path)
+    pend = tmp_path / ".craft" / "accounts" / "s" / "pending-critique.txt"
+    pend.parent.mkdir(parents=True)
+    pend.write_text("some-law (critic-live-0.json p1): the reading overreaches",
+                    encoding="utf-8")
+    t = tmp_path / "t.jsonl"
+    t.write_text("", encoding="utf-8")
+    code = account_hook.stop({"session_id": "s", "transcript_path": str(t)})
+    err = capsys.readouterr().err
+    assert code == 2 and "some-law" in err and "previous reply" in err
+    assert not pend.exists()
 
 
 def test_the_critics_own_files_are_not_filed_accounts(tmp_path, monkeypatch):

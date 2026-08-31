@@ -252,12 +252,24 @@ def residual(reply: str, accounts: list) -> dict:
 
 
 def user_prompt_submit(payload: dict) -> int:
-    """Silent since 2026-08-30. The per-turn instruction measurably degraded the
-    graded session (style contamination, ~15k tokens and a quarter of tool calls
-    per session spent on inline formalization, every live conviction an error of
-    that formalization) while buying near-zero answer repair. The lane now runs
-    as the silent critic (craft/critic.py) at session end; INSTRUCTION is kept
-    for the critic's schema reference, injected nowhere."""
+    """No instruction is injected (the 2026-08-30 measurement: inline
+    formalization taxed every answer and repaired none) -- but the detached
+    critic's findings about the reply the user just read ARE drained here, as
+    context, so the correction lands in the very next reply without anything
+    ever having blocked. stdout on this hook reaches the model as context."""
+    session = str(payload.get("session_id") or "")
+    if not session:
+        return 0
+    try:
+        fresh = _drain_critique(session)
+    except Exception:
+        return 0
+    if fresh:
+        print("the critic judged your previous reply (produced alongside it, "
+              "delivered with this message). Each line names a law with a "
+              "published root. Nothing is refused.\n  "
+              + "\n  ".join(fresh)
+              + "\n" + _conviction_contract(session))
     return 0
 
 
@@ -287,33 +299,38 @@ def _conviction_contract(session: str) -> str:
             "correction that cites its trigger is a response, not a correction.")
 
 
-def _live_critic(session: str, tpath) -> int:
-    """The critic beside the turn, no longer inside it. Two owner corrections meet
-    here: 2026-08-30, a critique nobody reads is waste, so findings land in the
-    conversation they criticize; 2026-09-01, the stop hooks are too long, so the
-    one `claude -p` this lane spends per turn runs DETACHED, off Stop's critical
-    path. Stop drains what the previous turn's critic left and spawns this turn's;
-    a conviction therefore arrives one turn late, which still reaches the author
-    in the conversation it belongs to. Any failure anywhere here is silent - a
-    dead critic must never block."""
+def _drain_critique(session: str) -> list:
+    """Whatever the detached critic has left, taken exactly once."""
     out = Path(flight.working_dir()) / ".craft" / "accounts" / session
-    lines: list = []
     try:
         pending = out / "pending-critique.txt"
-        if pending.is_file():
-            lines = [x for x in pending.read_text(encoding="utf-8").splitlines()
-                     if x.strip()]
-            pending.unlink()
+        if not pending.is_file():
+            return []
+        lines = [x for x in pending.read_text(encoding="utf-8").splitlines()
+                 if x.strip()]
+        pending.unlink()
     except OSError:
-        lines = []
-    _spawn_critic(session, tpath, out)
-    fresh = [ln for ln in lines if not _already_reported(hashlib.sha256(
+        return []
+    return [ln for ln in lines if not _already_reported(hashlib.sha256(
         ("critic|" + ln).encode("utf-8", "replace")).hexdigest())]
+
+
+def _live_critic(session: str, tpath) -> int:
+    """The critic judges the turn that just ENDED, detached, and never blocks:
+    measured 2026-09-01, the critique generation runs 135-202s on the small model
+    however much is stripped, so any synchronous design is minutes of Stop wait.
+    Findings are drained at the next event that can carry them -- the user's next
+    prompt (user_prompt_submit below, where they inform the very next reply) or
+    the next Stop, whichever fires first. Any failure anywhere is silent - a dead
+    critic must never block."""
+    out = Path(flight.working_dir()) / ".craft" / "accounts" / session
+    fresh = _drain_critique(session)
+    _spawn_critic(session, tpath, out)
     if not fresh:
         return 0
-    print("the critic reconstructed the PREVIOUS turn's argument and the "
-          "deciders convicted it. Each line names a law with a published root. "
-          "Nothing is refused.\n  "
+    print("the critic judged your previous reply (produced alongside it, "
+          "delivered at this seam). Each line names a law with a published "
+          "root. Nothing is refused.\n  "
           + "\n  ".join(fresh)
           + "\n" + _conviction_contract(session), file=sys.stderr)
     return 2

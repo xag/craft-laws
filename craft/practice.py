@@ -24,7 +24,7 @@ from __future__ import annotations
 from quern import Node
 from quern.provenance import Quantity
 
-from .laws import _cited, _law, _uncited
+from .laws import FEDPL, FEDPL_URL, _cited, _law, _uncited
 
 PARNAS = ("David L. Parnas, On the Criteria To Be Used in Decomposing Systems into "
           "Modules, Communications of the ACM 15(12), 1053-1058, 1972")
@@ -1531,6 +1531,47 @@ PRACTICE = [
         citations=[(CROSKERRY, CROSKERRY_URL,
                     "the influence of affective sources of error on "
                     "decision-making has been widely underestimated")],
+    ),
+
+    _law(
+        "an-answer-is-plain-on-first-reading",
+        "An answer is written to be understood the first time it is read: the plainest "
+        "words that carry the fact, no term the reply itself invents and leaves "
+        "undefined, and no ornament standing where a statement belongs",
+        _cited(FEDPL + " — Use short, simple words; Omit unnecessary words; Avoid "
+                       "legal, foreign, and technical jargon"),
+        falsifier="A sentence in the answer that names something by a term the answer "
+                  "introduced and never defined; or one whose plain restatement says "
+                  "the same thing in fewer words and loses nothing; or a figure of "
+                  "speech standing in the place where the fact should be.",
+        triggers=["an answer is written to the person who asked",
+                  "a finding is reported"],
+        citations=[(FEDPL + " — III.a.3.i Use short, simple words", FEDPL_URL,
+                    "While there is no problem with being expressive, most federal "
+                    "writing has no place for literary flair. ... Prefer the familiar "
+                    "word to the far-fetched. Prefer the concrete word to the "
+                    "abstraction. Prefer the single word to the circumlocution. Prefer "
+                    "the short word to the long."),
+                   (FEDPL + " — III.a.3.v Avoid legal, foreign, and technical jargon",
+                    FEDPL_URL,
+                    "Jargon is unnecessarily complicated, technical language used to "
+                    "impress, rather than to inform, your audience."),
+                   (FEDPL + " — III.a.3.ii Omit unnecessary words", FEDPL_URL,
+                    "writers must become more critical of their own writing. They must "
+                    "consider whether they need every word.")],
+        sightings=[("korean-gpt-coach, 2026-08-31",
+                    "A report on the language overlay described the cooldown as a "
+                    "throttle that 'brakes on engagement, not on emission', and the "
+                    "anchor test as one that 'doesn't bite'. Both sentences were "
+                    "accurate and neither could be read once. The owner answered "
+                    "'Plain English please', which is the falsifier being applied by "
+                    "the only instrument there is.")],
+        note="The source was read whole on 2026-08-24 and these two rows were routed "
+             "judge: whether a word is unnecessary is a reading. So it is, in a "
+             "document. In an answer written to one person it is not — that reader "
+             "says whether they could read it, and on 2026-08-31 they said they could "
+             "not. craft/census_plain.py carries the re-read at the guideline grain, "
+             "with this the one route that changed.",
     ),
 ]
 

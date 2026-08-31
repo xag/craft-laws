@@ -50,7 +50,9 @@ NNG = "Nielsen Norman Group, 10 Usability Heuristics for User Interface Design"
 NNG_URL = "https://www.nngroup.com/articles/ten-usability-heuristics/"
 
 FEDPL = ("Federal Plain Language Guidelines, March 2011, Rev. 1 May 2011 "
-         "(Plain Writing Act of 2010)")
+         "(Plain Language Action and Information Network, under the Plain Writing "
+         "Act of 2010; captured at docs/sources/plain-2011-federal-guidelines.pdf "
+         "and censused whole in craft/census_plain.py)")
 FEDPL_URL = "https://www.archive.org/details/FederalPLGuidelines"
 
 LAWS = [

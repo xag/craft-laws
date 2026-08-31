@@ -288,27 +288,53 @@ def _conviction_contract(session: str) -> str:
 
 
 def _live_critic(session: str, tpath) -> int:
-    """The critic in the turn it criticizes (the owner's 2026-08-30 correction of
-    the session-end design: a critique nobody reads is waste). Tray-gated by the
-    same switch as this whole hook, silent when clean; a conviction returns to
-    the model NOW, exit 2, so it corrects itself while the owner reads. Any
-    failure of the critic itself is silent - a dead critic must never block."""
+    """The critic beside the turn, no longer inside it. Two owner corrections meet
+    here: 2026-08-30, a critique nobody reads is waste, so findings land in the
+    conversation they criticize; 2026-09-01, the stop hooks are too long, so the
+    one `claude -p` this lane spends per turn runs DETACHED, off Stop's critical
+    path. Stop drains what the previous turn's critic left and spawns this turn's;
+    a conviction therefore arrives one turn late, which still reaches the author
+    in the conversation it belongs to. Any failure anywhere here is silent - a
+    dead critic must never block."""
+    out = Path(flight.working_dir()) / ".craft" / "accounts" / session
+    lines: list = []
     try:
-        from .critic import criticize_turn
-        out = Path(flight.working_dir()) / ".craft" / "accounts" / session
-        lines = criticize_turn(Path(str(tpath)), session, out)
-    except Exception:
-        return 0
+        pending = out / "pending-critique.txt"
+        if pending.is_file():
+            lines = [x for x in pending.read_text(encoding="utf-8").splitlines()
+                     if x.strip()]
+            pending.unlink()
+    except OSError:
+        lines = []
+    _spawn_critic(session, tpath, out)
     fresh = [ln for ln in lines if not _already_reported(hashlib.sha256(
         ("critic|" + ln).encode("utf-8", "replace")).hexdigest())]
     if not fresh:
         return 0
-    print("the critic reconstructed this turn's argument and the deciders "
-          "convicted it. Each line names a law with a published root. "
+    print("the critic reconstructed the PREVIOUS turn's argument and the "
+          "deciders convicted it. Each line names a law with a published root. "
           "Nothing is refused.\n  "
           + "\n  ".join(fresh)
           + "\n" + _conviction_contract(session), file=sys.stderr)
     return 2
+
+
+def _spawn_critic(session: str, tpath, out: Path) -> None:
+    """This turn's critic, detached: no window, no wait, output discarded (its
+    product is the pending file and the critic-live accounts, not a stream)."""
+    import subprocess
+    try:
+        flags = 0x00000008 | 0x08000000 if os.name == "nt" else 0
+        subprocess.Popen(
+            [sys.executable, "-m", "craft.critic", str(tpath), session,
+             "--out", str(out), "--live",
+             "--pending", str(out / "pending-critique.txt")],
+            cwd=str(_ROOT), creationflags=flags, close_fds=True,
+            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            env=dict(os.environ, CRAFT_ACCOUNTS_OFF="1"))
+    except Exception:
+        pass
 
 
 def stop(payload: dict) -> int:

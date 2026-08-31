@@ -485,10 +485,23 @@ def check_names_are_known_or_defined(a: Account, corpus=None) -> list[Finding]:
     A definition node's quote is a REPLY sentence, so it cannot be anchored against
     the record corpus here; the residual pass owns reply-side quotes. Stated, not
     hidden."""
+    import re as _re
+
     from .record import _canon
 
     def key(s) -> str:
-        return _canon(str(s or "")).lower()
+        # formatting is not part of a name: the first live firing convicted
+        # `craft/neutrality.py` because the transcriber carried the backticks in
+        return _canon(_re.sub(r"[`*_\"]", "", str(s or ""))).lower()
+
+    def tokens(s) -> set:
+        # possessives fold to their noun: "the critic's drawing task" coins nothing
+        # the record's "critic" has not already put on the table
+        out = set()
+        for t in _re.findall(r"[a-z0-9][a-z0-9./'-]*", key(s)):
+            t = t.rstrip(".-'")          # sentence punctuation is not part of a word
+            out.add(t[:-2] if t.endswith("'s") else t)
+        return out
 
     defined = {key(n.get("defines")) for n in a.of_type(I_NODE) if n.get("defines")}
     named = [(n, name) for n in a.of_type(I_NODE)
@@ -501,10 +514,17 @@ def check_names_are_known_or_defined(a: Account, corpus=None) -> list[Finding]:
             "this account carries names and no record was supplied to check them "
             "against -- give the transcript; unverifiable is not judged either way")
     record = (_canon(corpus.tool_text) + chr(10) + _canon(corpus.user_text)).lower()
+    record_tokens = tokens(record)
     out = []
     for n, name in named:
         k = key(name)
         if not k or k in defined or k in record:
+            continue
+        # A compositional name built entirely of words the record used is known the
+        # way its parts are: "the critic's drawing task" coins nothing when critic,
+        # drawing and task are all on the table. The coinage this law exists for is
+        # the name with a part nobody has seen -- and that part stays convicted.
+        if tokens(name) and tokens(name) <= record_tokens:
             continue
         out.append(Finding("a-name-is-known-or-defined", n.get("id", "?"), name[:110],
                            f"the conclusion leans on the name {name!r}: the record "

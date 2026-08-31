@@ -150,7 +150,10 @@ def critic_prompt(pairs: list[dict]) -> str:
         "turn shown; do not invent premises the reply does not state. On each "
         "conclusion, transcribe `names`: the short names — four words or fewer, "
         "articles included, copied verbatim — the `says` sentence uses to refer "
-        "to specific things (a component, a mechanism, a concept). Where the "
+        "to specific things (a component, a mechanism, a concept) -- names that "
+        "designate: the phrase could serve as the thing's title. Not counting or "
+        "pointing phrases ('the other two', 'that second one', 'tonight's build', 'my earlier "
+        "suggestion'), which refer without naming. Where the "
         "REPLY itself states what one of those names refers to, add a node "
         "carrying `defines` (the name) and `quote` (that REPLY sentence, "
         "verbatim; for definition nodes only, the quote comes from the REPLY). "
@@ -288,8 +291,21 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("session")
     ap.add_argument("--out", default=None,
                     help="accounts directory (default: cwd/.craft/accounts/<session>)")
+    ap.add_argument("--live", action="store_true",
+                    help="criticize the LAST turn only and write findings to --pending")
+    ap.add_argument("--pending", default=None,
+                    help="file the live findings are left in for the next Stop to drain")
     ns = ap.parse_args(argv)
     out = Path(ns.out) if ns.out else Path.cwd() / ".craft" / "accounts" / ns.session
+    if ns.live:
+        # The detached half of the async Stop hook (owner, 2026-09-01: the stop hooks
+        # are too long): this process runs off the critical path and leaves what it
+        # finds where the next Stop looks. Clean turns leave nothing.
+        lines = criticize_turn(Path(ns.transcript), ns.session, out)
+        if lines and ns.pending:
+            Path(ns.pending).parent.mkdir(parents=True, exist_ok=True)
+            Path(ns.pending).write_text("\n".join(lines) + "\n", encoding="utf-8")
+        return 0
     n = run(Path(ns.transcript), ns.session, out)
     print(f"critic: {n} finding(s)" if n else "critic: nothing to say")
     return 0

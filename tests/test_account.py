@@ -367,15 +367,15 @@ def test_a_clean_filed_account_is_silent_and_the_critic_still_runs(tmp_path,
     monkeypatch.setattr(account_hook, "repos_touched", lambda _p: [repo])
     monkeypatch.setattr(account_hook, "_already_reported", lambda _k: False)
     ran = []
-    monkeypatch.setattr(critic_mod, "criticize_turn",
-                        lambda tr, s, out, runner=None: ran.append(1) or [])
+    monkeypatch.setattr(account_hook, "_spawn_critic",
+                        lambda sess, tp, out: ran.append(1))
     monkeypatch.chdir(tmp_path)
     t = tmp_path / "t.jsonl"
     t.write_text("", encoding="utf-8")
     code = account_hook.stop({"session_id": "sess", "transcript_path": str(t)})
     assert code == 0
     assert capsys.readouterr().err == ""
-    assert ran == [1], "the critic must run on a clean pass, not be short-circuited"
+    assert ran == [1], "the critic must be spawned on a clean pass, not short-circuited"
 
 
 def test_a_standing_finding_is_reported_once_not_every_turn(tmp_path, monkeypatch,
@@ -471,23 +471,32 @@ def test_a_says_survives_punctuation_drift_and_a_fabricated_says_does_not(tmp_pa
 
 
 
-def test_the_live_critics_conviction_returns_to_the_model_now(tmp_path, monkeypatch,
-                                                              capsys):
-    """The owner's design: silent when clean, and a conviction lands in the very
-    turn it criticizes, exit 2, so the model corrects itself before the user
-    has to."""
-    import craft.critic as critic_mod
+def test_the_live_critics_conviction_returns_one_turn_late(tmp_path, monkeypatch,
+                                                           capsys):
+    """Two owner corrections, together: a conviction lands in the conversation it
+    criticizes (2026-08-30), and the stop hook does not wait for the model that
+    finds it (2026-09-01). So Stop drains what the previous turn's critic left in
+    the pending file -- exit 2, reported once, file deleted -- and spawns this
+    turn's critic detached."""
     t = tmp_path / "t.jsonl"
     t.write_text("", encoding="utf-8")
     monkeypatch.setattr(account_hook, "_SEEN", tmp_path / "seen.json")
-    monkeypatch.setattr(critic_mod, "criticize_turn",
-                        lambda tr, s, out, runner=None: [
-                            "some-law (critic-live-0.json p1): the reading overreaches"])
+    spawned = []
+    monkeypatch.setattr(account_hook, "_spawn_critic",
+                        lambda sess, tp, out: spawned.append(1))
     monkeypatch.chdir(tmp_path)
+    pend = tmp_path / ".craft" / "accounts" / "s" / "pending-critique.txt"
+    pend.parent.mkdir(parents=True)
+    pend.write_text("some-law (critic-live-0.json p1): the reading overreaches",
+                    encoding="utf-8")
     code = account_hook.stop({"session_id": "s", "transcript_path": str(t)})
     assert code == 2
     err = capsys.readouterr().err
-    assert "critic" in err and "some-law" in err
+    assert "critic" in err and "some-law" in err and "PREVIOUS" in err
+    assert not pend.exists(), "a drained critique must not be re-reported"
+    assert spawned == [1]
+    code2 = account_hook.stop({"session_id": "s", "transcript_path": str(t)})
+    assert code2 == 0 and capsys.readouterr().err == ""
 
 
 

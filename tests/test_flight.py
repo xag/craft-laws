@@ -40,7 +40,8 @@ def _record_claims_turn(tmp_path, monkeypatch) -> tuple[int, Path, Path]:
         {"kind": "done", "text": "shipped",
          "evidence": [{"where": "producer", "what": "suite green"}]}) + "\n")
     t = _transcript(tmp_path, repo / "src" / "a.py")
-    monkeypatch.setattr(claims_hook, "_SEEN", tmp_path / "seen.json")
+    # the say-it-once store is the courier's since 2026-09-01; point it at tmp
+    monkeypatch.setenv("COURIER_DIR", str(tmp_path / "courier"))
     flight.reset()
     install(flight.boundary("claims"), claims_hook,
             directory=str(tmp_path / "flight"))
@@ -56,25 +57,32 @@ def test_a_claims_turn_records_one_tape_holding_the_whole_verdict(tmp_path,
                                                                   monkeypatch,
                                                                   capsys):
     rc, tape, t = _record_claims_turn(tmp_path, monkeypatch)
-    assert rc == 2                    # the producer-only done-claim convicts
+    # Nothing blocks since the courier carries delivery (2026-09-01): the producer-only
+    # done-claim still convicts, and the conviction is posted rather than thrown at Stop.
+    assert rc == 0
+    from courier import mail
+    posted = mail.take("s")
+    assert any("done-is-observed-where-the-user-stands" in m["body"] for m in posted)
     header, calls = _tape_lines(tape)
     assert header["hook"] == "claims"
     assert [c["fn"] for c in calls] == ["run"]
     assert calls[0]["kwargs"]["payload"]["transcript_path"] == str(t)
     fns = [e.get("fn") for e in calls[0]["events"]]
-    # the verdict's inputs all crossed as effects: the transcript once (memoized),
-    # the claims file, the seen-state read, and the seen-state write
+    # The verdict's inputs crossed as effects: the transcript once (memoized) and the
+    # claims file. The say-it-once state is no longer among them — it moved to the
+    # courier, which has its own boundary and its own tape. This tape now holds what
+    # this producer DECIDED; what happened to the message afterwards is read next door.
     assert fns.count("craft.flight.read_transcript") == 1
     assert "craft.flight.file_text" in fns
-    assert "craft.flight.write_text" in fns
 
 
 def test_the_tape_replays_the_turn_without_touching_the_world(tmp_path, monkeypatch,
                                                               capsys):
     from flight_recorder import ReplayAdapter, replay_call
 
+    repo_claims = tmp_path / "alpha" / "claims.jsonl"
     _, tape, _ = _record_claims_turn(tmp_path, monkeypatch)
-    seen_after_record = (tmp_path / "seen.json").read_text(encoding="utf-8")
+    claims_after_record = repo_claims.read_text(encoding="utf-8")
 
     class Adapter(ReplayAdapter):
         boundary = flight.boundary("claims")
@@ -85,8 +93,8 @@ def test_the_tape_replays_the_turn_without_touching_the_world(tmp_path, monkeypa
     flight.reset()   # a fresh hook process starts with no memo; so must a replay
     report = replay_call(tape, 0, Adapter())
     assert report.ok, report
-    # the recorded write was served, not executed: replay advanced no live state
-    assert (tmp_path / "seen.json").read_text(encoding="utf-8") == seen_after_record
+    # the recorded reads were served, not executed: replay advanced no live state
+    assert repo_claims.read_text(encoding="utf-8") == claims_after_record
 
 
 def _tape(d: Path, name: str, size: int, mtime: float) -> Path:

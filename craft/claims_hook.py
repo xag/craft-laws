@@ -26,7 +26,6 @@ CRAFT_FLIGHT=0 opts out; a recorder failure is as silent as every other failure 
 
 from __future__ import annotations
 
-import hashlib
 import json
 import subprocess
 import sys
@@ -35,7 +34,6 @@ from pathlib import Path
 from . import flight
 
 _ROOT = Path(__file__).resolve().parents[1]
-_SEEN = _ROOT / ".craft" / "seen.json"
 
 
 def touched(transcript: Path) -> list[Path]:
@@ -115,23 +113,12 @@ def silent_repos(transcript: Path) -> list[Path]:
     return sorted(r for r in wrote - filed if flight.exists(r / "claims.jsonl"))
 
 
-def _already_reported(findings) -> bool:
-    key = hashlib.sha256(
-        "|".join(f"{f.law}{f.where}{f.quote}" for f in findings).encode("utf-8", "replace")
-    ).hexdigest()
-    try:
-        seen = set(json.loads(flight.file_text(_SEEN)))
-    except Exception:
-        seen = set()
-    if key in seen:
-        return True
-    seen.add(key)
-    try:
-        _SEEN.parent.mkdir(parents=True, exist_ok=True)
-        flight.write_text(_SEEN, json.dumps(sorted(seen)[-400:]))
-    except OSError:
-        pass
-    return False
+def _identity(findings) -> str:
+    """What counts as the same thing being said again — this producer's judgment, handed
+    to the courier, which owns the storage. A turn told about a finding, and choosing to
+    leave it, is not nagged the next turn: a noisy informant is one that gets switched
+    off."""
+    return "|".join(f"{f.law}{f.where}{f.quote}" for f in findings)
 
 
 def report(findings, session: str = "") -> str:
@@ -196,17 +183,24 @@ def run(payload: dict) -> int:
     # a noisy informant is one that gets switched off
     notes = []
     if silent:
-        marker = [ClaimFinding(law="intake-silence", quote="",
-                               where="|".join(sorted(r.name for r in silent)),
-                               why="")]
-        if not _already_reported(marker):
-            notes.append(_silence_note(silent))
-    if findings and not _already_reported(findings):
-        notes.insert(0, report(findings, str(payload.get("session_id") or "")))
+        notes.append((_silence_note(silent),
+                      "intake-silence|" + "|".join(sorted(r.name for r in silent))))
+    if findings:
+        notes.insert(0, (report(findings, str(payload.get("session_id") or "")),
+                         _identity(findings)))
     if not notes:
         return 0
-    print("\n\n".join(notes), file=sys.stderr)
-    return 2
+    # The courier delivers: it owns the seam, the say-it-once store and the off switch,
+    # so this module owns none of them (the 2026-09-01 extraction). What is left here is
+    # the judgment — which claims break which law, and what counts as saying it twice.
+    try:
+        from courier import mail
+    except ImportError:
+        return 0
+    session = str(payload.get("session_id") or "")
+    for body, key in notes:
+        mail.post_once(session, "craft.claims", body, key=key)
+    return 0
 
 
 def main() -> int:

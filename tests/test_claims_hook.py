@@ -53,13 +53,16 @@ def test_the_deciders_convict_in_code_and_in_milliseconds(tmp_path):
 
 def test_the_same_findings_are_handed_back_once(tmp_path, monkeypatch):
     # a turn already told, which chose, is not told again — a check that will not let go
-    # is one that gets switched off
-    monkeypatch.setattr(hook, "_SEEN", tmp_path / "seen.json")
+    # is one that gets switched off. The store is the courier's since 2026-09-01; what
+    # counts as the same thing said twice stays this producer's judgment.
+    monkeypatch.setenv("COURIER_DIR", str(tmp_path / "courier"))
+    from courier import mail
     f = [ClaimFinding(law="l", where="claims.jsonl#1", quote="q", why="w")]
-    assert hook._already_reported(f) is False
-    assert hook._already_reported(f) is True
     other = [ClaimFinding(law="l", where="claims.jsonl#2", quote="q", why="w")]
-    assert hook._already_reported(other) is False
+    assert hook._identity(f) != hook._identity(other)
+    assert mail.post_once("s", "craft.claims", "a", key=hook._identity(f))["status"] == "sent"
+    assert mail.post_once("s", "craft.claims", "a", key=hook._identity(f))["status"] == "duplicate"
+    assert mail.post_once("s", "craft.claims", "b", key=hook._identity(other))["status"] == "sent"
 
 
 def test_the_finding_goes_to_the_author_and_refuses_nothing():
@@ -144,8 +147,14 @@ def test_the_consult_gate_reaches_the_author_at_the_stop(tmp_path, monkeypatch, 
         encoding="utf-8")
     (repo / "src").mkdir()
     t = _transcript(tmp_path, repo / "src" / "a.py")
-    monkeypatch.setattr(hook, "_SEEN", tmp_path / "seen.json")
+    monkeypatch.setenv("COURIER_DIR", str(tmp_path / "courier"))
     monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1]))
     rc = hook.run({"transcript_path": str(t), "session_id": "s"})
-    assert rc == 2
-    assert "unconsulted" in capsys.readouterr().err
+    # nothing blocks any more: the courier carries the finding to the next seam
+    assert rc == 0
+    from courier import mail
+    posted = mail.take("s")
+    # the findings and the intake-silence note travel as separate messages now, so each
+    # is thrown away or repeated on its own terms rather than as one blob
+    assert {m["producer"] for m in posted} == {"craft.claims"}
+    assert any("unconsulted" in m["body"] for m in posted)

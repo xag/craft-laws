@@ -21,7 +21,7 @@ dev = ["pytest>=8.0.0"]
 tray = ["pystray>=0.19", "pillow>=10"]
 
 [project.scripts]
-craft-account-tray = "craft.account_tray:main"
+craft-review-tray = "craft.review_tray:main"
 
 [tool.uv.sources]
 # Pinned by rev, always. quern is pre-1.0 and its own doctrine is fork-or-republish over resolver

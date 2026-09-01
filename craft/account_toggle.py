@@ -1,4 +1,9 @@
-"""The switch for craft.account. `python -m craft.account_toggle on | off | status`.
+"""The MASTER switch for the reply reviews. `python -m craft.account_toggle on|off|status`.
+
+Since 2026-09-01 this is the blunt one: it silences every review at once and wires the one
+Stop entry point. WHICH reviews run is `craft.review`, one switch each, shown and flipped
+from the tray (`craft.review_tray`) — this module's own tray was retired there, because two
+icons for one lane is the ambiguity a tray icon exists to remove.
 
 Two dimensions, reported separately, because they fail differently:
 
@@ -21,7 +26,7 @@ from craft.account_hook import off, off_path
 
 SETTINGS = Path.home() / ".claude" / "settings.json"
 COMMAND = ("uv run --no-sync --project C:/Users/trans/Projects/craft-laws "
-           "python -m craft.account_hook")
+           "python -m craft.review_hook")
 
 
 def _settings() -> dict:
@@ -31,12 +36,21 @@ def _settings() -> dict:
         return {}
 
 
+MARKER = "craft.review_hook"      # what makes an entry OURS, whatever flags wrap it
+
+
 def wired() -> dict:
-    """Which events run the account hook, as settings.json has it now."""
+    """Which events run the review doorway, as settings.json has it now.
+
+    Matched on the MODULE, not on the whole command line: the two are wired with
+    different uv flags (--project and --directory) at different times, and an exact-string
+    match reported AMBER — nothing is being checked — over a hook that was right there.
+    An identity test that a cosmetic difference defeats is worse than none: it sends you
+    to re-wire something already wired."""
     hooks = (_settings().get("hooks") or {})
     out = {}
     for event in ("Stop",):
-        out[event] = any(h.get("command") == COMMAND
+        out[event] = any(MARKER in (h.get("command") or "")
                          for group in (hooks.get(event) or [])
                          for h in (group.get("hooks") or []))
     return out

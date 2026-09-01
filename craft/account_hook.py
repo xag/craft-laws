@@ -299,6 +299,13 @@ def _live_critic(session: str, tpath) -> int:
     return 0
 
 
+def spawn_critic(session: str, tpath) -> None:
+    """The argument review, started detached. Public because craft.review owns the
+    question of WHICH reviews run; this module owns what this one is."""
+    out = Path(flight.working_dir()) / ".craft" / "accounts" / session
+    _spawn_critic(session, tpath, out)
+
+
 def _spawn_critic(session: str, tpath, out: Path) -> None:
     """This turn's critic, started and left. The flags are NOT this repo's business:
     courier.spawn owns the windowless rule, having been given it by transponder's

@@ -177,7 +177,13 @@ def run(payload: dict) -> int:
                             for f in (consult_file(claims_path) or []))
         except Exception:
             pass
-    silent = silent_repos(Path(path))
+    # craft.review may ask for one half of this hook and not the other: the claim
+    # deciders and the intake-silence note are two reviews that happen to share a
+    # transcript parse, and a user who switched one off means it.
+    wanted = set(payload.get("_reviews") or ("claims", "intake"))
+    if "claims" not in wanted:
+        findings = []
+    silent = silent_repos(Path(path)) if "intake" in wanted else []
     # the silence rides the same once-per-content throttle as the findings: a
     # repo the author was told about, and chose to leave silent, is not nagged —
     # a noisy informant is one that gets switched off

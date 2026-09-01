@@ -105,10 +105,11 @@ def refresh(icon: pystray.Icon) -> None:
 
 
 def _toggle(item_id: str):
-    def act(icon, _item):
+    def act(icon, _item=None):
         r = review.BY_ID[item_id]
         r.set(not r.on)
-        refresh(icon)
+        if icon is not None:
+            refresh(icon)
     return act
 
 
@@ -117,25 +118,40 @@ def _checked(item_id: str):
 
 
 def _all(on: bool):
-    def act(icon, _item):
+    def act(icon, _item=None):
         for r in review.REVIEWS:
             r.set(on)
-        refresh(icon)
+        if icon is not None:
+            refresh(icon)
     return act
 
 
+def _flip_all(icon, _item=None) -> None:
+    """The blunt one: everything off if anything is on, else everything back on."""
+    _all(not review.enabled())(icon, _item)
+
+
 def menu() -> pystray.Menu:
-    """One checkbox per review, then the two blunt instruments. Built once: pystray
-    reads the checked callbacks on every open, so the marks follow the switches even
-    when something else flipped them."""
+    """A default action first, then one checkbox per review.
+
+    THE DEFAULT ITEM IS NOT DECORATION. On Windows a left-click invokes a menu's default
+    item and nothing else — with no default, the icon simply does not answer a click, which
+    is what a user calls a broken tray icon. The predecessor had one and this replacement
+    shipped without it. Left-click flips everything; the per-review choice is one right-click
+    away, where a choice belongs.
+
+    Built once: pystray re-reads the text and checked callbacks on every open, so both the
+    label and the marks follow switches flipped by other hands."""
     items = [pystray.MenuItem(f"{r.id}: {r.what}", _toggle(r.id),
                               checked=_checked(r.id))
              for r in review.REVIEWS]
     return pystray.Menu(
+        pystray.MenuItem(lambda _i: ("Turn every review off" if review.enabled()
+                                     else "Turn every review on"),
+                         _flip_all, default=True),
+        pystray.Menu.SEPARATOR,
         *items,
         pystray.Menu.SEPARATOR,
-        pystray.MenuItem("All on", _all(True)),
-        pystray.MenuItem("All off", _all(False)),
         pystray.MenuItem("Status", lambda *_: print(review.render(review.state()))),
         pystray.MenuItem("Quit", lambda ic, _i: (_stop.set(), ic.stop())),
     )

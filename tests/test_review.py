@@ -138,6 +138,26 @@ class TestTheTray:
         assert not by_id["record"][0].checked
         assert by_id["reasoning"][0].checked, "switching one review off unchecked another"
 
+    def test_a_left_click_does_something(self):
+        """On Windows a left-click invokes the menu's DEFAULT item and nothing else. With
+        no default the icon does not answer a click at all, which is what a user calls a
+        broken tray icon — this replacement shipped that way once."""
+        tray = pytest.importorskip("craft.review_tray")
+        items = list(tray.menu())
+        defaults = [i for i in items if i.default]
+        assert len(defaults) == 1, "exactly one default action, or a click does nothing"
+
+        for r in review.REVIEWS:
+            r.set(True)
+        assert "off" in str(defaults[0].text).lower(), "it should offer to turn them off"
+        tray._flip_all(None)
+        assert review.state()["on"] == [], "a click with everything on turned nothing off"
+
+        items = list(tray.menu())
+        assert "on" in str([i for i in items if i.default][0].text).lower()
+        tray._flip_all(None)
+        assert len(review.state()["on"]) == len(review.REVIEWS)
+
     def test_the_tooltip_never_exceeds_what_the_shell_will_show(self):
         tray = pytest.importorskip("craft.review_tray")
         for r in review.REVIEWS:

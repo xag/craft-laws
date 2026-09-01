@@ -4,8 +4,14 @@ version = "0.1.0"
 description = "craft@0.1.0 — the laws of interface and copy, as checkable data."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["quern", "lark>=1.2", "z3-solver>=4.13", "jsonschema>=4.21",
-                "xag-flight-recorder"]
+dependencies = [
+    "quern",
+    "lark>=1.2",
+    "z3-solver>=4.13",
+    "jsonschema>=4.21",
+    "xag-flight-recorder",
+    "courier",
+]
 
 [dependency-groups]
 dev = ["pytest>=8.0.0"]
@@ -25,6 +31,7 @@ quern = { git = "https://github.com/xag/quern", rev = "ab9563e" }
 # The rev quern itself pins, stated as our own dependency because craft.flight imports it —
 # leaning on a transitive pin is how an import breaks on somebody else's upgrade.
 xag-flight-recorder = { git = "https://github.com/xag/flight-recorder", rev = "b4d2bb1" }
+courier = { path = "../courier", editable = true }
 
 [build-system]
 requires = ["hatchling"]

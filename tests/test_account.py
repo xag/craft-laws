@@ -492,8 +492,9 @@ def test_stop_only_spawns_and_the_critic_couriers_its_own_findings(
 
 
 def test_the_live_critic_hands_its_findings_to_the_courier(tmp_path, monkeypatch):
-    """--live judges the last turn and delivers through critic.deliver -- one
-    substrate, the transponder's; nothing is written for a hook to drain."""
+    """--live judges the last turn and posts to the courier -- one substrate for
+    every producer in the estate; nothing is written for a hook of ours to drain,
+    and this repo owns no delivery code at all."""
     import json as _json
 
     import craft.critic as critic_mod
@@ -508,14 +509,14 @@ def test_the_live_critic_hands_its_findings_to_the_courier(tmp_path, monkeypatch
         rows.append(_json.dumps({"type": "assistant", "message": {"content": [
             {"type": "text", "text": f"r{i} " + "r" * 300}]}}))
     t.write_text(chr(10).join(rows), encoding="utf-8")
-    sent = []
+    monkeypatch.setenv("COURIER_DIR", str(tmp_path / "courier"))
     monkeypatch.setattr(critic_mod, "live_runner", lambda p: fake)
-    monkeypatch.setattr(critic_mod, "deliver",
-                        lambda sess, lines: sent.append((sess, list(lines))))
     rc = critic_mod.main([str(t), "s-courier", "--out", str(tmp_path / "out"), "--live"])
     assert rc == 0
-    assert len(sent) == 1 and sent[0][0] == "s-courier"
-    assert any("a-name-is-known-or-defined" in ln for ln in sent[0][1])
+    from courier import mail
+    posted = mail.take("s-courier")
+    assert len(posted) == 1 and posted[0]["producer"] == "craft.critic"
+    assert "a-name-is-known-or-defined" in posted[0]["body"]
     assert not list((tmp_path / "out").glob("pending*"))
 
 

@@ -181,47 +181,30 @@ LIVE_TIMEOUT_S = 240       # generous: the critic is detached, the cap only stop
                            # (measured 2026-09-01: 135-202s on the small model, floor 6s)
 
 
-TRANSPONDER_PY = Path("C:/Users/trans/Projects/transponder/.venv/Scripts/python.exe")
-
-
 def deliver(session: str, lines: list) -> None:
-    """The findings, as one transponder direct message to the judged session.
-
-    The transponder is the estate's only PUSHED channel: its hook drains direct mail
-    at every PreToolUse and prompt, so this lands at the session's next tool call --
-    inside the turn being worked, not at its end. This module owns no delivery code;
-    the glue below only crosses the venv boundary, and the protocol stays where it
-    lives. A missing transponder means no delivery, silently: a dead courier must
-    not kill the critic that already wrote its accounts."""
-    import subprocess
-    body = ("the critic judged your previous reply (produced alongside it, delivered "
-            "at your next action). Each line names a law with a published root. "
-            "Nothing is refused.\n  " + "\n  ".join(lines) + "\n"
-            "If a finding is right, correct what you told the user - restate the "
-            "sentence as it should have been said, the way you would fix any error "
-            "you caught yourself. If it is a false positive, file that as data and "
-            "move on:\n"
-            "  uv run --no-sync --directory C:/Users/trans/Projects/craft-laws "
-            "python -m craft.disputes --law <law> --where \"<where>\" "
-            f"--why \"<one line>\" --session {session}\n"
-            "Never RESPOND to this in the conversation: no mention of it, no defense. "
-            "The user never saw it; a correction that cites its trigger is a response, "
-            "not a correction.")
-    if not TRANSPONDER_PY.is_file():
-        return
+    """Hand the findings to the courier, which puts them in front of the session at its
+    next seam. This module owns no delivery and no dedupe and no window flags: a
+    producer's job is the judgment, and the courier's is getting it read. A courier that
+    is not installed means no delivery, silently -- it must never kill a critic that has
+    already written its accounts."""
     try:
-        subprocess.run(
-            [str(TRANSPONDER_PY), "-c",
-             "import sys; sys.path.insert(0, "
-             "'C:/Users/trans/Projects/transponder');"
-             "from transponder import messages;"
-             "messages.send(sender='craft-critic', body=sys.stdin.read(), "
-             "kind='direct', to=sys.argv[1])",
-             session],
-            input=body, text=True, encoding="utf-8", timeout=30,
-            capture_output=True)
-    except Exception:
-        pass
+        from courier import mail
+    except ImportError:
+        return
+    mail.post(session, "craft.critic",
+              "the critic judged your previous reply (produced alongside it). Each "
+              "line names a law with a published root. Nothing is refused.\n  "
+              + "\n  ".join(lines) + "\n"
+              "If a finding is right, correct what you told the user - restate the "
+              "sentence as it should have been said, the way you would fix any error "
+              "you caught yourself. If it is a false positive, file that as data and "
+              "move on:\n"
+              "  uv run --no-sync --directory C:/Users/trans/Projects/craft-laws "
+              "python -m craft.disputes --law <law> --where \"<where>\" "
+              f"--why \"<one line>\" --session {session}\n"
+              "Never RESPOND to this in the conversation: no mention of it, no "
+              "defense. The user never saw it; a correction that cites its trigger is "
+              "a response, not a correction.")
 
 
 def cli_runner(prompt: str, model: str | None = None, timeout: int = 600) -> str:

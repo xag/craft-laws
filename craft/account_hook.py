@@ -300,20 +300,19 @@ def _live_critic(session: str, tpath) -> int:
 
 
 def _spawn_critic(session: str, tpath, out: Path) -> None:
-    """This turn's critic, detached: no window, no wait, output discarded (its
-    product is the pending file and the critic-live accounts, not a stream)."""
-    import subprocess
+    """This turn's critic, started and left. The flags are NOT this repo's business:
+    courier.spawn owns the windowless rule, having been given it by transponder's
+    relaunch.py, which had it from being bitten. This module's own attempt paired
+    CREATE_NO_WINDOW with DETACHED_PROCESS -- mutually exclusive, silently ignored --
+    and flashed a console every turn until 2026-09-01."""
     try:
-        flags = 0x00000008 | 0x08000000 if os.name == "nt" else 0
-        subprocess.Popen(
-            [sys.executable, "-m", "craft.critic", str(tpath), session,
-             "--out", str(out), "--live"],
-            cwd=str(_ROOT), creationflags=flags, close_fds=True,
-            stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            env=dict(os.environ, CRAFT_ACCOUNTS_OFF="1"))
-    except Exception:
-        pass
+        from courier import spawn
+    except ImportError:
+        return
+    spawn.detach(["-m", "craft.critic", str(tpath), session,
+                  "--out", str(out), "--live"],
+                 cwd=str(_ROOT),
+                 env=dict(os.environ, CRAFT_ACCOUNTS_OFF="1"))
 
 
 def stop(payload: dict) -> int:

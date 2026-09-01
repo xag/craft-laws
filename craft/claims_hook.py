@@ -177,13 +177,11 @@ def run(payload: dict) -> int:
                             for f in (consult_file(claims_path) or []))
         except Exception:
             pass
-    # craft.review may ask for one half of this hook and not the other: the claim
-    # deciders and the intake-silence note are two reviews that happen to share a
-    # transcript parse, and a user who switched one off means it.
-    wanted = set(payload.get("_reviews") or ("record", "unrecorded"))
-    if "record" not in wanted:
-        findings = []
-    silent = silent_repos(Path(path)) if "unrecorded" in wanted else []
+    # Both halves always run: the deciders judge what the record SAYS, and the silence
+    # note judges where it says nothing, under a-corpus-of-reports-carries-its-reporting-
+    # bias. They were briefly switchable apart, which nobody wanted — a conviction rate
+    # over self-filed records means nothing without the filing rate beside it.
+    silent = silent_repos(Path(path))
     # the silence rides the same once-per-content throttle as the findings: a
     # repo the author was told about, and chose to leave silent, is not nagged —
     # a noisy informant is one that gets switched off

@@ -19,14 +19,14 @@ def _switches(tmp_path, monkeypatch):
 def test_every_review_names_what_it_looks_at_and_what_it_costs():
     """The registry exists to answer 'what is checking my replies' in one place. A review
     that cannot say what it reads, or what it costs to run, cannot be chosen against."""
-    assert {r.id for r in review.REVIEWS} == {"record", "unrecorded", "reasoning"}
+    assert {r.id for r in review.REVIEWS} == {"record", "reasoning"}
     for r in review.REVIEWS:
         assert r.what.strip() and r.cost.strip()
 
 
 def test_a_review_is_switched_on_its_own():
     review.BY_ID["reasoning"].set(False)
-    assert review.state()["on"] == ["record", "unrecorded"]
+    assert review.state()["on"] == ["record"]
     assert review.state()["off"] == ["reasoning"]
     assert review.state()["colour"] == "amber", "some on, some off is the middle state"
     review.BY_ID["reasoning"].set(True)
@@ -72,7 +72,6 @@ def test_only_the_enabled_reviews_run(tmp_path, monkeypatch):
 
     review.run(payload)
     assert [k for k, _ in ran] == ["record", "reasoning"]
-    assert ran[0][1] == ("record", "unrecorded")
 
     ran.clear()
     review.BY_ID["reasoning"].set(False)
@@ -80,30 +79,31 @@ def test_only_the_enabled_reviews_run(tmp_path, monkeypatch):
     assert [k for k, _ in ran] == ["record"], "the reasoning review still ran when off"
 
     ran.clear()
-    review.BY_ID["unrecorded"].set(False)
-    review.run(payload)
-    assert ran[0][1] == ("record",), "unrecorded was switched off and still asked for"
-
-    ran.clear()
     review.BY_ID["record"].set(False)
     review.run(payload)
     assert ran == [], "everything is off and something still ran"
 
 
-def test_the_claims_lane_honours_a_half_selection(tmp_path, monkeypatch):
-    """record and unrecorded share one transcript parse but are two reviews; a user who
-    switched one off means it."""
+def test_the_record_review_judges_both_what_was_written_and_what_was_not(tmp_path,
+                                                                          monkeypatch):
+    """The claim deciders and the silence note are one review: a conviction rate over
+    self-filed records means nothing without the filing rate beside it (PRISMA 2020
+    items 14 and 21, via a-corpus-of-reports-carries-its-reporting-bias). They were
+    briefly switchable apart, which nobody wanted."""
     from craft import claims_hook
     t = tmp_path / "t.jsonl"
     t.write_text(json.dumps({"type": "assistant", "message": {"content": []}}),
                  encoding="utf-8")
     seen = {}
-    monkeypatch.setattr(claims_hook, "silent_repos",
-                        lambda p: seen.setdefault("silent", True) or [])
+
+    def _silent(_path):
+        seen["silent"] = True
+        return []
+
+    monkeypatch.setattr(claims_hook, "silent_repos", _silent)
     monkeypatch.setattr(claims_hook, "touched", lambda p: [])
-    claims_hook.run({"transcript_path": str(t), "session_id": "s",
-                     "_reviews": ["record"]})
-    assert "silent" not in seen, "unrecorded was not asked for and ran anyway"
+    claims_hook.run({"transcript_path": str(t), "session_id": "s"})
+    assert seen.get("silent"), "the record review skipped its own silence half"
 
 
 class TestTheTray:

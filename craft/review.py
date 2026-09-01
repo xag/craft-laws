@@ -7,23 +7,28 @@ without reading two modules and a settings file. They differ by WHAT THEY READ, 
 names say so — they used to be `claims`, `argument` and `intake`, and the owner asked what
 the difference was, which is the only review a name gets:
 
-  record      what the turn WROTE DOWN, in claims.jsonl — "this is done", "this is
-              fixed", "the cause is X" — checked against the practice laws. A done-claim
-              resting on the author's own test output; a fixed-claim with no reproduction.
-              It sees only what was recorded. Data, no model, about a millisecond.
-  unrecorded  the opposite, and the reason the first one cannot be trusted alone: repos
-              this turn EDITED and then said nothing about. Not a conviction — a turn may
-              be mid-work — but the record's silence, named, where the work happened.
-              (It was called `intake`, after the "intake debt" in the ledger. Nobody
-              outside that entry could know what it meant, including at a glance.)
-  reasoning   what the reply SAID TO THE USER: the critic reconstructs its argument and
-              the deciders judge it — a conclusion with nothing supporting it, a
-              "nothing was found" with no search behind it, a name coined and never
-              defined. Costs one small-model call, detached, never blocking.
+  record     the turn's claims record, judged whole — both what it says and where it
+             says nothing. The claim deciders convict a done-claim resting on the
+             author's own test output or a fixed-claim with no reproduction; and
+             a-corpus-of-reports-carries-its-reporting-bias (PRISMA 2020 items 14 and
+             21) names the repos this turn EDITED and then filed nothing about, because
+             a conviction rate drawn from self-filed records is a rate over what somebody
+             chose to file. Data, no model, about a millisecond.
+  reasoning  what the reply SAID TO THE USER: the critic reconstructs its argument and
+             the deciders judge it — a conclusion with nothing supporting it, a "nothing
+             was found" with no search behind it, a name coined and never defined. Costs
+             one small-model call, detached, never blocking.
 
-So: what I recorded, what I failed to record, what I said. One registry, one Stop entry
-point, one switch each. What survives per review is its JUDGMENT; the plumbing (delivery,
-dedupe, the seam) belongs to the courier.
+So: what the turn recorded, and what the turn said. Two, because they read different
+things and cost differently; the record's silences are NOT a third — that was `intake`,
+and it was a review of its own only because it had its own code path. It is one law over
+the same corpus at the same cost, and nobody wants "check what the record says" without
+"say where it is silent": they are two halves of judging one record. The rule about
+sourcing rules held (that law is cited and its source censused whole); the extra SWITCH
+was the unearned part, and it is gone.
+
+What survives per review is its JUDGMENT; the plumbing (delivery, dedupe, the seam)
+belongs to the courier.
 
     python -m craft.review              # what runs, and what is off
     python -m craft.review on reasoning  # per-review switches, reaching running sessions
@@ -82,10 +87,8 @@ class Review:
 
 
 REVIEWS = (
-    Review("record", "what this turn wrote down — its done/fixed/diagnosis claims",
+    Review("record", "the turn's claims — what it wrote down, and where it wrote nothing",
            "data only, about a millisecond"),
-    Review("unrecorded", "repos this turn edited and then said nothing about",
-           "data only"),
     Review("reasoning", "what the reply told the user, and whether it holds up",
            "one small-model call, detached — never blocks"),
 )
@@ -124,10 +127,9 @@ def run(payload: dict) -> int:
         return 0
     on = {r.id for r in enabled()}
 
-    if {"record", "unrecorded"} & on:
+    if "record" in on:
         from . import claims_hook
-        claims_hook.run({**payload,
-                         "_reviews": sorted({"record", "unrecorded"} & on)})
+        claims_hook.run(payload)
 
     if "reasoning" in on:
         from .account_hook import spawn_critic

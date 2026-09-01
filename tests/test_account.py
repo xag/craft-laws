@@ -471,51 +471,52 @@ def test_a_says_survives_punctuation_drift_and_a_fabricated_says_does_not(tmp_pa
 
 
 
-def test_the_critique_of_a_reply_informs_the_very_next_one(tmp_path, monkeypatch,
-                                                           capsys):
-    """The critic judges the turn that just ended, detached (measured 2026-09-01:
-    135-202s a critique, so nothing synchronous survives). Its findings drain at
-    the user's NEXT PROMPT as context, informing the reply being written; the
-    next Stop is the fallback seam. Neither waits for anything."""
+def test_stop_only_spawns_and_the_critic_couriers_its_own_findings(
+        tmp_path, monkeypatch, capsys):
+    """The hook owns no delivery. The detached critic sends its findings as
+    transponder direct mail -- the estate's one pushed channel, drained by the
+    transponder's own hook at every tool call -- so a finding reaches the session
+    mid-turn. Here: Stop spawns, says nothing, blocks nothing."""
     monkeypatch.setattr(account_hook, "_SEEN", tmp_path / "seen.json")
-    monkeypatch.chdir(tmp_path)
-    pend = tmp_path / ".craft" / "accounts" / "s" / "pending-critique.txt"
-    pend.parent.mkdir(parents=True)
-    pend.write_text("some-law (critic-live-0.json p1): the reading overreaches",
-                    encoding="utf-8")
-    code = account_hook.user_prompt_submit({"session_id": "s"})
-    out = capsys.readouterr().out
-    assert code == 0
-    assert "some-law" in out and "previous reply" in out
-    assert not pend.exists(), "a drained critique must not be re-reported"
-    # drained means drained: the Stop seam stays silent afterwards
     spawned = []
     monkeypatch.setattr(account_hook, "_spawn_critic",
-                        lambda sess, tp, out_: spawned.append(1))
-    t = tmp_path / "t.jsonl"
-    t.write_text("", encoding="utf-8")
-    code2 = account_hook.stop({"session_id": "s", "transcript_path": str(t)})
-    assert code2 == 0 and capsys.readouterr().err == ""
-    assert spawned == [1]
-
-
-def test_the_stop_seam_carries_a_critique_the_user_never_prompted_after(
-        tmp_path, monkeypatch, capsys):
-    """The fallback drain: when no next prompt arrives before the next Stop, the
-    finding lands there, exit 2, once."""
-    monkeypatch.setattr(account_hook, "_SEEN", tmp_path / "seen.json")
-    monkeypatch.setattr(account_hook, "_spawn_critic", lambda sess, tp, out: None)
+                        lambda sess, tp, out: spawned.append(1))
     monkeypatch.chdir(tmp_path)
-    pend = tmp_path / ".craft" / "accounts" / "s" / "pending-critique.txt"
-    pend.parent.mkdir(parents=True)
-    pend.write_text("some-law (critic-live-0.json p1): the reading overreaches",
-                    encoding="utf-8")
     t = tmp_path / "t.jsonl"
     t.write_text("", encoding="utf-8")
     code = account_hook.stop({"session_id": "s", "transcript_path": str(t)})
-    err = capsys.readouterr().err
-    assert code == 2 and "some-law" in err and "previous reply" in err
-    assert not pend.exists()
+    assert code == 0 and capsys.readouterr().err == ""
+    assert spawned == [1]
+    assert account_hook.user_prompt_submit({"session_id": "s"}) == 0
+    assert capsys.readouterr().out == ""
+
+
+def test_the_live_critic_hands_its_findings_to_the_courier(tmp_path, monkeypatch):
+    """--live judges the last turn and delivers through critic.deliver -- one
+    substrate, the transponder's; nothing is written for a hook to drain."""
+    import json as _json
+
+    import craft.critic as critic_mod
+    fake = _json.dumps([{"turn": 2, "nodes": [
+        {"id": "c1", "type": "I", "role": "conclusion", "says": "x",
+         "text": "a conclusion", "names": ["the zorbulator relay"]}]}])
+    t = tmp_path / "t.jsonl"
+    rows = []
+    for i in range(3):
+        rows.append(_json.dumps({"type": "user",
+                                 "message": {"content": f"q{i} " + "q" * 300}}))
+        rows.append(_json.dumps({"type": "assistant", "message": {"content": [
+            {"type": "text", "text": f"r{i} " + "r" * 300}]}}))
+    t.write_text(chr(10).join(rows), encoding="utf-8")
+    sent = []
+    monkeypatch.setattr(critic_mod, "live_runner", lambda p: fake)
+    monkeypatch.setattr(critic_mod, "deliver",
+                        lambda sess, lines: sent.append((sess, list(lines))))
+    rc = critic_mod.main([str(t), "s-courier", "--out", str(tmp_path / "out"), "--live"])
+    assert rc == 0
+    assert len(sent) == 1 and sent[0][0] == "s-courier"
+    assert any("a-name-is-known-or-defined" in ln for ln in sent[0][1])
+    assert not list((tmp_path / "out").glob("pending*"))
 
 
 def test_the_critics_own_files_are_not_filed_accounts(tmp_path, monkeypatch):

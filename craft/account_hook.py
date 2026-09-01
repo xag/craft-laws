@@ -252,24 +252,11 @@ def residual(reply: str, accounts: list) -> dict:
 
 
 def user_prompt_submit(payload: dict) -> int:
-    """No instruction is injected (the 2026-08-30 measurement: inline
-    formalization taxed every answer and repaired none) -- but the detached
-    critic's findings about the reply the user just read ARE drained here, as
-    context, so the correction lands in the very next reply without anything
-    ever having blocked. stdout on this hook reaches the model as context."""
-    session = str(payload.get("session_id") or "")
-    if not session:
-        return 0
-    try:
-        fresh = _drain_critique(session)
-    except Exception:
-        return 0
-    if fresh:
-        print("the critic judged your previous reply (produced alongside it, "
-              "delivered with this message). Each line names a law with a "
-              "published root. Nothing is refused.\n  "
-              + "\n  ".join(fresh)
-              + "\n" + _conviction_contract(session))
+    """Silent. No instruction is injected (the 2026-08-30 measurement: inline
+    formalization taxed every answer and repaired none), and no critique is
+    drained here either -- the critic couriers its findings as transponder
+    direct mail, which the transponder's own hook delivers at every seam. One
+    substrate for pushed content, owned where it lives."""
     return 0
 
 
@@ -299,41 +286,17 @@ def _conviction_contract(session: str) -> str:
             "correction that cites its trigger is a response, not a correction.")
 
 
-def _drain_critique(session: str) -> list:
-    """Whatever the detached critic has left, taken exactly once."""
-    out = Path(flight.working_dir()) / ".craft" / "accounts" / session
-    try:
-        pending = out / "pending-critique.txt"
-        if not pending.is_file():
-            return []
-        lines = [x for x in pending.read_text(encoding="utf-8").splitlines()
-                 if x.strip()]
-        pending.unlink()
-    except OSError:
-        return []
-    return [ln for ln in lines if not _already_reported(hashlib.sha256(
-        ("critic|" + ln).encode("utf-8", "replace")).hexdigest())]
-
-
 def _live_critic(session: str, tpath) -> int:
-    """The critic judges the turn that just ENDED, detached, and never blocks:
-    measured 2026-09-01, the critique generation runs 135-202s on the small model
-    however much is stripped, so any synchronous design is minutes of Stop wait.
-    Findings are drained at the next event that can carry them -- the user's next
-    prompt (user_prompt_submit below, where they inform the very next reply) or
-    the next Stop, whichever fires first. Any failure anywhere is silent - a dead
-    critic must never block."""
+    """Spawn, and only spawn. The critic judges the turn that just ended,
+    detached (measured 2026-09-01: 135-202s a critique, nothing synchronous
+    survives), and DELIVERS ITS OWN FINDINGS as transponder direct mail -- the
+    estate's one pushed channel, drained by its hook at every tool call, so a
+    finding reaches the session mid-turn, at the next action after it exists.
+    This hook owns no delivery: one substrate, the courier's (the owner's
+    2026-09-01 correction -- the wheel existed, use it)."""
     out = Path(flight.working_dir()) / ".craft" / "accounts" / session
-    fresh = _drain_critique(session)
     _spawn_critic(session, tpath, out)
-    if not fresh:
-        return 0
-    print("the critic judged your previous reply (produced alongside it, "
-          "delivered at this seam). Each line names a law with a published "
-          "root. Nothing is refused.\n  "
-          + "\n  ".join(fresh)
-          + "\n" + _conviction_contract(session), file=sys.stderr)
-    return 2
+    return 0
 
 
 def _spawn_critic(session: str, tpath, out: Path) -> None:
@@ -344,8 +307,7 @@ def _spawn_critic(session: str, tpath, out: Path) -> None:
         flags = 0x00000008 | 0x08000000 if os.name == "nt" else 0
         subprocess.Popen(
             [sys.executable, "-m", "craft.critic", str(tpath), session,
-             "--out", str(out), "--live",
-             "--pending", str(out / "pending-critique.txt")],
+             "--out", str(out), "--live"],
             cwd=str(_ROOT), creationflags=flags, close_fds=True,
             stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,

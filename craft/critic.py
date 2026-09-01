@@ -181,6 +181,49 @@ LIVE_TIMEOUT_S = 240       # generous: the critic is detached, the cap only stop
                            # (measured 2026-09-01: 135-202s on the small model, floor 6s)
 
 
+TRANSPONDER_PY = Path("C:/Users/trans/Projects/transponder/.venv/Scripts/python.exe")
+
+
+def deliver(session: str, lines: list) -> None:
+    """The findings, as one transponder direct message to the judged session.
+
+    The transponder is the estate's only PUSHED channel: its hook drains direct mail
+    at every PreToolUse and prompt, so this lands at the session's next tool call --
+    inside the turn being worked, not at its end. This module owns no delivery code;
+    the glue below only crosses the venv boundary, and the protocol stays where it
+    lives. A missing transponder means no delivery, silently: a dead courier must
+    not kill the critic that already wrote its accounts."""
+    import subprocess
+    body = ("the critic judged your previous reply (produced alongside it, delivered "
+            "at your next action). Each line names a law with a published root. "
+            "Nothing is refused.\n  " + "\n  ".join(lines) + "\n"
+            "If a finding is right, correct what you told the user - restate the "
+            "sentence as it should have been said, the way you would fix any error "
+            "you caught yourself. If it is a false positive, file that as data and "
+            "move on:\n"
+            "  uv run --no-sync --directory C:/Users/trans/Projects/craft-laws "
+            "python -m craft.disputes --law <law> --where \"<where>\" "
+            f"--why \"<one line>\" --session {session}\n"
+            "Never RESPOND to this in the conversation: no mention of it, no defense. "
+            "The user never saw it; a correction that cites its trigger is a response, "
+            "not a correction.")
+    if not TRANSPONDER_PY.is_file():
+        return
+    try:
+        subprocess.run(
+            [str(TRANSPONDER_PY), "-c",
+             "import sys; sys.path.insert(0, "
+             "'C:/Users/trans/Projects/transponder');"
+             "from transponder import messages;"
+             "messages.send(sender='craft-critic', body=sys.stdin.read(), "
+             "kind='direct', to=sys.argv[1])",
+             session],
+            input=body, text=True, encoding="utf-8", timeout=30,
+            capture_output=True)
+    except Exception:
+        pass
+
+
 def cli_runner(prompt: str, model: str | None = None, timeout: int = 600) -> str:
     import subprocess
     env = dict(os.environ, CRAFT_ACCOUNTS_OFF="1")
@@ -308,19 +351,18 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out", default=None,
                     help="accounts directory (default: cwd/.craft/accounts/<session>)")
     ap.add_argument("--live", action="store_true",
-                    help="criticize the LAST turn only and write findings to --pending")
-    ap.add_argument("--pending", default=None,
-                    help="file the live findings are left in for the next Stop to drain")
+                    help="criticize the LAST turn only and courier the findings to the "
+                         "session as transponder direct mail")
     ns = ap.parse_args(argv)
     out = Path(ns.out) if ns.out else Path.cwd() / ".craft" / "accounts" / ns.session
     if ns.live:
-        # The detached half of the async Stop hook (owner, 2026-09-01: the stop hooks
-        # are too long): this process runs off the critical path and leaves what it
-        # finds where the next Stop looks. Clean turns leave nothing.
+        # Detached (the generation runs minutes; nothing synchronous survives it,
+        # measured 2026-09-01) and delivered on the estate's one push channel: a
+        # transponder direct message lands at the session's next tool call, mid-turn.
+        # Clean turns send nothing.
         lines = criticize_turn(Path(ns.transcript), ns.session, out)
-        if lines and ns.pending:
-            Path(ns.pending).parent.mkdir(parents=True, exist_ok=True)
-            Path(ns.pending).write_text("\n".join(lines) + "\n", encoding="utf-8")
+        if lines:
+            deliver(ns.session, lines)
         return 0
     n = run(Path(ns.transcript), ns.session, out)
     print(f"critic: {n} finding(s)" if n else "critic: nothing to say")

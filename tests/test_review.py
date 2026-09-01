@@ -19,17 +19,17 @@ def _switches(tmp_path, monkeypatch):
 def test_every_review_names_what_it_looks_at_and_what_it_costs():
     """The registry exists to answer 'what is checking my replies' in one place. A review
     that cannot say what it reads, or what it costs to run, cannot be chosen against."""
-    assert {r.id for r in review.REVIEWS} == {"claims", "argument", "intake"}
+    assert {r.id for r in review.REVIEWS} == {"record", "unrecorded", "reasoning"}
     for r in review.REVIEWS:
         assert r.what.strip() and r.cost.strip()
 
 
 def test_a_review_is_switched_on_its_own():
-    review.BY_ID["argument"].set(False)
-    assert review.state()["on"] == ["claims", "intake"]
-    assert review.state()["off"] == ["argument"]
+    review.BY_ID["reasoning"].set(False)
+    assert review.state()["on"] == ["record", "unrecorded"]
+    assert review.state()["off"] == ["reasoning"]
     assert review.state()["colour"] == "amber", "some on, some off is the middle state"
-    review.BY_ID["argument"].set(True)
+    review.BY_ID["reasoning"].set(True)
     assert review.state()["colour"] == "green"
 
 
@@ -45,7 +45,7 @@ def test_the_master_switch_still_silences_everything():
 def test_the_switch_reaches_a_session_already_running():
     """Read at every turn, not at startup: a file, not a setting. That is what makes it
     a switch — the account lane learned it, and the reviews inherit it."""
-    r = review.BY_ID["claims"]
+    r = review.BY_ID["record"]
     r.set(False)
     assert not r.on and r.off_path().exists()
     r.set(True)
@@ -63,35 +63,35 @@ def test_only_the_enabled_reviews_run(tmp_path, monkeypatch):
     stop reporting it."""
     ran = []
     monkeypatch.setattr("craft.claims_hook.run",
-                        lambda p: ran.append(("claims", tuple(p.get("_reviews") or ()))))
+                        lambda p: ran.append(("record", tuple(p.get("_reviews") or ()))))
     monkeypatch.setattr("craft.account_hook.spawn_critic",
-                        lambda s, t: ran.append(("argument", ())))
+                        lambda s, t: ran.append(("reasoning", ())))
     t = tmp_path / "t.jsonl"
     t.write_text("", encoding="utf-8")
     payload = {"session_id": "s", "transcript_path": str(t)}
 
     review.run(payload)
-    assert [k for k, _ in ran] == ["claims", "argument"]
-    assert ran[0][1] == ("claims", "intake")
+    assert [k for k, _ in ran] == ["record", "reasoning"]
+    assert ran[0][1] == ("record", "unrecorded")
 
     ran.clear()
-    review.BY_ID["argument"].set(False)
+    review.BY_ID["reasoning"].set(False)
     review.run(payload)
-    assert [k for k, _ in ran] == ["claims"], "the argument review still ran when off"
+    assert [k for k, _ in ran] == ["record"], "the reasoning review still ran when off"
 
     ran.clear()
-    review.BY_ID["intake"].set(False)
+    review.BY_ID["unrecorded"].set(False)
     review.run(payload)
-    assert ran[0][1] == ("claims",), "intake was switched off and still asked for"
+    assert ran[0][1] == ("record",), "unrecorded was switched off and still asked for"
 
     ran.clear()
-    review.BY_ID["claims"].set(False)
+    review.BY_ID["record"].set(False)
     review.run(payload)
     assert ran == [], "everything is off and something still ran"
 
 
 def test_the_claims_lane_honours_a_half_selection(tmp_path, monkeypatch):
-    """claims and intake share one transcript parse but are two reviews; a user who
+    """record and unrecorded share one transcript parse but are two reviews; a user who
     switched one off means it."""
     from craft import claims_hook
     t = tmp_path / "t.jsonl"
@@ -102,8 +102,8 @@ def test_the_claims_lane_honours_a_half_selection(tmp_path, monkeypatch):
                         lambda p: seen.setdefault("silent", True) or [])
     monkeypatch.setattr(claims_hook, "touched", lambda p: [])
     claims_hook.run({"transcript_path": str(t), "session_id": "s",
-                     "_reviews": ["claims"]})
-    assert "silent" not in seen, "intake was not asked for and ran anyway"
+                     "_reviews": ["record"]})
+    assert "silent" not in seen, "unrecorded was not asked for and ran anyway"
 
 
 class TestTheTray:
@@ -114,7 +114,7 @@ class TestTheTray:
         for r in review.REVIEWS:
             r.set(True)
         assert review.state()["colour"] == "green"
-        review.BY_ID["argument"].set(False)
+        review.BY_ID["reasoning"].set(False)
         assert review.state()["colour"] == "amber"
         for r in review.REVIEWS:
             r.set(False)
@@ -123,21 +123,25 @@ class TestTheTray:
             assert tray.image(name).mode == "RGBA"
 
     def test_the_menu_carries_one_checkbox_per_review(self):
+        """One item per review, each labelled with its id FIRST — matched on the label's
+        prefix, not by searching the sentence: an earlier version grepped for a word that
+        also appears in another review's description, so it passed by coincidence."""
         tray = pytest.importorskip("craft.review_tray")
         items = list(tray.menu())
-        labelled = [i for i in items if any(r.id in str(i.text) for r in review.REVIEWS)]
-        assert len(labelled) == len(review.REVIEWS)
+        by_id = {r.id: [i for i in items if str(i.text).startswith(r.id + ":")]
+                 for r in review.REVIEWS}
+        assert all(len(v) == 1 for v in by_id.values()), by_id
         for r in review.REVIEWS:
             r.set(True)
-        assert all(i.checked for i in labelled)
-        review.BY_ID["claims"].set(False)
-        unchecked = [i for i in labelled if "claims" in str(i.text)]
-        assert unchecked and not unchecked[0].checked
+        assert all(v[0].checked for v in by_id.values())
+        review.BY_ID["record"].set(False)
+        assert not by_id["record"][0].checked
+        assert by_id["reasoning"][0].checked, "switching one review off unchecked another"
 
     def test_the_tooltip_never_exceeds_what_the_shell_will_show(self):
         tray = pytest.importorskip("craft.review_tray")
         for r in review.REVIEWS:
             r.set(True)
         assert len(tray.title(review.state())) <= 127
-        review.BY_ID["claims"].set(False)
+        review.BY_ID["record"].set(False)
         assert len(tray.title(review.state())) <= 127

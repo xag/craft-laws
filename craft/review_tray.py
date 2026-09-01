@@ -128,7 +128,7 @@ def menu() -> pystray.Menu:
     """One checkbox per review, then the two blunt instruments. Built once: pystray
     reads the checked callbacks on every open, so the marks follow the switches even
     when something else flipped them."""
-    items = [pystray.MenuItem(f"{r.id} — {r.what}", _toggle(r.id),
+    items = [pystray.MenuItem(f"{r.id}: {r.what}", _toggle(r.id),
                               checked=_checked(r.id))
              for r in review.REVIEWS]
     return pystray.Menu(

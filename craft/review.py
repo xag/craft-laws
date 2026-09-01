@@ -1,23 +1,32 @@
 # -*- coding: utf-8 -*-
-"""Every review that judges a reply, in one registry, each switchable on its own.
+"""Every review that judges a turn, in one registry, each switchable on its own.
 
-Three reviews of the agent's own answers grew separately, and by 2026-09-01 each had its
-own hook entry, its own on/off, and no way to ask "what is checking my replies right now?"
-without reading two modules and a settings file:
+Three reviews of the agent's own work grew separately, and by 2026-09-01 each had its own
+hook entry, its own on/off, and no way to ask "what is checking my replies right now?"
+without reading two modules and a settings file. They differ by WHAT THEY READ, and the
+names say so — they used to be `claims`, `argument` and `intake`, and the owner asked what
+the difference was, which is the only review a name gets:
 
-  claims    the claim deciders over what the turn RECORDED — a done-claim resting on
-            producer evidence, a fixed-claim with no reproduction. Data, no model, ~1ms.
-  argument  the critic reconstructs the reply's argument and the AIF deciders judge it —
-            a conclusion with no warrant, an absence with no documented search, a name
-            the record never used. Costs one small-model call, detached.
-  intake    the reporting-bias note: this turn wrote in a repo and left its record silent.
+  record      what the turn WROTE DOWN, in claims.jsonl — "this is done", "this is
+              fixed", "the cause is X" — checked against the practice laws. A done-claim
+              resting on the author's own test output; a fixed-claim with no reproduction.
+              It sees only what was recorded. Data, no model, about a millisecond.
+  unrecorded  the opposite, and the reason the first one cannot be trusted alone: repos
+              this turn EDITED and then said nothing about. Not a conviction — a turn may
+              be mid-work — but the record's silence, named, where the work happened.
+              (It was called `intake`, after the "intake debt" in the ledger. Nobody
+              outside that entry could know what it meant, including at a glance.)
+  reasoning   what the reply SAID TO THE USER: the critic reconstructs its argument and
+              the deciders judge it — a conclusion with nothing supporting it, a
+              "nothing was found" with no search behind it, a name coined and never
+              defined. Costs one small-model call, detached, never blocking.
 
-They are one thing from where the user sits — reviews of the reply — so they are one
-registry here, one Stop entry point, and one switch each. What survives per review is its
-JUDGMENT; the plumbing (delivery, dedupe, the seam) belongs to the courier.
+So: what I recorded, what I failed to record, what I said. One registry, one Stop entry
+point, one switch each. What survives per review is its JUDGMENT; the plumbing (delivery,
+dedupe, the seam) belongs to the courier.
 
     python -m craft.review              # what runs, and what is off
-    python -m craft.review on argument  # per-review switches, reaching running sessions
+    python -m craft.review on reasoning  # per-review switches, reaching running sessions
     python -m craft.review off
 
 A review is OFF the moment its file exists — the switch is read at every turn, so it
@@ -73,12 +82,12 @@ class Review:
 
 
 REVIEWS = (
-    Review("claims", "the claims this turn recorded, against the practice laws",
+    Review("record", "what this turn wrote down — its done/fixed/diagnosis claims",
            "data only, about a millisecond"),
-    Review("argument", "the argument the reply makes, reconstructed and judged",
-           "one small-model call, detached — never blocks"),
-    Review("intake", "repos this turn wrote in and left silent in the record",
+    Review("unrecorded", "repos this turn edited and then said nothing about",
            "data only"),
+    Review("reasoning", "what the reply told the user, and whether it holds up",
+           "one small-model call, detached — never blocks"),
 )
 
 BY_ID = {r.id: r for r in REVIEWS}
@@ -115,11 +124,12 @@ def run(payload: dict) -> int:
         return 0
     on = {r.id for r in enabled()}
 
-    if {"claims", "intake"} & on:
+    if {"record", "unrecorded"} & on:
         from . import claims_hook
-        claims_hook.run({**payload, "_reviews": sorted({"claims", "intake"} & on)})
+        claims_hook.run({**payload,
+                         "_reviews": sorted({"record", "unrecorded"} & on)})
 
-    if "argument" in on:
+    if "reasoning" in on:
         from .account_hook import spawn_critic
         spawn_critic(session, transcript)
     return 0

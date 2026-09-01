@@ -180,10 +180,10 @@ def run(payload: dict) -> int:
     # craft.review may ask for one half of this hook and not the other: the claim
     # deciders and the intake-silence note are two reviews that happen to share a
     # transcript parse, and a user who switched one off means it.
-    wanted = set(payload.get("_reviews") or ("claims", "intake"))
-    if "claims" not in wanted:
+    wanted = set(payload.get("_reviews") or ("record", "unrecorded"))
+    if "record" not in wanted:
         findings = []
-    silent = silent_repos(Path(path)) if "intake" in wanted else []
+    silent = silent_repos(Path(path)) if "unrecorded" in wanted else []
     # the silence rides the same once-per-content throttle as the findings: a
     # repo the author was told about, and chose to leave silent, is not nagged —
     # a noisy informant is one that gets switched off

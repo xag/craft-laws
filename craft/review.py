@@ -133,7 +133,7 @@ def run(payload: dict) -> int:
 
     if "reasoning" in on:
         from .account_hook import spawn_critic
-        spawn_critic(session, transcript)
+        spawn_critic(session, transcript, payload.get("cwd"))
     return 0
 
 

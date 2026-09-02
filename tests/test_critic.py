@@ -178,3 +178,56 @@ def test_the_live_critic_judges_only_the_last_turn_with_context(tmp_path):
     files = list(out.glob("critic-live-*.json"))
     assert len(files) == 1, "context turns are shown, not re-judged"
     assert json.loads(files[0].read_text(encoding="utf-8"))["turn"] == 2
+
+
+def test_a_live_reply_with_no_json_is_recorded_as_a_failure_not_a_clean_turn(tmp_path,
+                                                                             monkeypatch):
+    """For a day every critique came back as prose (the user's global hooks answered
+    in place of the prompt), held no "[", and read as a clean turn. A reply the critic
+    cannot parse now leaves the raw text on disk and tells the session once."""
+    long_reply = "The check passed and therefore everything works. " * 10
+    t = _transcript(tmp_path, [("does it work?", long_reply)])
+    told = []
+    monkeypatch.setattr(critic, "_report_unparsed",
+                        lambda session, raw: told.append((session, raw)))
+    out = tmp_path / "acc"
+    raw = "Understood. I'll follow the shared checkout protocol."
+    assert critic.criticize_turn(t, "s", out, runner=lambda p: raw) == []
+    unparsed = list(out.glob("critic-live-*.unparsed.txt"))
+    assert len(unparsed) == 1 and unparsed[0].read_text(encoding="utf-8") == raw
+    assert told == [("s", unparsed[0])]
+    assert not list(out.glob("critic-live-*.json")), "a failure filed as an account"
+
+
+def test_an_empty_array_is_a_clean_turn_and_records_no_failure(tmp_path, monkeypatch):
+    long_reply = "The check passed and therefore everything works. " * 10
+    t = _transcript(tmp_path, [("does it work?", long_reply)])
+    told = []
+    monkeypatch.setattr(critic, "_report_unparsed", lambda *a: told.append(a))
+    out = tmp_path / "acc"
+    assert critic.criticize_turn(t, "s", out, runner=lambda p: "[]") == []
+    assert told == [] and not list(out.glob("critic-live-*"))
+
+
+def test_the_cli_runner_loads_no_settings_sources(monkeypatch):
+    """The small model runs in a one-shot session on the same machine as the user's
+    hooks. With the user's settings loaded, SessionStart and UserPromptSubmit hooks
+    inject their context and the model answers that instead of the prompt (seen
+    2026-09-01 to 09-02: every critique was an acknowledgement of a checkout
+    protocol). No settings sources, no hooks; OAuth still reads."""
+    import subprocess
+    seen = {}
+
+    class Done:
+        returncode, stdout, stderr = 0, "[]", ""
+
+    def run(cmd, **kw):
+        seen["cmd"], seen["env"] = cmd, kw.get("env") or {}
+        return Done()
+
+    monkeypatch.setattr(subprocess, "run", run)
+    assert critic.cli_runner("prompt", model="haiku") == "[]"
+    cmd = seen["cmd"]
+    assert cmd[:2] == ["claude", "-p"]
+    assert cmd[cmd.index("--setting-sources") + 1] == ""
+    assert seen["env"].get("CRAFT_ACCOUNTS_OFF") == "1"

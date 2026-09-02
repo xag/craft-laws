@@ -65,7 +65,7 @@ def test_only_the_enabled_reviews_run(tmp_path, monkeypatch):
     monkeypatch.setattr("craft.claims_hook.run",
                         lambda p: ran.append(("record", tuple(p.get("_reviews") or ()))))
     monkeypatch.setattr("craft.account_hook.spawn_critic",
-                        lambda s, t: ran.append(("reasoning", ())))
+                        lambda s, t, cwd=None: ran.append(("reasoning", ())))
     t = tmp_path / "t.jsonl"
     t.write_text("", encoding="utf-8")
     payload = {"session_id": "s", "transcript_path": str(t)}

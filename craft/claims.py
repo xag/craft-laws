@@ -461,14 +461,39 @@ CHECKS = (check_done_is_observed, check_fixed_reproduced_first,
 
 
 def check_file(path: Path) -> list[ClaimFinding]:
-    claims = []
-    for line in flight.file_text(path).splitlines():
+    """Every decider over every claim in the file. A line that is not a JSON object,
+    or a claim whose fields are not the shape a decider reads, is REPORTED as
+    could-not-judge, never raised: the Stop hook swallows every exception into exit
+    0, so a raise here used to make the whole record review -- its silence note
+    included -- vanish for the turn with no word said (a-check-exhibits-what-it-read;
+    found in the 2026-09-02 audit)."""
+    claims, out = [], []
+    for n, line in enumerate(flight.file_text(path).splitlines(), 1):
         line = line.strip()
-        if line:
-            claims.append(json.loads(line))
-    out: list[ClaimFinding] = []
+        if not line:
+            continue
+        try:
+            c = json.loads(line)
+        except ValueError as e:
+            out.append(ClaimFinding(_law("a-check-exhibits-what-it-read"),
+                                    f"{path.name}:{n}", line[:80],
+                                    f"the line is not JSON ({e}): no decider read it"))
+            continue
+        if not isinstance(c, dict):
+            out.append(ClaimFinding(_law("a-check-exhibits-what-it-read"),
+                                    f"{path.name}:{n}", line[:80],
+                                    "the line is not an object: no decider read it"))
+            continue
+        claims.append(c)
     for check in CHECKS:
-        out.extend(check(path.name, claims))
+        try:
+            out.extend(check(path.name, claims))
+        except (TypeError, ValueError, AttributeError) as e:
+            out.append(ClaimFinding(_law("a-check-exhibits-what-it-read"),
+                                    path.name, "",
+                                    f"{check.__name__} could not read the record "
+                                    f"({e.__class__.__name__}: {e}): its verdict over "
+                                    "this file is could-not-judge, not a pass"))
     return out
 
 

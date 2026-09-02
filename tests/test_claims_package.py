@@ -45,3 +45,21 @@ def test_the_drawing_fields_the_code_reads_are_the_fields_the_package_names():
         assert f'"{field}"' in code and f"`{field}`" in by_kind["drawing"]
     for field in ("kind", "quote", "claim", "unfiled"):
         assert f'"{field}"' in code and f"`{field}`" in by_kind["annotation"]
+
+
+def test_a_malformed_record_is_reported_not_raised(tmp_path):
+    """The Stop hook turns any exception into exit 0 and silence. A record with one
+    bad line used to take the whole review down with it, silence note included; now
+    the bad line is a finding and the good lines are still judged."""
+    from craft import claims
+    f = tmp_path / "claims.jsonl"
+    f.write_text('{"kind": "done", "text": "x", "evidence": [{"where": "producer", '
+                 '"what": "tests"}]}\n'
+                 'not json\n'
+                 '{"kind": "diagnosis", "text": "y", "prior_theories": "many"}\n',
+                 encoding="utf-8")
+    found = claims.check_file(f)
+    laws = [x.law for x in found]
+    assert "a-check-exhibits-what-it-read" in laws, laws
+    assert "done-is-observed-where-the-user-stands" in laws, "the good line went unjudged"
+    assert any(x.where.endswith(":2") for x in found), "the bad line is not located"

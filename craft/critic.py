@@ -207,12 +207,31 @@ def deliver(session: str, lines: list) -> None:
               "a response, not a correction.")
 
 
+def _report_unparsed(session: str, raw) -> None:
+    try:
+        from courier import mail
+    except ImportError:
+        return
+    mail.post_once(session, "craft.critic",
+                   "the critic ran on your previous reply and produced no accounts it "
+                   f"could parse -- its raw reply is at {raw}. Your replies are NOT "
+                   "being reviewed for reasoning until this is fixed; say so to the "
+                   "user once, then carry on.", key="unparsed")
+
+
 def cli_runner(prompt: str, model: str | None = None, timeout: int = 600) -> str:
     import subprocess
     env = dict(os.environ, CRAFT_ACCOUNTS_OFF="1")
     # the prompt travels on stdin: a digest-sized argv element trips Windows'
-    # command-line length limit (WinError 206, seen on the first live run)
-    cmd = ["claude", "-p"] + (["--model", model] if model else [])
+    # command-line length limit (WinError 206, seen on the first live run).
+    # No settings sources: the user's SessionStart/UserPromptSubmit hooks inject
+    # their own context into this one-shot session, and the small model answered
+    # THAT instead of the prompt -- from 2026-09-01 10:07, when the global hooks
+    # went in, to 2026-09-02, every critique came back as an acknowledgement of a
+    # checkout protocol, held no "[", and was filed as a clean turn. `--bare`
+    # would also do it but never reads OAuth, which is how this machine is signed in.
+    cmd = (["claude", "-p", "--setting-sources", ""]
+           + (["--model", model] if model else []))
     done = subprocess.run(cmd, input=prompt, capture_output=True,
                           text=True, timeout=timeout, encoding="utf-8",
                           errors="replace", env=env)
@@ -301,12 +320,20 @@ def criticize_turn(transcript: Path, session: str, out_dir: Path,
     text = runner(critic_prompt(window, judge_turn=len(window) - 1))
     start, end = text.find("["), text.rfind("]")
     try:
-        accounts = json.loads(text[start:end + 1]) if 0 <= start <= end else []
+        accounts = json.loads(text[start:end + 1]) if 0 <= start <= end else None
     except ValueError:
-        accounts = []
-    written = []
+        accounts = None
     out_dir.mkdir(parents=True, exist_ok=True)
     k = len(flight.listing(out_dir, "critic-live-*.json"))
+    if accounts is None:
+        # A reply with no JSON array in it is the critic FAILING, not a clean
+        # turn; the two read the same from the session and for a day nobody could
+        # tell them apart (a-check-reports-what-it-could-not-judge). The raw reply
+        # goes on disk beside the accounts, and the session hears it once.
+        flight.write_text(out_dir / f"critic-live-{k}.unparsed.txt", text)
+        _report_unparsed(session, out_dir / f"critic-live-{k}.unparsed.txt")
+        return []
+    written = []
     last_turn = len(window) - 1
     for a in accounts:
         if not isinstance(a, dict) or not a.get("nodes"):

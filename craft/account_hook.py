@@ -299,11 +299,16 @@ def _live_critic(session: str, tpath) -> int:
     return 0
 
 
-def spawn_critic(session: str, tpath) -> None:
+def spawn_critic(session: str, tpath, cwd=None) -> None:
     """The argument review, started detached. Public because craft.review owns the
-    question of WHICH reviews run; this module owns what this one is."""
-    out = Path(flight.working_dir()) / ".craft" / "accounts" / session
-    _spawn_critic(session, tpath, out)
+    question of WHICH reviews run; this module owns what this one is.
+
+    `cwd` is the SESSION's directory, from the hook payload -- not this process's.
+    The Stop hook runs under `uv run --directory craft-laws`, so its own cwd is this
+    repo whatever the session is working on, and from the review unification
+    (2026-09-01) until this fix every session's accounts landed here."""
+    root = Path(cwd) if cwd else Path(flight.working_dir())
+    _spawn_critic(session, tpath, root / ".craft" / "accounts" / session)
 
 
 def _spawn_critic(session: str, tpath, out: Path) -> None:

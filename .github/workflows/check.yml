@@ -92,6 +92,12 @@ jobs:
         run: uv run python -m craft.consulted claims.jsonl
       - name: The consult gate convicts what it must
         run: uv run python -m craft.consulted --alarm
+      # The audit that says whether marking an element type IS convicting. It had an
+      # alarm and a CLI and no CI step (found in the 2026-09-02 audit of the verifiers).
+      - name: The neutrality audit flags a verdict-shaped feature and clears an innocent one
+        run: uv run python -m craft.neutrality --alarm
+      - name: No account feature is a verdict in disguise
+        run: uv run python -m craft.neutrality .craft/accounts/*
       - name: Every kind in every committed record resolves to a pinned KindDef
         run: uv run python -m craft.formats .
       - name: The format gate convicts what it must

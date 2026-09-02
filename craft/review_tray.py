@@ -152,7 +152,9 @@ def menu() -> pystray.Menu:
         pystray.Menu.SEPARATOR,
         *items,
         pystray.Menu.SEPARATOR,
-        pystray.MenuItem("Status", lambda *_: print(review.render(review.state()))),
+        # a balloon, not print(): under pythonw stdout is DEVNULL and the item did nothing
+        pystray.MenuItem("Status", lambda ic, _i=None: ic.notify(
+            review.render(review.state()), "craft reviews")),
         pystray.MenuItem("Quit", lambda ic, _i: (_stop.set(), ic.stop())),
     )
 

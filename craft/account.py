@@ -539,6 +539,24 @@ CHECKS = (check_shape, check_conclusions_are_supported, check_no_circular_suppor
           check_declared_deductions_are_valid, check_precision_is_earned,
           check_scheme_instances)
 
+# The laws each decider convicts under, so the alarm can hold a decider to its own: a
+# finding under any law satisfied "convicts the guilty account", and a decider filing
+# under its neighbour's law would have rung all the same (2026-09-02).
+LAWS_OF = {
+    check_shape: {"an-account-is-an-aif-graph"},
+    check_conclusions_are_supported: {"a-conclusion-names-its-warrant"},
+    check_no_circular_support: {"no-claim-supports-itself"},
+    check_counter_evidence_is_consumed: {"counter-evidence-is-answered"},
+    check_support_is_not_only_attack: {"a-conclusion-stands-on-its-own-feet"},
+    check_absence_concludes_nothing: {"absence-of-evidence-concludes-nothing"},
+    check_strength_is_licensed: {"calibration-is-agreed-before-the-case"},
+    check_declared_deductions_are_valid: {
+        "a-premise-does-its-work", "a-proposition-is-in-the-language",
+        "the-premises-entail-the-conclusion-or-they-do-not"},
+    check_precision_is_earned: {"a-figure-is-no-more-precise-than-its-inputs"},
+    check_scheme_instances: {"a-scheme-is-instantiated-not-invoked"},
+}
+
 
 def check_file(path: Path, corpus=None) -> list[Finding]:
     try:
@@ -623,6 +641,12 @@ GUILTY = {
         {"id": "c3", "type": "I", "role": "conclusion", "text": "so do it this way"},
         {"id": "r4", "type": "RA", "scheme": "deduction", "premises": ["x2"],
          "conclusion": "c3"},
+        {"id": "u1", "type": "I", "prop": "the build mostly works",
+         "text": "a proposition the grammar does not admit"},
+        {"id": "u2", "type": "I", "role": "conclusion", "prop": "every S is P",
+         "text": "concluded from a sentence no parser can read"},
+        {"id": "r9", "type": "RA", "scheme": "deduction", "premises": ["u1"],
+         "conclusion": "u2"},
         {"id": "bad", "type": "Z", "text": "not an AIF type"},
     ]
 }
@@ -719,8 +743,13 @@ def _alarm() -> int:
         ga, ca = load(g), load(c)
         for check in CHECKS:
             bad = []
-            if not check(ga):
+            found = check(ga)
+            if not found:
                 bad.append(f"{check.__name__} missed the guilty account")
+            elif {f.law for f in found} != LAWS_OF[check]:
+                bad.append(f"{check.__name__} convicted under "
+                           f"{sorted({f.law for f in found})}, and it is the decider "
+                           f"for {sorted(LAWS_OF[check])}")
             if check(ca):
                 bad.append(f"{check.__name__} convicted the clean account")
             dead += bad

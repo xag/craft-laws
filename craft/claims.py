@@ -108,12 +108,33 @@ CLAIM_KINDS = ("done", "fixed", "diagnosis", "detour", "confirmation", "measurem
 
 def check_done_is_observed(name: str, claims: list[dict]) -> list[ClaimFinding]:
     """A done/fixed claim carries user-surface evidence, or a stand-in that names its
-    gap. Producer evidence alone — however much of it — does not close a done-claim."""
+    gap. Producer evidence alone — however much of it — does not close a done-claim.
+
+    An item of evidence is an object with a `where` on the three-word scale and a
+    non-empty `what`. Until 2026-09-02 neither was checked: `{"where": "user-surface"}`
+    with nothing observed closed a done-claim, and a `where` off the scale fell through
+    to a wrong reason instead of a refusal — the field's name did the deciding."""
     out = []
     for i, c in enumerate(claims):
         if c.get("kind") not in ("done", "fixed"):
             continue
         ev = c.get("evidence") or []
+        bad = [e for e in ev if not isinstance(e, dict)
+               or e.get("where") not in _WHERES
+               or not str(e.get("what") or "").strip()]
+        if bad:
+            e = bad[0]
+            why = ("an item of evidence is not an object"
+                   if not isinstance(e, dict) else
+                   f"where {e.get('where')!r} is no term of {_WHERES}: an "
+                   "observation is filed as one of the three or it is not evidence"
+                   if e.get("where") not in _WHERES else
+                   f"a {e.get('where')} item with nothing in `what`: a place with no "
+                   "observation in it is not evidence")
+            out.append(ClaimFinding(_law("done-is-observed-where-the-user-stands"),
+                                    f"{name}#{i + 1}", str(c.get("text", ""))[:120],
+                                    why))
+            continue
         if any(e.get("where") == "user-surface" for e in ev):
             continue
         stand_ins = [e for e in ev if e.get("where") == "stand-in"]
@@ -459,6 +480,33 @@ CHECKS = (check_done_is_observed, check_fixed_reproduced_first,
           check_figures_break_down_by_declared_factors,
           check_resemblance_carries_the_base_rate)
 
+# The laws each decider convicts under, stated once so the alarm can hold a decider to
+# them: "convicts the guilty record" was satisfied by any finding under any law, so a
+# decider that had drifted onto its neighbour's law would still have rung (2026-09-02).
+LAWS_OF = {
+    check_done_is_observed: {"done-is-observed-where-the-user-stands"},
+    check_fixed_reproduced_first: {"make-it-fail-before-you-fix-it"},
+    check_one_candidate_per_fix: {"one-candidate-fix-per-deploy"},
+    check_theories_carry_observations: {"instrument-before-the-second-theory"},
+    check_detours_say_so: {"a-detour-is-announced-as-a-detour"},
+    check_confirmations_carry_their_account:
+        {"a-qualifier-is-licensed-by-the-evidence"},
+    check_measurements_state_their_protocol: {
+        "calibration-size-is-declared-before-the-run",
+        "prespecified-is-distinguished-from-exploratory",
+        "the-reference-standard-is-named-with-its-rationale",
+        "blindness-is-disclosed", "a-check-reports-its-misses"},
+    check_grades_are_calibrated: {
+        "validity-is-evidence-and-agreement", "calibration-is-agreed-before-the-case",
+        "low-confidence-is-reserved-and-explained"},
+    check_prespecification_has_its_artifact:
+        {"a-protocol-is-an-artifact-before-the-run"},
+    check_figures_break_down_by_declared_factors:
+        {"a-figure-is-broken-down-by-its-declared-factors"},
+    check_resemblance_carries_the_base_rate:
+        {"a-cause-is-weighed-by-how-often-not-only-how-alike"},
+}
+
 
 def check_file(path: Path) -> list[ClaimFinding]:
     """Every decider over every claim in the file. A line that is not a JSON object,
@@ -510,6 +558,10 @@ def _alarm() -> int:
         {"kind": "detour", "text": "use /deck instead"},
         {"kind": "done", "text": "it renders",
          "evidence": [{"where": "stand-in", "what": "jsdom run"}]},
+        {"kind": "done", "text": "a place with nothing observed in it",
+         "evidence": [{"where": "user-surface"}]},
+        {"kind": "done", "text": "a where off the scale",
+         "evidence": [{"where": "phone", "what": "it looked fine"}]},
         {"kind": "confirmation", "text": "you are right, the tests are irrelevant"},
         {"kind": "measurement", "text": "the checker is accurate",
          "corpus": "twenty transcripts", "caught": 18},
@@ -576,10 +628,21 @@ def _alarm() -> int:
     ]
     dead = []
     for check in CHECKS:
-        if not check("guilty", guilty):
+        found = check("guilty", guilty)
+        if not found:
             dead.append(f"{check.__name__} missed the guilty record")
+        elif {f.law for f in found} != LAWS_OF[check]:
+            dead.append(f"{check.__name__} convicted under "
+                        f"{sorted({f.law for f in found})}, and it is the decider for "
+                        f"{sorted(LAWS_OF[check])}")
         if check("clean", clean):
             dead.append(f"{check.__name__} convicted the clean record")
+    # the two evidence-shape convictions are named, not just counted
+    whys = [f.why for f in check_done_is_observed("guilty", guilty)]
+    if not any("nothing in `what`" in w for w in whys):
+        dead.append("check_done_is_observed let an empty observation close a claim")
+    if not any("no term of" in w for w in whys):
+        dead.append("check_done_is_observed let a where off the scale through")
     for d in dead:
         print(f"DEAD ALARM  {d}")
     print("all alarms live" if not dead else f"{len(dead)} dead alarm(s)")

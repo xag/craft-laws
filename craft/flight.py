@@ -153,10 +153,19 @@ def boundary(hook_name: str):
     from flight_recorder import Boundary
 
     me = sys.modules[__name__]
+    effects = [(subprocess, ["run"]),
+               (me, ["read_transcript", "file_text", "write_text", "exists",
+                     "is_dir", "listing", "git_root", "working_dir"])]
+    # the critic is started through courier's detach, not subprocess.run, so until
+    # 2026-09-02 a Stop tape showed the review deciding to spawn and no spawn: the one
+    # process that leaves the hook was the one thing the hook's tape did not hold
+    try:
+        from courier import spawn
+        effects.append((spawn, ["detach"]))
+    except ImportError:
+        pass
     return Boundary(
-        effects=[(subprocess, ["run"]),
-                 (me, ["read_transcript", "file_text", "write_text", "exists",
-                       "is_dir", "listing", "git_root", "working_dir"])],
+        effects=effects,
         redact={"env": None},
         header_extras={"hook": lambda: hook_name},
     )

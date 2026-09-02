@@ -31,7 +31,9 @@ quern = { git = "https://github.com/xag/quern", rev = "ab9563e" }
 # The rev quern itself pins, stated as our own dependency because craft.flight imports it —
 # leaning on a transitive pin is how an import breaks on somebody else's upgrade.
 xag-flight-recorder = { git = "https://github.com/xag/flight-recorder", rev = "b4d2bb1" }
-courier = { path = "../courier", editable = true }
+# Pinned by rev like the others: a path to a sibling checkout installs on one machine
+# and on no runner (CI died at `uv sync` on it, 2026-09-02).
+courier = { git = "https://github.com/xag/courier", rev = "0e2ac66" }
 
 [build-system]
 requires = ["hatchling"]

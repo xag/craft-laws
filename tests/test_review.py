@@ -165,3 +165,28 @@ class TestTheTray:
         assert len(tray.title(review.state())) <= 127
         review.BY_ID["record"].set(False)
         assert len(tray.title(review.state())) <= 127
+
+    def test_the_status_item_shows_something_a_headless_process_can_show(self):
+        """The item printed to stdout, which under pythonw is DEVNULL: a menu entry that
+        did nothing, shipped 2026-09-01. A balloon is the only channel the icon has."""
+        tray = pytest.importorskip("craft.review_tray")
+        shown = []
+
+        class Icon:
+            def notify(self, message, title=None):
+                shown.append((message, title))
+
+        item = [i for i in tray.menu() if str(i.text) == "Status"][0]
+        item(Icon())
+        assert shown and shown[0][0] == review.render(review.state())
+
+
+def test_the_critic_spawn_is_on_the_tape():
+    """The Stop tape held the decision to spawn the critic and never the spawn: courier's
+    detach is the effect that leaves the hook, and a boundary without it recorded a
+    review that judged nothing as one that judged (2026-09-02)."""
+    pytest.importorskip("courier")
+    from courier import spawn
+    from craft import flight
+    names = {m.__name__: set(n) for m, n, *_ in flight.boundary("review").effects}
+    assert "detach" in names.get(spawn.__name__, set())

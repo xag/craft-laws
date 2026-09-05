@@ -16,6 +16,14 @@ the only way to ask for it was to hand-edit settings.json.
   AMBER  some on, some off — the deliberate middle, and the icon says which in its tooltip
   GREY   nothing is reviewing replies
 
+and, over any of the three, a DOT when a review found something since you last looked:
+the count is in the tooltip, per review, and opening Status shows it and resets the
+clock. "Since you last looked" is the icon's start or the last Status, never "this
+session" — the courier's boxes are keyed by a one-way hash of the session id, so what
+is on disk cannot be told apart by session, and the icon does not pretend it can. The
+findings themselves still go where they always went, to the session, at its next seam;
+the icon reads the outboxes without taking from them (courier's `mail.survey`).
+
 Run headless with `pythonw -m craft.review_tray`; a second launch bows out rather than
 stacking icons. `pystray` and `Pillow` arrive via the `tray` extra — the reviews themselves
 stay stdlib.
@@ -26,6 +34,7 @@ from __future__ import annotations
 import ctypes
 import sys
 import threading
+import time
 
 import pystray
 from PIL import Image, ImageChops, ImageDraw, ImageFont
@@ -37,6 +46,11 @@ _stop = threading.Event()
 
 INK = "#3b3b3b"      # the standard dark tray-glyph grey beside OneDrive and friends
 WARN = "#c47a10"     # amber ink: some reviews on, some off
+DOT = "#b3261e"      # the badge: a review found something since you last looked
+
+# When the user last looked: the icon's start, then every Status. Read by refresh, reset
+# by the Status item, and nothing else touches it.
+_since = [time.time()]
 
 
 def already_running() -> bool:
@@ -49,11 +63,13 @@ def already_running() -> bool:
         return False
 
 
-def image(state: str = "green") -> Image.Image:
+def image(state: str = "green", landed: bool = False) -> Image.Image:
     """A bare section sign in the dark grey of the neighbouring tray glyphs — the mark
     the account tray wore, kept, because this icon replaces it and a user should not
     have to learn a new shape for the same job. Amber when the set is mixed, struck
-    through when nothing is reviewing. Drawn at 256px, downscaled once with Lanczos."""
+    through when nothing is reviewing, and a dot in the corner when `landed` — a
+    review found something since the user last looked. Drawn at 256px, downscaled
+    once with Lanczos."""
     S = 256
     colour = WARN if state == "amber" else INK
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
@@ -80,6 +96,10 @@ def image(state: str = "green") -> Image.Image:
         d.line((38, 218, 218, 38), fill=colour, width=16)
         for cx, cy in ((38, 218), (218, 38)):
             d.ellipse((cx - 8, cy - 8, cx + 8, cy + 8), fill=colour)
+    if landed:
+        # cleared first, so the badge reads on the glyph and on the strike alike
+        d.ellipse((150, 150, 246, 246), fill=(0, 0, 0, 0))
+        d.ellipse((164, 164, 236, 236), fill=DOT)
     # hand Windows its own small-icon metric instead of a 64px image it will soften
     try:
         metric = ctypes.windll.user32.GetSystemMetrics(49) or 16
@@ -91,17 +111,30 @@ def image(state: str = "green") -> Image.Image:
 
 def title(s: dict) -> str:
     if not s["on"]:
-        return "craft reviews - OFF, no reply is being checked"
-    line = "craft reviews - on: " + ", ".join(s["on"])
-    if s["off"]:
-        line += " | off: " + ", ".join(s["off"])
+        line = "craft reviews - OFF, no reply is being checked"
+    else:
+        line = "craft reviews - on: " + ", ".join(s["on"])
+        if s["off"]:
+            line += " | off: " + ", ".join(s["off"])
+    if s.get("landed"):
+        per = ", ".join(f"{k} {v}" for k, v in s["findings"].items() if v)
+        line += f" | {s['landed']} found since "                 f"{time.strftime('%H:%M', time.localtime(s['since']))}: {per}"
     return line[:127]            # the shell truncates a tooltip past this, silently
 
 
 def refresh(icon: pystray.Icon) -> None:
-    s = review.state()
-    icon.icon = image(s["colour"])
+    s = review.state(since=_since[0])
+    icon.icon = image(s["colour"], landed=bool(s.get("landed")))
     icon.title = title(s)
+
+
+def _status(icon, _item=None) -> None:
+    """Show what is on and what was found, then start the clock again: opening Status
+    is how the user says "I have looked", and the dot goes with it."""
+    s = review.state(since=_since[0])
+    icon.notify(review.render(s), "craft reviews")
+    _since[0] = time.time()
+    refresh(icon)
 
 
 def _toggle(item_id: str):
@@ -153,8 +186,7 @@ def menu() -> pystray.Menu:
         *items,
         pystray.Menu.SEPARATOR,
         # a balloon, not print(): under pythonw stdout is DEVNULL and the item did nothing
-        pystray.MenuItem("Status", lambda ic, _i=None: ic.notify(
-            review.render(review.state()), "craft reviews")),
+        pystray.MenuItem("Status", _status),
         pystray.MenuItem("Quit", lambda ic, _i: (_stop.set(), ic.stop())),
     )
 
@@ -172,8 +204,9 @@ def main() -> int:
     if already_running():
         print("a craft review tray icon is already running")
         return 0
-    s = review.state()
-    icon = pystray.Icon("craft-review", image(s["colour"]), title(s), menu=menu())
+    s = review.state(since=_since[0])
+    icon = pystray.Icon("craft-review", image(s["colour"], landed=bool(s.get("landed"))),
+                        title(s), menu=menu())
     icon.run(setup=_poll)
     return 0
 

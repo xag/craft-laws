@@ -178,7 +178,73 @@ class TestTheTray:
 
         item = [i for i in tray.menu() if str(i.text) == "Status"][0]
         item(Icon())
-        assert shown and shown[0][0] == review.render(review.state())
+        assert shown and shown[0][0].startswith(review.render(review.state()))
+
+    def test_a_finding_puts_a_dot_on_the_icon_and_a_count_in_the_tooltip(self, outbox):
+        """The fourth state sits over the other three: the dot says something landed,
+        the tooltip says how many and for which review, and opening Status is how
+        the user says they have looked — the dot goes, the clock restarts."""
+        tray = pytest.importorskip("craft.review_tray")
+        for r in review.REVIEWS:
+            r.set(True)
+        for colour in ("green", "amber", "grey"):
+            assert tray.image(colour, landed=True).tobytes() !=                 tray.image(colour).tobytes(), colour
+
+        tray._since[0] = 0
+        outbox.post("s1", "craft.critic", "a finding")
+        outbox.post("s1", "craft.critic", "another")
+        s = review.state(since=tray._since[0])
+        assert s["landed"] == 2
+        assert "2 found since" in tray.title(s) and "reasoning 2" in tray.title(s)
+        assert len(tray.title(s)) <= 127
+
+        class Icon:
+            icon = title = None
+            def notify(self, message, title=None):
+                self.shown = message
+
+        icon = Icon()
+        tray.refresh(icon)
+        assert icon.icon.tobytes() == tray.image("green", landed=True).tobytes()
+        tray._status(icon)
+        assert "2 finding(s) since" in icon.shown
+        assert tray._since[0] > 0, "Status did not restart the clock"
+        assert "found since" not in icon.title, "the count outlived the look"
+        assert icon.icon.tobytes() == tray.image("green").tobytes(), "the dot outlived it"
+
+
+@pytest.fixture()
+def outbox(tmp_path, monkeypatch):
+    """A courier state root of our own: the real one holds the user's mail."""
+    courier = pytest.importorskip("courier")
+    from courier import env, mail
+    monkeypatch.setenv(env.DIR_ENV, str(tmp_path / "courier"))
+    return mail
+
+
+def test_the_state_counts_what_each_review_found_since_a_moment(outbox):
+    """Option 2 of the tray's "what is up" (2026-09-02): the icon says THAT something
+    was found and how many per review, counted off the courier's outboxes by producer
+    label, and never reads or takes the finding — that stays the session's."""
+    from courier import env
+    outbox.post("s1", "craft.claims", "done-is-observed…: a done-claim on producer evidence")
+    outbox.post("s1", "transponder", "somebody is in your region")
+    t = env.now()
+    outbox.post("s2", "craft.critic", "a-name-is-known-or-defined: 'the seam' is nowhere")
+    s = review.state(since=0)
+    assert s["findings"] == {"record": 1, "reasoning": 1}, "one per review, no neighbour"
+    assert s["landed"] == 2
+    later = review.state(since=t + 60)
+    assert later["landed"] == 0 and "findings" in later
+    assert "since" not in review.state(), "without a moment there is nothing to count"
+    assert [m["producer"] for m in outbox.take("s1")] == ["craft.claims", "transponder"],         "counting took the session's mail"
+
+
+def test_render_says_the_count_or_says_nothing_landed(outbox):
+    outbox.post("s1", "craft.critic", "x")
+    assert "1 finding(s) since" in review.render(review.state(since=0))
+    assert "nothing found since" in review.render(review.state(since=2e10))
+    assert "since" not in review.render(review.state())
 
 
 def test_the_critic_spawn_is_on_the_tape():

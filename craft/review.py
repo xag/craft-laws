@@ -42,6 +42,7 @@ makes it a switch and not a setting.
 from __future__ import annotations
 
 import sys
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -56,11 +57,14 @@ def _home() -> Path:
 
 @dataclass(frozen=True)
 class Review:
-    """One review of a reply: an id, what it looks at, and what it costs to run."""
+    """One review of a reply: an id, what it looks at, what it costs to run, and the
+    producer label its findings travel under in the courier — the one fact that lets a
+    watcher count what a review found without reading the finding."""
 
     id: str
     what: str
     cost: str
+    producer: str
 
     def off_path(self) -> Path:
         return _home() / f"REVIEW_OFF_{self.id}"
@@ -88,9 +92,9 @@ class Review:
 
 REVIEWS = (
     Review("record", "the turn's claims — what it wrote down, and where it wrote nothing",
-           "data only, about a millisecond"),
+           "data only, about a millisecond", "craft.claims"),
     Review("reasoning", "what the reply told the user, and whether it holds up",
-           "one small-model call, detached — never blocks"),
+           "one small-model call, detached — never blocks", "craft.critic"),
 )
 
 BY_ID = {r.id: r for r in REVIEWS}
@@ -100,20 +104,54 @@ def enabled() -> tuple:
     return tuple(r for r in REVIEWS if r.on)
 
 
-def state() -> dict:
+def findings(since: float) -> dict:
+    """How many findings each review posted after `since`, counted off the courier's
+    outboxes without taking anything: the findings are addressed to sessions, and the
+    session is the reader; a watcher only counts. Across every session on this machine,
+    because the boxes are keyed by a one-way hash and cannot be told apart — so the
+    honest question is "since when", never "in which session". Empty without a courier."""
+    try:
+        from courier import mail
+    except ImportError:
+        return {r.id: 0 for r in REVIEWS}
+    by_producer = {r.producer: r.id for r in REVIEWS}
+    out = {r.id: 0 for r in REVIEWS}
+    for m in mail.survey(since):
+        rid = by_producer.get(m.get("producer"))
+        if rid is not None:
+            out[rid] += 1
+    return out
+
+
+def state(since: float | None = None) -> dict:
     """What is checking replies right now — the question that needed two modules and a
-    settings file to answer."""
+    settings file to answer. With `since`, also what they found after that moment:
+    a count per review under `findings`, and their sum under `landed`."""
     on = enabled()
-    return {"on": [r.id for r in on], "off": [r.id for r in REVIEWS if not r.on],
-            "colour": "green" if len(on) == len(REVIEWS)
-                      else "grey" if not on else "amber"}
+    s = {"on": [r.id for r in on], "off": [r.id for r in REVIEWS if not r.on],
+         "colour": "green" if len(on) == len(REVIEWS)
+                   else "grey" if not on else "amber"}
+    if since is not None:
+        s["since"] = since
+        s["findings"] = findings(since)
+        s["landed"] = sum(s["findings"].values())
+    return s
 
 
 def render(s: dict) -> str:
     if not s["on"]:
-        return "reviews OFF — no reply is being checked"
-    line = "reviews on: " + ", ".join(s["on"])
-    return line + (f"   (off: {', '.join(s['off'])})" if s["off"] else "")
+        line = "reviews OFF — no reply is being checked"
+    else:
+        line = "reviews on: " + ", ".join(s["on"])
+        line += f"   (off: {', '.join(s['off'])})" if s["off"] else ""
+    if s.get("landed"):
+        clock = time.strftime("%H:%M", time.localtime(s["since"]))
+        per = ", ".join(f"{k} {v}" for k, v in s["findings"].items() if v)
+        line += f"\n{s['landed']} finding(s) since {clock}: {per}"
+    elif "landed" in s:
+        clock = time.strftime("%H:%M", time.localtime(s["since"]))
+        line += f"\nnothing found since {clock}"
+    return line
 
 
 def run(payload: dict) -> int:

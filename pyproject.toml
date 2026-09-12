@@ -27,7 +27,7 @@ craft-review-tray = "craft.review_tray:main"
 # Pinned by rev, always. quern is pre-1.0 and its own doctrine is fork-or-republish over resolver
 # algebra. This package builds ON quern's ledger and grounding packages; it does not live inside
 # them, and that is the point (see craft/package.py, and xag/quern#19).
-quern = { git = "https://github.com/xag/quern", rev = "ab9563e" }
+quern = { git = "https://github.com/xag/quern", rev = "26d9b05" }
 # The rev quern itself pins, stated as our own dependency because craft.flight imports it —
 # leaning on a transitive pin is how an import breaks on somebody else's upgrade.
 xag-flight-recorder = { git = "https://github.com/xag/flight-recorder", rev = "b4d2bb1" }

@@ -284,6 +284,15 @@ LAWS = [
             ("chores 2026-07-13, the households sheet",
              "Opened to SWITCH team; its largest element was a fully-expanded create-a-new-team "
              "form — an action performed about once a year. Folded behind a disclosure."),
+        
+            ("korean-gpt-coach 2026-09-14, the page for choosing what to practise from",
+             "The same defect, in another app, two months later: the page exists to pick a "
+             "song or an artist to be served sentences from, and half of it was a "
+             "permanently-expanded upload form — three labelled fields, a textarea and a "
+             "submit — for pasting a text of your own, which almost no visit does. The law "
+             "was already written, with the sighting above; nothing looked at these screens "
+             "for it, because the app's screen discipline decides WCAG criteria and nothing "
+             "else. Folded behind a disclosure."),
         ],
     ),
 
@@ -311,6 +320,16 @@ LAWS = [
              "The founder: 'the two items are not related'. The law that was almost "
              "minted for this ('one-card-one-screen') was this law, applied to a "
              "card."),
+        
+            ("korean-gpt-coach 2026-09-14, the page for choosing what to practise from",
+             "Two jobs stacked flat under a heading naming both — pick what you are "
+             "served sentences from, and upload a text of your own — each in its own "
+             "card, each opening with a paragraph of policy about what the other one "
+             "does not do. A third sighting, in a third app, which is the count this "
+             "law's own note asked for before deciding whether it merges into "
+             "rare-action-folds-away: it does not. The rare action folding away is not "
+             "the same finding as the second job belonging on its own surface, and here "
+             "the fix was both."),
         ],
         note="Weaker than the others as a standalone law: it derives from #8 and progressive "
              "disclosure, and so far it has never produced a verdict that rare-action-folds-away "

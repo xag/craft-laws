@@ -69,7 +69,8 @@ CENSUS: dict[str, tuple[str, tuple[str, ...], str]] = {
         "records which of them is at the screen"),
     "8. Aesthetic and Minimalist Design": (
         "covered", ("rare-action-folds-away", "one-surface-one-job", "say-it-once",
-                    "paragraphs-stay-under-five-sentences"),
+                    "paragraphs-stay-under-five-sentences",
+                    "a-screen-carries-no-words-nobody-acts-on"),
         "the frequency half and the one-job half are each a law, and both were "
         "breached by the page that prompted this census. WHAT NO LAW HERE DECIDES "
         "is the heuristic's own second sentence — that every extra unit competes "

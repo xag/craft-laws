@@ -717,6 +717,105 @@ LAWS = [
     # overlap map decided the root and the collision is recorded in the note.
     # =========================================================================
 
+    # --- space and words, 2026-09-21: what a screen carries and how far apart ----------
+    _law(
+        "words-keep-their-space",
+        "A control inside a line of text adds no space around its word: two words of a "
+        "line are one word space apart, whether or not one of them can be tapped",
+        _cited("Bringhurst, The Elements of Typographic Style, 2.1.1"),
+        falsifier="Two consecutive words in one line of text separated by more than the "
+                  "font's word space, because one of them is a control with padding or "
+                  "margin of its own.",
+        triggers=["a word in a sentence is a tap target (a blank to fill, a word to find, "
+                  "a term to look up)"],
+        citations=[
+            ("Bringhurst, The Elements of Typographic Style, 2.1.1 (Rutter's web adaptation, "
+             "which quotes the section)",
+             "https://webtypography.net/2.1.1",
+             "Define the word space to suit the size and natural letterfit of the font."),
+            ("W3C - WCAG 2.2, SC 2.5.8 Target Size (Minimum), the inline exception",
+             "https://www.w3.org/TR/WCAG22/#target-size-minimum",
+             "Inline: The target is inline, such as a hyperlink within a sentence."),
+        ],
+        sightings=[
+            ("korean-gpt-coach 2026-09-21, Bullet",
+             "Every word of the sentence became a button with two pixels of padding each "
+             "side, and every gap in the line grew by four pixels: the sentence read as a "
+             "row of tokens. The owner: 'There's an issue with spacing.' The padding went, "
+             "the target being the word's own box under WCAG's inline exception, and a "
+             "screen law now measures the gap between consecutive word controls against the "
+             "line's own space."),
+        ],
+        note="The tap target's size is targets-are-thumb-sized's business; this law is about "
+             "the space a target must not add. The two meet at WCAG's inline exception.",
+    ),
+
+    _law(
+        "space-comes-in-measured-intervals",
+        "Space on a surface is added and deleted in multiples of one unit: no margin, "
+        "padding or gap is a size of its own",
+        _cited("Bringhurst, The Elements of Typographic Style, 2.2.2"),
+        falsifier="A margin, padding or gap whose size is not a multiple of the surface's "
+                  "declared unit, on a surface that declares one.",
+        triggers=["a stylesheet shared by more than one screen",
+                  "a rule written for one element with a size chosen by eye"],
+        citations=[
+            ("Bringhurst, The Elements of Typographic Style, 2.2.2 (Rutter's web adaptation, "
+             "which quotes the section)",
+             "https://webtypography.net/2.2.2",
+             "Add and delete vertical space in measured intervals."),
+        ],
+        sightings=[
+            ("korean-gpt-coach 2026-09-21, the shared stylesheet of the five Apps",
+             "One stylesheet carried 6, 10 and 14 pixels beside 8, 12 and 16, each chosen by "
+             "eye when its rule was written; thirty-six values sat off the unit. The unit is "
+             "4px, declared in the screen laws, every stray snapped to it, and a law in the "
+             "DOM reads each computed margin, padding and gap against it."),
+        ],
+        note="The unit is the surface's to declare (4, 8, a leading); the law holds that "
+             "there is one and that every space is a multiple of it. Material's 8dp grid and "
+             "Apple's 8pt are practice, not the ground; Bringhurst's measured intervals are.",
+    ),
+
+    _law(
+        "a-screen-carries-no-words-nobody-acts-on",
+        "A screen carries no words a reader must read and cannot act on: no welcome, no "
+        "explanation of what the screen is for, no instructions for what the controls "
+        "already say",
+        _cited("Krug, Don't Make Me Think, the third law of usability; Nielsen 1997"),
+        falsifier="A sentence on a surface that names no control, no state and no fact the "
+                  "reader came for, and whose removal loses the reader nothing they act on.",
+        triggers=["a screen opens on prose above its controls",
+                  "a control is explained in a sentence beside it",
+                  "a first screen welcomes, or tells the reader what they are about to see"],
+        citations=[
+            ("Krug - Don't Make Me Think, Revisited (2014), chapter 5, Omit needless words",
+             "https://www.oreilly.com/library/view/dont-make-me/0321344758/ch05.html",
+             "Get rid of half the words on each page, then get rid of half of what's left."),
+            ("Nielsen - How Users Read on the Web (NN/g, 1997-09-30)",
+             "https://www.nngroup.com/articles/how-users-read-on-the-web/",
+             "79 percent of our test users always scanned any new page they came across; "
+             "only 16 percent read word-by-word."),
+            (f"{NNG} - #8 Aesthetic and Minimalist Design", NNG_URL,
+             "Interfaces should not contain information that is irrelevant or rarely needed. "
+             "Every extra unit of information in an interface competes with the relevant "
+             "units of information and diminishes their relative visibility."),
+        ],
+        sightings=[
+            ("korean-gpt-coach 2026-09-14, the page for choosing what to practise from",
+             "Sixty words of policy prose above the search box, on a page whose job was the "
+             "search. The words were the first thing cut."),
+            ("korean-gpt-coach 2026-09-21, Bullet's lobby",
+             "Find the changed word, put the original back, a wrong tap costs 3 seconds: "
+             "fourteen words explaining a game whose first sentence teaches it in one tap. "
+             "The owner: 'no explanatory garbage'. The lobby says 60 seconds and Start."),
+        ],
+        note="rare-action-folds-away and one-surface-one-job govern what a surface holds; "
+             "this law governs the words on it. The count is inductive in korean-gpt-coach "
+             "(tools/prose.py: a screen that grows its words is red until somebody says why), "
+             "because nobody has published the number at which a screen has too many.",
+    ),
+
     # --- errors ------------------------------------------------------------------
 
     _law(

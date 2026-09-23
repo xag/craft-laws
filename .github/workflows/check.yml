@@ -86,6 +86,12 @@ jobs:
         run: uv run python -m craft.genericity --alarm
       - name: Every law is a proposition, not an app spec
         run: uv run python -m craft.genericity
+      # A library knows nothing of its consumers: no word of it names a project that uses it.
+      # The names live in the repository's variables, not in the repository.
+      - name: No word of the library names a client project
+        env:
+          CRAFT_CLIENT_NAMES: ${{ vars.CRAFT_CLIENT_NAMES }}
+        run: uv run python -m craft.genericity --clients
       - name: This repo's own claims hold
         run: uv run python -m craft.claims claims.jsonl
       - name: Work claims name the decisions consulted, and the names resolve

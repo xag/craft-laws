@@ -166,7 +166,7 @@ CENSUS: dict[str, tuple[str, str]] = {
     "12.4": ("zero", "sitemap reachable identically: site-static"),
     "12.5": ("zero", "search reachable identically: site-static"),
     "12.6": ("zero", "landmark regions skippable: DOM"),
-    "12.7": ("zero", "skip link present: DOM (chores ships nav.skip today)"),
+    "12.7": ("zero", "skip link present: DOM (a chore-sharing app ships nav.skip)"),
     "12.8": ("zero", "tab order coherent: the focus walk against visual order"),
     "12.9": ("covered", "no-keyboard-trap (model half proved per overlay in two "
                         "apps)"),

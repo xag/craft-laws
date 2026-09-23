@@ -44,7 +44,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "covered",
         "Failure to adhere to the defined responsibilities and constraints of an "
         "assigned role",
-        "the state machines: invest's daemon cannot transition a thesis, arming is "
+        "the state machines: an investment notebook's daemon cannot transition a thesis, arming is "
         "refused to non-humans, verdicts propose and never dispose — role walls "
         "enforced in code where they matter most"),
     "fm-1.3-step-repetition": (

@@ -17,7 +17,7 @@ Why it requires `ledger`
 ------------------------
 Because an unsourced law *is* a ledger hypothesis, exactly and not by analogy: a belief held
 provisionally, carrying the observation that would kill it. There is no reason to re-invent that
-vocabulary, and every reason not to — `invest` re-authored the ledger's kinds and Home Hub rolled
+vocabulary, and every reason not to — one project re-authored the ledger's kinds and another rolled
 its own, and the whole point of a package is that the third project does not make the same
 mistake a third time.
 
@@ -137,7 +137,7 @@ EXAMPLES = [
                  payload={"url": "https://design-system.service.gov.uk/components/button/",
                           "quote": "Write button text in sentence case, describing the action "
                                    "it performs."}),
-            Node(id="ex-sighting", kind="sighting", name="chores, the member sheet",
+            Node(id="ex-sighting", kind="sighting", name="a chore-sharing app, the member sheet",
                  payload={"what": "A section headed 'Absence' whose submit button was also "
                                   "labelled 'Absence'."}),
         ],

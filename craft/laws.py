@@ -4,7 +4,7 @@ Every law here was earned by a defect that shipped. The `sighting` nodes are not
 that has never caught anything is a law nobody should trust, and the ones below are the reason
 each of these is in the file at all.
 
-The sightings are drawn from one run — `chores`, 2026-07-13, a French localisation that shipped
+The sightings are drawn from one run — a chore-sharing app, 2026-07-13, a French localisation that shipped
 to production with 486 tests passing, 303/303 string keys covered in both directions, `node
 --check` clean, and twelve flight-recorder tapes replaying bit-for-bit. Every check was green.
 None of them reads.
@@ -69,14 +69,14 @@ LAWS = [
                     "The design should speak the users' language. Use words, phrases, and "
                     "concepts familiar to the user, rather than internal jargon.")],
         sightings=[
-            ("chores 2026-07-13, the charter screen",
+            ("a chore-sharing app, 2026-07-13, the charter screen",
              "A section headed « Les murs » — a literal rendering of the codebase's own "
              "metaphor, 'hard walls'. A French parent does not set a wall; they forbid "
              "something. Now « Interdictions »."),
-            ("chores 2026-07-13, the add-a-chore sheet",
+            ("a chore-sharing app, 2026-07-13, the add-a-chore sheet",
              "« Tout l'équilibre se compte en minutes » — *l'équilibre* is the app's name for "
              "its own fairness ledger. A person counts minutes."),
-            ("chores ruling cards, 2026-08-18",
+            ("a chore-sharing app's ruling cards, 2026-08-18",
              "The judgment surface itself: ungrouped conviction cards served law ids, "
              "element ids, click paths and solver margins as the sentence to judge — "
              "«targets-are-thumb-sized: '-8.6px margin at 15px' — 'header-all' renders "
@@ -101,7 +101,7 @@ LAWS = [
                     "You may need to include more or different words to better describe the "
                     "action.")],
         sightings=[
-            ("chores 2026-07-13, the member sheet",
+            ("a chore-sharing app, 2026-07-13, the member sheet",
              "A section headed « Absence » whose submit button was also labelled « Absence ». "
              "In the English original: 'Away' over 'Away' — so the defect predated the "
              "translation, and nobody had ever read the screen."),
@@ -127,7 +127,7 @@ LAWS = [
                     "translators to handle these as fixed strings rather than composed "
                     "strings.")],
         sightings=[
-            ("chores 2026-07-13, a proposal's countdown",
+            ("a chore-sharing app, 2026-07-13, a proposal's countdown",
              "`proposal.closes` = « Encore {left} pour contester » composed with `left.min` = "
              "« encore {n} min », rendering « Encore encore 3 min pour contester. » Both "
              "strings correct in isolation. The defect existed only on the screen, and a "
@@ -149,7 +149,7 @@ LAWS = [
                     "Instead, 'one' is a category for any number that behaves like 1. — six "
                     "categories: zero, one, two, few, many, other.")],
         sightings=[
-            ("chores 2026-07-13, the count on Today",
+            ("a chore-sharing app, 2026-07-13, the count on Today",
              "French treats 0 as singular (« 0 tâche »); English does not ('0 turns'). A "
              "binary check is wrong in the very first language you add. Routed through "
              "Intl.PluralRules."),
@@ -179,7 +179,7 @@ LAWS = [
              "fixes across all documents, all languages, and all versions."),
         ],
         sightings=[
-            ("chores 2026-07-13, every screen",
+            ("a chore-sharing app, 2026-07-13, every screen",
              "The commissioning agent invented « maisonnée » for *household* (literary; nobody "
              "says it) and counted chores in « tours » (« il reste 3 tours » — a board game), "
              "wrote both into the translator's brief as BINDING, and every tab, count and "
@@ -206,7 +206,7 @@ LAWS = [
                     "The smaller the source message, the higher the likely translation "
                     "length.")],
         sightings=[
-            ("chores 2026-07-13, the tab bar",
+            ("a chore-sharing app, 2026-07-13, the tab bar",
              "'Today' (5) → « Aujourd'hui » (11). 'Household' → « Équipe ». The tab bar and the "
              "button row are the FIRST things to check, not the last — which is the opposite of "
              "the intuition that long paragraphs are the risk."),
@@ -226,7 +226,7 @@ LAWS = [
         triggers=["the app is translated into any second language",
                   "the app coins domain concepts of its own"],
         sightings=[
-            ("chores 2026-07-13, the households sheet",
+            ("a chore-sharing app, 2026-07-13, the households sheet",
              "« Ses propres habitants » — a *team* has no inhabitants. The word survived a "
              "glossary change from 'house' to 'team' because the sentences AROUND the changed "
              "word were never re-read."),
@@ -251,7 +251,7 @@ LAWS = [
         triggers=["the app is translated into any second language",
                   "the app's voice does work of its own (dry, warm, terse)"],
         sightings=[
-            ("chores 2026-07-13, the empty board",
+            ("a chore-sharing app, 2026-07-13, the empty board",
              "'Nothing today. / That is the whole message.' — a dry joke about the app's own "
              "terseness. French has no such joke. Every attempt to carry it across produced a "
              "line that said nothing, and one of them — « Il n'y a rien à ajouter. » — sat "
@@ -281,11 +281,11 @@ LAWS = [
              "Interfaces should not contain information that is irrelevant or rarely needed."),
         ],
         sightings=[
-            ("chores 2026-07-13, the households sheet",
+            ("a chore-sharing app, 2026-07-13, the households sheet",
              "Opened to SWITCH team; its largest element was a fully-expanded create-a-new-team "
              "form — an action performed about once a year. Folded behind a disclosure."),
         
-            ("korean-gpt-coach 2026-09-14, the page for choosing what to practise from",
+            ("a language-learning app, 2026-09-14, the page for choosing what to practise from",
              "The same defect, in another app, two months later: the page exists to pick a "
              "song or an artist to be served sentences from, and half of it was a "
              "permanently-expanded upload form — three labelled fields, a textarea and a "
@@ -308,12 +308,12 @@ LAWS = [
                     "needed. Every extra unit of information in an interface competes with the "
                     "relevant units of information.")],
         sightings=[
-            ("chores 2026-07-13, the households sheet",
+            ("a chore-sharing app, 2026-07-13, the households sheet",
              "Three unrelated jobs stacked flat — rename this team, set its language, create "
              "another — plus a bare text box holding the team's name with nothing saying it was "
              "a name."),
         
-            ("spec-studio ruling cards, 2026-08-18",
+            ("a specification studio's ruling cards, 2026-08-18",
              "a ruling card is itself a surface with one job — one decision — and one "
              "card gathered the chore form's rhythm line with the Today tab's swap "
              "line, because its grouping matched a law with an empty surface prefix. "
@@ -321,7 +321,7 @@ LAWS = [
              "minted for this ('one-card-one-screen') was this law, applied to a "
              "card."),
         
-            ("korean-gpt-coach 2026-09-14, the page for choosing what to practise from",
+            ("a language-learning app, 2026-09-14, the page for choosing what to practise from",
              "Two jobs stacked flat under a heading naming both — pick what you are "
              "served sentences from, and upload a text of your own — each in its own "
              "card, each opening with a paragraph of policy about what the other one "
@@ -361,7 +361,7 @@ LAWS = [
         falsifier="The zero state and a visible control disagreeing with each other.",
         triggers=["any surface has a zero state (a new user; a day with nothing due)"],
         sightings=[
-            ("chores 2026-07-13, the empty board — the worst defect of the run",
+            ("a chore-sharing app, 2026-07-13, the empty board — the worst defect of the run",
              "« Il n'y a rien à ajouter. » rendered forty pixels above a button marked "
              "AJOUTER. As a sentence it is perfectly good French. It is absurd only in place, "
              "and no string table contains position."),
@@ -423,7 +423,7 @@ LAWS = [
             ("craft-laws itself, 2026-08-16 — three times in one day",
              "The README said 'twelve laws' while the file held 57; the census "
              "document's hand tally said 24 while the computed status said 25; "
-             "chores' probe docstring described a two-surface drawing at eleven "
+             "the app's probe docstring described a two-surface drawing at eleven "
              "surfaces. Each was written true and went silently false — the exact "
              "failure mode this package's founding argument names, reproduced in "
              "its own prose. The fixes all had one shape: the prose keeps the "
@@ -670,7 +670,7 @@ LAWS = [
                     "Users should not have to wonder whether different words, situations, or "
                     "actions mean the same thing. Follow platform and industry conventions.")],
         sightings=[
-            ("chores 2026-08-16, the three add sheets",
+            ("a chore-sharing app, 2026-08-16, the three add sheets",
              "'Add it' committed add-a-chore, add-a-category and add-a-tag on three "
              "different sheets — proved co-offered by the compiled law the day the sheets "
              "were drawn, each conviction carrying its two-tap path. Ruled a defect: the "
@@ -678,7 +678,7 @@ LAWS = [
              "generic confirm — and the ruling refined this law with the generic-confirm "
              "exemption, so every adopter inherits the sharper check."),
         
-            ("spec-studio ruling cards, 2026-08-18",
+            ("a specification studio's ruling cards, 2026-08-18",
              "the ellipsis card carried twelve findings: six menu entries × two "
              "languages, the identical sentence beneath each. A bilingual app finds "
              "every string defect once per language BY CONSTRUCTION, so evidence "
@@ -738,7 +738,7 @@ LAWS = [
              "Inline: The target is inline, such as a hyperlink within a sentence."),
         ],
         sightings=[
-            ("korean-gpt-coach 2026-09-21, Bullet",
+            ("a language-learning app, 2026-09-21, Bullet",
              "Every word of the sentence became a button with two pixels of padding each "
              "side, and every gap in the line grew by four pixels: the sentence read as a "
              "row of tokens. The owner: 'There's an issue with spacing.' The padding went, "
@@ -766,7 +766,7 @@ LAWS = [
              "Add and delete vertical space in measured intervals."),
         ],
         sightings=[
-            ("korean-gpt-coach 2026-09-21, the shared stylesheet of the five Apps",
+            ("a language-learning app, 2026-09-21, the shared stylesheet of the five Apps",
              "One stylesheet carried 6, 10 and 14 pixels beside 8, 12 and 16, each chosen by "
              "eye when its rule was written; thirty-six values sat off the unit. The unit is "
              "4px, declared in the screen laws, every stray snapped to it, and a law in the "
@@ -802,16 +802,16 @@ LAWS = [
              "units of information and diminishes their relative visibility."),
         ],
         sightings=[
-            ("korean-gpt-coach 2026-09-14, the page for choosing what to practise from",
+            ("a language-learning app, 2026-09-14, the page for choosing what to practise from",
              "Sixty words of policy prose above the search box, on a page whose job was the "
              "search. The words were the first thing cut."),
-            ("korean-gpt-coach 2026-09-21, Bullet's lobby",
+            ("a language-learning app, 2026-09-21, Bullet's lobby",
              "Find the changed word, put the original back, a wrong tap costs 3 seconds: "
              "fourteen words explaining a game whose first sentence teaches it in one tap. "
              "The owner: 'no explanatory garbage'. The lobby says 60 seconds and Start."),
         ],
         note="rare-action-folds-away and one-surface-one-job govern what a surface holds; "
-             "this law governs the words on it. The count is inductive in korean-gpt-coach "
+             "this law governs the words on it. The count is inductive in a language-learning app "
              "(tools/prose.py: a screen that grows its words is red until somebody says why), "
              "because nobody has published the number at which a screen has too many.",
     ),
@@ -830,8 +830,8 @@ LAWS = [
                   "that is still there afterwards but at another place or another height, "
                   "because something above it or inside it changed size.",
         triggers=["a screen answers a tap by redrawing itself around the thing the person "
-                  "was looking at (a result under an answer, a sentence completed, a card "
-                  "revealed)",
+                  "was looking at (a result under an answer, a sentence completed, a hidden "
+                  "answer revealed)",
                   "an element changes its style between two states (a heading that becomes a "
                   "note, a text that becomes a control)"],
         citations=[
@@ -1777,7 +1777,7 @@ LAWS = [
                    ("Grice — Logic and Conversation, the maxim of Quality",
                     "https://plato.stanford.edu/entries/implicature/",
                     "Do not say what you believe to be false.")],
-        sightings=[("spec-studio ruling cards, 2026-08-18",
+        sightings=[("a specification studio's ruling cards, 2026-08-18",
                     "twice in one day. A conviction carried a photograph that did not "
                     "contain the convicted control — the capture walked to a screen "
                     "and photographed whatever was there, and once photographed the "
@@ -1795,7 +1795,7 @@ LAWS = [
     ),
 
     # --- the deck, 2026-08-17 ----------------------------------------------------
-    # Two laws earned in one afternoon by spec-studio's one-card redesign: each is a
+    # Two laws earned in one afternoon by a specification studio's one-card redesign: each is a
     # defect the owner caught on their own screen within minutes of the deploy.
 
     _law(
@@ -1817,7 +1817,7 @@ LAWS = [
                   "squinting.",
         triggers=["the app is used on a phone",
                   "a status chip, badge, overline, or caption is styled"],
-        sightings=[("spec-studio sheet v2, 2026-08-17",
+        sightings=[("a specification studio's sheet v2, 2026-08-17",
                     "the status chip shipped at 9px and the group overline at 10px. "
                     "The previous design's label 'took too much space'; the correction "
                     "overshot straight through the floor — 'the tiny fonts are "
@@ -1846,7 +1846,7 @@ LAWS = [
                     "https://www.nngroup.com/articles/natural-mappings/",
                     "When controls map to the actions that will result, systems are "
                     "faster to learn and easier to remember.")],
-        sightings=[("spec-studio sheet v2, 2026-08-17",
+        sightings=[("a specification studio's sheet v2, 2026-08-17",
                     "swipe right = keep and swipe left = drop, while the buttons "
                     "rendered keep on the left and drop on the right. Each half "
                     "followed its own convention (swipe from card decks, buttons from "
@@ -1880,7 +1880,7 @@ LAWS = [
                   "raises nothing the page can catch.",
         triggers=["a view is delivered into a sandbox somebody else controls",
                   "a page builds part of itself after loading"],
-        sightings=[("spec-studio sheet, 2026-08-17",
+        sightings=[("a specification studio's sheet, 2026-08-17",
                     "the card's resource was a bootstrap that called a tool for the "
                     "real widget and injected it. It fetched, it ran, it called the "
                     "tool twice — and the founder got a card-shaped empty box. The "
@@ -1908,7 +1908,7 @@ LAWS = [
                     "With a sufficient number of users of an API, it does not matter "
                     "what you promise in the contract: all observable behaviors of "
                     "your system will be depended on by somebody.")],
-        sightings=[("spec-studio, 2026-08-17",
+        sightings=[("a specification studio, 2026-08-17",
                     "project_card was renamed project_deck to bust a platform cache "
                     "and the old name was pruned in the same deploy — the founder's "
                     "phone, holding the cached registry, got 'Unknown tool' where the "
@@ -1937,7 +1937,7 @@ LAWS = [
                   "ground (a sheet over a dimmed page, a menu over what opened it "
                   "are declared coverings, not breaches).",
         triggers=["any interface at all"],
-        sightings=[("spec-studio, 2026-08-17 (xag/spec-studio#13)",
+        sightings=[("a specification studio, 2026-08-17",
                     "The expanded view rendered its close button on top of its "
                     "title — the title unreadable and part of what sat under both "
                     "unreachable — while every layout check passed, because each "
@@ -1971,7 +1971,7 @@ LAWS = [
                     "https://web.stanford.edu/dept/communication/faculty/krosnick/"
                     "docs/2010/2010%20Handbook%20of%20Survey%20Research.pdf",
                     "Make response options exhaustive and mutually exclusive")],
-        sightings=[("spec-studio, 2026-08-18 (xag/spec-studio#14)",
+        sightings=[("a specification studio, 2026-08-18",
                     "A judgment row carried a genuine open question in its text "
                     "and declared no answer set, so it fell back to the sheet's "
                     "default keep/drop — neither word answers it. Sibling rows on "
@@ -2000,7 +2000,7 @@ LAWS = [
                     "https://designsystem.parliament.uk/components/button/",
                     "Start button text with a verb (an action), for example, "
                     "‘Save and continue’.")],
-        sightings=[("chores, 2026-08-18 (xag/craft-laws#11)",
+        sightings=[("a chore-sharing app, 2026-08-18 (xag/craft-laws#11)",
                     "The create-a-household form commits with «Make it» and the "
                     "edit sheet's remove control reads «Take it off». Both reached "
                     "the judgment surface only as by-products of other findings — "

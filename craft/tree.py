@@ -31,7 +31,7 @@ DECISIONS = [
                 "A sighting is evidence, and evidence anonymized loses exactly the "
                 "property that makes a law trustworthy: that somebody can ask 'did this "
                 "really happen'. Every sighting in laws.py was re-read for this "
-                "decision; each exposes the app's name (chores), a date, a screen, and "
+                "decision; each exposes the kind of app, a date, a screen, and "
                 "the defective copy itself — no user, no household, no stored data, no "
                 "identifier. The app's name is already the estate's public case study "
                 "(the 486-green localisation story is the launch narrative), so the "
@@ -81,7 +81,7 @@ DECISIONS = [
                 "skips. The constraint kind is minted as a seat (layout as solved "
                 "interval queries, not three sampled viewports) and carried "
                 "honestly with no consumer yet. First consumer of the whole package "
-                "is chores' interface drawing, whose render-layer bindings are "
+                "is a chore-sharing app's interface drawing, whose render-layer bindings are "
                 "generated from the tree — drift impossible by construction for "
                 "what is generated.",
         },
@@ -126,7 +126,7 @@ DECISIONS = [
                 "generic — the act was already named by the menu that led there, so "
                 "a commit may wear a conventional confirm. That became the law's "
                 "generic-confirm exemption (falsifier text and compiler both), and "
-                "chores' fix and the law's sharpening shipped as one motion. The "
+                "the app's fix and the law's sharpening shipped as one motion. The "
                 "sighting records it, because a law that has caught something is a "
                 "law somebody may trust.",
             "consequence":
@@ -503,7 +503,7 @@ DECISIONS.append(Node(
             "The figure-of-speech and lost-nothing clauses stay readings: no "
             "decomposition found so far passes the write-time test, and the one "
             "measure tried (restatement word-overlap) was refused by its own filed "
-            "calibration (korean-gpt-coach claims.jsonl, 2026-08-31).",
+            "calibration (a language-learning app's claims.jsonl, 2026-08-31).",
     },
     children=[
         Node(id="alt-a-glossary-instead-of-the-record", kind="alternative",
@@ -607,8 +607,8 @@ DECISIONS.append(Node(
     payload={
         "rationale":
             "The first adoption survey scored a ladder of artifacts, and that "
-            "scale is contingent on today's rules: it read chores as complete "
-            "(11/11 rungs) while chores' twin covered 45% of its walked surfaces "
+            "scale is contingent on today's rules: it read a chore-sharing app as complete "
+            "(11/11 rungs) while that app's twin covered 45% of its walked surfaces "
             "and ~7% of its shipped strings — every undrawn surface a place no "
             "law can reach, invisible in the score. Coverage is the invariant: at "
             "100%, every law, current and future, applies wholesale and for free, "

@@ -6,7 +6,7 @@ one-surface-one-job (#8) — and the set was never censused. Five heuristics use
 five unread: the picked-item defect `a-census-is-read-from-its-source` names, in
 the source this family quotes most often.
 
-What prompted it, 2026-09-14: a page built in korean-gpt-coach for choosing what
+What prompted it, 2026-09-14: a page built in a language-learning app for choosing what
 to practise from opened on sixty words of policy prose above its search box, gave
 every result two buttons where one would do, kept a rarely-used upload form
 permanently expanded, and ran to eight phone screens. The founder: "atrocious.
@@ -76,7 +76,7 @@ CENSUS: dict[str, tuple[str, tuple[str, ...], str]] = {
         "is the heuristic's own second sentence — that every extra unit competes "
         "with the relevant ones — as a property of a screen taken whole. That is "
         "not a threshold anybody can root; it is a quantity that should not grow "
-        "unnoticed, so korean-gpt-coach records it per screen inductively "
+        "unnoticed, so a language-learning app records it per screen inductively "
         "(tools/prose.py), the way tools/answers.py records the words of a tool's "
         "answer: no budget, no reading, the ceiling is what stands today"),
     "9. Help Users Recognize, Diagnose, and Recover from Errors": (

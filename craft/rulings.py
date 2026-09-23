@@ -91,7 +91,7 @@ def human_quote(replay: str) -> str:
     left — the path — is the one part a person can walk. Shipped whole, it put a raw
     state dump on a card and asked an owner to rule on it, which is this package's own
     no-system-vocabulary law, broken by its adopter, on a card about breaking laws
-    (chores, 2026-08).
+    (a chore-sharing app, 2026-08).
     """
     s = str(replay)
     if " fails after " not in s:

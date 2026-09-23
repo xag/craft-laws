@@ -117,14 +117,14 @@ PRACTICE = [
                     "item fulfils specified requirements ... validation: "
                     "verification, where the specified requirements are adequate "
                     "for an intended use")],
-        sightings=[("spec-studio, 2026-08-17",
+        sightings=[("a specification studio, 2026-08-17",
                     "fifteen rounds of 'deployed and verified' against a founder "
                     "answering 'still nothing'. Every verification was real and every "
                     "one was on the producing side: tests green, machine carrying the "
                     "file, OAuth door answering, CI passing. The card on the phone was "
                     "never once observed until the founder said 'you really won't test "
                     "what you do'."),
-                   ("spec-studio sheet, 2026-08-17 — the UI-change case",
+                   ("a specification studio's sheet, 2026-08-17 — the UI-change case",
                     "the same day, the same failure at a finer grain: every claim "
                     "about the redesigned card rested on green tests, and the widget "
                     "was never rendered once. The first actual render found, in one "
@@ -155,7 +155,7 @@ PRACTICE = [
         citations=[(f"{AGANS} — rule 2", AGANS_URL, "Make it fail"),
                    (f"{AGANS} — rule 2, expanded", AGANS_URL,
                     "Stimulate the failure, don't simulate the failure")],
-        sightings=[("spec-studio, 2026-08-17",
+        sightings=[("a specification studio, 2026-08-17",
                     "five fixes shipped against an empty card that had never been "
                     "reproduced anywhere but on the founder's phone. The first "
                     "reproduction — a jsdom host with no payload — was written after "
@@ -177,14 +177,14 @@ PRACTICE = [
         citations=[(f"{AGANS} — rule 3", AGANS_URL, "Quit thinking and look"),
                    (f"{AGANS} — rule 3, expanded", AGANS_URL,
                     "Build instrumentation in")],
-        sightings=[("spec-studio, 2026-08-17",
+        sightings=[("a specification studio, 2026-08-17",
                     "four hours of cache theories — connector cache, HTML cache, tool "
                     "list, URI naming — each plausible, none checkable, because a dead "
                     "script and a missing payload draw the identical blank box. One "
                     "beacon ('the script ran'; 'no payload came') settled it in two "
                     "log lines. The estate's own flight-recorder doctrine says exactly "
                     "this and it was not applied at the one boundary that mattered."),
-                   ("spec-studio, 2026-08-18",
+                   ("a specification studio, 2026-08-18",
                     "the founder reported a card whose sentence the server no longer "
                     "served, and the reply was a live re-fetch plus a theory about "
                     "whose screen was stale — while the recorder, armed on this server "
@@ -210,7 +210,7 @@ PRACTICE = [
         triggers=["a failure is being chased", "more than one plausible cause is open"],
         citations=[(f"{AGANS} — rule 5", AGANS_URL, "Change one thing at a time"),
                    (f"{AGANS} — rule 5, expanded", AGANS_URL, "Isolate the key factor")],
-        sightings=[("spec-studio, 2026-08-17",
+        sightings=[("a specification studio, 2026-08-17",
                     "one deploy carried a content-hashed URI, a renamed tool and a "
                     "reshaped meta block — three theories at once. It failed, and the "
                     "failure taught nothing about any of them; worse, the rename broke "
@@ -229,7 +229,7 @@ PRACTICE = [
                   "spends the user's turn to learn what a script would have said.",
         triggers=["a fix is ready and its effect is unknown",
                   "the author cannot see the user's surface"],
-        sightings=[("spec-studio, 2026-08-17",
+        sightings=[("a specification studio, 2026-08-17",
                     "'open a new conversation and tell me', repeatedly, for a whole "
                     "afternoon — while the connector's own resource and payload were "
                     "readable from the author's session all along, and a browser was "
@@ -250,7 +250,7 @@ PRACTICE = [
                   "a different route — a second endpoint, another surface, a manual "
                   "step — as the resolution.",
         triggers=["the reported failure resists", "a workaround exists"],
-        sightings=[("spec-studio, 2026-08-17",
+        sightings=[("a specification studio, 2026-08-17",
                     "a second MCP endpoint and then a whole browser deck were built "
                     "and offered while the MCP app itself stayed broken. Both were "
                     "sound work and neither was the ask: 'you can't just create a new "
@@ -1421,7 +1421,7 @@ PRACTICE = [
                     "how diagnosticians see things may be strongly influenced by "
                     "the way in which the problem is framed")],
         sightings=[("this session, 2026-08-29",
-                    "'invest can be exercised without real money' carried both "
+                    "'the investment notebook can be exercised without real money' carried both "
                     "'the sandbox exists' and 'it runs today'; the evidence "
                     "licensed the first and the phrasing sold the second, and the "
                     "repair was splitting the readings apart.")],
@@ -1559,7 +1559,7 @@ PRACTICE = [
                    (FEDPL + " — III.a.3.ii Omit unnecessary words", FEDPL_URL,
                     "writers must become more critical of their own writing. They must "
                     "consider whether they need every word.")],
-        sightings=[("korean-gpt-coach, 2026-08-31",
+        sightings=[("a language-learning app, 2026-08-31",
                     "A report on the language overlay described the cooldown as a "
                     "throttle that 'brakes on engagement, not on emission', and the "
                     "anchor test as one that 'doesn't bite'. Both sentences were "

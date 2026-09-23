@@ -818,6 +818,89 @@ LAWS = [
 
     # --- errors ------------------------------------------------------------------
 
+    # --- stability, 2026-09-23: what stays on the screen stays where it was --------------
+    _law(
+        "what-stays-stays-put",
+        "An element on the screen before a change and still on it after keeps its place and "
+        "its size: the change adds, removes or restyles what is around it without moving it",
+        _cited("Scarr, Cockburn, Gutwin and Bunt, Improving Command Selection with "
+               "CommandMaps, CHI 2012"),
+        falsifier="Record the position and size of every element present both before and "
+                  "after a state change the person caused (an answer, a tap, a reveal): one "
+                  "that is still there afterwards but at another place or another height, "
+                  "because something above it or inside it changed size.",
+        triggers=["a screen answers a tap by redrawing itself around the thing the person "
+                  "was looking at (a result under an answer, a sentence completed, a card "
+                  "revealed)",
+                  "an element changes its style between two states (a heading that becomes a "
+                  "note, a text that becomes a control)"],
+        citations=[
+            ("Scarr, Cockburn, Gutwin and Bunt, Improving Command Selection with CommandMaps, "
+             "CHI 2012",
+             "https://www.csse.canterbury.ac.nz/andrew.cockburn/papers/commandMap-finalCamera.pdf",
+             "they do so in a spatially-stable fashion, allowing users to build up spatial "
+             "memory of frequently-used commands"),
+            ("web.dev, Cumulative Layout Shift (CLS)",
+             "https://web.dev/articles/cls",
+             "causing them to lose their place while reading if the text moves suddenly, to "
+             "making them click the wrong link or button."),
+        ],
+        sightings=[
+            ("a sentence-building game, 2026-09-23",
+             "When the learner placed the last word, the result screen drew the meaning above "
+             "the sentence as a small note instead of the large text it had been, and the "
+             "sentence jumped up by the difference; the blank's underline was a border, and "
+             "the line lost three pixels of height when the last blank filled. The owner: "
+             "'people like stability; since the sentence stays on screen it should stay at "
+             "the exact same place.' The result now keeps the meaning's style and the "
+             "sentence's element, the underline is drawn without height, and a walk measures "
+             "the sentence's box before its last word and after: the same to the pixel."),
+        ],
+        note="CLS counts only the shifts a person did not cause: one within 500 ms of input "
+             "is flagged hadRecentInput and left out, on the ground that 'a layout shift is "
+             "only bad if the user isn't expecting it' (same page). This law goes further, on "
+             "the CommandMaps ground: a person expects the RESULT of a tap, not that the thing "
+             "they were reading moves - their eye and their memory of where things are stay "
+             "on it. Motion that shows where an element went (a transition) is a different "
+             "case: the element is not still there, it is moving on purpose.",
+    ),
+
+    _law(
+        "space-is-held-for-what-arrives",
+        "What will arrive where a person is already looking - a verdict, a result, a loaded "
+        "block, a line that grows - has its space held before it arrives, so its arrival "
+        "moves nothing",
+        _cited("web.dev, Optimize Cumulative Layout Shift"),
+        falsifier="An element that appears, or grows, after the first paint of a screen and "
+                  "pushes an element below it down (or pulls it up when it goes), where its "
+                  "size was known, or boundable, before it appeared.",
+        triggers=["content that loads after the screen is drawn",
+                  "a verdict or result shown under an answer",
+                  "a line whose content grows as it is filled"],
+        citations=[
+            ("web.dev, Optimize Cumulative Layout Shift",
+             "https://web.dev/articles/optimize-cls",
+             "When placing late-loading content in the content flow, layout shifts can be "
+             "avoided by reserving the space for them in the initial layout."),
+            ("web.dev, Optimize Cumulative Layout Shift",
+             "https://web.dev/articles/optimize-cls",
+             "reserve sufficient space in the viewport for it in advance (for example, using "
+             "a placeholder or skeleton UI) so that when it loads, it does not cause content "
+             "in the page to surprisingly shift around."),
+        ],
+        sightings=[
+            ("a sentence-building game, 2026-09-23",
+             "The line under a sentence that says whether a word was right is reserved empty "
+             "from the first screen at the height of the mark it will hold, and the result "
+             "screen puts its verdict on that same line; the choices under it never moved "
+             "when a verdict appeared."),
+        ],
+        note="Where the size cannot be known exactly (an ad, a machine-made translation), "
+             "hold the likely size and let the rest grow below the fold of attention; the "
+             "law is about what could have been known. what-stays-stays-put is the same "
+             "demand made of an element that stays; this one is made of the one that comes.",
+    ),
+
     _law(
         "error-names-the-culprit",
         "A rejected input is identified by name and its error described in words",

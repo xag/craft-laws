@@ -802,6 +802,12 @@ LAWS = [
              "units of information and diminishes their relative visibility."),
         ],
         sightings=[
+            ("a language-practice app, 2026-09-26, the home page",
+             "A status line above the list of games - 'Learning Korean · 54 words · 43 due · "
+             "meanings in English' - named the language the header already names and two "
+             "counts nothing on the page acts on. The owner: 'duplicate info, irrelevant, "
+             "useless'. It was removed; the change that had added it is judged by "
+             "a-change-adds-no-words-nobody-asked-for."),
             ("a language-learning app, 2026-09-14, the page for choosing what to practise from",
              "Sixty words of policy prose above the search box, on a page whose job was the "
              "search. The words were the first thing cut."),

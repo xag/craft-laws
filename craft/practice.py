@@ -26,6 +26,11 @@ from quern.provenance import Quantity
 
 from .laws import FEDPL, FEDPL_URL, _cited, _law, _uncited
 
+GOVUK_NEEDS = "GOV.UK content and publishing guidance, Identify user needs"
+GOVUK_NEEDS_URL = "https://www.gov.uk/guidance/content-design/user-needs"
+JEFFRIES = "Ron Jeffries, You're NOT gonna need it! (XProgramming, 1998-04-04)"
+JEFFRIES_URL = "https://ronjeffries.com/xprog/articles/practices/pracnotneed/"
+
 PARNAS = ("David L. Parnas, On the Criteria To Be Used in Decomposing Systems into "
           "Modules, Communications of the ACM 15(12), 1053-1058, 1972")
 PARNAS_URL = ("https://www.win.tue.nl/~wstomv/edu/2ip30/references/"
@@ -1572,6 +1577,43 @@ PRACTICE = [
              "says whether they could read it, and on 2026-08-31 they said they could "
              "not. craft/census_plain.py carries the re-read at the guideline grain, "
              "with this the one route that changed.",
+    ),
+    _law(
+        "a-change-adds-no-words-nobody-asked-for",
+        "A change to an interface adds no visible words the request did not ask for: every "
+        "string it puts on a screen answers a need the owner named, and a screen that seems "
+        "to want more words is taken to the owner, not written",
+        _cited(GOVUK_NEEDS),
+        falsifier="A change to an interface that adds visible text - a line, a hint, a "
+                  "caption, a status or summary, a count, a restatement of what another "
+                  "part of the product already shows - that the request which produced the "
+                  "change did not name.",
+        triggers=["an agent changes an interface",
+                  "a screen is built or redrawn and has room for a line"],
+        citations=[(GOVUK_NEEDS, GOVUK_NEEDS_URL,
+                    "Every piece of published content should meet a valid user need."),
+                   (GOVUK_NEEDS, GOVUK_NEEDS_URL,
+                    "If the user does not need to take an action as a result of what "
+                    "they’re understanding, it’s not a valid user need."),
+                   (JEFFRIES, JEFFRIES_URL,
+                    "Always implement things when you actually need them, never when you "
+                    "just foresee that you need them.")],
+        sightings=[("a language-practice app, 2026-09-26",
+                    "The home page opened on a line nobody had asked for: 'Learning Korean "
+                    "· 54 words · 43 due · meanings in English' - the language the header "
+                    "already names, the meaning language the settings hold, and two counts "
+                    "nothing on that page acts on. The owner: 'duplicate info, irrelevant, "
+                    "useless, stupid, and simply banned by every craft law', and then "
+                    "'Never ever add un requested text again in a UI.' The line was "
+                    "removed with the function that wrote it.")],
+        note="The screen laws a-screen-carries-no-words-nobody-acts-on and say-it-once "
+             "judge the words a screen holds; this law judges the change that put them "
+             "there, which is where they can be stopped. It is decidable where the "
+             "product keeps a record of each screen's words that its owner accepts by name "
+             "(a screen whose words grow is red until accepted); elsewhere it is a reading "
+             "of the diff against the request. GOV.UK's second quotation is the same test "
+             "the screen law applies: a word nobody acts on meets no need. The whole of "
+             "both sources is read in craft/census_user_needs.py.",
     ),
 ]
 

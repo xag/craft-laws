@@ -50,9 +50,8 @@ CENSUS: dict[str, tuple[str, str]] = {
     "2.2": ("judge", "frame title pertinent: a reading"),
     # --- 3. Couleurs -----------------------------------------------------------------
     "3.1": ("covered", "colour-is-never-the-only-signal (+ the grayscale decider)"),
-    "3.2": ("zero", "text contrast: computed styles + luminance arithmetic — the "
-                    "measured-premise route thumb-size already walks"),
-    "3.3": ("zero", "UI component contrast: same arithmetic, same route"),
+    "3.2": ("covered", "text-holds-its-contrast"),
+    "3.3": ("covered", "control-and-graphic-hold-their-contrast"),
     # --- 4. Multimédia ---------------------------------------------------------------
     "4.1": ("zero", "the `media` kind (interface@0.4.0) declares alternatives as "
                     "resolvable references — 'a transcript exists' is a tree query"),

@@ -1369,6 +1369,100 @@ LAWS = [
     ),
 
     _law(
+        "text-holds-its-contrast",
+        "Text stands out from the background it is drawn on by a contrast ratio of at least "
+        "4.5:1, or 3:1 when it is large (18pt, or 14pt bold), in every colour scheme the "
+        "screen offers",
+        _cited("W3C, WCAG 2.2, SC 1.4.3 Contrast (Minimum), Level AA"),
+        falsifier="Compute (L1 + 0.05) / (L2 + 0.05) from the relative luminances of a "
+                  "text's computed colour and the colour it is drawn on: under 4.5 for text "
+                  "under 18pt (14pt bold), or under 3 for text that size or over, on any "
+                  "screen, in any scheme. A measurement, not a judgement.",
+        triggers=["any interface at all",
+                  "a filled control whose label sits on a brand or accent colour",
+                  "a second colour scheme (dark mode) redrawing the same screen",
+                  "text de-emphasised by a lighter colour (a hint, a caption, a muted note)"],
+        citations=[
+            ("W3C — WCAG 2.2, SC 1.4.3 Contrast (Minimum)",
+             "https://www.w3.org/TR/WCAG22/#contrast-minimum",
+             "The visual presentation of text and images of text has a contrast ratio of at "
+             "least 4.5:1, except for the following: Large Text Large-scale text and images "
+             "of large-scale text have a contrast ratio of at least 3:1;"),
+            ("W3C — WCAG 2.2, definition of contrast ratio",
+             "https://www.w3.org/TR/WCAG22/#dfn-contrast-ratio",
+             "(L1 + 0.05) / (L2 + 0.05), where L1 is the relative luminance of the lighter "
+             "of the colors, and L2 is the relative luminance of the darker of the colors."),
+            ("GOV.UK Design System — Colour",
+             "https://design-system.service.gov.uk/styles/colour/",
+             "You must make sure that the contrast ratio of text and interactive elements in "
+             "your service meets Web Content Accessibility Guidelines (WCAG 2.2) success "
+             "criterion 1.4.3 Contrast (minimum) level AA"),
+            ("RGAA 4.1 — Test 3.2.1",
+             "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/",
+             "Le rapport de contraste entre le texte et son arrière-plan est de 4.5:1, au "
+             "moins"),
+        ],
+        sightings=[
+            ("a language-practice app, 2026-09-25",
+             "The main button was to take a platform's system blue, #007AFF, as a fill under "
+             "white labels (Continue, Sign in again): 4.0:1, under 4.5:1 for 16px text. The "
+             "blue of the same maker's web buy buttons, #0071e3, keeps 4.7:1 and was taken "
+             "instead; the app's screen check measures every text in both schemes."),
+        ],
+        note="Large scale is WCAG's own: 'at least 18 point or 14 point bold', about 24px "
+             "and 18.66px bold in CSS. The law binds text; a control's shape, a focus ring "
+             "and a graphic that carries meaning are control-and-graphic-hold-their-"
+             "contrast. Incidental text (an inactive control, decoration) and logotypes are "
+             "exempt, as in the criterion.",
+    ),
+
+    _law(
+        "control-and-graphic-hold-their-contrast",
+        "What identifies a control or its state (its fill, its border, the icon that is its "
+        "only label, a focus ring, a selected mark), and each part of a graphic needed to "
+        "understand it, stands out from the colour next to it by at least 3:1",
+        _cited("W3C, WCAG 2.2, SC 1.4.11 Non-text Contrast, Level AA"),
+        falsifier="For each control and each state it shows, and each part of a graphic "
+                  "that carries information (a progress mark, a chart's series, a meter's "
+                  "fill): the contrast ratio between the colour that identifies it and the "
+                  "colour adjacent to it is under 3, in any scheme.",
+        triggers=["a control drawn only by its outline or its fill, with no text to "
+                  "identify it",
+                  "a state (selected, current, done, skipped) told apart by a colour",
+                  "progress, a score or a meter drawn as marks instead of words"],
+        citations=[
+            ("W3C — WCAG 2.2, SC 1.4.11 Non-text Contrast",
+             "https://www.w3.org/TR/WCAG22/#non-text-contrast",
+             "The visual presentation of the following have a contrast ratio of at least "
+             "3:1 against adjacent color(s): User Interface Components Visual information "
+             "required to identify user interface components and states, except for "
+             "inactive components or where the appearance of the component is determined "
+             "by the user agent and not modified by the author; Graphical Objects Parts of "
+             "graphics required to understand the content, except when a particular "
+             "presentation of graphics is essential to the information being conveyed."),
+            ("RGAA 4.1 — Test 3.3.1",
+             "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/",
+             "Soit le rapport de contraste entre les couleurs du composant dans ses "
+             "différents états et la couleur d’arrière-plan contiguë est de 3:1, au moins"),
+        ],
+        sightings=[
+            ("a language-practice app, 2026-09-25",
+             "A round's progress is a row of segments, one per item, told apart by colour: "
+             "done, missed, current, skipped, still to come. The segments still to come are "
+             "filled, and the skipped ones outlined, in the divider colour - #e5e5e5 on "
+             "white (1.26:1) and #313131 on #151515 (1.40:1) - so a skipped item and the "
+             "length of the round are near invisible. Found while writing this law; the "
+             "app's screen check measured text only and passed it."),
+        ],
+        note="A control that carries its own text is identified by the text, so its border "
+             "is not owed 3:1; an icon-only control is identified by its icon, which is. "
+             "The adjacent colour is what the part touches: a button's fill against the "
+             "page, a ring against the fill it surrounds. colour-is-never-the-only-signal "
+             "asks that a state be told apart without colour at all; this law asks that "
+             "the colours used be seen.",
+    ),
+
+    _law(
         "navigation-keeps-its-order",
         "A navigation mechanism repeated across screens keeps the same relative order "
         "everywhere",

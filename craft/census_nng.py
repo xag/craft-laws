@@ -47,9 +47,9 @@ CENSUS: dict[str, tuple[str, tuple[str, ...], str]] = {
         "covered", ("a-way-back", "escape-closes-the-overlay"),
         "the marked exit, and the one exit a keyboard always expects"),
     "4. Consistency and Standards": (
-        "covered", ("one-act-one-name", "navigation-keeps-its-order"),
-        "one act under one name, and the order a person learned once kept "
-        "everywhere it is repeated"),
+        "covered", ("one-act-one-name", "one-act-one-look-one-place", "navigation-keeps-its-order"),
+        "one act under one name, with one look in one place, and the order a person "
+        "learned once kept everywhere it is repeated"),
     "5. Error Prevention": (
         "covered", ("check-before-commit", "validate-at-field-exit",
                     "destructive-is-set-apart", "no-disabled-submit",

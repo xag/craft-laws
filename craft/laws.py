@@ -1463,6 +1463,61 @@ LAWS = [
     ),
 
     _law(
+        "one-act-one-look-one-place",
+        "The same action has the same look and the same place wherever it is offered - every "
+        "screen of a product and every state of a screen - and a control offered on one "
+        "screen of a set is offered, in the same place, on the others where its action applies",
+        _cited("Nielsen Norman Group, Maintain Consistency and Adhere to Standards "
+               "(Usability Heuristic #4)"),
+        falsifier="Two controls that do the same thing (go on, go back, end, close, show the "
+                  "translation) on two screens of one product, or in two states of one screen, "
+                  "drawn with a different shape, size or symbol, or at a different place "
+                  "relative to the content; or a control present on some screens of a set and "
+                  "missing on another where its action applies. A change of emphasis alone - "
+                  "the same control filled where it is the screen's main action and plain "
+                  "where it is not - is not a different look.",
+        triggers=["a product with several screens, games or modes that offer the same action",
+                  "a screen whose states (before and after an answer, a look back) redraw its "
+                  "controls",
+                  "a control added to one screen of a set that its siblings lack"],
+        citations=[
+            ("Nielsen Norman Group — Maintain Consistency and Adhere to Standards (Usability "
+             "Heuristic #4)",
+             "https://www.nngroup.com/articles/consistency-and-standards/",
+             "There are styles and elements that you can reuse, such as headings, "
+             "call-to-action buttons, and navigation. Decide where those elements will live "
+             "and make them consistent across all pages whenever applicable."),
+            ("Nielsen Norman Group — Maintain Consistency and Adhere to Standards (Usability "
+             "Heuristic #4)",
+             "https://www.nngroup.com/articles/consistency-and-standards/",
+             "Ensure consistency in the placement of form fields and buttons, especially for "
+             "multipage forms or wizards."),
+            ("GOV.UK — Government Design Principles, 10. Be consistent, not uniform",
+             "https://www.gov.uk/guidance/government-design-principles",
+             "We should use the same language and the same design patterns wherever "
+             "possible."),
+        ],
+        sightings=[
+            ("a language-practice app, 2026-09-25",
+             "Going on to the next item was drawn five ways across five games and their "
+             "states: a small outlined Skip with an arrow, a full-width black bar with an "
+             "arrow, a grey filled block with an arrow beside a large outlined Back, a pair of "
+             "grade buttons, and a full-width outlined Nothing to fix. End left the screen "
+             "once an item was answered in two games and stayed in a third; Back existed in "
+             "two games of five. The owner: 'why so many different buttons for the same "
+             "thing'. One row now ends every screen of a round - back and End at the left, "
+             "one forward arrow at the right, plain while it skips and filled once the item is "
+             "answered - and the answers that move on by themselves (the grades) stay "
+             "answers. Back in the other three games is still open: this law convicts it."),
+        ],
+        note="The look and place of what one-act-one-name asks of the words, and the "
+             "position of what navigation-keeps-its-order asks of the order. what-stays-"
+             "stays-put holds an element still across one change; this law holds a control "
+             "the same across screens and states. GOV.UK's own principle is 'consistent, not "
+             "uniform': two different actions may look different, the same action may not.",
+    ),
+
+    _law(
         "navigation-keeps-its-order",
         "A navigation mechanism repeated across screens keeps the same relative order "
         "everywhere",

@@ -704,9 +704,25 @@ LAWS = [
                     "The size of the target for pointer inputs is at least 24 by 24 CSS "
                     "pixels, except where: Spacing: Undersized targets ... Equivalent: The "
                     "function can be achieved through a different control on the same page "
-                    "that meets this criterion.")],
-        note="WCAG's floor, not the platforms' comfort: Apple's HIG asks 44pt and Material "
-             "48dp. The law takes the citable minimum; an app may hold itself to more.",
+                    "that meets this criterion."),
+                   ("W3C — WCAG 2.2, SC 2.5.5 Target Size (Enhanced), Level AAA",
+                    "https://www.w3.org/TR/WCAG22/#target-size-enhanced",
+                    "The size of the target for pointer inputs is at least 44 by 44 CSS "
+                    "pixels except when:"),
+                   ("Apple — Human Interface Guidelines, Accessibility",
+                    "https://developer.apple.com/design/human-interface-guidelines/accessibility",
+                    "Strive to meet the recommended minimum control size for each platform to "
+                    "ensure controls and menus are comfortable for all when tapping and "
+                    "clicking.")],
+        sightings=[("a language-practice app, 2026-09-26",
+                    "The header's controls - the settings gear, Share, Home - were 16-18px "
+                    "symbols in 32px targets: over WCAG's 24px floor, under the 44 by 44 of "
+                    "WCAG's enhanced criterion and of Apple's default control size. They were "
+                    "raised to 44px targets; the game rows under them were already 56px.")],
+        note="WCAG's floor, not the platforms' comfort: Apple's table gives iOS a default "
+             "control size of 44x44 pt and a minimum of 28x28 pt, and WCAG's AAA criterion "
+             "44 by 44. The law convicts under the citable minimum; 44 is the size a phone "
+             "screen is built to, and an app may hold itself to it.",
     ),
 
     # =========================================================================
@@ -1521,6 +1537,101 @@ LAWS = [
              "stays-put holds an element still across one change; this law holds a control "
              "the same across screens and states. GOV.UK's own principle is 'consistent, not "
              "uniform': two different actions may look different, the same action may not.",
+    ),
+
+    _law(
+        "sizes-come-from-one-scale-ranked-by-role",
+        "Every text size on a screen is a point of one small scale, each point a role (title, "
+        "body, label, caption), and the ranking of sizes follows the ranking of roles: nothing "
+        "that names the screen or a place in it is smaller than the items under it, and body "
+        "text sits at the platform's default size",
+        _cited("GOV.UK Design System, Type scale"),
+        falsifier="The computed font sizes on a screen take more values than the product's "
+                  "scale has points, or a heading, a page title or a bar's words are set "
+                  "smaller than the list items or body text they stand over, or running text "
+                  "is set under the platform's default text size.",
+        triggers=["a screen with a header, a title or a list",
+                  "a size set on one component instead of taken from the scale",
+                  "a bar or a header redrawn"],
+        citations=[
+            ("GOV.UK Design System — Type scale",
+             "https://design-system.service.gov.uk/styles/type-scale/",
+             "The type scale is a collection of font sizes and line heights that underpin all "
+             "of the typographic styles on GOV.UK. It has been tested and iterated for "
+             "readability on different devices. When creating new components, always start by "
+             "using the existing typography styles. If you need to create a new style, align "
+             "it with one of the points on the type scale."),
+            ("Material Web — Typography",
+             "https://github.com/material-components/material-web/blob/main/docs/theming/typography.md",
+             "A typescale is a collection of font styles: `font-family`, `font-size`, "
+             "`line-height`, and `font-weight`. They are organized into roles that describe "
+             "their purpose."),
+            ("Apple — Human Interface Guidelines, Typography",
+             "https://developer.apple.com/design/human-interface-guidelines/typography",
+             "Adjust font weight, size, and color as needed to emphasize important information "
+             "and help people visualize hierarchy. Be sure to maintain the relative hierarchy "
+             "and visual distinction of text elements when people adjust text sizes."),
+            ("Apple — Human Interface Guidelines, Typography",
+             "https://developer.apple.com/design/human-interface-guidelines/typography",
+             "Follow the recommended default and minimum text sizes for each platform — for "
+             "both custom and system fonts — to ensure your text is legible on all devices."),
+        ],
+        sightings=[
+            ("a language-practice app, 2026-09-26",
+             "The header named the screen in 15px and carried its words in 14px, over a list "
+             "of games whose names were 17px: the bar that says where you are was the smallest "
+             "text on the page. Its words were raised to 17px, the list's own point and the "
+             "size of a navigation bar's title."),
+        ],
+        note="Apple's table gives iOS body text a default of 17 pt and a minimum of 11 pt; "
+             "GOV.UK's scale runs 16, 19, 24, 27, 36, 48, 80px with 19px body text. The law "
+             "names no number of its own: it holds a screen to its own scale and to the "
+             "platform's default. text-survives-doubling is about the reader enlarging the "
+             "text; this law is about the sizes the screen chose before that.",
+    ),
+
+    _law(
+        "an-icon-is-sized-to-its-set-and-its-text",
+        "Icons that stand as controls of one kind share one size - the icon family's standard "
+        "for a bar or a list - and an icon beside words is sized to those words",
+        _cited("Material Web, Icon button: the icon size token"),
+        falsifier="Two icons of the same kind of control on one product (bar actions, list "
+                  "leads, row ends) drawn at different sizes, or an icon beside a label "
+                  "visibly larger or smaller than the label's text, where the difference "
+                  "carries no meaning.",
+        triggers=["a header or toolbar of icon buttons",
+                  "a list whose rows lead with an icon",
+                  "an icon and a word in one control"],
+        citations=[
+            ("Material Web — Icon button tokens",
+             "https://github.com/material-components/material-web/blob/main/docs/components/icon-button.md",
+             "`--md-icon-button-icon-size`         | `24px`"),
+            ("Apple — Human Interface Guidelines, SF Symbols",
+             "https://developer.apple.com/design/human-interface-guidelines/sf-symbols",
+             "The scales are defined relative to the cap height of the San Francisco system "
+             "font."),
+            ("Apple — Human Interface Guidelines, SF Symbols",
+             "https://developer.apple.com/design/human-interface-guidelines/sf-symbols",
+             "Specifying a scale lets you adjust a symbol’s emphasis compared to adjacent "
+             "text, without disrupting the weight matching with text that uses the same point "
+             "size."),
+            ("Apple — Human Interface Guidelines, Typography",
+             "https://developer.apple.com/design/human-interface-guidelines/typography",
+             "If you use interface icons to communicate important information, make sure "
+             "they’re easy to view at larger font sizes too."),
+        ],
+        sightings=[
+            ("a language-practice app, 2026-09-26",
+             "The header's symbols - settings 16px, Share 16px, Home 18px - sat over game "
+             "rows whose leading icons were 24px, beside header words of 14px: three icon "
+             "sizes for controls of one bar, none the family's. They were set to Material's "
+             "24px, the rows' own size, with the words beside them at 17px."),
+        ],
+        note="The relative half is Apple's: a symbol's scale is defined against the text it "
+             "sits with, not in isolation. The absolute half is the family's standard size, "
+             "which Material states as a token. sizes-come-from-one-scale-ranked-by-role "
+             "asks the same of the text; one-act-one-look-one-place asks it of the same "
+             "action across screens.",
     ),
 
     _law(

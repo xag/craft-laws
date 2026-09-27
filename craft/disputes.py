@@ -29,13 +29,15 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from craft.former_ids import current_id
+
 _ROOT = Path(__file__).resolve().parents[1]
 DISPUTES = _ROOT / ".craft" / "disputes.jsonl"
 
 
 def file_dispute(law: str, where: str, why: str, session: str = "") -> dict:
     """Append one dispute. Returns the record written."""
-    rec = {"law": law, "where": where, "why": why, "session": session,
+    rec = {"law": current_id(law), "where": where, "why": why, "session": session,
            "ts": datetime.now(timezone.utc).isoformat(timespec="seconds")}
     DISPUTES.parent.mkdir(parents=True, exist_ok=True)
     with DISPUTES.open("a", encoding="utf-8") as f:

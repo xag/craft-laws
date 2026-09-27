@@ -1794,7 +1794,7 @@ LAWS = [
     ),
 
     _law(
-        "a-label-names-the-thing-not-a-speaker",
+        "keep-labels-clear-and-simple",
         "A control's or a setting's label names what it controls, practically and in few "
         "words - never a sentence in a speaker's voice: no 'my', 'I' or 'we' the label does "
         "not need, no stand-in ('what I add') for a thing the product has a name for, "

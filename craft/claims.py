@@ -72,6 +72,8 @@ claims ledger has left the game these checks are part of.
 
 from __future__ import annotations
 
+from craft.former_ids import current_id
+
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -91,6 +93,7 @@ class ClaimFinding:
 
 
 def _law(law_id: str) -> str:
+    law_id = current_id(law_id)
     if law_id not in _LAW_IDS:
         raise ValueError(f"no practice law '{law_id}' in craft@")
     return law_id

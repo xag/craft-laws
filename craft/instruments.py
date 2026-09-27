@@ -20,6 +20,8 @@ dead — a checker that has never been seen red is relocated guessing.
 
 from __future__ import annotations
 
+from craft.former_ids import current_id
+
 from dataclasses import dataclass
 from typing import Iterable, Mapping, Sequence
 
@@ -37,6 +39,7 @@ class ProbeFinding:
 
 
 def _law(law_id: str) -> str:
+    law_id = current_id(law_id)
     if law_id not in _LAW_IDS:
         raise ValueError(f"no law '{law_id}' in craft@")
     return law_id

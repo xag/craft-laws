@@ -475,7 +475,18 @@ def read_rulings(path: Path) -> dict[str, dict]:
     path = Path(path)
     if not path.exists():
         return {}
-    return json.loads(path.read_text(encoding="utf-8"))
+    return {_current_card_id(k): v for k, v in json.loads(path.read_text(encoding="utf-8")).items()}
+
+
+def _current_card_id(rid: str) -> str:
+    """A card id recorded under a law's former id, as the card is keyed now: a renamed
+    law must not orphan the verdicts an owner already gave (craft.former_ids)."""
+    from craft.former_ids import FORMER_IDS
+    body = rid[len("ruling:"):] if rid.startswith("ruling:") else ""
+    for old, new in FORMER_IDS.items():
+        if body.startswith(old + "--"):
+            return f"ruling:{new}{body[len(old):]}"
+    return rid
 
 
 def verdict_for(law: str, where: str, groups: Groups,
@@ -484,7 +495,8 @@ def verdict_for(law: str, where: str, groups: Groups,
     the element or key the finding fired on — the same identity `add_finding`
     carded it under, so a check and its card can never disagree about which
     ruling applies."""
-    return recorded.get(card_id(law, where, groups))
+    from craft.former_ids import current_id
+    return recorded.get(card_id(current_id(law), where, groups))
 
 
 # --------------------------------------------------------------------------------------

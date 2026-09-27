@@ -65,9 +65,10 @@ def _law_ids() -> set[str]:
     """The actual law ids, so a card is convicted for naming a LAW rather than for
     hyphenating English: «the take-it-off button» is a name a person can read, and
     «rare-action-folds-away» is this package talking to itself."""
+    from craft.former_ids import FORMER_IDS
     from craft.laws import LAWS
     from craft.practice import PRACTICE
-    return {law.id for law in LAWS} | {law.id for law in PRACTICE}
+    return {law.id for law in LAWS} | {law.id for law in PRACTICE} | set(FORMER_IDS)
 
 
 def _sentences(text: str) -> list[str]:

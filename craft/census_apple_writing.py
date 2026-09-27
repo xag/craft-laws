@@ -1,6 +1,6 @@
 """A census: Apple's Human Interface Guidelines, Writing, whole.
 
-It roots a-label-names-the-thing-not-a-speaker, and a source is adopted entire or not at all
+It roots keep-labels-clear-and-simple, and a source is adopted entire or not at all
 (the source-the-rule protocol): every guideline the page states is classified here, not only
 the ones that convicted the label. The census unit is each guideline's lead sentence, read
 from the page on 2026-09-27 (developer.apple.com/design/human-interface-guidelines/writing):
@@ -21,14 +21,14 @@ from __future__ import annotations
 CENSUS: dict[str, tuple[str, str, str]] = {
     # --- Getting started ----------------------------------------------------------------
     "Determine your app's voice.": (
-        "covered", "a-label-names-the-thing-not-a-speaker",
+        "covered", "keep-labels-clear-and-simple",
         "its list of common terms is one-act-one-name's; the voice is the product's, not a "
         "speaker's, which is this law"),
     "Match your tone to the context.": (
         "set aside", "",
         "a tone per situation is a writer's judgment with no observable a law can hold"),
     "Be clear.": (
-        "covered", "a-label-names-the-thing-not-a-speaker",
+        "covered", "keep-labels-clear-and-simple",
         "'Check each word to be sure it needs to be there' is quoted by the law"),
     "Write for everyone.": (
         "covered", "no-system-vocabulary",
@@ -40,7 +40,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
     "Be action oriented.": (
         "covered", "says-what-happens",
         "a verb on a button; 'too cute or clever' is quoted by "
-        "a-label-names-the-thing-not-a-speaker, 'Click here' by links-say-where-they-lead"),
+        "keep-labels-clear-and-simple, 'Click here' by links-say-where-they-lead"),
     "Build language patterns.": (
         "covered", "one-act-one-name",
         "the same words for the same act, every time"),
@@ -54,7 +54,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "covered", "one-act-one-name",
         "the same word for the same step of a flow, and 'Done' where it ends"),
     "Use possessive pronouns sparingly.": (
-        "covered", "a-label-names-the-thing-not-a-speaker",
+        "covered", "keep-labels-clear-and-simple",
         "quoted by the law, with Microsoft's allowance for 'my' in toggles in its note"),
     "Write for how people use each device.": (
         "owed", "",
@@ -73,7 +73,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "which channel a message goes by is a design choice per message, not a property of "
         "words on a screen"),
     "Keep settings labels clear and simple.": (
-        "covered", "a-label-names-the-thing-not-a-speaker",
+        "covered", "keep-labels-clear-and-simple",
         "quoted by the law; 'describe what it does when turned on' is NN/g's toggle label "
         "rule, the same law's"),
     "Show hints in text fields.": (

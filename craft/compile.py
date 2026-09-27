@@ -20,6 +20,8 @@ idiom, so any consumer that can prove a model can prove a drawing.
 
 from __future__ import annotations
 
+from craft.former_ids import current_id
+
 import re
 
 from quern import Node
@@ -53,6 +55,7 @@ def when(surface: Node, element: Node) -> str:
 
 
 def _law(law_id: str) -> str:
+    law_id = current_id(law_id)
     if law_id not in _LAW_IDS:
         raise ValueError(f"no law '{law_id}' in craft@ — a compiler for a law nobody "
                          "ships would convict against a standard nobody stated")

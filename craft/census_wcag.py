@@ -42,7 +42,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
               "source order vs visual order: the linearization check"),
     "1.3.3": ("Sensory Characteristics", "covered",
               "instructions-point-by-name-not-by-place"),
-    "1.3.4": ("Orientation", "covered", "works-both-ways-up"),
+    "1.3.4": ("Orientation", "covered", "works-in-portrait-and-landscape"),
     "1.3.5": ("Identify Input Purpose", "covered",
               "the `collects` fact is input purpose; the autocomplete family "
               "compiles from it"),
@@ -52,7 +52,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
     "1.4.2": ("Audio Control", "zero",
               "the media kind's `autoplay` fact (interface@0.4.0); compiles"),
     "1.4.3": ("Contrast (Minimum)", "covered", "text-holds-its-contrast"),
-    "1.4.4": ("Resize Text", "covered", "text-survives-doubling"),
+    "1.4.4": ("Resize Text", "covered", "text-works-at-twice-its-size"),
     "1.4.5": ("Images of Text", "covered", "no-text-baked-into-images"),
     "1.4.6": ("Contrast (Enhanced)", "zero", "same arithmetic, higher ratio"),
     "1.4.7": ("Low or No Background Audio", "judge",
@@ -157,7 +157,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
               "help element in the same relative order: the nav machinery "
               "reused"),
     "3.3.1": ("Error Identification", "covered",
-              "error-names-the-culprit, evidenced by the erring lane"),
+              "an-error-names-the-field, evidenced by the erring lane"),
     "3.3.2": ("Labels or Instructions", "covered", "every-input-labeled"),
     "3.3.3": ("Error Suggestion", "covered", "error-says-the-fix"),
     "3.3.4": ("Error Prevention (Legal, Financial, Data)", "covered",

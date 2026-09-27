@@ -222,7 +222,7 @@ def check_detours_say_so(name: str, claims: list[dict]) -> list[ClaimFinding]:
 
 
 # THREE DECIDERS WERE REMOVED HERE, 2026-08-22, and this note is why they should not come
-# back in this shape. deliberate-names-its-decision, a-remainder-names-its-debt and
+# back in this shape. calling-a-state-deliberate-names-the-decision, what-is-left-undone-is-named-as-a-debt and
 # a-census-is-read-from-its-source were checked by matching WORDS in a claim's prose --
 # /deliberate|by design|on purpose/, /later|next|not yet|deferred|owed|blocked|remains/,
 # a count-noun pattern -- and requiring a structured field once a word hit. The match only
@@ -250,7 +250,7 @@ def check_confirmations_carry_their_account(name: str, claims: list[dict]
             continue
         if str(c.get("checked") or "").strip():
             continue
-        out.append(ClaimFinding(_law("a-qualifier-is-licensed-by-the-evidence"),
+        out.append(ClaimFinding(_law("a-hedge-needs-a-named-unknown"),
                                 f"{name}#{i + 1}", str(c.get("text", ""))[:120],
                                 "an agreement with nothing checked behind it — the "
                                 "finding has no traceable account, and assent the "
@@ -493,7 +493,7 @@ LAWS_OF = {
     check_theories_carry_observations: {"instrument-before-the-second-theory"},
     check_detours_say_so: {"a-detour-is-announced-as-a-detour"},
     check_confirmations_carry_their_account:
-        {"a-qualifier-is-licensed-by-the-evidence"},
+        {"a-hedge-needs-a-named-unknown"},
     check_measurements_state_their_protocol: {
         "calibration-size-is-declared-before-the-run",
         "prespecified-is-distinguished-from-exploratory",

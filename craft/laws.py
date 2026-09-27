@@ -113,7 +113,7 @@ LAWS = [
 
     # --- composition: the laws a string catalogue cannot hold ---------------------
     _law(
-        "composed-prose",
+        "never-build-a-sentence-from-fragments",
         "A sentence is one translatable unit; never assemble one from separately-translated "
         "fragments",
         _cited("Mozilla, Localization best practices for developers"),
@@ -163,7 +163,7 @@ LAWS = [
 
     # --- localisation process ------------------------------------------------------
     _law(
-        "glossary-first",
+        "settle-the-glossary-before-translating",
         "The domain nouns are settled BEFORE a word is translated, and settled by someone who "
         "speaks the target language — not by whoever commissioned the work, and not by the "
         "translator",
@@ -195,7 +195,7 @@ LAWS = [
     ),
 
     _law(
-        "text-expansion",
+        "layout-survives-longer-translations",
         "Layout survives the target language's length — and SHORT strings are the dangerous "
         "ones",
         _cited("W3C i18n, Text size in translation, citing IBM"),
@@ -217,7 +217,7 @@ LAWS = [
     ),
 
     _law(
-        "no-calque",
+        "a-metaphor-is-rechosen-in-each-language",
         "A metaphor is re-chosen in the target language, not carried across it",
         _cited("Microsoft Writing Style Guide — global communications"),
         citations=[("Microsoft Writing Style Guide — Writing tips for global communications",
@@ -240,7 +240,7 @@ LAWS = [
     ),
 
     _law(
-        "untranslatable-tone",
+        "a-tone-only-line-may-be-dropped-in-translation",
         "A line whose only content is TONE may be dropped in a language with no equivalent "
         "register — not rendered",
         _cited("Microsoft Manual of Style, 4th ed. — Don't try to be funny"),
@@ -268,7 +268,7 @@ LAWS = [
 
     # --- surfaces --------------------------------------------------------------------
     _law(
-        "rare-action-folds-away",
+        "rare-actions-go-to-a-second-layer",
         "Frequency decides prominence; rare and advanced actions are deferred to a second layer",
         _cited("NN/g, Progressive Disclosure; heuristic #8"),
         falsifier="The rarest action on a surface occupying the most space.",
@@ -330,17 +330,17 @@ LAWS = [
              "card, each opening with a paragraph of policy about what the other one "
              "does not do. A third sighting, in a third app, which is the count this "
              "law's own note asked for before deciding whether it merges into "
-             "rare-action-folds-away: it does not. The rare action folding away is not "
+             "rare-actions-go-to-a-second-layer: it does not. The rare action folding away is not "
              "the same finding as the second job belonging on its own surface, and here "
              "the fix was both."),
         ],
         note="Weaker than the others as a standalone law: it derives from #8 and progressive "
-             "disclosure, and so far it has never produced a verdict that rare-action-folds-away "
+             "disclosure, and so far it has never produced a verdict that rare-actions-go-to-a-second-layer "
              "did not. Merge it if that holds.",
     ),
 
     _law(
-        "a-way-back",
+        "every-mistake-has-a-way-back",
         "Every action a person can take by mistake has a marked exit",
         _cited("NN/g heuristic #3, User Control and Freedom"),
         falsifier="A destructive or contested action with no undo, no cancel, and no way to "
@@ -353,7 +353,7 @@ LAWS = [
     ),
 
     _law(
-        "empty-state-never-contradicts",
+        "an-empty-state-never-contradicts-the-controls",
         "No empty state asserts something the surrounding controls deny",
         _cited("NN/g, Designing Empty States in Complex Applications"),
         citations=[("NN/g — Designing Empty States in Complex Applications",
@@ -738,7 +738,7 @@ LAWS = [
 
     # --- space and words, 2026-09-21: what a screen carries and how far apart ----------
     _law(
-        "words-keep-their-space",
+        "a-control-in-a-line-adds-no-space",
         "A control inside a line of text adds no space around its word: two words of a "
         "line are one word space apart, whether or not one of them can be tapped",
         _cited("Bringhurst, The Elements of Typographic Style, 2.1.1"),
@@ -770,7 +770,7 @@ LAWS = [
     ),
 
     _law(
-        "space-comes-in-measured-intervals",
+        "space-comes-in-multiples-of-one-unit",
         "Space on a surface is added and deleted in multiples of one unit: no margin, "
         "padding or gap is a size of its own",
         _cited("Bringhurst, The Elements of Typographic Style, 2.2.2"),
@@ -835,7 +835,7 @@ LAWS = [
              "fourteen words explaining a game whose first sentence teaches it in one tap. "
              "The owner: 'no explanatory garbage'. The lobby says 60 seconds and Start."),
         ],
-        note="rare-action-folds-away and one-surface-one-job govern what a surface holds; "
+        note="rare-actions-go-to-a-second-layer and one-surface-one-job govern what a surface holds; "
              "this law governs the words on it. The count is inductive in a language-learning app "
              "(tools/prose.py: a screen that grows its words is red until somebody says why), "
              "because nobody has published the number at which a screen has too many.",
@@ -845,7 +845,7 @@ LAWS = [
 
     # --- stability, 2026-09-23: what stays on the screen stays where it was --------------
     _law(
-        "what-stays-stays-put",
+        "what-stays-on-screen-keeps-its-place",
         "An element on the screen before a change and still on it after keeps its place and "
         "its size: the change adds, removes or restyles what is around it without moving it",
         _cited("Scarr, Cockburn, Gutwin and Bunt, Improving Command Selection with "
@@ -891,7 +891,7 @@ LAWS = [
     ),
 
     _law(
-        "space-is-held-for-what-arrives",
+        "space-is-reserved-for-what-will-appear",
         "What will arrive where a person is already looking - a verdict, a result, a loaded "
         "block, a line that grows - has its space held before it arrives, so its arrival "
         "moves nothing",
@@ -922,12 +922,12 @@ LAWS = [
         ],
         note="Where the size cannot be known exactly (an ad, a machine-made translation), "
              "hold the likely size and let the rest grow below the fold of attention; the "
-             "law is about what could have been known. what-stays-stays-put is the same "
+             "law is about what could have been known. what-stays-on-screen-keeps-its-place is the same "
              "demand made of an element that stays; this one is made of the one that comes.",
     ),
 
     _law(
-        "error-names-the-culprit",
+        "an-error-names-the-field",
         "A rejected input is identified by name and its error described in words",
         _cited("W3C, WCAG 2.2, SC 3.3.1 Error Identification, Level A"),
         falsifier="A failed submit showing only a generic verdict ('Something went wrong'), "
@@ -1127,13 +1127,13 @@ LAWS = [
                     "https://baymard.com/blog/mobile-form-usability-single-input-fields",
                     "you should avoid splitting single input entities across multiple "
                     "fields")],
-        note="Lives beside known-date-three-boxes without contradiction: GOV.UK's date "
+        note="Lives beside a-known-date-is-three-fields without contradiction: GOV.UK's date "
              "rule is the researched exception for memorable dates, where the three "
              "parts are how people actually hold the value.",
     ),
 
     _law(
-        "known-date-three-boxes",
+        "a-known-date-is-three-fields",
         "A date the user knows is three labelled text fields — day, month, year — never "
         "a calendar picker or dropdowns, never auto-tabbed",
         _cited("GOV.UK Design System, Date input; USWDS, Date of birth"),
@@ -1233,7 +1233,7 @@ LAWS = [
                     "When they've finished, the 'Continue' button should return them to "
                     "the check answers page. They should not need to go through the rest "
                     "of the transaction again.")],
-        note="Distinct from a-way-back: that is escape, this is verification before "
+        note="Distinct from every-mistake-has-a-way-back: that is escape, this is verification before "
              "commitment. The round-trip clause is the sharp edge — many apps have the "
              "review page and fail the return path.",
     ),
@@ -1272,7 +1272,7 @@ LAWS = [
         citations=[("W3C — ARIA Authoring Practices, Modal Dialog",
                     "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/",
                     "Escape: Closes the dialog.")],
-        note="The keyboard instance of a-way-back. APG is the true root — WCAG never "
+        note="The keyboard instance of every-mistake-has-a-way-back. APG is the true root — WCAG never "
              "requires Escape — and APG is non-normative, said here because a citation "
              "that overstates its authority is worse than none. Also from the pattern: "
              "'When a dialog closes, focus returns to the element that invoked the "
@@ -1308,7 +1308,7 @@ LAWS = [
                     "If keyboard focus can be moved to a component of the page using a "
                     "keyboard interface, then focus can be moved away from that "
                     "component using only a keyboard interface")],
-        note="a-way-back's keyboard-focus instance, as escape-closes-the-overlay is its "
+        note="every-mistake-has-a-way-back's keyboard-focus instance, as escape-closes-the-overlay is its "
              "overlay instance: three laws, one doctrine, three falsifiers.",
     ),
 
@@ -1355,7 +1355,7 @@ LAWS = [
     ),
 
     _law(
-        "works-both-ways-up",
+        "works-in-portrait-and-landscape",
         "The app works in portrait and landscape alike",
         _cited("W3C, WCAG 2.2, SC 1.3.4 Orientation, Level AA"),
         falsifier="Rotate the device: content refuses to rotate, or view or operation "
@@ -1589,7 +1589,7 @@ LAWS = [
         note="Apple's table gives iOS body text a default of 17 pt and a minimum of 11 pt; "
              "GOV.UK's scale runs 16, 19, 24, 27, 36, 48, 80px with 19px body text. The law "
              "names no number of its own: it holds a screen to its own scale and to the "
-             "platform's default. text-survives-doubling is about the reader enlarging the "
+             "platform's default. text-works-at-twice-its-size is about the reader enlarging the "
              "text; this law is about the sizes the screen chose before that.",
     ),
 
@@ -1672,7 +1672,7 @@ LAWS = [
     ),
 
     _law(
-        "text-survives-doubling",
+        "text-works-at-twice-its-size",
         "Everything the screen says is still there, still readable, and still "
         "operable with the text at twice its size",
         _cited("W3C, WCAG 2.2, SC 1.4.4 Resize Text, Level AA"),
@@ -1691,7 +1691,7 @@ LAWS = [
                     "Dans chaque page web, le texte reste-t-il lisible lorsque la "
                     "taille des caractères est augmentée jusqu’à 200 %, au moins "
                     "(hors cas particuliers) ?")],
-        note="text-expansion's monolingual twin: that law doubles the words "
+        note="layout-survives-longer-translations's monolingual twin: that law doubles the words "
              "(another language), this one doubles the glyphs (the reader's eyes). "
              "Both land on the same solver over the same measured premises.",
     ),
@@ -1776,7 +1776,7 @@ LAWS = [
     ),
 
     _law(
-        "speaks-to-you",
+        "address-the-reader-as-you",
         "Copy addresses the user as 'you' in the active voice — never 'the user' in "
         "the third person, never a passive that hides who must act",
         _cited("GOV.UK style guide; digital.gov plain language guide"),
@@ -1913,7 +1913,7 @@ LAWS = [
                     "https://mozilla-l10n.github.io/documentation/localization/dev_best_practices.html",
                     "some locales use nouns for titles, and verbs for actions (for "
                     "example button labels)")],
-        note="Distinct from composed-prose: this is one string in two PLACES, not two "
+        note="Distinct from never-build-a-sentence-from-fragments: this is one string in two PLACES, not two "
              "strings glued into one sentence.",
     ),
 
@@ -1933,7 +1933,7 @@ LAWS = [
     ),
 
     _law(
-        "locale-machinery-formats",
+        "dates-and-numbers-use-locale-formatting",
         "Dates, times, numbers, and currency reach the screen through locale "
         "formatting machinery, never hand-assembled or hardcoded",
         _cited("Unicode CLDR"),
@@ -2045,7 +2045,7 @@ LAWS = [
                     "noticeable.")],
         note="A practice law — it polices the build, not a screen — kept because its "
              "falsifier is observable in the repo and its breaches (hardcoded "
-             "strings, clipped expansion) are the very defects text-expansion and "
+             "strings, clipped expansion) are the very defects layout-survives-longer-translations and "
              "the coach's #97 record.",
     ),
 
@@ -2215,7 +2215,7 @@ LAWS = [
     ),
 
     _law(
-        "yesterdays-names-keep-answering",
+        "a-published-name-keeps-working",
         "A name once served keeps answering, whatever today's name is",
         _cited("Hyrum Wright, Hyrum's Law"),
         falsifier="Rename or remove a served name — a tool, a route, a resource URI — "
@@ -2272,7 +2272,7 @@ LAWS = [
     ),
 
     _law(
-        "the-answers-span-the-question",
+        "the-answers-offered-cover-every-possible-answer",
         "The answers a surface offers span the answers its question admits",
         _cited("Krosnick & Presser, Question and Questionnaire Design "
                "(Handbook of Survey Research, 2010)"),
@@ -2338,7 +2338,7 @@ LAWS = [
     # --- are radar material under a-word-list-is-a-reading-not-a-mechanization: they
     # --- report, they never hold a handback.
     _law(
-        "a-verb-travels-as-a-verb",
+        "write-an-action-as-a-verb",
         "An action is written as its verb, never buried in a noun that needs a "
         "weaker verb to carry it",
         _cited("Federal Plain Language Guidelines, III.a.1.iii"),

@@ -49,12 +49,12 @@ def _law(law_id: str) -> str:
 
 def check_orientation(readings: Mapping[str, Mapping[str, str]]
                       ) -> list[ProbeFinding]:
-    """works-both-ways-up: nothing the app says in one orientation is unsayable in
+    """works-in-portrait-and-landscape: nothing the app says in one orientation is unsayable in
     the other. Collection contract: per surface, the rendered prose in 'portrait'
     and 'landscape' (the walker reads the same state twice, rotated). Convicts on
     words present whole in one orientation and absent from the other — layout may
     reflow freely; CONTENT lost to a rotation is the certain breach."""
-    law = _law("works-both-ways-up")
+    law = _law("works-in-portrait-and-landscape")
     out: list[ProbeFinding] = []
     for surface, sides in readings.items():
         a, b = sides.get("portrait", ""), sides.get("landscape", "")

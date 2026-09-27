@@ -6,7 +6,7 @@ judge is the semantic link the account merely declares: whether a premise's read
 follows from its quote, and whether a defeasible inference's premises support its
 conclusion. Until 2026-08-29 that link was checked by nobody, and the estate's own
 law says routing it to the owner's attention is a defect
-(the-users-attention-is-not-a-test-harness). This module is the recorded remedy
+(never-ask-the-user-to-run-a-check-you-can-run). This module is the recorded remedy
 (quality-harness: the-remainder-can-be-adjudicated-without-a-person): a judge model
 reads each link WITH the material in hand and rules on it; a person sees only what
 the judge could not support.

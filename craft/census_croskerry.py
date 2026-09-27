@@ -150,7 +150,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "covered",
         "the tendency toward inaction",
         "the unflagged remainder: work silently scaled down because acting felt "
-        "riskier than skipping. a-remainder-names-its-debt covers the claim's text; "
+        "riskier than skipping. what-is-left-undone-is-named-as-a-debt covers the claim's text; "
         "nothing compares what was asked against what was delivered"),
     "order-effects": (
         "set aside",
@@ -170,7 +170,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "covered",
         "a universal tendency to believe we know more than we do. Overconfidence "
         "reflects a tendency to act on incomplete information, intuitions, or hunches",
-        "the calibration family: a-qualifier-is-licensed-by-the-evidence, "
+        "the calibration family: a-hedge-needs-a-named-unknown, "
         "validity-is-evidence-and-agreement, low-confidence-is-reserved-and-explained, "
         "and the closed strength scale in accounts. This session's over-claimed "
         "deduction labels were this CDR and were convicted"),
@@ -257,7 +257,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "the influence of affective sources of error on decision-making has been "
         "widely underestimated",
         "sycophancy is this CDR in an agent: the user's frustration or enthusiasm "
-        "steering the verdict. a-view-moves-on-observation-not-on-company convicts "
+        "steering the verdict. a-view-changes-on-new-observation-not-to-agree convicts "
         "the moved view when filed; nothing watches the unfiled agreement"),
     "yin-yang-out": (
         "set aside",

@@ -1,16 +1,16 @@
 """The language laws, compiled against the glossary: terms × catalogues → findings.
 
-glossary-first has always demanded the glossary as an ARTIFACT — settled terms,
+settle-the-glossary-before-translating has always demanded the glossary as an ARTIFACT — settled terms,
 settled by someone who speaks the language. interface@0.2.0's `term` kind makes it
 data, and these compilers run the two language laws' mechanical halves over it:
 
-  - COVERAGE (glossary-first): every term speaks every language the app ships. A
+  - COVERAGE (settle-the-glossary-before-translating): every term speaks every language the app ships. A
     concept with no settled word in some shipped language is exactly the state in
     which ad-hoc translation happens, so the gap itself convicts, before any wrong
     word is even chosen.
-  - STRAYS (glossary-first): a word the glossary rejects for a concept, found in a
+  - STRAYS (settle-the-glossary-before-translating): a word the glossary rejects for a concept, found in a
     catalogue string — the settled term exists and the copy drifted past it.
-  - CALQUES (no-calque): a literal translation the glossary marks as translationese,
+  - CALQUES (a-metaphor-is-rechosen-in-each-language): a literal translation the glossary marks as translationese,
     found in a catalogue string.
 
 The judgment of WHICH words are settled, strayed, or calqued is made once, at
@@ -193,11 +193,11 @@ def check_label_case(surfaces: list[Node],
 
 def check_voice(voices: list[Node],
                 catalogues: dict[str, dict[str, str]]) -> list[LexFinding]:
-    """untranslatable-tone's and speaks-to-you's wordlist halves: a word the app's
+    """a-tone-only-line-may-be-dropped-in-translation's and address-the-reader-as-you's wordlist halves: a word the app's
     declared voice never uses, found in a catalogue string. The voice node is the
     app's own register, declared once by whoever owns it — this enforces a
     declaration, it does not invent taste."""
-    tone = _law("untranslatable-tone")
+    tone = _law("a-tone-only-line-may-be-dropped-in-translation")
     findings: list[LexFinding] = []
     for v in voices:
         if v.kind != "voice":
@@ -218,8 +218,8 @@ def check_glossary(terms: list[Node],
                    catalogues: dict[str, dict[str, str]]) -> list[LexFinding]:
     """Every conviction the glossary supports against these catalogues. `catalogues`
     maps language -> {key: string} — the same tables drift and generation read."""
-    glossary_first = _law("glossary-first")
-    no_calque = _law("no-calque")
+    glossary_first = _law("settle-the-glossary-before-translating")
+    no_calque = _law("a-metaphor-is-rechosen-in-each-language")
     findings: list[LexFinding] = []
     for t in terms:
         if t.kind != "term":

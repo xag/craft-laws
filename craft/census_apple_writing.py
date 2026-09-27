@@ -61,7 +61,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "'tap' not 'click' on a touch device is decidable from the platform and the words; "
         "no law holds it yet"),
     "Provide clear next steps on any blank screens.": (
-        "covered", "empty-state-never-contradicts",
+        "covered", "an-empty-state-never-contradicts-the-controls",
         "an empty state that guides to an action; the law holds that it never contradicts "
         "the controls around it"),
     "Write clear error messages.": (

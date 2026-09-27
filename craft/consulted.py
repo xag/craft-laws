@@ -52,6 +52,8 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+from craft.former_ids import current_id
+
 WORK_KINDS = ("done", "fixed")
 
 
@@ -102,7 +104,8 @@ def check_claims(claims: list[dict], index: dict[str, str], since: int,
                 f"'{consulted}' is neither a list of entry ids nor 'none: <why>'"))
             continue
         for cid in consulted:
-            kind = index.get(str(cid))
+            # A claim filed before a law was renamed names it by its former id.
+            kind = index.get(current_id(str(cid)))
             if kind is None:
                 findings.append(ConsultFinding(
                     "unresolved", where,

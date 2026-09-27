@@ -49,7 +49,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
     # --- II. Organize ------------------------------------------------------------------
     "II. Organize": ("meta", "", "a section heading"),
     "II.a Organize to meet your readers' needs": ("judge", "", "a reading"),
-    "II.b Address one person, not a group": ("covered", "speaks-to-you", ""),
+    "II.b Address one person, not a group": ("covered", "address-the-reader-as-you", ""),
     "II.c Use lots of useful headings": (
         "covered", "front-load-first-words", "with the heading machinery behind it"),
     "II.d Write short sections": (
@@ -64,15 +64,15 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "judge", "", "passive detection by wordlist is radar, not a decider — the "
                      "editorial census's ruling, for which this source is the second root"),
     "III.a.1.ii Use the simplest form of a verb": ("judge", "", "grammar judgment"),
-    "III.a.1.iii Avoid hidden verbs": ("covered", "a-verb-travels-as-a-verb", "minted 2026-08-24"),
+    "III.a.1.iii Avoid hidden verbs": ("covered", "write-an-action-as-a-verb", "minted 2026-08-24"),
     "III.a.1.iv Use \"must\" to indicate requirements": (
         "covered", "must-marks-a-requirement", "minted 2026-08-24"),
     "III.a.1.v Use contractions when appropriate": (
         "zero", "", "a wordlist decider, the editorial census's route"),
     "III.a.2 Nouns and pronouns": ("meta", "", "a section heading"),
     "III.a.2.i Don't turn verbs into nouns": (
-        "covered", "a-verb-travels-as-a-verb", "the source states one rule twice"),
-    "III.a.2.ii Use pronouns to speak directly to readers": ("covered", "speaks-to-you", ""),
+        "covered", "write-an-action-as-a-verb", "the source states one rule twice"),
+    "III.a.2.ii Use pronouns to speak directly to readers": ("covered", "address-the-reader-as-you", ""),
     "III.a.2.iii Minimize abbreviations": (
         "covered", "acronyms-spell-out-on-first-reference", "decided in craft/prose.py"),
     "III.a.3 Other word issues": ("meta", "", "a section heading"),
@@ -86,7 +86,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "ROUTE CHANGED 2026-08-31, from judge — the same law's second root"),
     "III.a.3.iii Dealing with definitions": ("covered", "terms-defined-before-use", ""),
     "III.a.3.iv Use the same term consistently for a specific thought or object": (
-        "covered", "glossary-first",
+        "covered", "settle-the-glossary-before-translating",
         "the STRAYS check in craft/lexicon.py is this guideline mechanised"),
     "III.a.3.v Avoid legal, foreign, and technical jargon": (
         "covered", "no-system-vocabulary",

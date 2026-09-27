@@ -45,3 +45,11 @@ def test_a_decider_registered_under_a_former_id_registers_under_the_current_one(
     ui = {x.id for x in LAWS}
     old, new = next((o, n) for o, n in FORMER_IDS.items() if n in ui)
     assert compile_._law(old) == new
+
+
+def test_a_claim_that_consulted_a_law_by_a_former_id_still_resolves():
+    from craft import consulted
+    old, new = next(iter(FORMER_IDS.items()))
+    kind = next(iter(consulted.WORK_KINDS))
+    claim = {"kind": kind, "consulted": [old]}
+    assert consulted.check_claims([claim], {new: "law"}, 0) == []

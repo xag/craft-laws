@@ -1,7 +1,7 @@
 """The census of Nielsen's ten heuristics, none skipped.
 
-NN/g roots FIVE interface laws — no-system-vocabulary (#2), a-way-back (#3),
-one-act-one-name (#4), status-is-visible (#1), rare-action-folds-away and
+NN/g roots FIVE interface laws — no-system-vocabulary (#2), every-mistake-has-a-way-back (#3),
+one-act-one-name (#4), status-is-visible (#1), rare-actions-go-to-a-second-layer and
 one-surface-one-job (#8) — and the set was never censused. Five heuristics used,
 five unread: the picked-item defect `a-census-is-read-from-its-source` names, in
 the source this family quotes most often.
@@ -11,7 +11,7 @@ to practise from opened on sixty words of policy prose above its search box, gav
 every result two buttons where one would do, kept a rarely-used upload form
 permanently expanded, and ran to eight phone screens. The founder: "atrocious.
 typical Claude. lunatic." Every one of those was already a breach of a law in this
-file — rare-action-folds-away's own sighting reads "its largest element was a
+file — rare-actions-go-to-a-second-layer's own sighting reads "its largest element was a
 fully-expanded create-a-new-team form" — and nothing looked. THE LAW WAS NOT
 MISSING; THE CHECK WAS. That is the finding this census exists to record, and it
 is why the routes below are honest about how few of these a machine can decide.
@@ -44,7 +44,7 @@ CENSUS: dict[str, tuple[str, tuple[str, ...], str]] = {
         "the heuristic rooted this law directly: a word on screen that only the "
         "people who built it use"),
     "3. User Control and Freedom": (
-        "covered", ("a-way-back", "escape-closes-the-overlay"),
+        "covered", ("every-mistake-has-a-way-back", "escape-closes-the-overlay"),
         "the marked exit, and the one exit a keyboard always expects"),
     "4. Consistency and Standards": (
         "covered", ("one-act-one-name", "one-act-one-look-one-place", "navigation-keeps-its-order"),
@@ -53,7 +53,7 @@ CENSUS: dict[str, tuple[str, tuple[str, ...], str]] = {
     "5. Error Prevention": (
         "covered", ("check-before-commit", "validate-at-field-exit",
                     "destructive-is-set-apart", "no-disabled-submit",
-                    "known-date-three-boxes", "no-autocorrect-on-identifiers"),
+                    "a-known-date-is-three-fields", "no-autocorrect-on-identifiers"),
         "the heuristic's own emphasis — the best design prevents the problem — "
         "carried by six laws over the commit, the field and the keyboard"),
     "6. Recognition Rather than Recall": (
@@ -68,7 +68,7 @@ CENSUS: dict[str, tuple[str, tuple[str, ...], str]] = {
         "confusing a novice is a reading about two populations, and nothing here "
         "records which of them is at the screen"),
     "8. Aesthetic and Minimalist Design": (
-        "covered", ("rare-action-folds-away", "one-surface-one-job", "say-it-once",
+        "covered", ("rare-actions-go-to-a-second-layer", "one-surface-one-job", "say-it-once",
                     "paragraphs-stay-under-five-sentences",
                     "a-screen-carries-no-words-nobody-acts-on"),
         "the frequency half and the one-job half are each a law, and both were "
@@ -80,7 +80,7 @@ CENSUS: dict[str, tuple[str, tuple[str, ...], str]] = {
         "(tools/prose.py), the way tools/answers.py records the words of a tool's "
         "answer: no budget, no reading, the ceiling is what stands today"),
     "9. Help Users Recognize, Diagnose, and Recover from Errors": (
-        "covered", ("error-names-the-culprit", "error-says-the-fix",
+        "covered", ("an-error-names-the-field", "error-says-the-fix",
                     "error-neither-begs-nor-blames", "error-lands-at-the-field"),
         "the heuristic's three clauses — plain language, precisely indicate the "
         "problem, constructively suggest a solution — are three of these four; "

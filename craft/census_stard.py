@@ -144,7 +144,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
     "24": ("covered", "Estimates of diagnostic accuracy and their precision (such as 95% "
            "confidence intervals)",
            "grounding@'s Quantity carries tolerance and grounded, and "
-           "a-qualifier-is-licensed-by-the-evidence refuses a bare number where the "
+           "a-hedge-needs-a-named-unknown refuses a bare number where the "
            "evidence does not settle it"),
     "25": ("set aside", "Any adverse events from performing the index test or the "
            "reference standard",
@@ -152,7 +152,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
     # --- discussion ------------------------------------------------------------------
     "26": ("covered", "Study limitations, including sources of potential bias, "
            "statistical uncertainty, and generalisability",
-           "the `gap` field on grounds, and a-remainder-names-its-debt: what a "
+           "the `gap` field on grounds, and what-is-left-undone-is-named-as-a-debt: what a "
            "done-claim leaves undone is carried by a debt it names"),
     "27": ("set aside", "Implications for practice, including the intended use and "
            "clinical role of the index test",

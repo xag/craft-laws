@@ -577,12 +577,12 @@ def _alarm() -> int:
           sentence_cut("Short.", 60) == "Short.")
 
     # grouping: a prefixed where lands in its group; an unmatched one keeps law--where
-    groups: Groups = {("composed-prose", "fold:"): ("composed-form-rows", "q?")}
+    groups: Groups = {("never-build-a-sentence-from-fragments", "fold:"): ("composed-form-rows", "q?")}
     alarm("card_id",
-          card_id("composed-prose", "fold:add-sheet", groups)
+          card_id("never-build-a-sentence-from-fragments", "fold:add-sheet", groups)
           == "ruling:composed-form-rows",
-          card_id("composed-prose", "tab:today", groups)
-          == "ruling:composed-prose--tab:today")
+          card_id("never-build-a-sentence-from-fragments", "tab:today", groups)
+          == "ruling:never-build-a-sentence-from-fragments--tab:today")
 
     # add_finding: findings sort by what a person can judge from — the probe's
     # replay never outranks a quoted string
@@ -670,9 +670,9 @@ def _alarm() -> int:
 
     # verdict_for: the check and the card land on the same identity
     alarm("verdict_for",
-          verdict_for("composed-prose", "fold:add-sheet", groups,
+          verdict_for("never-build-a-sentence-from-fragments", "fold:add-sheet", groups,
                       {"ruling:composed-form-rows": RULING}) == RULING,
-          verdict_for("composed-prose", "tab:today", groups,
+          verdict_for("never-build-a-sentence-from-fragments", "tab:today", groups,
                       {"ruling:composed-form-rows": RULING}) is None)
 
     for d in dead:

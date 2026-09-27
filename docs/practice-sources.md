@@ -27,16 +27,16 @@ Excluded despite fame, with reasons: **Clean Code / SOLID / most engineering-pra
 
 ## Gaps found
 
-- **Nothing authoritative was found on delegating a decision.** The laws about spending a person's attention (`the-users-attention-is-not-a-test-harness`, and the one the corrections named about asking for a decision the evidence settles) have no obvious root. Automation-levels research (Parasuraman/Sheridan) describes the design space without prescribing; GOV.UK prescribes for services, not for a working relationship. Searched and thin — recorded as a boundary chosen, not one fallen into.
+- **Nothing authoritative was found on delegating a decision.** The laws about spending a person's attention (`never-ask-the-user-to-run-a-check-you-can-run`, and the one the corrections named about asking for a decision the evidence settles) have no obvious root. Automation-levels research (Parasuraman/Sheridan) describes the design space without prescribing; GOV.UK prescribes for services, not for a working relationship. Searched and thin — recorded as a boundary chosen, not one fallen into.
 - **The longevity half is unread.** Eidelman, Pattershall & Crandall, "Longer is better" (*Journal of Experimental Social Psychology*, 2010, DOI 10.1016/j.jesp.2010.07.008) is the companion finding — the longer something is thought to have existed, the better it is judged. Elsevier, paywalled, and the abstract was not retrieved. Named here so its absence is a record rather than an oversight; the law it would strengthen cites only the 2009 paper.
 - **Nothing was found on context leaking between records.** The interface family states it for strings (`no-cross-context-string-reuse`); the practice analogue — reasoning from one context written into another's record — is asserted from the estate's own rule that a library never names a client. Owed.
 
 ---
-17. **Nygard, “Documenting Architecture Decisions”** (Cognitect blog, 2011-11-15) — the canonical statement that significant decisions are kept as records with their rationale; captured verbatim 2026-08-25, roots `deliberate-names-its-decision`. https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
-18. **Cunningham, OOPSLA 1992 experience report** (c2.com) — the debt metaphor at its origin: unpaid remainder accrues interest; captured verbatim 2026-08-25, roots `a-remainder-names-its-debt`. http://c2.com/doc/oopsla92.html
+17. **Nygard, “Documenting Architecture Decisions”** (Cognitect blog, 2011-11-15) — the canonical statement that significant decisions are kept as records with their rationale; captured verbatim 2026-08-25, roots `calling-a-state-deliberate-names-the-decision`. https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
+18. **Cunningham, OOPSLA 1992 experience report** (c2.com) — the debt metaphor at its origin: unpaid remainder accrues interest; captured verbatim 2026-08-25, roots `what-is-left-undone-is-named-as-a-debt`. http://c2.com/doc/oopsla92.html
 19. **ITIL 4 glossary (Axelos)** — defines a workaround as a solution for which a full resolution is not yet available: definitionally not a fix, which is `a-detour-is-announced-as-a-detour` stated by a standard. **Capture blocked, per the ISO precedent:** the official glossary is paywalled and the text is not in hand; secondary glossaries agree on the wording and are not the authority. The law stays red until the sentence is captured.
 
-*(2026-08-25, same sitting: Agans rule 3 — already censused whole at row 4 — gained a second law: `the-users-attention-is-not-a-test-harness` is the delegation face of the observing duty, and cites the rule the way the census's other laws do.)*
+*(2026-08-25, same sitting: Agans rule 3 — already censused whole at row 4 — gained a second law: `never-ask-the-user-to-run-a-check-you-can-run` is the delegation face of the observing duty, and cites the rule the way the census's other laws do.)*
 
 
 # Census: IPCC AR5 Guidance Note, read whole
@@ -48,10 +48,10 @@ The Guidance Note states 11 numbered paragraphs, 6 lettered criteria (A–F) und
 | # | What it states | Status |
 |---|---|---|
 | 1 | Consider, at an early stage, how to communicate the degree of certainty; agree the process in advance of the specific case | covered — `calibration-is-agreed-before-the-case` (2026-08-24) |
-| 2 | Provide a *traceable account*: a description of the evaluation of type, amount, quality and consistency of evidence, and the degree of agreement, which together form the basis for the finding | covered — `done-is-observed-where-the-user-stands` demands the evidence beside the claim, and the claims ledger's `evidence.where` is the traceable account in data. Since 2026-08-24 also the root of the `confirmation` kind's decider: an agreement is a finding, and one filed with nothing in `checked` has no account, convicting under `a-qualifier-is-licensed-by-the-evidence` |
-| 3 | Beware group convergence and overconfidence; beware anchoring on previous versions to a greater extent than is justified | covered — `a-view-moves-on-observation-not-on-company` (2026-08-24), both directions: folding is convergence, stonewalling is anchoring |
+| 2 | Provide a *traceable account*: a description of the evaluation of type, amount, quality and consistency of evidence, and the degree of agreement, which together form the basis for the finding | covered — `done-is-observed-where-the-user-stands` demands the evidence beside the claim, and the claims ledger's `evidence.where` is the traceable account in data. Since 2026-08-24 also the root of the `confirmation` kind's decider: an agreement is a finding, and one filed with nothing in `checked` has no account, convicting under `a-hedge-needs-a-named-unknown` |
+| 3 | Beware group convergence and overconfidence; beware anchoring on previous versions to a greater extent than is justified | covered — `a-view-changes-on-new-observation-not-to-agree` (2026-08-24), both directions: folding is convergence, stonewalling is anchoring |
 | 4 | Framing changes interpretation (10% chance of dying vs 90% of surviving); consider reciprocal statements | set aside — about presenting risk to a public, not about reporting work |
-| 5 | **"Consider that, in some cases, it may be appropriate to describe findings for which evidence and understanding are overwhelming as statements of fact without using uncertainty qualifiers."** | **covered — `a-qualifier-is-licensed-by-the-evidence`** |
+| 5 | **"Consider that, in some cases, it may be appropriate to describe findings for which evidence and understanding are overwhelming as statements of fact without using uncertainty qualifiers."** | **covered — `a-hedge-needs-a-named-unknown`** |
 | 6 | Consider all plausible sources of uncertainty; experts tend to underestimate structural uncertainty from incomplete understanding | covered — `structural-unknowns-are-considered` (2026-08-24) |
 | 7 | Assess uncertainty and risk to the extent possible; attend to high-consequence outcomes | set aside — a risk-management instruction about the subject matter |
 | 8 | Evaluate validity on two dimensions — evidence (limited/medium/robust) and agreement (low/medium/high) — and provide a traceable account of both | covered — `validity-is-evidence-and-agreement` (2026-08-24) |
@@ -158,8 +158,8 @@ The current statement (BMJ 2025;388:e081123, open access; the 2010 version's 25 
 | 25 | baseline characteristics table | set aside — clinical |
 | 26 | per outcome: **numbers analysed, available data, effect size and its precision** | covered — `a-check-reports-its-misses` and grounding@'s tolerance |
 | 28 | ancillary analyses, prespecified vs post hoc | covered — with 21d |
-| 29 | **interpretation consistent with results, balancing benefits and harms** | covered — `a-qualifier-is-licensed-by-the-evidence`, corroborated |
-| 30 | limitations: bias, imprecision, generalisability | covered — the `gap` field on grounds; `a-remainder-names-its-debt` |
+| 29 | **interpretation consistent with results, balancing benefits and harms** | covered — `a-hedge-needs-a-named-unknown`, corroborated |
+| 30 | limitations: bias, imprecision, generalisability | covered — the `gap` field on grounds; `what-is-left-undone-is-named-as-a-debt` |
 
 **Counted: 41 rows — 26 covered, 3 owed (16b, 23b as one demand: a stopped run says why; and nothing else), 12 set aside.** The cross-check the census was for: every measurement-protocol law minted from STARD is independently demanded by CONSORT, none contradicted.
 
@@ -208,14 +208,14 @@ The author consortium's own PDF. The Essential 10 is the set the guidelines name
 | R1 | insensitivity to prior probability of outcomes | roots `a-cause-is-weighed-by-how-often-not-only-how-alike` (2026-08-25), with a decider: a diagnosis saying `resembles` carries `base_rate`, computable from the filed diagnoses themselves |
 | R2 | **insensitivity to sample size** | roots `calibration-size-is-declared-before-the-run` (second, empirical root beside STARD 18) |
 | R3 | misconceptions of chance (gambler's fallacy) | recorded in the argument census (Greenwell row) — vocab lane |
-| R4 | insensitivity to predictability | roots `a-qualifier-is-licensed-by-the-evidence` (cited 2026-08-25): confidence unaffected by the reliability of its inputs is the unlicensed qualifier's empirical mechanism |
+| R4 | insensitivity to predictability | roots `a-hedge-needs-a-named-unknown` (cited 2026-08-25): confidence unaffected by the reliability of its inputs is the unlicensed qualifier's empirical mechanism |
 | R5 | the illusion of validity | roots `blindness-is-disclosed`'s worry: consistency of inputs breeds confidence regardless of accuracy |
 | R6 | **misconceptions of regression** | roots `regression-is-the-null-after-an-extreme`, minted 2026-08-24 from this row |
 | A1 | biases due to the retrievability of instances | roots `an-imagined-plan-is-not-thereby-likely`'s family (availability) |
 | A2 | biases due to the effectiveness of a search set | roots `a-corpus-names-its-assembly` (cited 2026-08-25): the search set organizes what is found, which is why a corpus states whether it was exhaustive, random or convenient |
 | A3 | biases of **imaginability** | roots `an-imagined-plan-is-not-thereby-likely` (second, older root beside Eidelman study 3) |
 | A4 | illusory correlation | argument-lane (Greenwell: correlation family) — vocab lane |
-| An1 | **insufficient adjustment** from an anchor | roots `a-view-moves-on-observation-not-on-company`'s anchoring half (the empirical root beneath IPCC ¶3, exactly as the shortlist predicted) |
+| An1 | **insufficient adjustment** from an anchor | roots `a-view-changes-on-new-observation-not-to-agree`'s anchoring half (the empirical root beneath IPCC ¶3, exactly as the shortlist predicted) |
 | An2 | biases in the evaluation of **conjunctive and disjunctive events** | roots `a-conditional-finding-grades-its-condition` — chained pins are a conjunctive event, overestimated exactly as the paper says |
 | An3 | anchoring in the assessment of subjective probability distributions | with An1 |
 
@@ -233,7 +233,7 @@ The reinvention question's answer, now from the read papers instead of a flag. M
 | MC 4.6 Training Data | set aside — no counterpart (the checks are not trained) |
 | MC 4.7 Quantitative Analyses | covered — `a-check-reports-its-misses` |
 | MC 4.8 Ethical Considerations | set aside |
-| MC 4.9 Caveats and Recommendations | covered — the `gap` field, `a-remainder-names-its-debt` |
+| MC 4.9 Caveats and Recommendations | covered — the `gap` field, `what-is-left-undone-is-named-as-a-debt` |
 | DS Motivation / Uses / Distribution / Maintenance | set aside — dataset lifecycle |
 | DS **Composition** and **Collection Process** | covered — `a-corpus-names-its-assembly` in another field's words, exactly as flagged; the corroboration that answers the reinvention question |
 | DS Preprocessing/cleaning/labelling | covered — `missing-input-is-reported-with-its-handling`'s ground |
@@ -266,20 +266,20 @@ The official document (March 2011, Rev. 1 May 2011), fetched from the Internet A
 |---|---|---|
 | I.a, I.b | identify and write for your audience; address separate audiences separately | judge — audience fit is a reading, as the editorial census already ruled for the same ground |
 | II.a | organize to meet your readers' needs | judge |
-| II.b | address one person, not a group | covered — `speaks-to-you` |
+| II.b | address one person, not a group | covered — `address-the-reader-as-you` |
 | II.c | use lots of useful headings | covered — `front-load-first-words` and the heading machinery |
 | II.d | write short sections | owed, unminted with the reason stated: the source gives no ceiling, and a length law without its number is a taste — the sentence and paragraph laws have their numbers from GOV.UK, this has none |
 | III.a.1.i | use active voice | covered — the editorial census's ruling stands: passive detection by wordlist is a radar, not a decider; this source is its second root |
 | III.a.1.ii | use the simplest form of a verb | judge — grammar judgment |
-| III.a.1.iii | **avoid hidden verbs** | covered — roots `a-verb-travels-as-a-verb`, minted 2026-08-24 from this row |
+| III.a.1.iii | **avoid hidden verbs** | covered — roots `write-an-action-as-a-verb`, minted 2026-08-24 from this row |
 | III.a.1.iv | **use "must" to indicate requirements** | covered — roots `must-marks-a-requirement`, minted 2026-08-24 |
 | III.a.1.v | use contractions when appropriate | covered — editorial census route (wordlist radar) |
 | III.a.2.i | don't turn verbs into nouns | covered — the same hidden-verbs law; the source states one rule twice |
-| III.a.2.ii | use pronouns to speak directly | covered — `speaks-to-you` |
+| III.a.2.ii | use pronouns to speak directly | covered — `address-the-reader-as-you` |
 | III.a.2.iii | minimize abbreviations | covered — `acronyms-spell-out-on-first-reference` |
 | III.a.3.i–ii | short, simple words; omit unnecessary words | **covered since 2026-08-31** — roots `an-answer-is-plain-on-first-reading`. Routed judge here on the ground that necessity is a reading; that holds for a word in a document and not for an answer written to one person, who says whether they could read it |
 | III.a.3.iii | dealing with definitions | covered — `terms-defined-before-use` |
-| III.a.3.iv | **use the same term consistently** | covered — `glossary-first` and the term kind, corroborated |
+| III.a.3.iv | **use the same term consistently** | covered — `settle-the-glossary-before-translating` and the term kind, corroborated |
 | III.a.3.v | avoid jargon | covered — `no-system-vocabulary` |
 | III.a.3.vi | don't use slashes | covered — wordlist radar route |
 | III.b.1 | write short sentences | covered — `sentences-stay-under-twenty-five-words` (scope per the standing ruling: interfaces) and the paragraph law's family for docs |
@@ -323,7 +323,7 @@ The statement (BMJ 2021;372:n71, open access, read from PubMed Central's hosting
 | 17, 18, 19 | per-study characteristics, bias, estimates with precision | covered — grounds, grades, grounding@'s tolerance |
 | 20a–20d | synthesis results, heterogeneity, sensitivity | covered — with 13 |
 | 21 | **reporting-bias assessments presented per synthesis** | covered — the new law's second citation |
-| 23a–23d | interpretation; limitations of the evidence; **limitations of the review process itself**; implications | covered — `a-qualifier-is-licensed-by-the-evidence`, the `gap` field, and 23c is the why_low this catalogue's own claims already carry |
+| 23a–23d | interpretation; limitations of the evidence; **limitations of the review process itself**; implications | covered — `a-hedge-needs-a-named-unknown`, the `gap` field, and 23c is the why_low this catalogue's own claims already carry |
 | 24a | registration | set aside — the repo is the register |
 | 24b | protocol accessible **or state that a protocol was not prepared** | covered — `a-null-is-stated-not-implied`, corroborated; the before-half itself is the SPIRIT sitting |
 | 24c | amendments to registration or protocol | covered — `prespecified-is-distinguished-from-exploratory` |
@@ -445,7 +445,7 @@ The second sitting the Essential 10 census recorded as owed, now sat: **items 11
 | 16a | steps to reduce pain and distress | set aside — welfare conduct |
 | 16b | **expected or unexpected adverse events, reported** | covered — `the-trail-is-written-as-it-happens`: the unexpected event is precisely what a reconstructed account loses |
 | 16c | **humane endpoints, the signs monitored, the frequency; "If the study did not have humane endpoints, state this"** | covered — `a-stopped-run-says-why` gains this as a citation: the stopping rule declared with its signs and monitoring cadence, and the null stated |
-| 17a | interpretation against objectives, theory, and the literature | covered — `a-qualifier-is-licensed-by-the-evidence` |
+| 17a | interpretation against objectives, theory, and the literature | covered — `a-hedge-needs-a-named-unknown` |
 | 17b | **limitations: bias, limitations of the animal model, imprecision** | covered — the `gap` field and `structural-unknowns-are-considered`; "limitations of the animal model" is the stand-in's gap in the source's own words |
 | 18 | generalisability to other species and conditions | covered — as CONSORT 30, the `gap`'s reach |
 | 19 | **whether a protocol was prepared before the study, and if and where registered** | covered — `a-protocol-is-an-artifact-before-the-run` gains this as a citation: its third standard in two days |

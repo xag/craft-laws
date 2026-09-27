@@ -1,6 +1,6 @@
 {
  "source": "README.md",
- "sha256": "504d8ba35497b4af2da582b62231a881e91c464aae0b24de38d44d06964625cc",
+ "sha256": "bdc450a44790d9b8aa140a11a07671fa284ba87919ac90849628958e97aee33a",
  "derived_by": "session b140da27-6325-4548-b0fe-091ed49dca92, 2026-08-25",
  "coverage_note": "claim-kind assertions only; the deriver chose the nodes, and under-derivation is measured by a later audit of the same source, never guessed by code",
  "nodes": [

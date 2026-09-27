@@ -21,7 +21,7 @@ THE SOURCES, each adopted whole:
       Z3 decides; total by construction, nothing to cherry-pick.
   IPCC AR5 uncertainty guidance (Mastrandrea et al. 2010) -- adopted by the practice
       family; the account deciders REUSE its law ids rather than minting doubles:
-      calibration-is-agreed-before-the-case and a-qualifier-is-licensed-by-the-evidence
+      calibration-is-agreed-before-the-case and a-hedge-needs-a-named-unknown
       convict here too, under the practice family's own citations.
   AIF (Chesnevar et al. 2006) -- the graph ontology. Its citation is the estate's
       captured reading in quality-harness/harness/argument.py, marked as such: the

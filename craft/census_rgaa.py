@@ -122,7 +122,7 @@ CENSUS: dict[str, tuple[str, str]] = {
     "10.2": ("zero", "content survives styles-off: a bare-render walker lane, the "
                      "erring lane's pattern"),
     "10.3": ("judge", "comprehensible styles-off: a reading of that lane"),
-    "10.4": ("covered", "text-survives-doubling"),
+    "10.4": ("covered", "text-works-at-twice-its-size"),
     "10.5": ("zero", "bg/fg declared together: static CSS check"),
     "10.6": ("zero", "links distinguishable from text: computed-style arithmetic"),
     "10.7": ("zero", "focus visible: focus-walk instrument reads outline/style "
@@ -185,7 +185,7 @@ CENSUS: dict[str, tuple[str, str]] = {
     "13.7": ("zero", "flash/luminance limits: shot arithmetic over frames"),
     "13.8": ("zero", "moving/blinking controllable: animation probe — mineable at "
                      "+0, not yet mined"),
-    "13.9": ("covered", "works-both-ways-up"),
+    "13.9": ("covered", "works-in-portrait-and-landscape"),
     "13.10": ("covered", "gesture-has-a-plain-alternative"),
     "13.11": ("covered", "touch-commits-on-release"),
     "13.12": ("zero", "the element's `motion` fact (interface@0.4.0) says an act "

@@ -91,7 +91,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "agents' decision-making",
         "the transponder protocol: work declared before it starts, changes said "
         "aloud on the channel, and a claim that omits its remainder is convicted "
-        "by a-remainder-names-its-debt"),
+        "by what-is-left-undone-is-named-as-a-debt"),
     "fm-2.5-ignored-other-agents-input": (
         "covered",
         "Disregarding or failing to adequately consider input from other agents",
@@ -109,7 +109,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "covered",
         "Ending interaction before all necessary information has been exchanged or "
         "objectives met",
-        "finish-the-whole-task is doctrine and a-remainder-names-its-debt makes the "
+        "finish-the-whole-task is doctrine and what-is-left-undone-is-named-as-a-debt makes the "
         "undone part a named debt on the claim; the done-claim gate refuses "
         "producer-only evidence of completion"),
     "fm-3.2-no-or-incomplete-verification": (

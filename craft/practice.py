@@ -224,7 +224,7 @@ PRACTICE = [
     ),
 
     _law(
-        "the-users-attention-is-not-a-test-harness",
+        "never-ask-the-user-to-run-a-check-you-can-run",
         "A check the author can run is never delegated to the person waiting for the "
         "work",
         _agans("Quit thinking and look"),
@@ -270,7 +270,7 @@ PRACTICE = [
     # --- reported as a choice. Three faces of it. All three are UNMECHANIZED: the word
     # --- lists that used to check them were removed 2026-08-22 (see craft/claims.py).
     _law(
-        "deliberate-names-its-decision",
+        "calling-a-state-deliberate-names-the-decision",
         "A state called deliberate, by design or on purpose names where the decision "
         "was made",
         _cited("Nygard 2011, Documenting Architecture Decisions"),
@@ -296,7 +296,7 @@ PRACTICE = [
     ),
 
     _law(
-        "a-remainder-names-its-debt",
+        "what-is-left-undone-is-named-as-a-debt",
         "What a done-claim leaves undone is carried by a debt it names, never by a "
         "sentence",
         _cited("Cunningham 1992, the debt metaphor (OOPSLA experience report)"),
@@ -366,7 +366,7 @@ PRACTICE = [
     # --- sentence. docs/practice-sources.md censuses that note whole - 21 items, 3
     # --- covered, 8 owed, 10 set aside - so what it does NOT cover is a number too.
     _law(
-        "a-qualifier-is-licensed-by-the-evidence",
+        "a-hedge-needs-a-named-unknown",
         "A finding the evidence settles is stated as fact; a hedge is licensed by a named "
         "unknown, never by modesty",
         _cited(IPCC),
@@ -456,7 +456,7 @@ PRACTICE = [
                     "of which none is about its name. Half the justification was read off "
                     "the fact that the name exists - which is Study 4's finding about "
                     "aesthetic judgment where no choice among alternatives was made.")],
-        note="The sibling of [[deliberate-names-its-decision]], and the harder direction. "
+        note="The sibling of [[calling-a-state-deliberate-names-the-decision]], and the harder direction. "
              "That law catches CALLING a state deliberate without naming the decision; this "
              "catches INFERRING that it was, which needs no words at all and so leaves no "
              "sentence to convict. It is not an argument for change: Chesterton's fence "
@@ -622,7 +622,7 @@ PRACTICE = [
              "vocabulary, which is why each turn improvises one.",
     ),
     _law(
-        "a-view-moves-on-observation-not-on-company",
+        "a-view-changes-on-new-observation-not-to-agree",
         "A stated assessment changes on a named observation — never merely to converge "
         "with a view somebody expressed, and never held to a prior version beyond what "
         "the evidence justifies",
@@ -672,7 +672,7 @@ PRACTICE = [
                     "understanding of or competing conceptual frameworks for relevant "
                     "systems and processes.")],
         note="The mirror of the fact-when-settled clause on "
-             "a-qualifier-is-licensed-by-the-evidence, now carrying its own falsifier "
+             "a-hedge-needs-a-named-unknown, now carrying its own falsifier "
              "instead of riding as that law's second citation only.",
     ),
     _law(

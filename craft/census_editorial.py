@@ -60,8 +60,8 @@ CENSUS: dict[str, tuple[str, str]] = {
     "Prepositions": ("judge", "grammar judgment"),
     "Present tense": ("judge", "'will' is radar material — future tense is often "
                                "legitimate"),
-    "Pronouns": ("covered", "speaks-to-you"),
-    "Second person": ("covered", "speaks-to-you — its citation"),
+    "Pronouns": ("covered", "address-the-reader-as-you"),
+    "Second person": ("covered", "address-the-reader-as-you — its citation"),
     "Sentence structure": ("covered", "conditions-come-before-instructions — its "
                                       "citation"),
     "Verbs in reference documents": ("judge", "grammar judgment"),

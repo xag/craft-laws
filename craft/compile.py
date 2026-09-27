@@ -63,7 +63,7 @@ def _law(law_id: str) -> str:
 
 
 def _empty_state_never_contradicts(surfaces: list[Node], **_: object) -> list[Node]:
-    law = _law("empty-state-never-contradicts")
+    law = _law("an-empty-state-never-contradicts-the-controls")
     # Controls are collected ACROSS surfaces, deliberately: a screen a person sees is
     # several model surfaces at once (a tab and the header above it), and whether a
     # denial and an offer are co-visible is not a modeling convention — it is exactly
@@ -96,7 +96,7 @@ def _empty_state_never_contradicts(surfaces: list[Node], **_: object) -> list[No
 
 
 def _composed_prose(surfaces: list[Node], **_: object) -> list[Node]:
-    law = _law("composed-prose")
+    law = _law("never-build-a-sentence-from-fragments")
     out: list[Node] = []
     for s in surfaces:
         for e in elements(s):
@@ -164,7 +164,7 @@ def _rare_action_folds_away(surfaces: list[Node], *,
     lexical (a word-boundary match of the variable name in the element's own `when`),
     which is honest at this size: a `when` that names a fold it does not actually
     gate on is a drawing lying about itself, and the walks convict that separately."""
-    law = _law("rare-action-folds-away")
+    law = _law("rare-actions-go-to-a-second-layer")
     out: list[Node] = []
     for s in surfaces:
         for e in elements(s):
@@ -363,11 +363,11 @@ def compile_marked_fields(surfaces: list[Node], **_: object) -> list[Node]:
 
 
 COMPILABLE = {
-    "empty-state-never-contradicts": _empty_state_never_contradicts,
-    "composed-prose": _composed_prose,
+    "an-empty-state-never-contradicts-the-controls": _empty_state_never_contradicts,
+    "never-build-a-sentence-from-fragments": _composed_prose,
     "plurals-and-agreement": _plurals_and_agreement,
     "one-surface-one-job": _one_surface_one_job,
-    "rare-action-folds-away": _rare_action_folds_away,
+    "rare-actions-go-to-a-second-layer": _rare_action_folds_away,
     "navigation-keeps-its-order": compile_navigation_order,
     "one-question-per-page": compile_one_question,
     "never-ask-twice": compile_never_ask_twice,
@@ -381,7 +381,7 @@ def compile_invariants(surfaces: list[Node], laws: list[str] | None = None,
     """Every invariant the compilable laws produce over these surfaces. Naming a law
     that does not compile is refused out loud — its falsifier needs a reading, and
     pretending otherwise would report the judge's work as done. `disclosures` names
-    the operational model's fold/expand state variables — what rare-action-folds-away
+    the operational model's fold/expand state variables — what rare-actions-go-to-a-second-layer
     means by 'a second layer'."""
     chosen = list(COMPILABLE) if laws is None else laws
     out: list[Node] = []

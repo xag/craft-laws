@@ -64,7 +64,7 @@ _ALLOWED = ("stand", "exempt", "fix", "keep", "drop", "unclear")
 def _law_ids() -> set[str]:
     """The actual law ids, so a card is convicted for naming a LAW rather than for
     hyphenating English: «the take-it-off button» is a name a person can read, and
-    «rare-action-folds-away» is this package talking to itself."""
+    «rare-actions-go-to-a-second-layer» is this package talking to itself."""
     from craft.former_ids import FORMER_IDS
     from craft.laws import LAWS
     from craft.practice import PRACTICE

@@ -69,7 +69,7 @@ def _text_width(metrics: dict, lang: str, element: Node) -> float:
     table = metrics.get("text", {}).get(lang)
     if table is None:
         raise ValueError(f"no '{lang}' text metrics — the fit is a claim about every "
-                         "language the app ships, or it is not the text-expansion law")
+                         "language the app ships, or it is not the layout-survives-longer-translations law")
     widths = []
     for b in bindings(element):
         key = b.payload.get("key", "")

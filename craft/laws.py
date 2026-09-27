@@ -55,6 +55,9 @@ FEDPL = ("Federal Plain Language Guidelines, March 2011, Rev. 1 May 2011 "
          "and censused whole in craft/census_plain.py)")
 FEDPL_URL = "https://www.archive.org/details/FederalPLGuidelines"
 
+APPLE_WRITING = "Apple - Human Interface Guidelines, Writing"
+APPLE_WRITING_URL = "https://developer.apple.com/design/human-interface-guidelines/writing"
+
 LAWS = [
 
     # --- language and vocabulary ------------------------------------------------
@@ -1788,6 +1791,55 @@ LAWS = [
                     "https://digital.gov/guides/plain-language/writing",
                     "Active voice makes it clear who should do what. It eliminates "
                     "ambiguity about responsibilities.")],
+    ),
+
+    _law(
+        "a-label-names-the-thing-not-a-speaker",
+        "A control's or a setting's label names what it controls, practically and in few "
+        "words - never a sentence in a speaker's voice: no 'my', 'I' or 'we' the label does "
+        "not need, no stand-in ('what I add') for a thing the product has a name for, "
+        "nothing cute or chatty where the plain word works",
+        _cited(APPLE_WRITING),
+        falsifier="A label on a button, toggle, checkbox or settings row that reads as a "
+                  "clause somebody is saying - a first-person sentence ('Show my username "
+                  "on what I add'), a pronoun phrase standing in for a thing the product "
+                  "names elsewhere, a 'we' as the speaker, a playful line ('Let's do it!') - "
+                  "where the plain name of the setting or the verb of the action would do.",
+        triggers=["an agent writes interface copy",
+                  "a screen has settings, toggles or buttons with words on them"],
+        citations=[(APPLE_WRITING, APPLE_WRITING_URL,
+                    "Keep settings labels clear and simple. Help people easily find the "
+                    "settings they need by labeling them as practically as possible."),
+                   (APPLE_WRITING, APPLE_WRITING_URL,
+                    "Use possessive pronouns sparingly. Possessive pronouns like my and "
+                    "your are often unnecessary to establish context. For example, "
+                    "\"Favorites\" conveys the same message as \"Your Favorites,\" and is "
+                    "more succinct."),
+                   (APPLE_WRITING, APPLE_WRITING_URL,
+                    "Prioritize clarity and avoid the temptation to be too cute or clever "
+                    "with your labels. For example, just saying \"Send\" often works better "
+                    "than \"Let's do it!\""),
+                   (APPLE_WRITING, APPLE_WRITING_URL,
+                    "Check each word to be sure it needs to be there. If you can use fewer "
+                    "words, do so."),
+                   ("Nielsen Norman Group, Toggle-Switch Guidelines",
+                    "https://www.nngroup.com/articles/toggle-switch-guidelines/",
+                    "Keep labels for toggle switches short and direct")],
+        sightings=[("a language-practice app, 2026-09-27, the settings",
+                    "The switch that credits a learner's contributions to their username "
+                    "was labelled 'Show my username on what I add': a first-person sentence, "
+                    "with 'what I add' standing in for the contributions the app names "
+                    "everywhere else. The owner: 'so Claudish'. The row it replaced, "
+                    "'Credits' over two buttons 'Username' and 'Anonymous', had the opposite "
+                    "fault - too few words to say what was credited.")],
+        note="The name is the owner's: copy that reads like an assistant talking - first "
+             "person, conversational, explaining itself - rather than a product's labels. "
+             "Microsoft's style guide allows first-person singular in toggle and checkbox "
+             "labels to show a person's control ('Remember my password'), so a 'my' alone "
+             "does not convict: the law convicts the label written as a speaker's sentence, "
+             "and the stand-in where the thing has a name. A reading, judged against the "
+             "labels of the platform's own settings; no word list decides it. The whole of "
+             "Apple's Writing page is read in craft/census_apple_writing.py.",
     ),
 
     _law(

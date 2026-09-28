@@ -109,6 +109,37 @@ DECISIONS = [
         ],
     ),
     Node(
+        id="every-check-runs-through-one-command-in-parallel",
+        kind="decision",
+        name="Every check this repo keeps is listed in craft/gate.py and run by `python -m "
+             "craft.gate`: the checks run side by side, each result prints in list order as "
+             "soon as it is known, and the command returns when the last check ends. CI runs "
+             "that one command; a check is added to CHECKS, never as a workflow step",
+        payload={
+            "decided_on": "2026-09-28",
+            "the_owner": "Then apply the optimization you made on the coach to Craft Laws, to "
+                         "run checks in parallel and return when finished instead of forcing a "
+                         "wait on a cron",
+            "rationale":
+                "The checks were 25 steps of the CI workflow, run one after another, and the "
+                "only way to see them was to push and wait for a runner - which has failed "
+                "to start since 2026-09-23. They are independent processes that read the "
+                "tree and write nothing to it. Measured on 22 CPUs: 23.3s one at a time, "
+                "7.4-9.6s in parallel, bounded by the test suite.",
+        },
+        children=[
+            Node(id="the-checks-as-workflow-steps", kind="alternative",
+                 name="Keep each check as its own step in .github/workflows/check.yml",
+                 payload={"why": "Judged only after a push, one step at a time, on a runner "
+                                 "that may not start; the list and the local practice drift "
+                                 "apart."}),
+            Node(id="the-test-suite-split-by-file", kind="alternative",
+                 name="Run each test file as its own parallel check",
+                 payload={"why": "Measured slower (11.1s for the suite against about 9s "
+                                 "whole): every process pays the same imports."}),
+        ],
+    ),
+    Node(
         id="a-law-enters-on-its-source-and-a-sighting-reviews-it",
         kind="decision",
         name="A law enters on its source - a falsifier, a trigger and a citation - never on a "

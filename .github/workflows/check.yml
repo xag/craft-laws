@@ -1,20 +1,10 @@
-# Two assertions, both about drift — the failure mode this repo exists to prevent.
+# Every check this repo keeps runs through one command, `python -m craft.gate`: the checks run
+# side by side and the command returns when the last one ends. The list lives in
+# craft/gate.py, so the machine where the work is done runs exactly what CI runs - a step
+# added here instead would run only after a push.
 #
-# The check is red today, on purpose: the uncited laws named below cite nobody and the
-# publish gate refuses them. So CI does not ask "is it green" — it asserts the red is
-# EXACTLY the declared red (a set of names, never a count — see counts-are-computed).
-# A law that quietly loses a citation, or a gate that quietly goes green, both change the
-# set, and both should cost a failing build until the record moves with them.
-#
-# The second assertion: LAWS.md is a rendered view, and a view that can drift from its
-# data is a second source of truth. CI re-renders and diffs, ignoring only the rev stamp.
-#
-# NEITHER NEEDS A CREDENTIAL ANY MORE. This job used to check out xag/quern-registry with
-# ESTATE_READ_TOKEN and rewrite git's URLs to carry it. Both halves were removable: quern is
-# public now, and the registry checkout was fetching a package this repo already pins — from a
-# registry frozen at ledger@0.4.1, which is why the check died on "craft@0.1.1 (pinned) is not
-# in the library". `.quern/library` is committed, so the pinned bytes travel with the lock that
-# names them. Verified with QUERN_REGISTRY pointed at a path that does not exist.
+# NO CREDENTIAL IS NEEDED. `.quern/library` is committed, so the pinned bytes travel with the
+# lock that names them. CRAFT_CLIENT_NAMES comes from the repository's variables.
 name: check
 
 on:
@@ -30,95 +20,7 @@ jobs:
         with:
           fetch-depth: 2   # craft.report diffs HEAD against its parent
       - uses: astral-sh/setup-uv@v5
-      - name: The red is exactly the declared red
-        run: |
-          uv run python - <<'EOF'
-          from quern import run_rules
-          from craft.tree import build
-          red = {r.node for r in run_rules(build()) if not r.ok}
-          declared = {
-                      # the two that stay red carry their reasons in their own
-                      # authority notes: ITIL 4's glossary text is not in hand
-                      # (a-detour), and no source has been found that STATES the
-                      # whole-view norm (a-view). Ten laws left this set
-                      # 2026-08-25, each rooted in a source captured verbatim -
-                      # the last of them the Apple HIG typography floor, from
-                      # the site's own data endpoint after the rendered page
-                      # resisted capture for a day.
-                      "a-view-arrives-whole",
-                      "a-detour-is-announced-as-a-detour",
-                      "publish", "publish-practice"}
-          assert red == declared, (
-              f"the red set changed: {sorted(red)} != {sorted(declared)} - a law lost or "
-              "gained a citation without the record moving. Update laws.py AND this list "
-              "in the same commit, deliberately.")
-          print(f"red is exactly the declared red: {sorted(red)}")
-          EOF
-      # The prose deciders, on the front page that earned them. docs/ still holds
-      # standing findings — visible debt, run `python -m craft.prose docs/*.md` to
-      # see it — but the front page stays green or the build says so.
-      # The law registry gate: every id a decider convicts under must resolve to a
-      # registered, cited law, and every source must be adopted whole. A rule added
-      # by hand fails here -- the owner's standing order of 2026-08-27.
-      - name: No rule enters by hand
-        run: uv run python -m pytest tests -q
-      - name: The account deciders' alarms are live
-        run: uv run python -m craft.account --alarm
-      - name: The claim deciders' alarms are live
-        run: uv run python -m craft.claims --alarm
-      - name: The card deciders' alarms are live
-        run: uv run python -m craft.cards --alarm
-      - name: The ruling pipeline's alarms are live
-        run: uv run python -m craft.rulings --alarm
-      # Six alarms exist in this package and CI ran four. The two it skipped were
-      # craft.prose and craft.instruments -- and prose is the lane that shipped two
-      # defects in one week, both in the reduction, both invisible to every check the
-      # lane runs on itself. An alarm nobody runs is the thing an alarm exists to
-      # prevent, one level up: a checker never seen red.
-      - name: The prose deciders' alarms are live
-        run: uv run python -m craft.prose --alarm
-      - name: The rendered-world probes' alarms are live
-        run: uv run python -m craft.instruments --alarm
-      # The founder's ruling, mechanized: «a rule about a card is not generic and
-      # should not go to craft laws». A law states itself in the world's vocabulary
-      # or the build fails — see craft/genericity.py for the bar and its exemptions.
-      - name: The genericity alarm is live
-        run: uv run python -m craft.genericity --alarm
-      - name: Every law is a proposition, not an app spec
-        run: uv run python -m craft.genericity
-      # A library knows nothing of its consumers: no word of it names a project that uses it.
-      # The names live in the repository's variables, not in the repository.
-      - name: No word of the library names a client project
+      - name: Every check, in parallel
         env:
           CRAFT_CLIENT_NAMES: ${{ vars.CRAFT_CLIENT_NAMES }}
-        run: uv run python -m craft.genericity --clients
-      - name: This repo's own claims hold
-        run: uv run python -m craft.claims claims.jsonl
-      - name: Work claims name the decisions consulted, and the names resolve
-        run: uv run python -m craft.consulted claims.jsonl
-      - name: The consult gate convicts what it must
-        run: uv run python -m craft.consulted --alarm
-      # The audit that says whether marking an element type IS convicting. It had an
-      # alarm and a CLI and no CI step (found in the 2026-09-02 audit of the verifiers).
-      - name: The neutrality audit flags a verdict-shaped feature and clears an innocent one
-        run: uv run python -m craft.neutrality --alarm
-      - name: No account feature is a verdict in disguise
-        run: uv run python -m craft.neutrality .craft/accounts/*
-      - name: Every kind in every committed record resolves to a pinned KindDef
-        run: uv run python -m craft.formats .
-      - name: The format gate convicts what it must
-        run: uv run python -m craft.formats --alarm
-      - name: A filed measurement travels whole in the commit message
-        run: uv run python -m craft.report HEAD
-      - name: The report gate convicts what it must
-        run: uv run python -m craft.report --alarm
-      - name: The README passes its own laws
-        run: uv run python -m craft.prose README.md
-      - name: The README's drawing is fresh, anchored, and joined to the record
-        run: uv run python -m craft.drawing README.md
-      - name: LAWS.md is the data, rendered
-        run: |
-          uv run python -m craft.render > /tmp/laws.md
-          diff <(grep -v 'GENERATED from craft@' LAWS.md) \
-               <(grep -v 'GENERATED from craft@' /tmp/laws.md) \
-            || { echo "LAWS.md disagrees with the data - re-render: python -m craft.render > LAWS.md"; exit 1; }
+        run: uv run python -m craft.gate

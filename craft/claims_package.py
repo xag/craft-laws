@@ -46,7 +46,9 @@ VOCABULARY = [
         "agreed 2026-08-24 and recorded at the-calibration-vocabulary in this "
         "repository's ledger; both dimensions or neither, and the low end carries "
         "`why_low`. The scales are closed: widening one is an edit to that decision, "
-        "never a synonym in a record.",
+        "never a synonym in a record. Optional `factors` on a done or fixed claim about "
+        "a screen: the screen's states it changed (a list of names), each to be covered "
+        "by an observation naming it - a-change-to-a-screen-reaches-every-state-it-has.",
     ),
     KindDef(
         kind="fixed",
@@ -158,7 +160,9 @@ VOCABULARY = [
         "user-surface (the thing the user touches was observed), stand-in (a faithful "
         "reconstruction, honest only with a `gap` naming what it cannot show), or "
         "producer (tests, deploys, logs — necessary, never sufficient for a done-claim "
-        "alone) — and `what`, the observation in enough detail to be checked again. "
+        "alone) — and `what`, the observation in enough detail to be checked again; "
+        "optionally `factor`, the declared factor of its claim this observation covers "
+        "(one of the claim's `factors`). "
         "In the JSONL wire format evidence rides as a list under the claim; as a tree "
         "it is the claim's children, which is what the rules below read.",
     ),
@@ -261,7 +265,7 @@ COUNTER_EXAMPLES = [
 
 CLAIMS_PACKAGE = Package(
     name="claims",
-    version="0.5.0",
+    version="0.6.0",
     description="A session's assertions as data: seven claim kinds, graded evidence, "
                 "the drawing shape for prose, "
                 "the measurement protocol and the agreed calibration scales — the "

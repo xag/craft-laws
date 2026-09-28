@@ -2431,10 +2431,10 @@ LAWS = [
                     "Your product shouldn't undo, destroy, or delete anything entered or "
                     "uploaded by your customer in the event of an error.")],
         note="Decided against the drawing (craft/compile.py compile_error_keeps_input): an "
-             "input declares the state variable that holds what is entered (`holds`), an "
-             "act that fails declares it (`fails: true`), and a failing act that updates a "
-             "held variable convicts, the path to it the counterexample. The whole source is "
-             "read in craft/census_hurff.py.",
+             "input's `asks` names the variable holding what is entered, an act that fails "
+             "says so (`fails`, interface@0.5.0), and a failing act that updates that "
+             "variable convicts, the path to it the counterexample. The whole source is read "
+             "in craft/census_hurff.py.",
     ),
     _law(
         "the-users-work-is-never-harmed-by-an-act-or-by-inaction",
@@ -2455,10 +2455,11 @@ LAWS = [
                     "preserve your customers' data.")],
         note="Jef Raskin's first law of interface design (The Humane Interface), as Hurff "
              "quotes it. Decided against the drawing (craft/compile.py compile_work_kept): "
-             "by an act, a held variable updated by any act but the input's own entry "
-             "(`enters`) or the one that sends it (`commits: true`) convicts; by inaction, an "
-             "input whose work is not kept beyond the page (`kept: true`) convicts wherever "
-             "it is shown. The whole source is read in craft/census_hurff.py.",
+             "by an act, the variable an input's `asks` names updated by any act but the "
+             "input's own `action` or one that `commits` it convicts; by inaction, an input "
+             "whose work is not `kept` beyond the page convicts wherever it is shown "
+             "(`commits` and `kept`, interface@0.5.0). The whole source is read in "
+             "craft/census_hurff.py.",
     ),
     _law(
         "an-error-message-is-human-not-technical",
@@ -2478,11 +2479,11 @@ LAWS = [
                     "by the failed call's own error message as it came back; a round that "
                     "cannot start shows 'Could not start another round: ' and the same.")],
         note="Decided against the drawing, never by matching words (craft/compile.py "
-             "_error_is_human): a binding whose text is passed through from a runtime value "
-             "rather than taken from the catalogue declares it (`raw: true`), and an element "
-             "carrying one convicts wherever it is shown. Words written badly in the "
-             "catalogue stay with the judge: meaning is never checked by matching words. The "
-             "whole source is read in craft/census_hurff.py.",
+             "compile_error_is_human): an element shown in the state a failing act leaves "
+             "(`fails`) that carries `content` - text no catalogue holds - convicts wherever "
+             "it is shown. Words written badly in the catalogue stay with the judge: meaning "
+             "is never checked by matching words. The whole source is read in "
+             "craft/census_hurff.py.",
     ),
 ]
 

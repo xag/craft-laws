@@ -76,7 +76,11 @@ VOCABULARY = [
         "the act this element commits also listens to device motion — a dict "
         "{input: 'device-motion'|'tilt'|'shake', alternative: element-id, "
         "disableable} naming the conventional control that performs the same act "
-        "and whether the listening can be turned off (WCAG 2.5.4, RGAA 13.12). "
+        "and whether the listening can be turned off (WCAG 2.5.4, RGAA 13.12); "
+        "on an input, `asks` names the datum it gathers, and the state variable of "
+        "that name holds what the person has entered, and `kept: true` says what "
+        "they entered outlives the page - a draft kept when it is left, closed or "
+        "cut off from the network. "
         "These are the facts the compilable laws read — stated on "
         "the element because they are properties of the drawing, not observations of "
         "a screen, and each is a judgment a person makes ONCE at authoring time that "
@@ -352,7 +356,7 @@ COUNTER_EXAMPLES = [
 
 INTERFACE_PACKAGE = Package(
     name="interface",
-    version="0.4.0",
+    version="0.5.0",
     description="An interface's denotation as data: surfaces, elements, bindings, "
                 "content, denials, witnesses, media, tables and (one day) "
                 "constraints — the "
@@ -362,7 +366,12 @@ INTERFACE_PACKAGE = Package(
                 "construction for whatever is generated. The operational half of the "
                 "twin (state variables, navigation actions) stays with épure's model "
                 "idiom; `when` expressions here are written over its state "
-                "variables, which is the seam the two halves join at.",
+                "variables, which is the seam the two halves join at. The laws also "
+                "read four facts an app states on épure's actions: `irreversible` "
+                "(money moves, mail sends, another person is bound), `destructive` "
+                "(the act destroys), `fails` (the act's failed outcome, whose updates "
+                "are the state a failure leaves) and `commits` (the act sends what an "
+                "input gathered).",
     publisher="poietic.studio",
     requires=[],
     vocabulary=VOCABULARY,

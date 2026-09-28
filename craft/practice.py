@@ -1641,9 +1641,10 @@ PRACTICE = [
                     "just did ... when I wanted you to finish the job that you hadn't done on "
                     "the page showing up when the exercise is finished'.")],
         note="Decided on the claim (craft/claims.py check_change_reaches_every_state): a "
-             "done or fixed claim about a screen (`screen`) names its states (`states`) and "
-             "the ones looked at after the change (`looked_at`); a state not looked at, or no "
-             "states named, convicts. The whole source is read in craft/census_hurff.py.",
+             "done or fixed claim declares the screen's states as its `factors`, and each "
+             "item of evidence names the factor it covers (`factor`, claims@0.6.0); a state "
+             "no observation covers convicts. The whole source is read in "
+             "craft/census_hurff.py.",
     ),
 
 ]

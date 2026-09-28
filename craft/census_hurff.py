@@ -42,17 +42,18 @@ CENSUS: dict[str, tuple[str, str, str]] = {
         "a vague error is one that does not say the fix"),
     "Make error messages human, not technical, and suited to your audience.": (
         "covered", "an-error-message-is-human-not-technical",
-        "decided on the drawing's provenance: a binding passed through raw convicts; the "
-        "catalogue's words stay with the judge"),
+        "decided on the drawing's provenance: content shown in a failure's state convicts; "
+        "the catalogue's words stay with the judge"),
     "Error states should also be comforting in the sense that your product keeps all user "
     "input safe.": (
         "covered", "an-error-keeps-what-the-user-entered",
-        "decided on the drawing: a failing act that updates what an input holds"),
+        "decided on the drawing: a failing act that updates what an input asks for"),
     "A computer shall not harm your work or, through inaction, allow your work to come to "
     "harm.": (
         "covered", "the-users-work-is-never-harmed-by-an-act-or-by-inaction",
         "Raskin's first law, quoted: decided on the drawing - an act that is neither the "
-        "entry nor the sending updates what an input holds, or the work is not kept"),
+        "input's own nor one that commits it updates what it asks for, or the work is not "
+        "kept"),
     "Make your loading states a part of your prototyping efforts. They're a part of your "
     "product's experience and shouldn't be tacked on last.": (
         "covered", "a-change-to-a-screen-reaches-every-state-it-has",

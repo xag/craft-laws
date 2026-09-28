@@ -420,6 +420,11 @@ def check_figures_break_down_by_declared_factors(name: str, claims: list[dict]
             if nm:
                 declared[nm] = c.get("factors") or []
             continue
+        # A done or fixed claim declares factors as a protocol does - names (the states of
+        # the screen it changed, a-change-to-a-screen-reaches-every-state-it-has) - so rows
+        # are asked of the figures only.
+        if c.get("kind") in ("done", "fixed"):
+            continue
         rows = c.get("factors")
         if rows is not None:
             for r in rows if isinstance(rows, list) else []:
@@ -477,24 +482,24 @@ def check_grades_are_calibrated(name: str, claims: list[dict]) -> list[ClaimFind
 
 def check_change_reaches_every_state(name: str, claims: list[dict]) -> list[ClaimFinding]:
     """a-change-to-a-screen-reaches-every-state-it-has (Hurff, the UI Stack): a done or
-    fixed claim about a screen (`screen`) names the screen's states (`states`) and the ones
-    looked at after the change (`looked_at`); a state not looked at, or no states named,
-    convicts. A claim naming no screen is not about one, and nothing is said of it."""
+    fixed claim declares the states of the screen it changed as its `factors`, and its
+    evidence names the factor each observation covers (`factor`); a declared state no
+    observation covers convicts. The move a measurement already makes - declared factors,
+    broken down - made for a change: a claim that declares no factors says nothing of a
+    screen's states, and nothing is said of it."""
     out = []
     for i, c in enumerate(claims):
-        if c.get("kind") not in ("done", "fixed") or not c.get("screen"):
+        if c.get("kind") not in ("done", "fixed") or not c.get("factors"):
             continue
-        states = [str(x) for x in (c.get("states") or [])]
-        seen = {str(x) for x in (c.get("looked_at") or [])}
-        missing = [x for x in states if x not in seen]
-        if states and not missing:
+        covered = {str(e.get("factor")) for e in c.get("evidence") or []
+                   if isinstance(e, dict) and e.get("factor")}
+        missing = [str(f) for f in c["factors"] if str(f) not in covered]
+        if not missing:
             continue
-        why = (f"the claim names screen {c.get('screen')!r} and none of its states: every "
-               "state it has is looked at before the change is done" if not states else
-               f"{', '.join(missing)} of screen {c.get('screen')!r} not looked at after the "
-               "change")
         out.append(ClaimFinding(_law("a-change-to-a-screen-reaches-every-state-it-has"),
-                                f"{name}#{i + 1}", str(c.get("text", ""))[:120], why))
+                                f"{name}#{i + 1}", str(c.get("text", ""))[:120],
+                                f"{', '.join(missing)}: declared and not looked at after "
+                                "the change"))
     return out
 
 
@@ -578,9 +583,9 @@ def _alarm() -> int:
     harness re-taught on its first CI run."""
     guilty = [
         {"kind": "done", "text": "the end page shows the small list",
-         "evidence": [{"where": "user-surface", "what": "walked on the phone"}],
-         "screen": "the game's end page", "states": ["in play", "at the end"],
-         "looked_at": ["in play"]},
+         "factors": ["state=in play", "state=at the end"],
+         "evidence": [{"where": "user-surface", "what": "walked on the phone",
+                       "factor": "state=in play"}]},
         {"kind": "done", "text": "deployed and verified",
          "evidence": [{"where": "producer", "what": "suite green, machine has file"}]},
         {"kind": "fixed", "text": "the empty card",
@@ -620,9 +625,11 @@ def _alarm() -> int:
     ]
     clean = [
         {"kind": "done", "text": "the end page shows the small list",
-         "evidence": [{"where": "user-surface", "what": "walked on the phone"}],
-         "screen": "the game's end page", "states": ["in play", "at the end"],
-         "looked_at": ["in play", "at the end"]},
+         "factors": ["state=in play", "state=at the end"],
+         "evidence": [{"where": "user-surface", "what": "walked on the phone",
+                       "factor": "state=in play"},
+                      {"where": "user-surface", "what": "the round played to its end",
+                       "factor": "state=at the end"}]},
         {"kind": "done", "text": "the sheet renders on the phone",
          "evidence": [{"where": "user-surface",
                        "what": "beacon self-fetched; four card reports after"}]},

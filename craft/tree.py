@@ -109,6 +109,35 @@ DECISIONS = [
         ],
     ),
     Node(
+        id="a-law-enters-on-its-source-and-a-sighting-reviews-it",
+        kind="decision",
+        name="A law enters on its source - a falsifier, a trigger and a citation - never on a "
+             "defect it has caught: a source is adopted whole, so its laws may enter before "
+             "they have caught anything, and a law that prevents a defect may never catch one. "
+             "A sighting is evidence recorded when a law catches something, and it reviews the "
+             "law later: one that has caught nothing after long use is questioned, not barred "
+             "at the door",
+        payload={
+            "decided_on": "2026-09-28",
+            "the_owner": "Isn't it a rule to get all laws from a source? Where does this "
+                         "sightings idea come from? ... Does it make any sense to force having "
+                         "a caught defect? ... Yes fix this",
+            "rationale":
+                "A sighting required at entry admits only the rules already broken - the "
+                "source filtered by what has gone wrong, the selection the whole-source census "
+                "exists to stop - and it bars a law whose work is prevention. What a sighting "
+                "would guard is already guarded: the citation says the law is not an opinion, "
+                "the falsifier that a violation is observable, the trigger when it applies.",
+        },
+        children=[
+            Node(id="a-sighting-required-at-entry", kind="alternative",
+                 name="A new law needs a sighting, a real defect it caught, or it is red",
+                 payload={"why": "CONTRIBUTING said so while the check never enforced it; "
+                                 "it contradicts adopting a source whole and bars the laws "
+                                 "that prevent defects."}),
+        ],
+    ),
+    Node(
         id="a-human-found-defect-enters-as-a-law",
         kind="decision",
         name="Every defect a person finds — feedback, an issue, a ruling on a proposed "

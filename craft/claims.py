@@ -475,13 +475,36 @@ def check_grades_are_calibrated(name: str, claims: list[dict]) -> list[ClaimFind
     return out
 
 
+def check_change_reaches_every_state(name: str, claims: list[dict]) -> list[ClaimFinding]:
+    """a-change-to-a-screen-reaches-every-state-it-has (Hurff, the UI Stack): a done or
+    fixed claim about a screen (`screen`) names the screen's states (`states`) and the ones
+    looked at after the change (`looked_at`); a state not looked at, or no states named,
+    convicts. A claim naming no screen is not about one, and nothing is said of it."""
+    out = []
+    for i, c in enumerate(claims):
+        if c.get("kind") not in ("done", "fixed") or not c.get("screen"):
+            continue
+        states = [str(x) for x in (c.get("states") or [])]
+        seen = {str(x) for x in (c.get("looked_at") or [])}
+        missing = [x for x in states if x not in seen]
+        if states and not missing:
+            continue
+        why = (f"the claim names screen {c.get('screen')!r} and none of its states: every "
+               "state it has is looked at before the change is done" if not states else
+               f"{', '.join(missing)} of screen {c.get('screen')!r} not looked at after the "
+               "change")
+        out.append(ClaimFinding(_law("a-change-to-a-screen-reaches-every-state-it-has"),
+                                f"{name}#{i + 1}", str(c.get("text", ""))[:120], why))
+    return out
+
+
 CHECKS = (check_done_is_observed, check_fixed_reproduced_first,
           check_one_candidate_per_fix, check_theories_carry_observations,
           check_detours_say_so, check_confirmations_carry_their_account,
           check_measurements_state_their_protocol, check_grades_are_calibrated,
           check_prespecification_has_its_artifact,
           check_figures_break_down_by_declared_factors,
-          check_resemblance_carries_the_base_rate)
+          check_resemblance_carries_the_base_rate, check_change_reaches_every_state)
 
 # The laws each decider convicts under, stated once so the alarm can hold a decider to
 # them: "convicts the guilty record" was satisfied by any finding under any law, so a
@@ -508,6 +531,7 @@ LAWS_OF = {
         {"a-figure-is-broken-down-by-its-declared-factors"},
     check_resemblance_carries_the_base_rate:
         {"a-cause-is-weighed-by-how-often-not-only-how-alike"},
+    check_change_reaches_every_state: {"a-change-to-a-screen-reaches-every-state-it-has"},
 }
 
 
@@ -553,6 +577,10 @@ def _alarm() -> int:
     never been seen red is relocated guessing — the lesson this repo's own screenshot
     harness re-taught on its first CI run."""
     guilty = [
+        {"kind": "done", "text": "the end page shows the small list",
+         "evidence": [{"where": "user-surface", "what": "walked on the phone"}],
+         "screen": "the game's end page", "states": ["in play", "at the end"],
+         "looked_at": ["in play"]},
         {"kind": "done", "text": "deployed and verified",
          "evidence": [{"where": "producer", "what": "suite green, machine has file"}]},
         {"kind": "fixed", "text": "the empty card",
@@ -591,6 +619,10 @@ def _alarm() -> int:
          "caught": 3, "misses": "none"},
     ]
     clean = [
+        {"kind": "done", "text": "the end page shows the small list",
+         "evidence": [{"where": "user-surface", "what": "walked on the phone"}],
+         "screen": "the game's end page", "states": ["in play", "at the end"],
+         "looked_at": ["in play", "at the end"]},
         {"kind": "done", "text": "the sheet renders on the phone",
          "evidence": [{"where": "user-surface",
                        "what": "beacon self-fetched; four card reports after"}]},

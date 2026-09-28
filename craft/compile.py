@@ -362,8 +362,36 @@ def compile_marked_fields(surfaces: list[Node], **_: object) -> list[Node]:
     return out
 
 
+def _error_is_human(surfaces: list[Node], **_: object) -> list[Node]:
+    """an-error-message-is-human-not-technical (Hurff, the UI Stack): what a person is
+    shown when something fails is written for them, never the machine's own report. The
+    drawing says where a text comes from - a binding's `key` names the catalogue entry;
+    a binding whose text is passed through from a runtime value (a failed call's message,
+    an exception, a status) declares `raw: true` - so the law is decided on provenance,
+    never by reading the words. An element carrying a raw binding convicts wherever it is
+    shown. Catalogue words written badly stay with the judge."""
+    law = _law("an-error-message-is-human-not-technical")
+    out: list[Node] = []
+    for s in surfaces:
+        for e in elements(s):
+            raw = [b for b in bindings(e) if b.payload.get("raw")]
+            if not raw:
+                continue
+            out.append(Node(
+                id=f"{law}--{e.id}", kind="invariant",
+                payload={
+                    "expr": f"not ({when(s, e)})",
+                    "note": f"'{e.id}' shows text passed through from a runtime value "
+                            f"({', '.join(b.id for b in raw)}): the machine's own report "
+                            "reaches the person instead of what happened and what to do.",
+                    "law": law,
+                }))
+    return out
+
+
 COMPILABLE = {
     "an-empty-state-never-contradicts-the-controls": _empty_state_never_contradicts,
+    "an-error-message-is-human-not-technical": _error_is_human,
     "never-build-a-sentence-from-fragments": _composed_prose,
     "plurals-and-agreement": _plurals_and_agreement,
     "one-surface-one-job": _one_surface_one_job,
@@ -534,4 +562,81 @@ def bound_keys(surfaces: list[Node]) -> dict[str, list[str]]:
                 key = b.payload.get("key")
                 if key:
                     out.setdefault(key, []).append(e.id)
+    return out
+
+
+# --- what the person entered (Hurff, the UI Stack; Raskin's first law) ----------------
+# An input declares the state variable that holds what is entered (`holds`); the act that
+# enters it (the typing, the pick) declares `enters: <var>`, the act that sends it
+# `commits: true`, an act's failed outcome `fails: true`, and an input whose work outlives
+# the page (a kept draft) `kept: true`. Like compile_status these read the action graph
+# beside the drawing, and like it they match variables lexically in `updates`.
+
+def _held(surfaces: list[Node]) -> dict[str, tuple[Node, Node]]:
+    return {e.payload["holds"]: (s, e) for s in surfaces for e in elements(s)
+            if e.payload.get("holds")}
+
+
+def compile_error_keeps_input(surfaces: list[Node], actions: list[Node]) -> list[Node]:
+    """an-error-keeps-what-the-user-entered: a failing act never updates a variable an
+    input holds - the failure leaves what was typed, picked or uploaded where it was. The
+    invariant is `not (<the act's guard>)`, so the counterexample is the path to where the
+    failing act is offered."""
+    law = _law("an-error-keeps-what-the-user-entered")
+    held = _held(surfaces)
+    out: list[Node] = []
+    for a in actions:
+        if not a.payload.get("fails"):
+            continue
+        lost = sorted({u.get("var") for u in a.payload.get("updates") or []} & set(held))
+        if not lost:
+            continue
+        out.append(Node(
+            id=f"{law}--{a.id}", kind="invariant",
+            payload={
+                "expr": f"not ({a.payload.get('guard', '') or 'true'})",
+                "note": f"'{a.id}' fails and updates {', '.join(lost)}, which "
+                        f"{', '.join(held[v][1].id for v in lost)} holds: the error "
+                        "costs the person what they entered.",
+                "law": law,
+            }))
+    return out
+
+
+def compile_work_kept(surfaces: list[Node], actions: list[Node]) -> list[Node]:
+    """the-users-work-is-never-harmed-by-an-act-or-by-inaction (Raskin's first law, as
+    Hurff quotes it). By an act: a variable an input holds is updated only by the act that
+    enters it (`enters`) or the one that sends it (`commits: true`); any other act that
+    updates it - a reset, a reload, a navigation that clears - convicts where it is
+    offered. By inaction: an input whose work is not kept beyond the page (`kept: true`)
+    loses it when the page is left, so it convicts wherever it is shown."""
+    law = _law("the-users-work-is-never-harmed-by-an-act-or-by-inaction")
+    held = _held(surfaces)
+    out: list[Node] = []
+    for a in actions:
+        if a.payload.get("commits"):
+            continue
+        touched = {u.get("var") for u in a.payload.get("updates") or []} & set(held)
+        touched.discard(a.payload.get("enters"))
+        if not touched:
+            continue
+        out.append(Node(
+            id=f"{law}--{a.id}", kind="invariant",
+            payload={
+                "expr": f"not ({a.payload.get('guard', '') or 'true'})",
+                "note": f"'{a.id}' neither enters nor sends {', '.join(sorted(touched))} "
+                        "and updates it: the act harms the person's work.",
+                "law": law,
+            }))
+    for var, (s, e) in sorted(held.items()):
+        if e.payload.get("kept"):
+            continue
+        out.append(Node(
+            id=f"{law}--{e.id}--kept", kind="invariant",
+            payload={
+                "expr": f"not ({when(s, e)})",
+                "note": f"what '{e.id}' holds ({var}) lives only in the page: leaving, "
+                        "closing or losing the network loses it.",
+                "law": law,
+            }))
     return out

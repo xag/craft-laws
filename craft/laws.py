@@ -54,6 +54,10 @@ FEDPL = ("Federal Plain Language Guidelines, March 2011, Rev. 1 May 2011 "
          "Act of 2010; captured at docs/sources/plain-2011-federal-guidelines.pdf "
          "and censused whole in craft/census_plain.py)")
 FEDPL_URL = "https://www.archive.org/details/FederalPLGuidelines"
+HURFF = ("Scott Hurff, How to fix a bad user interface (the UI Stack), 2015-08-17; an "
+         "excerpt of Designing Products People Love, O'Reilly, 2016")
+HURFF_URL = ("https://www.scotthurff.com/posts/"
+             "why-your-user-interface-is-awkward-youre-ignoring-the-ui-stack/")
 
 APPLE_WRITING = "Apple - Human Interface Guidelines, Writing"
 APPLE_WRITING_URL = "https://developer.apple.com/design/human-interface-guidelines/writing"
@@ -2409,6 +2413,76 @@ LAWS = [
                     "for your audience to understand your information. Each "
                     "paragraph should start with a topic sentence that captures the "
                     "essence of everything in the paragraph.")],
+    ),
+    _law(
+        "an-error-keeps-what-the-user-entered",
+        "An error never costs the user what they entered: whatever they typed, picked or "
+        "uploaded before it is still there after it, for them to send again",
+        _cited(HURFF),
+        falsifier="An error - a field refused, a request failed, the network gone, a step left "
+                  "unfinished - after which something the user had entered or uploaded is "
+                  "empty, reset or gone.",
+        triggers=["a form, a field or an upload can fail",
+                  "an agent writes the handling of a failed request the user started"],
+        citations=[(HURFF, HURFF_URL,
+                    "Error states should also be comforting in the sense that your product "
+                    "keeps all user input safe."),
+                   (HURFF, HURFF_URL,
+                    "Your product shouldn't undo, destroy, or delete anything entered or "
+                    "uploaded by your customer in the event of an error.")],
+        note="Decided against the drawing (craft/compile.py compile_error_keeps_input): an "
+             "input declares the state variable that holds what is entered (`holds`), an "
+             "act that fails declares it (`fails: true`), and a failing act that updates a "
+             "held variable convicts, the path to it the counterexample. The whole source is "
+             "read in craft/census_hurff.py.",
+    ),
+    _law(
+        "the-users-work-is-never-harmed-by-an-act-or-by-inaction",
+        "What the user has made is never harmed by what the product does, nor lost by what "
+        "it fails to do: work in progress survives leaving the page, closing it and losing "
+        "the network, as it survives an error",
+        _cited(HURFF),
+        falsifier="The user's work in progress - a draft, a selection, a partly done task - "
+                  "lost by an act of the product (a reload, a reset, an overwrite) or by an "
+                  "omission (nothing kept when the page was left, closed or cut off).",
+        triggers=["a page holds work the user has not sent yet",
+                  "an agent writes what happens when a page is left, reloaded or cut off"],
+        citations=[(HURFF, HURFF_URL,
+                    "A computer shall not harm your work or, through inaction, allow your "
+                    "work to come to harm."),
+                   (HURFF, HURFF_URL,
+                    "at least cover the most painful errors and go to great efforts to "
+                    "preserve your customers' data.")],
+        note="Jef Raskin's first law of interface design (The Humane Interface), as Hurff "
+             "quotes it. Decided against the drawing (craft/compile.py compile_work_kept): "
+             "by an act, a held variable updated by any act but the input's own entry "
+             "(`enters`) or the one that sends it (`commits: true`) convicts; by inaction, an "
+             "input whose work is not kept beyond the page (`kept: true`) convicts wherever "
+             "it is shown. The whole source is read in craft/census_hurff.py.",
+    ),
+    _law(
+        "an-error-message-is-human-not-technical",
+        "What an error tells the user is said in their words, for them: what happened and "
+        "what to do, never the machine's own report - an exception, a status code, an "
+        "internal name or a raw message from a call",
+        _cited(HURFF),
+        falsifier="An error shown to the user that carries the machine's own report: an "
+                  "exception's name or message, a status code, a stack, an internal "
+                  "identifier, or the text a failed call returned, passed through as it came.",
+        triggers=["an agent writes what a user is shown when something fails"],
+        citations=[(HURFF, HURFF_URL,
+                    "Make error messages human, not technical, and suited to your "
+                    "audience.")],
+        sightings=[("a language-practice app, 2026-09-28",
+                    "The settings' Done, when a save fails, shows 'Could not save: ' followed "
+                    "by the failed call's own error message as it came back; a round that "
+                    "cannot start shows 'Could not start another round: ' and the same.")],
+        note="Decided against the drawing, never by matching words (craft/compile.py "
+             "_error_is_human): a binding whose text is passed through from a runtime value "
+             "rather than taken from the catalogue declares it (`raw: true`), and an element "
+             "carrying one convicts wherever it is shown. Words written badly in the "
+             "catalogue stay with the judge: meaning is never checked by matching words. The "
+             "whole source is read in craft/census_hurff.py.",
     ),
 ]
 

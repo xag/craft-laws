@@ -24,16 +24,12 @@ from __future__ import annotations
 from quern import Node
 from quern.provenance import Quantity
 
-from .laws import FEDPL, FEDPL_URL, _cited, _law, _uncited
+from .laws import FEDPL, FEDPL_URL, HURFF, HURFF_URL, _cited, _law, _uncited
 
 GOVUK_NEEDS = "GOV.UK content and publishing guidance, Identify user needs"
 GOVUK_NEEDS_URL = "https://www.gov.uk/guidance/content-design/user-needs"
 JEFFRIES = "Ron Jeffries, You're NOT gonna need it! (XProgramming, 1998-04-04)"
 JEFFRIES_URL = "https://ronjeffries.com/xprog/articles/practices/pracnotneed/"
-HURFF = ("Scott Hurff, How to fix a bad user interface (the UI Stack), 2015-08-17; an "
-         "excerpt of Designing Products People Love, O'Reilly, 2016")
-HURFF_URL = ("https://www.scotthurff.com/posts/"
-             "why-your-user-interface-is-awkward-youre-ignoring-the-ui-stack/")
 
 PARNAS = ("David L. Parnas, On the Criteria To Be Used in Decomposing Systems into "
           "Modules, Communications of the ACM 15(12), 1053-1058, 1972")
@@ -1644,77 +1640,12 @@ PRACTICE = [
                     "instead of looking. The owner: 'Did you already forget the changes you "
                     "just did ... when I wanted you to finish the job that you hadn't done on "
                     "the page showing up when the exercise is finished'.")],
-        note="Decidable where a product records its screens' states by name (a walk's "
-             "faces: in play, the end, empty, an error) and the change's review names each "
-             "state it looked at: a state of a changed screen missing from the review is red. "
-             "Elsewhere it is a reading of the review against the screen's states. The whole "
-             "source is read in craft/census_hurff.py.",
+        note="Decided on the claim (craft/claims.py check_change_reaches_every_state): a "
+             "done or fixed claim about a screen (`screen`) names its states (`states`) and "
+             "the ones looked at after the change (`looked_at`); a state not looked at, or no "
+             "states named, convicts. The whole source is read in craft/census_hurff.py.",
     ),
-    _law(
-        "an-error-keeps-what-the-user-entered",
-        "An error never costs the user what they entered: whatever they typed, picked or "
-        "uploaded before it is still there after it, for them to send again",
-        _cited(HURFF),
-        falsifier="An error - a field refused, a request failed, the network gone, a step left "
-                  "unfinished - after which something the user had entered or uploaded is "
-                  "empty, reset or gone.",
-        triggers=["a form, a field or an upload can fail",
-                  "an agent writes the handling of a failed request the user started"],
-        citations=[(HURFF, HURFF_URL,
-                    "Error states should also be comforting in the sense that your product "
-                    "keeps all user input safe."),
-                   (HURFF, HURFF_URL,
-                    "Your product shouldn't undo, destroy, or delete anything entered or "
-                    "uploaded by your customer in the event of an error.")],
-        note="Needs a new fact to decide: what the user entered, recorded before the error "
-             "and found again after it (a tape of the page's inputs across the failed "
-             "request). Until that is recorded it is a reading of the failure paths. The whole "
-             "source is read in craft/census_hurff.py.",
-    ),
-    _law(
-        "the-users-work-is-never-harmed-by-an-act-or-by-inaction",
-        "What the user has made is never harmed by what the product does, nor lost by what "
-        "it fails to do: work in progress survives leaving the page, closing it and losing "
-        "the network, as it survives an error",
-        _cited(HURFF),
-        falsifier="The user's work in progress - a draft, a selection, a partly done task - "
-                  "lost by an act of the product (a reload, a reset, an overwrite) or by an "
-                  "omission (nothing kept when the page was left, closed or cut off).",
-        triggers=["a page holds work the user has not sent yet",
-                  "an agent writes what happens when a page is left, reloaded or cut off"],
-        citations=[(HURFF, HURFF_URL,
-                    "A computer shall not harm your work or, through inaction, allow your "
-                    "work to come to harm."),
-                   (HURFF, HURFF_URL,
-                    "at least cover the most painful errors and go to great efforts to "
-                    "preserve your customers' data.")],
-        note="Jef Raskin's first law of interface design (The Humane Interface), as Hurff "
-             "quotes it. Needs a new fact to decide: the work a page holds, recorded before "
-             "it is left or cut off and looked for when the user comes back. The whole "
-             "source is read in craft/census_hurff.py.",
-    ),
-    _law(
-        "an-error-message-is-human-not-technical",
-        "What an error tells the user is said in their words, for them: what happened and "
-        "what to do, never the machine's own report - an exception, a status code, an "
-        "internal name or a raw message from a call",
-        _cited(HURFF),
-        falsifier="An error shown to the user that carries the machine's own report: an "
-                  "exception's name or message, a status code, a stack, an internal "
-                  "identifier, or the text a failed call returned, passed through as it came.",
-        triggers=["an agent writes what a user is shown when something fails"],
-        citations=[(HURFF, HURFF_URL,
-                    "Make error messages human, not technical, and suited to your "
-                    "audience.")],
-        sightings=[("a language-practice app, 2026-09-28",
-                    "The settings' Done, when a save fails, shows 'Could not save: ' followed "
-                    "by the failed call's own error message as it came back; a round that "
-                    "cannot start shows 'Could not start another round: ' and the same.")],
-        note="A reading: whether words are the machine's or the user's is meaning, and "
-             "meaning is never checked by matching words. Where a product builds its error "
-             "lines from a failed call's message, the code path is the evidence. The whole "
-             "source is read in craft/census_hurff.py.",
-    ),
+
 ]
 
 

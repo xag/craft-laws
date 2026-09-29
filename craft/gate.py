@@ -13,6 +13,9 @@ does - never on a fixed wait. CI runs this same command, so the list has one hom
 
 Two checks were inline shell in the workflow and are functions here: the red set is exactly
 the declared red set, and LAWS.md is the data rendered.
+
+Another project runs its own list through the same runner: `run(checks, cwd=its_root)`, each
+Check a module (`args`, run as `python -m`) or a whole command line (`command`).
 """
 
 from __future__ import annotations
@@ -48,12 +51,15 @@ STAMP = "GENERATED from craft@"
 @dataclass(frozen=True)
 class Check:
     name: str
-    args: tuple
+    args: tuple = ()        # a module and its arguments, run as `python -m`
+    command: tuple = ()     # or a whole command line, run as it is
 
-    def argv(self) -> list[str]:
+    def argv(self, root: Path = ROOT) -> list[str]:
+        if self.command:
+            return list(self.command)
         out = []
         for a in self.args:
-            out.extend(sorted(glob.glob(str(ROOT / a))) if "*" in a else [a])
+            out.extend(sorted(glob.glob(str(root / a))) if "*" in a else [a])
         return [sys.executable, "-m", *out]
 
 
@@ -154,10 +160,10 @@ def client_names() -> str:
     return done.stdout.strip() if done.returncode == 0 else ""
 
 
-def run_one(check: Check, env: dict) -> Result:
+def run_one(check: Check, env: dict, cwd: Path = ROOT) -> Result:
     start = time.monotonic()
     try:
-        done = subprocess.run(check.argv(), cwd=ROOT, capture_output=True, text=True,
+        done = subprocess.run(check.argv(Path(cwd)), cwd=cwd, capture_output=True, text=True,
                               encoding="utf-8", errors="replace", env=env)
         code, out = done.returncode, (done.stdout or "") + (done.stderr or "")
     except OSError as e:
@@ -165,13 +171,15 @@ def run_one(check: Check, env: dict) -> Result:
     return Result(check, code, out, time.monotonic() - start)
 
 
-def run(checks=CHECKS, jobs: int | None = None) -> int:
+def run(checks=CHECKS, jobs: int | None = None, cwd: Path = ROOT, env: dict | None = None) -> int:
+    """Run `checks` side by side from `cwd`, `env` added to the environment; print each result
+    in list order as soon as it is known; 1 when any check is red."""
     jobs = jobs or min(len(checks), os.cpu_count() or 4)
     start = time.monotonic()
-    env = dict(os.environ, PYTHONIOENCODING="utf-8", CRAFT_CLIENT_NAMES=client_names())
+    env = dict(os.environ, PYTHONIOENCODING="utf-8", **(env or {}))
     red = []
     with ThreadPoolExecutor(max_workers=jobs) as pool:
-        futures = [pool.submit(run_one, c, env) for c in checks]
+        futures = [pool.submit(run_one, c, env, cwd) for c in checks]
         for f in futures:            # list order; each prints as soon as it and those above are done
             r = f.result()
             mark = "ok " if r.code == 0 else "RED"
@@ -199,7 +207,7 @@ def main(argv=None) -> int:
         return red_is_declared()
     if ns.rendered:
         return laws_md_is_rendered()
-    return run(jobs=ns.jobs)
+    return run(jobs=ns.jobs, env={"CRAFT_CLIENT_NAMES": client_names()})
 
 
 if __name__ == "__main__":

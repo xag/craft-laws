@@ -16,7 +16,9 @@ it on the tape as testimony; replay serves it and touches nothing.
 The tape carries transcript excerpts and command output, which is exactly what the
 transcripts already carry, in the same directory tree, under the same user. The one
 thing recorded here that the transcript does not hold is subprocess environments --
-masked by name (`env`), because an environment block is where credentials live.
+masked by name (`env`), because an environment block is where credentials live. And
+every string on the tape is swept by the recorder's stock credential scrub, because a
+transcript holds whatever the session read, keys included.
 
 The pile is BOUNDED (see `roll`): a directory nothing prunes is one that surprises
 somebody months later, and a tape's worth decays with the run that made it.
@@ -164,9 +166,17 @@ def boundary(hook_name: str):
         effects.append((spawn, ["detach"]))
     except ImportError:
         pass
+    # A transcript holds whatever the session read, credentials included: on 2026-11-01 three
+    # tapes here held a broker's key, as `\"ALPACA_API_SECRET_KEY\": \"...\"` inside a tool
+    # result. The recorder's stock scrub masks every credential shape, and the value of every
+    # credential-named field, at any depth of JSON-in-a-string and in KEY=value lines. No
+    # `forbid` beside it: a refused line fails the recorded call, and the call is a hook turn.
+    from flight_recorder.scrubs import credentials
+
     return Boundary(
         effects=effects,
         redact={"env": None},
+        scrub=credentials,
         header_extras={"hook": lambda: hook_name},
     )
 

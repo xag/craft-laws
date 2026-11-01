@@ -97,6 +97,53 @@ def test_the_tape_replays_the_turn_without_touching_the_world(tmp_path, monkeypa
     assert repo_claims.read_text(encoding="utf-8") == claims_after_record
 
 
+# Built by concatenation, so this file is not one a scanner reads as carrying keys.
+_SECRET_FIELD_VALUE = "PKRAW" + "0001TESTVALUE"
+_SK_VALUE = "sk-" + "proj-0123456789abcdefghijklmnop"
+_DOTENV_VALUE = "dotenv" + "0123456789"
+
+
+def test_a_credential_in_the_transcript_reaches_no_tape(tmp_path, monkeypatch):
+    # On 2026-11-01 three tapes here held a broker's key. A session had read a trace line
+    # holding `"ALPACA_API_SECRET_KEY": "..."`; the transcript holds that tool result as a
+    # JSON string, so the pair reached the tape as `\"ALPACA_API_SECRET_KEY\": \"...\"`. The
+    # transcript below is shaped the same way, with a .env line and an sk- key beside it.
+    from flight_recorder import ReplayAdapter, install, replay_call, session_path, uninstall
+
+    repo = _repo(tmp_path, "alpha")
+    t = _transcript(tmp_path, repo / "src" / "a.py")
+    trace_line = json.dumps({"e": "L", "d": {"env": {"ALPACA_API_SECRET_KEY": _SECRET_FIELD_VALUE,
+                                                     "PATH": "/usr/bin"}}})
+    read_result = trace_line + f"\nOPENAI_API_KEY={_DOTENV_VALUE}\nexport OTHER={_SK_VALUE}\n"
+    t.write_text(t.read_text(encoding="utf-8") + "\n" + json.dumps(
+        {"type": "user", "message": {"content": [
+            {"type": "tool_result", "tool_use_id": "0", "content": read_result}]}}),
+        encoding="utf-8")
+    monkeypatch.setenv("COURIER_DIR", str(tmp_path / "courier"))
+    flight.reset()
+    install(flight.boundary("claims"), claims_hook, directory=str(tmp_path / "flight"))
+    try:
+        claims_hook.run({"transcript_path": str(t), "session_id": "s"})
+        tape = Path(session_path())
+    finally:
+        uninstall()
+    for p in (tmp_path / "flight").rglob("*"):
+        text = p.read_text(encoding="utf-8", errors="ignore")
+        for value in (_SECRET_FIELD_VALUE, _SK_VALUE, _DOTENV_VALUE):
+            assert value not in text, p
+    assert "<secret:" in tape.read_text(encoding="utf-8")
+
+    class Adapter(ReplayAdapter):
+        boundary = flight.boundary("claims")
+
+        def resolve(self, fn_name, feed):
+            return getattr(claims_hook, fn_name)
+
+    flight.reset()
+    report = replay_call(tape, 0, Adapter())
+    assert report.ok, report
+
+
 def _tape(d: Path, name: str, size: int, mtime: float) -> Path:
     p = d / name
     p.write_bytes(b"x" * size)

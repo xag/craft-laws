@@ -65,6 +65,10 @@ NNG_CHECKBOXES = "Jakob Nielsen, Checkboxes vs. Radio Buttons, Nielsen Norman Gr
 NNG_CHECKBOXES_URL = "https://www.nngroup.com/articles/checkboxes-vs-radio-buttons/"
 GOVUK_CHECKBOXES = "GOV.UK Design System, Checkboxes"
 GOVUK_CHECKBOXES_URL = "https://design-system.service.gov.uk/components/checkboxes/"
+APG_SPLITTER = "W3C WAI, ARIA Authoring Practices Guide, Window Splitter Pattern"
+APG_SPLITTER_URL = "https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/"
+APPLE_SPLIT_VIEWS = "Apple, Human Interface Guidelines, Split views"
+APPLE_SPLIT_VIEWS_URL = "https://developer.apple.com/design/human-interface-guidelines/split-views"
 
 LAWS = [
 
@@ -1956,6 +1960,85 @@ LAWS = [
         note="Decidable from the DOM: an input of type checkbox outside any fieldset with a "
              "legend, among others answering the same question. One instance of WCAG 1.3.1, "
              "which census_wcag routes as a whole.",
+    ),
+
+    _law(
+        "a-pane-divider-is-a-focusable-separator-with-its-value",
+        "A divider that resizes panes is a focusable separator naming the pane it sizes, "
+        "with that pane's size as its current, minimum and maximum value",
+        _cited(APG_SPLITTER),
+        falsifier="A draggable divider between panes that cannot take focus, has no role "
+                  "separator, no name, no aria-controls naming the pane it sizes, or an "
+                  "aria-valuenow, aria-valuemin or aria-valuemax that disagrees with the "
+                  "pane's size and its allowed range at that moment.",
+        triggers=["a screen has panes the person resizes"],
+        citations=[(APG_SPLITTER, APG_SPLITTER_URL,
+                    "The element that serves as the focusable splitter has role separator."),
+                   (APG_SPLITTER, APG_SPLITTER_URL,
+                    "The separator element has the aria-valuemax property set to a decimal "
+                    "value that represents the position where the primary pane has its "
+                    "maximum size."),
+                   (APG_SPLITTER, APG_SPLITTER_URL,
+                    "The separator element has aria-controls referring to the primary pane.")],
+        sightings=[
+            ("a tree navigator's written design, 2026-11-19, dividers sizing its side panels",
+             "The design set aria-valuemax once, while the widest a panel could be "
+             "depended on the window's width: a narrower window left the value announcing "
+             "a width the divider could not reach."),
+        ],
+        note="Decidable from the DOM, the value checked against the pane's measured box "
+             "after a resize of the window. The whole pattern is read in "
+             "craft/census_apg_splitter.py.",
+    ),
+
+    _law(
+        "a-pane-divider-moves-with-the-arrow-keys",
+        "A focused pane divider moves with the arrow keys along its axis, and Enter "
+        "collapses its pane or restores it",
+        _cited(APG_SPLITTER),
+        falsifier="A focused vertical divider that Left and Right Arrow do not move (Up and "
+                  "Down for a horizontal one), or on which Enter does nothing.",
+        triggers=["a screen has panes the person resizes"],
+        citations=[(APG_SPLITTER, APG_SPLITTER_URL,
+                    "Left Arrow: Moves a vertical splitter to the left. Right Arrow: Moves a "
+                    "vertical splitter to the right."),
+                   (APG_SPLITTER, APG_SPLITTER_URL,
+                    "Enter: If the primary pane is not collapsed, collapses the pane. If the "
+                    "pane is collapsed, restores the splitter to its previous position.")],
+        sightings=[
+            ("a tree navigator's written design, 2026-11-19, dividers sizing its side panels",
+             "Arrows, Home and End were designed; Enter was not, so the key the pattern "
+             "names first after the arrows did nothing."),
+        ],
+        note="Decidable by keys sent to the focused separator and the pane's box measured "
+             "after each. A product with no collapse may give Enter its nearest act (back to "
+             "the default size), and says so. The keys do not answer WCAG 2.5.7, which asks "
+             "for a single-pointer way that does not drag.",
+    ),
+
+    _law(
+        "resizable-panes-have-limits-that-keep-the-divider-usable",
+        "Resizable panes have a minimum and a maximum size, held however the size came "
+        "about, so that no pane shrinks until its divider seems to disappear",
+        _cited(APPLE_SPLIT_VIEWS),
+        falsifier="A pane that a drag, a narrower window or a size kept from an earlier "
+                  "session brings below its stated minimum or above its maximum, or to a "
+                  "size where its divider cannot be seen or grabbed.",
+        triggers=["a screen has panes the person resizes"],
+        citations=[(APPLE_SPLIT_VIEWS, APPLE_SPLIT_VIEWS_URL,
+                    "Set reasonable defaults for minimum and maximum pane sizes. If people "
+                    "can resize the panes in your app's split view, make sure to use sizes "
+                    "that keep the divider visible. If a pane gets too small, the divider "
+                    "can seem to disappear, becoming difficult to use.")],
+        sightings=[
+            ("a tree navigator's written design, 2026-11-19, dividers sizing its side panels",
+             "The limits were stated for a drag only: at window widths between 821 and "
+             "981 px the default widths already left the centre under its minimum, and "
+             "widths kept from a 1920 px screen left it no room in a 1024 px window."),
+        ],
+        note="Decidable by measuring the panes after a drag past each limit, after a "
+             "window resize, and after a reload with kept sizes larger than the window. "
+             "The whole page is read in craft/census_apple_split_views.py.",
     ),
 
     _law(

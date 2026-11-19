@@ -22,6 +22,94 @@ _ROOT = Path(__file__).resolve().parents[1]
 # placement from one named app, no person, no household, no data.
 DECISIONS = [
     Node(
+        # Moved unchanged from quality-harness's ledger on 2026-11-19, when that repo retired;
+        # its rests_on there named that repo's purpose, which did not come with it.
+        id="meaning-is-never-checked-by-matching-words",
+        kind="decision",
+        name="No word matching over prose, anywhere - checker, proposer, or test "
+             "assertion. Forty years of literature says lexical identity is not meaning; "
+             "the gadget era shipped it anyway because nothing better existed, and that "
+             "excuse ended when semantics became computable",
+        payload={
+            "rationale":
+                "The owner, 2026-08-30: 'NEVER DO THAT STUPID THING. DO NOT DO HACKS. "
+                "WE'RE DEVELOPING A QUALITY HARNESS' - and on why the habit is everywhere: "
+                "before word vectors, semantic processing could only ship keyword gadgets, "
+                "and 'our effort is precisely to move away from those times where people "
+                "were bullshitting the world with their gadgets.' The literature already "
+                "ruled: the gadget's illusion of understanding was reported by its own "
+                "builder (Weizenbaum), the miss rate was quantified at 80-90 percent "
+                "(Furnas et al.), the mechanism of failure named as synonymy and polysemy "
+                "(Deerwester et al.), and once vectors made semantic similarity computable "
+                "(Mikolov et al.), surface matching stopped being the age's ceiling and "
+                "became a choice.",
+            "consequence":
+                "Ever-present by mechanism, not memory: CLAUDE.md at this repo's root "
+                "carries the rule into every session here. The architecture that satisfies "
+                "rule and ambition together: derive prose's structure as committed data - "
+                "AI-derived, refutable, quote- and hash-anchored - and check the data in "
+                "code, exactly; where prose embeds something executable, execute it and "
+                "assert on the outcome; what prose merely persuades is observable only in "
+                "live behavior, and a check that cannot reach that says so. craft-laws "
+                "holds this decision's product-side twin; this entry binds the practice, "
+                "tests included, and is its own entry rather than a copy.",
+        },
+        children=[
+            Node(id="the-literature-that-ended-the-excuse", kind="grounds",
+                 name="Six published results, 1966-2013: the gadget's illusion, the "
+                      "quantified miss rate, the diagnosis, the domain failure, the "
+                      "consolidation, and the hinge",
+                 payload={"what": "Weizenbaum 1966, CACM 9(1) 36-45 (ELIZA: 'how easy it "
+                                  "is to create and maintain the illusion of "
+                                  "understanding'). Furnas, Landauer, Gomez & Dumais "
+                                  "1987, CACM 30(11) 964-971 (same-word agreement "
+                                  "probability < 0.20; single-keyword failure 80-90%). "
+                                  "Deerwester, Dumais, Furnas, Landauer & Harshman 1990, "
+                                  "JASIS 41(6) 391-407 (term matching defeated by "
+                                  "synonymy and polysemy). Pang & Lee 2008, Foundations "
+                                  "and Trends in IR 2(1-2) (lexicon polarity defeated by "
+                                  "negation and implicit judgment). Turney & Pantel 2010, "
+                                  "JAIR 37 141-188 ('From Frequency to Meaning'). "
+                                  "Mikolov, Chen, Corrado & Dean 2013, arXiv:1301.3781 "
+                                  "(word vectors: semantic similarity computable without "
+                                  "surface matching).",
+                          "where": "producer",
+                          "gap": "Citations verified against the published records for "
+                                 "venue and figures on 2026-08-30; the papers themselves "
+                                 "were not re-read end to end for this entry."}),
+            Node(id="the-estate-paid-for-it-twice", kind="grounds",
+                 name="Both breaches were caught by the owner reading, not by any check",
+                 payload={"what": "2026-08-25: a regex 'radar' over prose shipped with 70 "
+                                  "false alarms in 176 hits. 2026-08-30: test assertions "
+                                  "matched words over a conviction contract's prose "
+                                  "('correct' in text passes on text that says never "
+                                  "correct anything); replaced the same day by executing "
+                                  "the command the prose embeds.",
+                          "where": "producer",
+                          "gap": "Two sightings, both by one reader. The rate at which "
+                                 "the habit recurs unwatched is not measured; CLAUDE.md "
+                                 "is the standing counter-pressure, and its effect is "
+                                 "not yet observed."}),
+            Node(id="alt-word-checks-as-informational", kind="alternative",
+                 name="Keep lexical checks but label their findings informational",
+                 payload={"why":
+                          "A mechanism with known false positives gets ignored, and then "
+                          "nothing is checked - the label changes the noise's name, not "
+                          "its cost. Rejected 2026-08-25 in the radar incident, and the "
+                          "rejection was itself rebuilt reworded once, which is why the "
+                          "consulted gate now refuses an alternative node as a "
+                          "foundation."}),
+            Node(id="alt-trust-the-era-s-habit", kind="alternative",
+                 name="Accept word matching because everyone does it and always has",
+                 payload={"why":
+                          "What everyone did was the ceiling of the pre-vector era, not "
+                          "a validated practice: the same literature that community "
+                          "produced documents the failure in numbers. Following the "
+                          "habit now means importing a known-broken mechanism into the "
+                          "instrument whose whole purpose is to end unchecked claims."}),
+        ],
+    ),
+    Node(
         id="sightings-name-the-app",
         kind="decision",
         name="The sightings keep the app's name and date; nothing else of the app is "

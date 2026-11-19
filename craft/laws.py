@@ -61,6 +61,10 @@ HURFF_URL = ("https://www.scotthurff.com/posts/"
 
 APPLE_WRITING = "Apple - Human Interface Guidelines, Writing"
 APPLE_WRITING_URL = "https://developer.apple.com/design/human-interface-guidelines/writing"
+NNG_CHECKBOXES = "Jakob Nielsen, Checkboxes vs. Radio Buttons, Nielsen Norman Group, 2004-09-26"
+NNG_CHECKBOXES_URL = "https://www.nngroup.com/articles/checkboxes-vs-radio-buttons/"
+GOVUK_CHECKBOXES = "GOV.UK Design System, Checkboxes"
+GOVUK_CHECKBOXES_URL = "https://design-system.service.gov.uk/components/checkboxes/"
 
 LAWS = [
 
@@ -1844,6 +1848,114 @@ LAWS = [
              "and the stand-in where the thing has a name. A reading, judged against the "
              "labels of the platform's own settings; no word list decides it. The whole of "
              "Apple's Writing page is read in craft/census_apple_writing.py.",
+    ),
+
+    # --- checkboxes: Nielsen 2004 and GOV.UK's component, each censused whole -----
+    _law(
+        "a-checkbox-label-says-what-ticking-it-does",
+        "A checkbox's label says, in positive words, what turning it on does",
+        _cited(NNG_CHECKBOXES),
+        falsifier="A checkbox labelled with a noun, a pronoun or a heading that does not say "
+                  "what ticking it does ('Yours', 'Mine'), or with a negation the person must "
+                  "tick for something not to happen.",
+        triggers=["a screen has checkboxes"],
+        citations=[(NNG_CHECKBOXES, NNG_CHECKBOXES_URL,
+                    "Use positive and active wording for checkbox labels, so that it's clear "
+                    "what will happen if the user turns on the checkbox.")],
+        sightings=[
+            ("a furniture-design app, 2026-11-19, a mockup of a piece's tools",
+             "One list of tools with a checkbox on each row under a column headed 'Yours': "
+             "the label named whose the tool was, not what ticking it did (it added the "
+             "tool to the person's list). The owner: \"I'm sure 'Yours' breaks many "
+             "rules.\""),
+        ],
+        note="Kin to says-what-happens, which holds a button to the action it performs; this "
+             "holds a checkbox to the state it turns on. The whole article is read in "
+             "craft/census_nng_checkboxes.py.",
+    ),
+
+    _law(
+        "a-checkbox-toggles-from-its-label",
+        "Each checkbox has its own label beside it, and tapping the label toggles it",
+        _cited(NNG_CHECKBOXES),
+        falsifier="A checkbox whose words do nothing when tapped, or whose only label is a "
+                  "heading over a column of checkboxes, so its purpose is read from its "
+                  "position.",
+        triggers=["a screen has checkboxes"],
+        citations=[(NNG_CHECKBOXES, NNG_CHECKBOXES_URL,
+                    "Let users select an option by clicking on either the button/box itself "
+                    "or its label: a bigger target is faster to click according to Fitts's "
+                    "Law.")],
+        sightings=[
+            ("a furniture-design app, 2026-11-19, a mockup of a piece's tools",
+             "The checkboxes had no label of their own: one heading, 'Yours', stood over the "
+             "column, and the words in each row were a link to the tool's page."),
+        ],
+        note="every-input-labeled (WCAG 3.3.2) asks for a label; this asks that it be the "
+             "checkbox's own and that it work as part of the target.",
+    ),
+
+    _law(
+        "a-checkbox-sets-and-never-acts",
+        "A checkbox changes a setting that a command then commits; ticking it makes nothing "
+        "happen by itself",
+        _cited(NNG_CHECKBOXES),
+        falsifier="A checkbox whose tick commits a change at once (saves, sends, adds to a "
+                  "list on the server), with no command that applies the settings.",
+        triggers=["a screen has checkboxes", "a list offers to add or remove each row"],
+        citations=[(NNG_CHECKBOXES, NNG_CHECKBOXES_URL,
+                    "Use checkboxes and radio buttons only to change settings, not as action "
+                    "buttons that make something happen. Also, the changed settings should "
+                    "not take effect until the user clicks the command button.")],
+        sightings=[
+            ("a furniture-design app, 2026-11-19, a mockup of a piece's tools",
+             "Ticking a row's checkbox added the tool to the person's list at once: the "
+             "checkbox was an action button in a checkbox's shape."),
+        ],
+    ),
+
+    _law(
+        "a-checkbox-sits-left-of-its-label",
+        "A checkbox is placed to the left of its label",
+        _cited(GOVUK_CHECKBOXES),
+        falsifier="A checkbox at the right end of a row, or anywhere but to the left of the "
+                  "words that label it.",
+        triggers=["a screen has checkboxes"],
+        citations=[(GOVUK_CHECKBOXES, GOVUK_CHECKBOXES_URL,
+                    "Always position checkboxes to the left of their labels. This makes them "
+                    "easier to find, especially for users of screen magnifiers.")],
+        sightings=[
+            ("a furniture-design app, 2026-11-19, a mockup of a piece's tools",
+             "The checkboxes sat at the right end of each row, after the tool's name and "
+             "the chevron of its link."),
+        ],
+        note="A decider can measure it: the checkbox's box against its label's box in the "
+             "rendered page. The whole component page is read in "
+             "craft/census_govuk_checkboxes.py.",
+    ),
+
+    _law(
+        "a-checkbox-group-has-a-legend",
+        "Checkboxes that answer one question are grouped in a fieldset whose legend asks it",
+        _cited(GOVUK_CHECKBOXES),
+        falsifier="Checkboxes tied together only by a heading or a column placed near them, "
+                  "with no fieldset and legend that a screen reader announces with each.",
+        triggers=["a screen has checkboxes"],
+        citations=[(GOVUK_CHECKBOXES, GOVUK_CHECKBOXES_URL,
+                    "Group checkboxes together in a <fieldset> with a <legend> that describes "
+                    "them, as shown in the examples on this page."),
+                   ("W3C - WCAG 2.2, SC 1.3.1 Info and Relationships, Level A",
+                    "https://www.w3.org/TR/WCAG22/#info-and-relationships",
+                    "Information, structure, and relationships conveyed through presentation "
+                    "can be programmatically determined or are available in text.")],
+        sightings=[
+            ("a furniture-design app, 2026-11-19, a mockup of a piece's tools",
+             "A column of checkboxes under an h3 'Yours': the heading related to them only "
+             "by where it was drawn."),
+        ],
+        note="Decidable from the DOM: an input of type checkbox outside any fieldset with a "
+             "legend, among others answering the same question. One instance of WCAG 1.3.1, "
+             "which census_wcag routes as a whole.",
     ),
 
     _law(

@@ -69,6 +69,31 @@ APG_SPLITTER = "W3C WAI, ARIA Authoring Practices Guide, Window Splitter Pattern
 APG_SPLITTER_URL = "https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/"
 APPLE_SPLIT_VIEWS = "Apple, Human Interface Guidelines, Split views"
 APPLE_SPLIT_VIEWS_URL = "https://developer.apple.com/design/human-interface-guidelines/split-views"
+NNG_INDICATORS = ("Kim Flaherty, Indicators, Validations, and Notifications: Pick the Correct "
+                  "Communication Option, Nielsen Norman Group, 2024-01-17")
+NNG_INDICATORS_URL = "https://www.nngroup.com/articles/indicators-validations-notifications/"
+NNG_ICONS = "Aurora Harley, Icon Usability, Nielsen Norman Group, 2014-07-27"
+NNG_ICONS_URL = "https://www.nngroup.com/articles/icon-usability/"
+NNG_MODAL = ("Therese Fessenden, Modal & Nonmodal Dialogs: When (& When Not) to Use Them, "
+             "Nielsen Norman Group, 2017-04-23")
+NNG_MODAL_URL = "https://www.nngroup.com/articles/modal-nonmodal-dialog/"
+M1_DIALOGS = "Google, Material Design (first edition), Components, Dialogs"
+M1_DIALOGS_URL = "https://m1.material.io/components/dialogs.html"
+PRIMER_DIALOG = "GitHub, Primer, Dialog, Guidelines"
+PRIMER_DIALOG_URL = "https://primer.style/product/components/dialog/guidelines"
+MDN_CLOSEWATCHER = "MDN Web Docs, CloseWatcher"
+MDN_CLOSEWATCHER_URL = "https://developer.mozilla.org/en-US/docs/Web/API/CloseWatcher"
+WICG_CLOSE_WATCHER = "WICG, Close Watchers explainer (archived; merged into the HTML Standard)"
+WICG_CLOSE_WATCHER_URL = "https://github.com/WICG/close-watcher/blob/main/README.md"
+MATERIAL_BADGE = "Material Components for Android, Badges (BadgeDrawable)"
+MATERIAL_BADGE_URL = ("https://github.com/material-components/material-components-android/"
+                      "blob/master/docs/components/BadgeDrawable.md")
+GOVUK_WARNING = "GOV.UK Design System, Warning text"
+GOVUK_WARNING_URL = "https://design-system.service.gov.uk/components/warning-text/"
+PROOF_MARKS = "Barbara Every, Proofreading Marks at a Glance, BioMedical Editor, 2009"
+PROOF_MARKS_URL = "https://amstp.northwestern.edu/documents/proofreading-marks-at-a-glance.pdf"
+_MARKS_REVIEW = ("an assembly-instructions viewer's written design, 2026-11-20, marks on the "
+                 "places that can be improved")
 
 LAWS = [
 
@@ -2039,6 +2064,271 @@ LAWS = [
         note="Decidable by measuring the panes after a drag past each limit, after a "
              "window resize, and after a reload with kept sizes larger than the window. "
              "The whole page is read in craft/census_apple_split_views.py.",
+    ),
+
+    # --- marks, dialogs and close requests: a design review's sources, 2026-11-20 -------
+    _law(
+        "an-indicator-sits-beside-what-it-marks",
+        "A sign that marks an element or a piece of content as having something of note "
+        "is shown in close proximity to that element",
+        _cited(NNG_INDICATORS),
+        falsifier="An indicator nearer to another element than to the one it marks, or "
+                  "sitting in empty space away from the content it is about.",
+        triggers=["the interface marks places in its content"],
+        citations=[(NNG_INDICATORS, NNG_INDICATORS_URL,
+                    "Indicators are contextual. They are associated with a UI element or with "
+                    "a piece of content, and should be shown in close proximity to that "
+                    "element.")],
+        sightings=[
+            (_MARKS_REVIEW,
+             "A mark on a step's picture was laid over the top right corner of the image "
+             "element, which letterboxes the picture: the corner could fall in empty space, "
+             "away from the picture it marked."),
+        ],
+        note="Decidable from rendered boxes: the indicator's box against the box of what it "
+             "marks and of its neighbours. error-lands-at-the-field is the same rule for a "
+             "validation message. The whole article is read in "
+             "craft/census_nng_indicators.py.",
+    ),
+
+    _law(
+        "an-icon-carries-a-visible-text-label",
+        "An icon has a text label beside it that says what it means there, visible at all "
+        "times and never revealed only on hover",
+        _cited(NNG_ICONS),
+        falsifier="An icon, as a control or as a sign, with no visible word beside it saying "
+                  "what it means, or whose words appear only on hover or focus.",
+        triggers=["an interface uses icons"],
+        citations=[(NNG_ICONS, NNG_ICONS_URL,
+                    "a text label must be present alongside an icon to clarify its meaning in "
+                    "that particular context."),
+                   (NNG_ICONS, NNG_ICONS_URL,
+                    "Icon labels should be visible at all times, without any interaction from "
+                    "the user.")],
+        sightings=[
+            (_MARKS_REVIEW,
+             "The button opening the list of things to improve showed a list icon and a "
+             "count, '7', and no word: beside a PDF button it could read as a count of pages "
+             "or of steps."),
+        ],
+        note="Decidable from the DOM and the rendered page: an icon with no visible text "
+             "within its control or beside it. The article grants no exception for standard "
+             "icons ('even if you’re using a standard icon, it’s often safer to include a "
+             "label'); an accessible name alone is not a visible label. Read whole in "
+             "craft/census_nng_icons.py.",
+    ),
+
+    _law(
+        "a-modal-dialog-holds-what-its-decision-needs",
+        "A modal dialog is a short, direct exchange: what the person needs to answer it is "
+        "shown in it, never left on the content it covers",
+        _cited(NNG_MODAL),
+        falsifier="A modal dialog asking about something - a picture, a passage, a figure - "
+                  "that it does not show, while it covers the place where that thing is.",
+        triggers=["the interface opens dialogs over its screens"],
+        citations=[(NNG_MODAL, NNG_MODAL_URL,
+                    "Modal dialogs should be used for short, direct dialogs with the user. If "
+                    "a modal requires the user to do complex research or consult additional "
+                    "sources of information (potentially blocked by the modal), then it’s not "
+                    "the right UI element for that interaction."),
+                   (NNG_MODAL, NNG_MODAL_URL,
+                    "When a dialog appears on top of the current window, it can cover "
+                    "important content and remove context.")],
+        sightings=[
+            (_MARKS_REVIEW,
+             "The dialog for a defect found in a step's picture gave the case in words and "
+             "covered the picture, so the case could not be checked against what it was "
+             "about."),
+        ],
+        note="Decidable once a dialog's question names what it is about: that thing is "
+             "either inside the dialog or in view beside it. Read whole in "
+             "craft/census_nng_modal.py.",
+    ),
+
+    _law(
+        "a-modal-dialog-serves-the-task-at-hand",
+        "A modal dialog interrupts only for what the task the person is doing needs; "
+        "nonessential information unrelated to that task is never put in one",
+        _cited(NNG_MODAL),
+        falsifier="A modal dialog that opens without the person's current task asking for "
+                  "it, to show something that task does not need: a sign-up, an "
+                  "announcement, a tip.",
+        triggers=["the interface opens dialogs over its screens"],
+        citations=[(NNG_MODAL, NNG_MODAL_URL,
+                    "Do not use modal dialogs for nonessential information that is not "
+                    "related to the current user flow."),
+                   (NNG_MODAL, NNG_MODAL_URL,
+                    "Modal dialogs that are not directly related to users’ goals are "
+                    "perceived as annoying and can diminish trust in the company.")],
+        note="Decidable from what opened the dialog: an act of the person's in the flow, or "
+             "a timer, a page load or the product's own schedule.",
+    ),
+
+    _law(
+        "a-dialog-opens-no-dialog-unless-it-fills-the-screen",
+        "A dialog does not open another dialog over itself; only a full-screen dialog may, "
+        "for a picker or a short choice its task needs",
+        _cited(M1_DIALOGS),
+        falsifier="A dialog that does not fill the screen opening a second dialog or a menu "
+                  "on top of itself.",
+        triggers=["the interface opens dialogs over its screens"],
+        citations=[(M1_DIALOGS, M1_DIALOGS_URL,
+                    "Dialogs should avoid: Opening dialogs from within a dialog"),
+                   (M1_DIALOGS, M1_DIALOGS_URL,
+                    "Full-screen dialogs may open additional dialogs, such as pickers, "
+                    "because their design accommodates additional layers of material without "
+                    "significantly increasing the app’s perceived z-depth or visual noise."),
+                   (M1_DIALOGS, M1_DIALOGS_URL,
+                    "Confirmation dialogs should avoid launching additional simple dialogs or "
+                    "simple menus, as they add complexity and appear to increase an app’s "
+                    "elevation. If they are needed to complete a task, consider using a "
+                    "full-screen dialog instead.")],
+        note="Decidable from the open dialogs and their boxes against the viewport. "
+             "Stricter than Primer, which accepts two nested dialogs "
+             "(stacked-dialogs-close-from-the-top-two-deep-at-most): a design meeting this "
+             "law meets that one. Read whole in craft/census_m1_dialogs.py.",
+    ),
+
+    _law(
+        "stacked-dialogs-close-from-the-top-two-deep-at-most",
+        "Dialogs stacked over one another close from the top, one at a time - Escape or a "
+        "click outside closes only the top one, and focus returns to the control in the "
+        "dialog below that opened it - and are stacked two deep at most",
+        _cited(PRIMER_DIALOG),
+        falsifier="Three dialogs open at once; Escape or a click outside the top dialog "
+                  "closing a dialog under it; or, after the top dialog closes, focus "
+                  "anywhere but the control that opened it.",
+        triggers=["the interface opens dialogs over its screens"],
+        citations=[(PRIMER_DIALOG, PRIMER_DIALOG_URL,
+                    "It is acceptable to have up to two nested Dialogs as long as the Dialog "
+                    "is implemented with expected focus management behavior. Upon closing the "
+                    "second nested Dialog, focus should return to the trigger control within "
+                    "the first Dialog. When the two stacked Dialogs are open, pressing Esc "
+                    "should only close the top-level Dialog. When one clicks outside of the "
+                    "second Dialog with a mouse, only the second Dialog should close."),
+                   (PRIMER_DIALOG, PRIMER_DIALOG_URL,
+                    "However, having more than three nested Dialogs is discouraged because it "
+                    "adds unnecessary complexity to the user experience and can be "
+                    "disorienting for some users.")],
+        note="Decidable by keys and clicks sent with two dialogs open, and the open set and "
+             "the focused element read after each. Primer accepts two and discourages more "
+             "than three, leaving three unsaid; the law takes the two it accepts. The "
+             "phone's Back is the same close request (an-overlay-closes-on-the-devices-"
+             "close-request). Read whole in craft/census_primer_dialog.py.",
+    ),
+
+    _law(
+        "an-overlay-closes-on-the-devices-close-request",
+        "What opens over a screen and closes - a dialog, a popup, a sidebar, a picker - "
+        "closes on the device's own close request: Escape with a keyboard, Back on Android",
+        _cited(MDN_CLOSEWATCHER),
+        falsifier="On a device whose close request is Back, Back leaving the page, or closing "
+                  "what lies under an open dialog, popup or sidebar, instead of closing it; "
+                  "with a keyboard, Escape leaving it open.",
+        triggers=["the app is used on a phone", "the interface opens dialogs over its screens"],
+        citations=[(MDN_CLOSEWATCHER, MDN_CLOSEWATCHER_URL,
+                    "Users generally expect to be able to use a particular mechanism to close "
+                    "these elements, and the mechanism tends to be device-specific. For "
+                    "example, on a device with a keyboard it might be the Esc key, but Android "
+                    "might use the back button."),
+                   (WICG_CLOSE_WATCHER, WICG_CLOSE_WATCHER_URL,
+                    "Typically, this is the Esc key on desktop platforms, and the back button "
+                    "on some mobile platforms (notably Android)."),
+                   (WICG_CLOSE_WATCHER, WICG_CLOSE_WATCHER_URL,
+                    "It allows the Android back button to close dialogs, subject to "
+                    "anti-abuse restrictions.")],
+        sightings=[
+            (_MARKS_REVIEW,
+             "The instructions were a dialog with a history entry, and a defect's dialog "
+             "was to open over them: the phone's Back, handled by the instructions, would "
+             "have closed them under the open defect dialog."),
+            (_MARKS_REVIEW,
+             "Back was specified as a history entry of the defect dialog, while a browser "
+             "where Back is a close request closes the dialog without traversing history: "
+             "its entry stayed, and the next Back closed the instructions."),
+        ],
+        note="escape-closes-the-overlay holds the keyboard half for a modal dialog; this law "
+             "adds the device's other close requests and the non-modal overlays. Decidable "
+             "by sending the close request with the overlay open and reading what is open "
+             "after. Read whole in craft/census_mdn_closewatcher.py and "
+             "craft/census_wicg_close_watcher.py.",
+    ),
+
+    _law(
+        "a-badge-sits-on-the-top-corner-of-an-icon-or-navigation-item",
+        "A badge - a count, a dot or a status laid over a corner - marks a navigation item "
+        "or an icon, and sits on its top corner, at the end unless placed at the start",
+        _cited(MATERIAL_BADGE),
+        falsifier="A badge laid over a sentence, a picture or a block of content rather than "
+                  "on an icon or a navigation item, or one on a bottom corner.",
+        triggers=["the interface marks places in its content", "an interface uses icons"],
+        citations=[(MATERIAL_BADGE, MATERIAL_BADGE_URL,
+                    "Badges show notifications, counts, or status information on navigation "
+                    "items and icons."),
+                   (MATERIAL_BADGE, MATERIAL_BADGE_URL,
+                    "By default, (`TOP_END`) badge aligns with the top and end edges of the "
+                    "anchor (with some offsets). Alternatively, you can use `TOP_START` to "
+                    "align the badge with the top and start edges of the anchor. Note that "
+                    "`BOTTOM_START` and `BOTTOM_END` are deprecated and not recommended for "
+                    "use.")],
+        sightings=[
+            (_MARKS_REVIEW,
+             "A mark was a badge over the top right corner of a sentence's block, a part's "
+             "tile and a picture: on a sentence it sat on the first line's last word, and on "
+             "a picture on the corner of the image element, not of the picture."),
+        ],
+        note="A component's documentation, read as the component's scope: what the badge "
+             "is for and where it goes. Decidable from the badge's anchor element and the "
+             "corner its box overlaps. Read whole in craft/census_material_badge.py.",
+    ),
+
+    _law(
+        "the-warning-sign-is-for-a-warning",
+        "The warning sign - '!' in a circle before the words - is for warning of something "
+        "important, such as the legal consequences of an act or of failing to act",
+        _cited(GOVUK_WARNING),
+        falsifier="A '!' sign beside something that warns of no important consequence: an "
+                  "improvement on offer, a tip, a count of things left to do.",
+        triggers=["the interface marks places in its content", "an interface uses icons"],
+        citations=[(GOVUK_WARNING, GOVUK_WARNING_URL,
+                    "Use the warning text component when you need to warn users about "
+                    "something important, such as legal consequences of an action, or lack "
+                    "of action, that they might take.")],
+        sightings=[
+            (_MARKS_REVIEW,
+             "The mark for a place that could be improved was a round amber badge with "
+             "'!', after the design had moved from red to amber to say 'can be improved', "
+             "not 'wrong': the glyph kept the warning the colour change had removed."),
+        ],
+        note="The component's 'when to use' is read as the meaning of its sign, as a design "
+             "system's components are read. Judging whether a consequence is important is a "
+             "reading; the sign and what the words beside it announce are data. Read whole "
+             "in craft/census_govuk_warning_text.py.",
+    ),
+
+    _law(
+        "a-correction-is-marked-in-the-line-and-in-the-margin",
+        "A correction marked on a page of text is marked twice: at its place in the line, "
+        "and in the margin beside that line",
+        _cited(PROOF_MARKS),
+        falsifier="A page of marked corrections where a correction has a mark in the line and "
+                  "none in the margin beside it, or a margin mark with no mark at its place "
+                  "in the line.",
+        triggers=["corrections or suggestions are marked on a page of text people read"],
+        citations=[(PROOF_MARKS, PROOF_MARKS_URL,
+                    "Proofreading marks (also called proofreaders' marks) are symbols and "
+                    "notations for correcting typeset pages. The proofreader places these "
+                    "marks in the margins and in corresponding lines of text.")],
+        sightings=[
+            (_MARKS_REVIEW,
+             "The design offered a mark in the line and a mark in the margin as two "
+             "exclusive alternatives, where the proofreader marks each correction in both "
+             "places."),
+        ],
+        note="The proofreader's convention for typeset pages, which BS 5261-2:2005 also "
+             "states (sold, not read here). Decidable from the marks' positions: each "
+             "in-line mark has a margin mark on its line, and the reverse. Read whole in "
+             "craft/census_proofreading_marks.py.",
     ),
 
     _law(

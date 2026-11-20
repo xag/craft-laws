@@ -121,7 +121,7 @@ CENSUS: dict[str, tuple[str, str, str]] = {
     "2.5.2": ("Pointer Cancellation", "covered", "touch-commits-on-release"),
     "2.5.3": ("Label in Name", "zero",
               "accessible name contains the visible label: a decider over the "
-              "DOM"),
+              "DOM, stated as the-accessible-name-contains-the-visible-label"),
     "2.5.4": ("Motion Actuation", "zero",
               "the element's `motion` fact (interface@0.4.0): names the "
               "conventional alternative and whether it can be turned off"),

@@ -122,6 +122,11 @@ NNG_FLAT_UI = ("Kate Moran, Flat UI Elements Attract Less Attention and Cause Un
 NNG_FLAT_UI_URL = "https://www.nngroup.com/articles/flat-ui-less-attention-cause-uncertainty/"
 WCAG_253 = "W3C, Understanding WCAG 2.2, SC 2.5.3 Label in Name (Level A)"
 WCAG_253_URL = "https://www.w3.org/WAI/WCAG22/Understanding/label-in-name.html"
+MS_MENUS = ("Microsoft, Windows 7 user experience guidelines, Menus (Design basics), still "
+            "published for Win32 apps")
+MS_MENUS_URL = "https://learn.microsoft.com/en-us/windows/win32/uxguide/cmd-menus"
+APPLE_MENUS = "Apple, Human Interface Guidelines, Menus"
+APPLE_MENUS_URL = "https://developer.apple.com/design/human-interface-guidelines/menus"
 
 LAWS = [
 
@@ -2651,6 +2656,138 @@ LAWS = [
              "names that put the button's words first and the flaw after. The Understanding "
              "page is read whole in craft/census_wcag_label_in_name.py; census_wcag routes "
              "the criterion.",
+    ),
+
+    _law(
+        "a-stable-menu-disables-what-does-not-apply",
+        "A menu whose contents are the same in every state shows a command that does not "
+        "apply in the present state as unavailable, in its place; it does not remove it",
+        _cited(MS_MENUS),
+        falsifier="An item removed from a menu bar, a toolbar menu or a menu of a window "
+                  "because it does not apply in the present state, so that the items "
+                  "after it move; or an item left available that does nothing in the "
+                  "present state when the program can tell, absent the exception that "
+                  "working out the state is noticeably slow, in which case a press on it "
+                  "says why nothing happened.",
+        triggers=["a menu or a menu-like bar of commands is the same in every state, and "
+                  "whether a command applies depends on the state"],
+        citations=[(MS_MENUS, MS_MENUS_URL,
+                    "Disable menu items that don't apply to the current context, instead "
+                    "of removing them. Doing so makes menu bar contents stable and easier "
+                    "to find."),
+                   (MS_MENUS, MS_MENUS_URL,
+                    "If determining when a menu item should be disabled causes noticeable "
+                    "performance problems, leave the menu item active and if necessary have "
+                    "its selection result in an error message."),
+                   (APPLE_MENUS, APPLE_MENUS_URL,
+                    "Show people when a menu item is unavailable. An unavailable menu item "
+                    "often appears dimmed and doesn’t respond to interactions.")],
+        note="The two sources state this for menus and say it is the menu's stability that "
+             "it buys. It is one half of a pair: a-contextual-menu-lists-only-what-applies "
+             "is the other, which Microsoft's page names as this rule's exception, so which "
+             "of the two a surface falls under is the first question, and the surface's own "
+             "definition answers it: a surface shown only for a selection or a mode is "
+             "contextual. Microsoft calls such a command unavailable in its documentation "
+             "and keeps disabled for programming. no-disabled-submit is a different matter "
+             "and still holds: GOV.UK's page is about a button that commits, which stays "
+             "live and explains what is missing when pressed; this law is about a command "
+             "in a menu. Decidable from the rendered menu in two states: the item's presence "
+             "and place against its state. Both pages are read whole in "
+             "craft/census_ms_menus.py and craft/census_apple_menus.py.",
+    ),
+
+    _law(
+        "a-contextual-menu-lists-only-what-applies",
+        "A menu shown only for a selection or a mode lists the commands that apply to it "
+        "and removes those that do not; the standard commands and the commands that "
+        "complete a set stay, shown unavailable",
+        _cited(MS_MENUS),
+        falsifier="A context menu, or a menu category displayed only for a mode or a "
+                  "selected object type, that lists a command which does nothing for the "
+                  "object or mode it was opened on, and is neither a standard command "
+                  "(Cut, Copy, Paste, Delete, Rename) nor the partner of one that is "
+                  "listed (a Forward beside a Back, a Paste beside a Copy); or such a "
+                  "menu that drops a standard command or a partner instead of showing it "
+                  "unavailable.",
+        triggers=["a menu or panel of commands is opened or shown for a selection, an "
+                  "object type or a mode, and some of the commands the program has do not "
+                  "apply to it"],
+        citations=[(MS_MENUS, MS_MENUS_URL,
+                    "Remove rather than disable context menu items that don't apply to the "
+                    "current context. Doing so makes context menus contextual and "
+                    "efficient."),
+                   (MS_MENUS, MS_MENUS_URL,
+                    "Exception: Disable menu items that don't apply if there is a "
+                    "reasonable expectation for them to be available:"),
+                   (MS_MENUS, MS_MENUS_URL,
+                    "Always have the relevant standard context menu commands, such as Cut, "
+                    "Copy, Paste, Delete, and Rename."),
+                   (MS_MENUS, MS_MENUS_URL,
+                    "Always have the commands that complete related sets."),
+                   (MS_MENUS, MS_MENUS_URL,
+                    "For contextual menu categories, remove rather than disable context "
+                    "menu items that don't apply to the current context. A menu category "
+                    "is contextual when it is displayed only for specific modes, such as "
+                    "when a certain object type is selected.")],
+        sightings=[
+            ("a 3D view of an object made of several parts, 2026-11-20",
+             "A slider to spread the parts apart was offered while a single part was "
+             "shown, where spreading moves nothing. The owner's complaint: a command "
+             "that does nothing in the present state should not be seen."),
+        ],
+        note="The source states the rule for menu items, and gives a menu category shown "
+             "only for specific modes as contextual. A control in a panel that exists only "
+             "for a mode (spreading the parts, with several parts shown) is that case by "
+             "the source's own definition; a control outside any menu is reached by "
+             "analogy, not by the source's words. The other half is "
+             "a-stable-menu-disables-what-does-not-apply. Decidable from the rendered "
+             "surface in two states: the control's presence against whether its command "
+             "changes anything there; what makes a surface contextual is read once, from "
+             "when it is shown. Both pages are read whole in craft/census_ms_menus.py "
+             "(Apple's does not state the removal) and craft/census_apple_menus.py.",
+    ),
+
+    _law(
+        "a-menu-with-nothing-available-stays-openable",
+        "A menu, or a submenu, whose items are all unavailable stays available to open, "
+        "so that people can learn what commands it holds",
+        _cited(APPLE_MENUS),
+        falsifier="A menu or submenu control that is removed, or does not open, because "
+                  "every item inside it is unavailable.",
+        triggers=["a menu or submenu holds commands that can all be unavailable at once"],
+        citations=[(APPLE_MENUS, APPLE_MENUS_URL,
+                    "If all of a menu’s items are unavailable, the menu itself needs to "
+                    "remain available so people can open it and learn about the commands "
+                    "it contains."),
+                   (APPLE_MENUS, APPLE_MENUS_URL,
+                    "Make sure a submenu remains available even when its nested menu items "
+                    "are unavailable.")],
+        note="It applies to a menu that stays in place. A menu opened for a selection "
+             "(a-contextual-menu-lists-only-what-applies) that has nothing to list is not "
+             "opened at all. The page is read whole in craft/census_apple_menus.py.",
+    ),
+
+    _law(
+        "a-shortcut-or-context-menu-is-never-the-only-way-to-a-command",
+        "A command reachable by a shortcut key or by a context menu is also reachable "
+        "another way, by the mouse or by Tab, arrow and access keys, through a menu bar, a "
+        "toolbar or a visible control",
+        _cited(MS_MENUS),
+        falsifier="A command whose only route is a shortcut key, or whose only route is a "
+                  "context menu.",
+        triggers=["a program binds a shortcut key to a command, or offers a command in a "
+                  "context menu"],
+        citations=[(MS_MENUS, MS_MENUS_URL,
+                    "Don't make commands only available through context menus. Like "
+                    "shortcut keys, context menus are alternative means of performing "
+                    "commands and choosing options."),
+                   (MS_MENUS, MS_MENUS_URL,
+                    "Don't make a shortcut key the only way to perform a task. Users "
+                    "should also be able to use the mouse or the keyboard with Tab, arrow, "
+                    "and access keys.")],
+        note="Decidable by listing each command's routes. The nearest standing law, "
+             "gesture-has-a-plain-alternative, is about gestures; this is about two other "
+             "routes the same page names. Read whole in craft/census_ms_menus.py.",
     ),
 
     _law(

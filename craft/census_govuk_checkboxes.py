@@ -19,10 +19,12 @@ from __future__ import annotations
 CENSUS: dict[str, tuple[str, str, str]] = {
     "Use the checkboxes component when you need to help users: select multiple options from "
     "a list, toggle a single option on or off.": (
-        "owed", "", "Nielsen's when-to-use, owed there too"),
+        "covered", "radios-for-one-answer-checkboxes-for-several",
+        "the law's checkbox half, quoted from Nielsen and GOV.UK's Radios"),
     "Do not use the checkboxes component if users can only choose one option from a "
     "selection. In this case, use the Radios component.": (
-        "owed", "", "the same choice"),
+        "covered", "radios-for-one-answer-checkboxes-for-several",
+        "the same choice, quoted from GOV.UK's Radios"),
     "Always position checkboxes to the left of their labels.": (
         "covered", "a-checkbox-sits-left-of-its-label", "quoted by the law"),
     "Do not assume that users will know how many options they can select based on the visual "

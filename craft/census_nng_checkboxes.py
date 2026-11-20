@@ -22,12 +22,10 @@ CENSUS: dict[str, tuple[str, str, str]] = {
     # --- When to Use Which Widgets --------------------------------------------------------
     "Radio buttons are used when there is a list of two or more options that are mutually "
     "exclusive and the user must select exactly one choice.": (
-        "owed", "",
-        "which control fits is decidable once the options' exclusivity is recorded; no law "
-        "holds it yet"),
+        "covered", "radios-for-one-answer-checkboxes-for-several", "quoted by the law"),
     "Checkboxes are used when there are lists of options and the user may select any number "
     "of choices, including zero, one, or several.": (
-        "owed", "", "the other half of the same choice"),
+        "covered", "radios-for-one-answer-checkboxes-for-several", "quoted by the law"),
     "A stand-alone checkbox is used for a single option that the user can turn on or off.": (
         "owed", "", "the same choice, for one option"),
     # --- Additional Guidelines ------------------------------------------------------------

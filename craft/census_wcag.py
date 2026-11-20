@@ -104,8 +104,9 @@ CENSUS: dict[str, tuple[str, str, str]] = {
               "the site-level navigation-systems declaration RGAA 12.1 also "
               "wants"),
     "2.4.6": ("Headings and Labels", "judge",
-              "descriptiveness is a reading; front-load and says-what-happens "
-              "hold the mechanical edges"),
+              "descriptiveness is a reading, stated as "
+              "headings-and-labels-describe-topic-or-purpose; front-load and "
+              "says-what-happens hold the mechanical edges"),
     "2.4.7": ("Focus Visible", "zero", "focus style probe"),
     "2.4.8": ("Location", "zero",
               "breadcrumb/location presence: DOM over the nav structure"),

@@ -94,6 +94,18 @@ PROOF_MARKS = "Barbara Every, Proofreading Marks at a Glance, BioMedical Editor,
 PROOF_MARKS_URL = "https://amstp.northwestern.edu/documents/proofreading-marks-at-a-glance.pdf"
 _MARKS_REVIEW = ("an assembly-instructions viewer's written design, 2026-11-20, marks on the "
                  "places that can be improved")
+NNG_SEVERITY = "Jakob Nielsen, Severity Ratings for Usability Problems, Nielsen Norman Group, 1994-11-01"
+NNG_SEVERITY_URL = "https://www.nngroup.com/articles/how-to-rate-the-severity-of-usability-problems/"
+MS_CHECKER_RULES = "Microsoft Support, Rules for the Accessibility Checker"
+MS_CHECKER_RULES_URL = ("https://support.microsoft.com/en-us/accessibility/office-accessibility/"
+                        "rules-for-the-accessibility-checker")
+WCAG_246 = "W3C, Understanding WCAG 2.2, SC 2.4.6 Headings and Labels (Level AA)"
+WCAG_246_URL = "https://www.w3.org/WAI/WCAG22/Understanding/headings-and-labels.html"
+NNG_ACCORDIONS = ("Hoa Loranger, Accordions Are Not Always the Answer for Complex Content on "
+                  "Desktops, Nielsen Norman Group, 2014-05-18")
+NNG_ACCORDIONS_URL = "https://www.nngroup.com/articles/accordions-complex-content/"
+GOVUK_RADIOS = "GOV.UK Design System, Radios"
+GOVUK_RADIOS_URL = "https://design-system.service.gov.uk/components/radios/"
 
 LAWS = [
 
@@ -2329,6 +2341,142 @@ LAWS = [
              "states (sold, not read here). Decidable from the marks' positions: each "
              "in-line mark has a margin mark on its line, and the reverse. Read whole in "
              "craft/census_proofreading_marks.py.",
+    ),
+
+    _law(
+        "a-problem-is-ranked-by-its-severity",
+        "Problems listed with levels or in an order are levelled and ordered by their "
+        "severity: how often each occurs, how hard it is to overcome, and whether it "
+        "persists, never by where it was found",
+        _cited(NNG_SEVERITY),
+        falsifier="A list of problems whose levels or order come from something other than "
+                  "each problem's consequence for the person who meets it (which check found "
+                  "it, which list it came from, what data it lacks), so that a problem that "
+                  "makes the thing unusable is levelled or placed below one that does not.",
+        triggers=["a screen or a report lists problems found in something, with levels or "
+                  "in an order"],
+        citations=[(NNG_SEVERITY, NNG_SEVERITY_URL,
+                    "The severity of a usability problem is a combination of three factors: "
+                    "The frequency with which the problem occurs: Is it common or rare? The "
+                    "impact of the problem if it occurs: Will it be easy or difficult for the "
+                    "users to overcome? The persistence of the problem: Is it a one-time "
+                    "problem that users can overcome once they know about it or will users "
+                    "repeatedly be bothered by the problem?"),
+                   (MS_CHECKER_RULES, MS_CHECKER_RULES_URL,
+                    "Depending on how severe the issue is, the Accessibility Checker "
+                    "classifies each issue as an error, warning, or tip. Error. Content that "
+                    "makes the document difficult or impossible to read and understand for "
+                    "people with disabilities")],
+        sightings=[
+            ("a furniture-design app's written design for listing a design's flaws, "
+             "2026-11-20",
+             "Each flaw's level came from the list it arrived in: a finding that fails, a "
+             "finding that is open, a design condition. Two parts filling the same space, a "
+             "design condition, would have been levelled 'Missing' and placed after a "
+             "'Can't tell', though it means the piece will not go together."),
+        ],
+        note="Ordering by a recorded level is decidable; the level each kind of problem "
+             "takes is a reading made once per kind, from its consequence, and recorded "
+             "with it. NN/g's 0-4 scale and Microsoft's errors, warnings and tips are two "
+             "scales of this kind. Both sources are read whole in craft/census_nng_severity.py "
+             "and craft/census_ms_checker_rules.py.",
+    ),
+
+    _law(
+        "headings-and-labels-describe-topic-or-purpose",
+        "A heading says what its section holds and a label says what its control or field "
+        "is for, so that each identifies its own component",
+        _cited(WCAG_246),
+        falsifier="A heading that does not say what its section holds, or a label that does "
+                  "not say what its control or field is for, such as a default or placeholder "
+                  "name ('Section 3', 'Sheet1') or several controls on one view that act on "
+                  "different things under one label, so that the label identifies none of "
+                  "them.",
+        triggers=["a screen has headings or labelled controls"],
+        citations=[(WCAG_246, WCAG_246_URL, "Headings and labels describe topic or purpose."),
+                   (WCAG_246, WCAG_246_URL,
+                    "Descriptive labels help users identify specific components within the "
+                    "content."),
+                   (MS_CHECKER_RULES, MS_CHECKER_RULES_URL,
+                    "All sections have names that aren't default or placeholder names such as "
+                    "“Default Section,” “Untitled Section,” or "
+                    "“Section 3.”")],
+        sightings=[
+            ("a furniture-design app's written design for listing a design's flaws, "
+             "2026-11-20",
+             "Every flaw carried a button 'Ask <assistant> to improve it': six controls on "
+             "one sheet, each acting on a different flaw, under one name, so a list of the "
+             "page's buttons told none of them apart."),
+        ],
+        note="Descriptiveness is a reading; two controls under one accessible name that act "
+             "on different targets are decidable from the DOM and the controls' targets. The "
+             "criterion does not require headings or labels, only that those present "
+             "describe; their markup is 1.3.1 and their accessible name 4.1.2. The "
+             "Understanding page is read whole in craft/census_wcag_headings_labels.py; "
+             "census_wcag routes the criterion as a reading.",
+    ),
+
+    _law(
+        "content-most-people-need-is-not-folded-away",
+        "What most people of a view need is shown at once, not folded into sections they "
+        "must open one at a time",
+        _cited(NNG_ACCORDIONS),
+        falsifier="Collapsed sections over content that most people who come to the view "
+                  "need, so that they open most of the sections one at a time to get it.",
+        triggers=["a screen folds its content into sections that open and close"],
+        citations=[(NNG_ACCORDIONS, NNG_ACCORDIONS_URL,
+                    "Accordions should be avoided when your audience needs most or all of "
+                    "the content on the page to answer their questions. Better to show all "
+                    "page content at once when the use case supports it."),
+                   (NNG_ACCORDIONS, NNG_ACCORDIONS_URL,
+                    "If people need to open the majority of subtopics to have their questions "
+                    "answered or to get the full story then an accordion is not the way to "
+                    "go.")],
+        note="The other half of the article, that an accordion suits content only a few "
+             "need, is rare-actions-go-to-a-second-layer's (NN/g heuristic #8: nothing "
+             "rarely needed on the first layer). Decidable once the view's use is recorded: "
+             "which sections people open, against how many there are. Cited by the review "
+             "of a written design for listing a design's flaws, 2026-11-20, in weighing "
+             "rows that open in place against a list shown whole. The article is read whole "
+             "in craft/census_nng_accordions.py.",
+    ),
+
+    _law(
+        "radios-for-one-answer-checkboxes-for-several",
+        "A question answered by one option from a list is asked with radios, and one "
+        "answered by any number of options with checkboxes",
+        _cited(GOVUK_RADIOS),
+        falsifier="A question whose answer is exactly one option of a list, asked with "
+                  "checkboxes, with a control that accepts several, or with a free-text "
+                  "field while the product holds the list; or a question that admits "
+                  "several answers, asked with radios.",
+        triggers=["a screen asks a question with a fixed set of answers"],
+        citations=[(GOVUK_RADIOS, GOVUK_RADIOS_URL,
+                    "Use the radios component when users can only select one option from a "
+                    "list."),
+                   (GOVUK_RADIOS, GOVUK_RADIOS_URL,
+                    "Do not use the radios component if users might need to select more than "
+                    "one option. In this case, you should use the Checkboxes component "
+                    "instead."),
+                   (NNG_CHECKBOXES, NNG_CHECKBOXES_URL,
+                    "Radio buttons are used when there is a list of two or more options that "
+                    "are mutually exclusive and the user must select exactly one choice."),
+                   (NNG_CHECKBOXES, NNG_CHECKBOXES_URL,
+                    "Checkboxes are used when there are lists of options and the user may "
+                    "select any number of choices, including zero, one, or several.")],
+        sightings=[
+            ("a furniture-design app's written design for listing a design's flaws, "
+             "2026-11-20",
+             "A flaw's question, which saw cuts the boards, was a one-line text field, while "
+             "the rule asking it named the person's tools that answer it: the answer is one "
+             "of a list the product holds, typed instead of chosen."),
+        ],
+        note="Decidable from the DOM once a question records whether its answers exclude "
+             "each other. The sources choose between radios and checkboxes for a list that "
+             "is shown; the free-text clause reads 'from a list' as a list the product holds "
+             "and does not show. Whether the list offered spans every answer is "
+             "the-answers-offered-cover-every-possible-answer. Both pages are read whole in "
+             "craft/census_govuk_radios.py and craft/census_nng_checkboxes.py.",
     ),
 
     _law(
